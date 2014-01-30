@@ -21,49 +21,45 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>carbon-features</artifactId>
+        <artifactId>service-hosting-feature</artifactId>
         <version>4.2.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>webapp-mgt-feature</artifactId>
+    <artifactId>ejb-services-feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Service Management Feature Aggregator Module</name>
+    <name>WSO2 Carbon - EJB Services Feature</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.webapp.mgt.feature</module>
-        <module>org.wso2.carbon.webapp.mgt.server.feature</module>
-	<module>org.wso2.carbon.webapp.mgt.ui.feature</module>
+        <module>org.wso2.carbon.ejbservices.feature</module>
+        <module>org.wso2.carbon.ejbservices.server.feature</module>
+	    <module>org.wso2.carbon.ejbservices.ui.feature</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
-                <version>${wso2carbon.version.webapp.mgt}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
-                <version>${wso2carbon.version.webapp.mgt}</version>
+                <artifactId>org.wso2.carbon.ejbservices</artifactId>
+                <version>${wso2carbon.version.ejbservices}</version>
             </dependency>
 	    <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
-                <version>${wso2carbon.version.webapp.mgt}</version>
+                <artifactId>org.wso2.carbon.ejbservices.stub</artifactId>
+                <version>${wso2carbon.version.ejbservices}</version>
             </dependency>	
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.webapp.mgt.ui</artifactId>
-                <version>${wso2carbon.version.webapp.mgt}</version>
+                <artifactId>org.wso2.carbon.ejbservices.ui</artifactId>
+                <version>${wso2carbon.version.ejbservices}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <properties>
-        <wso2carbon.version.webapp.mgt>${wso2carbon.version}</wso2carbon.version.webapp.mgt>
+        <wso2carbon.version.ejbservices>${wso2carbon.version}</wso2carbon.version.ejbservices>
     </properties>
 
 </project>
