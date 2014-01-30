@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html>
+<head>
+  <title>JAR Services Guide - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+<body>
+<h1>Creating Axis2 Service Archives from JAR Files</h1>
+
+<p>
+    This document describes how the JAR services wizard can be used for
+    creating Axis2 Web services from a JAR file. We will show how a regular jar file,
+    calculator.jar, is uploaded &amp; converted into an Axis2 service archive which
+    exposes an Axis2 Web service.
+</p>
+
+<h2>Step1: Specify Details &amp; Upload JAR Files</h2>
+
+<p>
+    Provide the hierarchical path of the service. This is optional. If you want to manage
+    services separately, specifying a heirarchy is important. This allows you to customise
+    your service EPR as you wish. And also it allows you to manage multiple versions of the
+    same service changing only the business logic.
+</p>
+<p><strong>Example:</strong> Consider a service "Version"</p>
+<p>If no service hierarchy -> EPR is ../services/Version</p>
+<p>With service hierarchy foo/bar/1.0.0 -> EPR is ../services/foo/bar/1.0.0/Version</p>
+
+<p>
+    Then Specify a name for the Axis2 service group to be created, and then
+    select one or more regular JAR files to be uploaded from the local file system,
+    and click Next. You could also specify a WSDL that can be associated with your services.
+    In this example, we will specify the 'Service Group Name' as 'Calculator', and select
+    the calculator.jar file from the local file system.
+</p>
+
+<p><img alt="" src="images/step1.png" height="278" width="758"/></p>
+<p>Figure 1: Specifying service archive details</p>
+
+<h2>Step 2: Select Classes</h2>
+
+<p>
+    If Step 1 was successful, you will be shown a screen which lists all the classes
+    in the JAR files you uploaded in Step 1. Select one or more classes that you would
+    like to be exposed as Web services. You can specify the following properties under the
+    selected class.
+</p>
+<ul>
+    <li>'Service Name' - Name to be given for the web service which is created from the
+    selected class.</li>
+    <li>'Deployment Scope' - There are 4 scopes in which you can deploy a service in WSAS. The
+        scope of the service relates to the lifecycle of the service instance.
+        <ol>
+            <li>Application - Service instance lifetime is equal to the server lifetime. Service
+            class will be intialized only once for a running server. This is useful in developing
+            stateful web services.</li>
+            <li>Request - Service class will be initialized for each and every request.</li>
+            <li>SOAP Session - Axis2 supports a SOAP session using a SOAP specific cookie. Here
+            the service instance lifetime is equal to the lifetime of the SOAP session.</li>
+            <li>Transport Session - Service instance lifetime is equal to the lifetime of
+            the transpotr session.</li>
+        </ol>
+    </li>
+    <li>'Use Original WSDL' - Whether to use the original WSDL in the service archive or not.
+        This property can only be specified if you have already uploaded a WSDL in Step 1. If
+        this is set to 'False', WSDL will be generated.</li>
+</ul>
+
+<p>After selecting the classes, Click Next.</p> 
+
+<p><img alt="" src="images/step2.png" height="200" width="900"/></p>
+<p>Figure 2: Select classes</p>
+
+<h2>Step 3: Select Operations</h2>
+
+<p>
+    In this step, you will be shown the set of classes you selected in Step 2, as well
+    as the respective operations in each of those classes. Here, you can select the methods
+    in those classes which need to be exposed as Web service operations. By default, all methods
+    are selected. Unselect the operations that you do not wish to be exposed as WS operations
+    and click Finish.
+</p>
+
+<p><img alt="" src="images/step3.png" height="279" width="898"/></p>
+
+<p>Figure 2: Select Operations</p>
+
+<h2>Step 4: View Service List</h2>
+
+<p>
+    If you were able to complete Step 3 successfully, you will be taken to the 'Service List'
+    page. Here you will see a message saying that the services that you created using the JAR service
+    creation wizard will be available in a few seconds. After a few seconds, refresh this page,
+    and you should be able to see the services you created being listed on this page.
+</p>
+
+<p><img alt="" src="images/service-list.png" height="301" width="997"/></p>
+
+<p>Figure 4: View Service List</p>
+
+<h2>Step 5: View Service Information</h2>
+
+<p>
+    Click on a service that you created to view its information.
+</p>
+
+<p><img alt="" src="images/service-info.png" height="519" width="1004"/></p>
+
+<p>Figure 5: View Service Information</p>
+
+
+<h2>Step 6: Try the Service</h2>
+
+<p>
+    Click the 'Try this service' link for this service, and invoke the service using the 'Try It' user
+    interface. if you were able to successfully invoke your services, it means that the service
+    has been created and deployed successfully.
+</p>
+
+<p><img alt="" src="images/tryit.png" height="297" width="521"/></p>
+
+<p>Figure 4: Try the Service</p>
+
+</body>
+</html>

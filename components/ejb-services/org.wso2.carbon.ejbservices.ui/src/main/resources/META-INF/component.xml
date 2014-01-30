@@ -1,0 +1,27 @@
+<component xmlns="http://products.wso2.org/carbon">
+        <!-- sample menu configuration -->
+    <menus>                       
+        <menu>
+            <id>ejb_menu</id>
+            <i18n-key>service.ejb</i18n-key>
+            <i18n-bundle>org.wso2.carbon.ejbservices.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>services_add_menu</parent-menu>
+            <link>../ejb_service/index.jsp</link>
+            <region>region1</region>
+            <order>28</order>
+            <style-class>manage</style-class>
+            <icon>../ejb_service/images/type.gif</icon>
+            <require-permission>/permission/admin/manage/add/service</require-permission>
+        </menu>
+    </menus>
+
+    <FileUploadConfig>
+        <Mapping>
+            <Actions>
+                <Action>ejbinterface</Action>
+            </Actions>
+            <Class>org.wso2.carbon.ejbservices.ui.fileupload.EJBInterfaceFileUploadExecutor</Class>
+        </Mapping>
+    </FileUploadConfig>
+    
+</component>

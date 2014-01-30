@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2009-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>carbon-deployment</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>carbon-component-deployment</artifactId>
+    <version>4.3.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Deployment Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+    <modules>
+        <module>aar-services</module>
+        <module>axis2-repo-mgt</module>
+        <module>ejb-services</module>
+        <module>jar-services</module>
+        <module>module-mgt</module>
+        <module>operation-mgt</module>
+        <module>service-mgt</module>
+        <module>spring-services</module>
+        <module>webapp-mgt</module>
+    </modules>
+
+    <properties>
+
+	<!-- Carbon platform version comes here-->
+        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
+        <carbon.platform.package.export.version>4.3.0-SNAPSHOT
+        </carbon.platform.package.export.version>
+        <carbon.platform.package.import.version.range>[4.3.0.SNAPSHOT, 4.4.0)
+        </carbon.platform.package.import.version.range>
+
+	<!-- Stratos Version -->
+       	<stratos.version>2.3.0-SNAPSHOT</stratos.version>
+
+	<!-- Synapse Version -->
+	<synapse.version>2.1.1-wso2v8</synapse.version>
+
+	<!-- Axiom Version -->
+	<axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
+	<axiom.version>1.2.11-wso2v5</axiom.version>
+	<axiom.osgi.version.range>[1.2.11.wso2v5, 1.3.0)</axiom.osgi.version.range>
+
+	<!-- Axis2 Version -->
+	<axis2.wso2.version>1.6.1.wso2v11</axis2.wso2.version>
+       	<axis2.version>1.6.1-wso2v11</axis2.version>
+	<axis2-transports.version>1.1.0-wso2v11</axis2-transports.version>
+	<axis2.osgi.version.range>[1.6.1.wso2v11, 1.7.0)</axis2.osgi.version.range>
+	<neethi.osgi.version>2.0.4.wso2v4</neethi.osgi.version>
+       	<neethi.osgi.version.range>[2.0.4.wso2v4, 3.1.0)</neethi.osgi.version.range>
+
+	<!-- Xerces Version -->
+	<xercesImpl.version>2.8.1</xercesImpl.version>
+		
+	<!-- Servet Version -->
+	<version.javax.servlet.jsp>2.2.0.v201112011158</version.javax.servlet.jsp>
+	<version.javax.servlet>3.0.0.v201112011016</version.javax.servlet>
+
+	<!-- Rampart Version -->
+	<rampart.wso2.version>1.6.1.wso2v9</rampart.wso2.version>
+
+	<!-- JSON Version -->
+	<orbit.version.json>2.0.0.wso2v1</orbit.version.json>
+
+	<!-- Commons Version -->
+	<commons-httpclient.version>3.0.1</commons-httpclient.version>
+	<commons-pool.version>1.5.0.wso2v1</commons-pool.version>
+	<commons-logging.version>1.1</commons-logging.version>
+	<orbit.version.commons.lang>2.6.0.wso2v1</orbit.version.commons.lang>
+	<orbit.version.commons.httpclient>3.1.0.wso2v2</orbit.version.commons.httpclient>
+	<commons-collections.version>3.2</commons-collections.version>
+	<commons-beanutils.version>1.8.0</commons-beanutils.version>
+	<commons-collections.version>3.2</commons-collections.version>
+       	<commons-digester.version>1.8</commons-digester.version>
+
+
+	<!-- Validate Utility Version -->
+	<validateutility.version>0.95</validateutility.version>
+
+	<!-- Jasper Reports Version -->
+	<version.jasper>2.2.2.v201205150955</version.jasper>
+	<jasperreports.wso2.version>3.7.1.wso2v1</jasperreports.wso2.version>
+
+	<!-- Equinox dependency versions -->
+	<version.equinox.osgi>3.8.1.v20120830-144521</version.equinox.osgi>
+	<version.equinox.osgi.services>3.3.100.v20120522-1822</version.equinox.osgi.services>
+
+	<!-- JSP API -->
+       	<exp.pkg.version.javax.servlet.jsp>2.2.0</exp.pkg.version.javax.servlet.jsp>
+	<imp.pkg.version.javax.servlet.jsp>[2.2.0, 2.3.0)</imp.pkg.version.javax.servlet.jsp>
+
+	<!-- JSTL -->
+	<orbit.version.jstl>1.2.1.wso2v1</orbit.version.jstl>
+       	<exp.pkg.version.javax.servlet.jsp.jstl>1.2.1</exp.pkg.version.javax.servlet.jsp.jstl>
+       	<imp.pkg.version.javax.servlet.jsp.jstl>[1.2.1, 1.3.0)</imp.pkg.version.javax.servlet.jsp.jstl>
+
+	<!-- gson Version -->
+	<gson.version>2.1</gson.version>		
+
+	<!-- slf4j Version -->
+	<slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
+
+	<!-- Abdera -->
+       	<version.abdera>1.0-wso2v2</version.abdera>
+       	<orbit.version.abdera>1.0.0.wso2v2</orbit.version.abdera>
+
+	<!-- Servlet API -->
+	<exp.pkg.version.javax.servlet>2.6.0</exp.pkg.version.javax.servlet>
+       	<imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
+
+	<!-- Misc -->
+	<jxl.wso2.version>2.6.8.wso2v1</jxl.wso2.version>
+	<junit.version>3.8.2</junit.version>
+	<quartz2.orbit.version>2.1.1.wso2v1</quartz2.orbit.version>
+	<jaxen.version>1.1.1</jaxen.version>
+	<woodstox.version>3.2.9</woodstox.version>
+	<xml-apis.version>1.3.04</xml-apis.version>
+	<commons-fileupload.version>1.1.1</commons-fileupload.version>
+	<commons-io.wso2.version>2.0.0.wso2v1</commons-io.wso2.version>
+	<xmlschema.version>1.4.3</xmlschema.version>
+	<wsdl4j.wso2.version>1.6.2.wso2v2</wsdl4j.wso2.version>
+	<geronimo-stax-api.wso2.version>1.0.1.wso2v1</geronimo-stax-api.wso2.version>
+	<activation.version>1.1</activation.version>
+	<commons-dbcp.version>1.2.2</commons-dbcp.version>
+	<jetty.version>6.1.5</jetty.version>
+	<orbit.version.infinispan>5.1.2.wso2v1</orbit.version.infinispan>
+	<orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
+	<orbit.version.spring>3.1.0.wso2v1</orbit.version.spring>
+	<orbit.version.commons.fileuploader>1.2.0.wso2v1</orbit.version.commons.fileuploader>
+	<orbit.version.woden>1.0.0.M8-wso2v1</orbit.version.woden>
+    </properties>
+</project>

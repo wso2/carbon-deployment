@@ -1,0 +1,75 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<component xmlns="http://products.wso2.org/carbon">
+	<menus>			
+		<menu>
+			<id>services_menu</id>
+			<i18n-key>servicemgt.services.menu</i18n-key>
+			<i18n-bundle>org.wso2.carbon.service.mgt.ui.i18n.Resources</i18n-bundle>
+			<parent-menu>manage_menu</parent-menu>
+			<link>#</link>
+            <region>region1</region>
+			<order>5</order>
+            <icon>../service-mgt/images/service.gif</icon>
+			<style-class>home</style-class>
+			<!--<skip-authentication>false</skip-authentication>-->
+            <!--Removing skip authentication param and seting a permission here to work around-->
+            <!--an issue in stratos.. TODO : fix properly-->
+            <require-permission>/permission/admin/login</require-permission>
+		</menu>
+		<menu>
+			<id>services_list_menu</id>
+			<i18n-key>servicemgt.list.services.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.service.mgt.ui.i18n.Resources</i18n-bundle>
+			<parent-menu>services_menu</parent-menu>
+			<link>../service-mgt/index.jsp</link>
+			<region>region1</region>
+			<order>5</order>
+			<icon>../service-mgt/images/list.gif</icon>
+			<style-class>home</style-class>
+			<!--<skip-authentication>false</skip-authentication>		-->
+            <!--Removing skip authentication param and seting a permission here to work around-->
+            <!--an issue in stratos.. TODO : fix properly-->
+            <require-permission>/permission/admin/login</require-permission>
+		</menu>
+		<menu>
+			<id>services_add_menu</id>
+			<i18n-key>servicemgt.addservices.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.service.mgt.ui.i18n.Resources</i18n-bundle>
+			<parent-menu>services_menu</parent-menu>
+			<link>#</link>
+			<region>region1</region>
+			<order>10</order>
+            <icon>../service-mgt/images/add.gif</icon>
+			<style-class>home</style-class>
+			<require-permission>/permission/admin/manage/add/service</require-permission>
+		</menu>
+	</menus>
+
+    <osgiServices>
+        <service>
+            <classes>
+                 <class>org.wso2.carbon.service.mgt.ui.ServiceManagementUIExtender</class>
+            </classes>
+            <object>org.wso2.carbon.service.mgt.ui.ServiceManagementUIExtender</object>
+            <properties>
+                <property name="service-mgt">true</property>
+            </properties>
+        </service>
+    </osgiServices>
+</component>
