@@ -36,7 +36,7 @@
     <modules>
         <module>aar-services</module>
         <module>axis2-repo-mgt</module>
-        <module>ejb-services</module>
+        <!--module>ejb-services</module-->
         <module>jar-services</module>
         <module>module-mgt</module>
         <module>operation-mgt</module>
