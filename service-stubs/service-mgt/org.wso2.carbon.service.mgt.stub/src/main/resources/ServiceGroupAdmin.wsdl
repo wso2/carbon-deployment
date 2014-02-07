@@ -1,0 +1,630 @@
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2367="http://mgt.service.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://mgt.service.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2365="http://utils.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.service.carbon.wso2.org">
+    <wsdl:documentation>ServiceGroupAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2366="http://utils.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2368="http://mgt.service.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://utils.carbon.wso2.org/xsd"></xs:import>
+            <xs:import namespace="http://mgt.service.carbon.wso2.org/xsd"></xs:import>
+            <xs:element name="ServiceGroupAdminServerException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ServerException" nillable="true" type="ax2366:ServerException"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateServiceGroupParamters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="params" nillable="true" type="ax2367:ParameterMetaData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateServiceGroupParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="paramMetaData" nillable="true" type="ax2367:ParameterMetaData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setServiceGroupParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupId" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="parameterElement" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setServiceGroupParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupId" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="parameterElement" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeServiceGroupParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupId" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="parameterName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroups">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceTypeFilter" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="serviceGroupSearchString" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroupsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2367:ServiceGroupMetaDataWrapper"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ServiceGroupAdminException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ServiceGroupAdminException" nillable="true" type="ns1:Exception"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="listServiceGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroupResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2367:ServiceGroupMetaData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceGroupParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceGroupParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceGroupParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="paramName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceGroupParameterResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2367:ParameterMetaData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dumpAAR">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dumpAARResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="configureServiceGroupMTOM">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="flag" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="configureServiceGroupMTOMResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2367:ServiceGroupMetaData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://utils.carbon.wso2.org/xsd">
+            <xs:complexType name="ServerException">
+                <xs:sequence></xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.service.carbon.wso2.org/xsd">
+            <xs:complexType name="ParameterMetaData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="editable" type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="locked" type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="type" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceGroupMetaDataWrapper">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="numberOfActiveServices" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="numberOfCorrectServiceGroups" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="numberOfFaultyServiceGroups" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="numberOfPages" type="xs:int"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="serviceGroups" nillable="true" type="ax2367:ServiceGroupMetaData"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="serviceTypes" nillable="true" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceGroupMetaData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="disableDeletion" type="xs:boolean"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="engagedModules" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="mtomStatus" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceContextPath" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="services" nillable="true" type="ax2367:ServiceMetaData"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceMetaData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="active" type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="disableDeletion" type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="disableTryit" type="xs:boolean"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="eprs" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="foundWebResources" type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="mtomStatus" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="operations" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="scope" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="securityScenarioId" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceDeployedTime" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceType" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceUpTime" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="serviceVersion" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="tryitURL" nillable="true" type="xs:string"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="wsdlPortTypes" nillable="true" type="xs:string"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="wsdlPorts" nillable="true" type="xs:string"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="wsdlURLs" nillable="true" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="updateServiceGroupParameterRequest">
+        <wsdl:part name="parameters" element="ns1:updateServiceGroupParameter"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="ServiceGroupAdminServerException">
+        <wsdl:part name="parameters" element="ns1:ServiceGroupAdminServerException"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getServiceGroupParameterRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceGroupParameter"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getServiceGroupParameterResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceGroupParameterResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="setServiceGroupParameterRequest">
+        <wsdl:part name="parameters" element="ns1:setServiceGroupParameter"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="configureServiceGroupMTOMRequest">
+        <wsdl:part name="parameters" element="ns1:configureServiceGroupMTOM"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="configureServiceGroupMTOMResponse">
+        <wsdl:part name="parameters" element="ns1:configureServiceGroupMTOMResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="ServiceGroupAdminException">
+        <wsdl:part name="parameters" element="ns1:ServiceGroupAdminException"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="dumpAARRequest">
+        <wsdl:part name="parameters" element="ns1:dumpAAR"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="dumpAARResponse">
+        <wsdl:part name="parameters" element="ns1:dumpAARResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupRequest">
+        <wsdl:part name="parameters" element="ns1:listServiceGroup"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupResponse">
+        <wsdl:part name="parameters" element="ns1:listServiceGroupResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateServiceGroupParamtersRequest">
+        <wsdl:part name="parameters" element="ns1:updateServiceGroupParamters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="setServiceGroupParametersRequest">
+        <wsdl:part name="parameters" element="ns1:setServiceGroupParameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeServiceGroupParameterRequest">
+        <wsdl:part name="parameters" element="ns1:removeServiceGroupParameter"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getServiceGroupParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceGroupParameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getServiceGroupParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceGroupParametersResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupsRequest">
+        <wsdl:part name="parameters" element="ns1:listServiceGroups"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupsResponse">
+        <wsdl:part name="parameters" element="ns1:listServiceGroupsResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="ServiceGroupAdminPortType">
+        <wsdl:operation name="updateServiceGroupParameter">
+            <wsdl:input message="tns:updateServiceGroupParameterRequest" wsaw:Action="urn:updateServiceGroupParameter"></wsdl:input>
+            <wsdl:fault message="tns:ServiceGroupAdminServerException" name="ServiceGroupAdminServerException" wsaw:Action="urn:updateServiceGroupParameterServiceGroupAdminServerException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameter">
+            <wsdl:input message="tns:getServiceGroupParameterRequest" wsaw:Action="urn:getServiceGroupParameter"></wsdl:input>
+            <wsdl:output message="tns:getServiceGroupParameterResponse" wsaw:Action="urn:getServiceGroupParameterResponse"></wsdl:output>
+            <wsdl:fault message="tns:ServiceGroupAdminServerException" name="ServiceGroupAdminServerException" wsaw:Action="urn:getServiceGroupParameterServiceGroupAdminServerException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameter">
+            <wsdl:input message="tns:setServiceGroupParameterRequest" wsaw:Action="urn:setServiceGroupParameter"></wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="configureServiceGroupMTOM">
+            <wsdl:input message="tns:configureServiceGroupMTOMRequest" wsaw:Action="urn:configureServiceGroupMTOM"></wsdl:input>
+            <wsdl:output message="tns:configureServiceGroupMTOMResponse" wsaw:Action="urn:configureServiceGroupMTOMResponse"></wsdl:output>
+            <wsdl:fault message="tns:ServiceGroupAdminException" name="ServiceGroupAdminException" wsaw:Action="urn:configureServiceGroupMTOMServiceGroupAdminException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dumpAAR">
+            <wsdl:input message="tns:dumpAARRequest" wsaw:Action="urn:dumpAAR"></wsdl:input>
+            <wsdl:output message="tns:dumpAARResponse" wsaw:Action="urn:dumpAARResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <wsdl:input message="tns:listServiceGroupRequest" wsaw:Action="urn:listServiceGroup"></wsdl:input>
+            <wsdl:output message="tns:listServiceGroupResponse" wsaw:Action="urn:listServiceGroupResponse"></wsdl:output>
+            <wsdl:fault message="tns:ServiceGroupAdminException" name="ServiceGroupAdminException" wsaw:Action="urn:listServiceGroupServiceGroupAdminException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceGroupParamters">
+            <wsdl:input message="tns:updateServiceGroupParamtersRequest" wsaw:Action="urn:updateServiceGroupParamters"></wsdl:input>
+            <wsdl:fault message="tns:ServiceGroupAdminServerException" name="ServiceGroupAdminServerException" wsaw:Action="urn:updateServiceGroupParamtersServiceGroupAdminServerException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameters">
+            <wsdl:input message="tns:setServiceGroupParametersRequest" wsaw:Action="urn:setServiceGroupParameters"></wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceGroupParameter">
+            <wsdl:input message="tns:removeServiceGroupParameterRequest" wsaw:Action="urn:removeServiceGroupParameter"></wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameters">
+            <wsdl:input message="tns:getServiceGroupParametersRequest" wsaw:Action="urn:getServiceGroupParameters"></wsdl:input>
+            <wsdl:output message="tns:getServiceGroupParametersResponse" wsaw:Action="urn:getServiceGroupParametersResponse"></wsdl:output>
+            <wsdl:fault message="tns:ServiceGroupAdminServerException" name="ServiceGroupAdminServerException" wsaw:Action="urn:getServiceGroupParametersServiceGroupAdminServerException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <wsdl:input message="tns:listServiceGroupsRequest" wsaw:Action="urn:listServiceGroups"></wsdl:input>
+            <wsdl:output message="tns:listServiceGroupsResponse" wsaw:Action="urn:listServiceGroupsResponse"></wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ServiceGroupAdminSoap11Binding" type="tns:ServiceGroupAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap:binding>
+        <wsdl:operation name="updateServiceGroupParameter">
+            <soap:operation soapAction="urn:updateServiceGroupParameter" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap:fault use="literal" name="ServiceGroupAdminServerException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameter">
+            <soap:operation soapAction="urn:setServiceGroupParameter" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameter">
+            <soap:operation soapAction="urn:getServiceGroupParameter" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap:fault use="literal" name="ServiceGroupAdminServerException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dumpAAR">
+            <soap:operation soapAction="urn:dumpAAR" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="configureServiceGroupMTOM">
+            <soap:operation soapAction="urn:configureServiceGroupMTOM" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminException">
+                <soap:fault use="literal" name="ServiceGroupAdminException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <soap:operation soapAction="urn:listServiceGroup" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminException">
+                <soap:fault use="literal" name="ServiceGroupAdminException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceGroupParamters">
+            <soap:operation soapAction="urn:updateServiceGroupParamters" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap:fault use="literal" name="ServiceGroupAdminServerException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameters">
+            <soap:operation soapAction="urn:setServiceGroupParameters" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceGroupParameter">
+            <soap:operation soapAction="urn:removeServiceGroupParameter" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameters">
+            <soap:operation soapAction="urn:getServiceGroupParameters" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap:fault use="literal" name="ServiceGroupAdminServerException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <soap:operation soapAction="urn:listServiceGroups" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServiceGroupAdminSoap12Binding" type="tns:ServiceGroupAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap12:binding>
+        <wsdl:operation name="updateServiceGroupParameter">
+            <soap12:operation soapAction="urn:updateServiceGroupParameter" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap12:fault use="literal" name="ServiceGroupAdminServerException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameter">
+            <soap12:operation soapAction="urn:setServiceGroupParameter" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameter">
+            <soap12:operation soapAction="urn:getServiceGroupParameter" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap12:fault use="literal" name="ServiceGroupAdminServerException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dumpAAR">
+            <soap12:operation soapAction="urn:dumpAAR" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="configureServiceGroupMTOM">
+            <soap12:operation soapAction="urn:configureServiceGroupMTOM" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminException">
+                <soap12:fault use="literal" name="ServiceGroupAdminException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <soap12:operation soapAction="urn:listServiceGroup" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminException">
+                <soap12:fault use="literal" name="ServiceGroupAdminException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceGroupParamters">
+            <soap12:operation soapAction="urn:updateServiceGroupParamters" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap12:fault use="literal" name="ServiceGroupAdminServerException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameters">
+            <soap12:operation soapAction="urn:setServiceGroupParameters" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceGroupParameter">
+            <soap12:operation soapAction="urn:removeServiceGroupParameter" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameters">
+            <soap12:operation soapAction="urn:getServiceGroupParameters" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+            <wsdl:fault name="ServiceGroupAdminServerException">
+                <soap12:fault use="literal" name="ServiceGroupAdminServerException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <soap12:operation soapAction="urn:listServiceGroups" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServiceGroupAdminHttpBinding" type="tns:ServiceGroupAdminPortType">
+        <http:binding verb="POST"></http:binding>
+        <wsdl:operation name="updateServiceGroupParameter">
+            <http:operation location="updateServiceGroupParameter"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameter">
+            <http:operation location="setServiceGroupParameter"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameter">
+            <http:operation location="getServiceGroupParameter"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="dumpAAR">
+            <http:operation location="dumpAAR"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="configureServiceGroupMTOM">
+            <http:operation location="configureServiceGroupMTOM"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <http:operation location="listServiceGroup"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceGroupParamters">
+            <http:operation location="updateServiceGroupParamters"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceGroupParameters">
+            <http:operation location="setServiceGroupParameters"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceGroupParameter">
+            <http:operation location="removeServiceGroupParameter"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceGroupParameters">
+            <http:operation location="getServiceGroupParameters"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <http:operation location="listServiceGroups"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ServiceGroupAdmin">
+        <wsdl:port name="ServiceGroupAdminHttpsSoap11Endpoint" binding="tns:ServiceGroupAdminSoap11Binding">
+            <soap:address location="https://10.100.0.134:9443/services/ServiceGroupAdmin.ServiceGroupAdminHttpsSoap11Endpoint/"></soap:address>
+        </wsdl:port>
+        <wsdl:port name="ServiceGroupAdminHttpsSoap12Endpoint" binding="tns:ServiceGroupAdminSoap12Binding">
+            <soap12:address location="https://10.100.0.134:9443/services/ServiceGroupAdmin.ServiceGroupAdminHttpsSoap12Endpoint/"></soap12:address>
+        </wsdl:port>
+        <wsdl:port name="ServiceGroupAdminHttpsEndpoint" binding="tns:ServiceGroupAdminHttpBinding">
+            <http:address location="https://10.100.0.134:9443/services/ServiceGroupAdmin.ServiceGroupAdminHttpsEndpoint/"></http:address>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

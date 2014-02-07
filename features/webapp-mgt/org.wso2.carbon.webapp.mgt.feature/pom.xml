@@ -22,15 +22,15 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>webapp-mgt-feature</artifactId>
-        <version>4.2.0</version>
-        <relativePath>../../pom.xml</relativePath>
+	<version>4.3.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.webapp.mgt.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Webapp Management Feature</name>
-    <version>4.2.2</version>
+    <version>4.3.0-SNAPSHOT</version>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for Webapp Management functionality
     </description>
@@ -39,13 +39,13 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.webapp.mgt.server.feature</artifactId>
-            <version>4.2.2</version>
+            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
-            <version>4.2.1</version>
+            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -67,15 +67,13 @@
                             <id>org.wso2.carbon.webapp.mgt</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core:${carbon.platform.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>
-                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:4.2.2
-                                </includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature</includedFeatureDef>
                                 <includedFeatureDef>
-                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.ui.feature:4.2.1
-                                </includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.ui.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>
