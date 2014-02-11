@@ -31,17 +31,17 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.core</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.user.core</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -51,12 +51,12 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ui</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.utils</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -93,7 +93,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.tomcat.ext</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
 
             <dependency>
@@ -105,11 +105,6 @@
                 <groupId>org.apache.neethi.wso2</groupId>
                 <artifactId>neethi</artifactId>
                 <version>${neethi.osgi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>${commons-logging.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
@@ -148,11 +143,6 @@
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.jarservices.stub</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server.admin</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
@@ -160,14 +150,9 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -195,17 +180,7 @@
                 <version>${orbit.version.commons.fileuploader}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework.ws.wso2</groupId>
-                <artifactId>spring.framework</artifactId>
-                <version>${orbit.version.spring}</version>
-            </dependency>
 
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.springservices.stub</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -225,16 +200,6 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.webapp.mgt.ui</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.webapp.list.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -291,11 +256,6 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.aarservices.ui</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -448,16 +408,6 @@
                 <version>${wsdl4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>${commons-logging.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>aopalliance</groupId>
                 <artifactId>aopalliance</artifactId>
                 <version>${aopalliance.version}</version>
@@ -540,11 +490,6 @@
                 <version>${openjpa.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${jpa-commons-lang.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-pool</groupId>
                 <artifactId>commons-pool</artifactId>
                 <version>${jpa-commons-pool.version}</version>
@@ -583,6 +528,13 @@
                 <version>${commons-collections.version}</version>
             </dependency>
             <!-- end of common dependancies-->
+	   
+	    <dependency>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>build-helper-maven-plugin</artifactId>
+	<version>1.8</version>
+</dependency>
+            
         </dependencies>
     </dependencyManagement>
 
@@ -892,7 +844,6 @@
         <!-- J2EE Runtime Enviroment -->
         <myfaces.version>2.1.11</myfaces.version>
         <openjpa.version>2.2.2</openjpa.version>
-        <jpa-commons-lang.version>2.4</jpa-commons-lang.version>
         <jpa-commons-pool.version>1.5.4</jpa-commons-pool.version>
         <serp.version>1.13.1</serp.version>
         <geronimo-jms.version>1.1.1</geronimo-jms.version>
