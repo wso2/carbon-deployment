@@ -16,14 +16,14 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>service-mgt</artifactId>
         <version>4.3.0-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -39,22 +39,18 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.security.mgt</artifactId>
-            <version>${previous.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.rampart.wso2</groupId>
@@ -69,42 +65,37 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-	    <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
-	    <version>${orbit.version.h2.engine}</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.infinispan.wso2</groupId>
-			<artifactId>infinispan-core</artifactId>
-			<version>${orbit.version.infinispan}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.woden.wso2</groupId>
-			<artifactId>woden</artifactId>
-			<version>${orbit.version.woden}</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.woden</groupId>
-					<artifactId>woden-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.woden</groupId>
-					<artifactId>woden-impl-dom</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+        <dependency>
+            <groupId>org.infinispan.wso2</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.woden.wso2</groupId>
+            <artifactId>woden</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.woden</groupId>
+                    <artifactId>woden-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.woden</groupId>
+                    <artifactId>woden-impl-dom</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>
@@ -116,7 +107,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                
+
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -139,7 +130,8 @@
                             org.wso2.carbon.service.mgt.multitenancy
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
-                        <Require-CarbonUIComponents>${project.artifactId}.ui-${project.parent.version}</Require-CarbonUIComponents>
+                        <Require-CarbonUIComponents>${project.artifactId}.ui-${project.parent.version}
+                        </Require-CarbonUIComponents>
                     </instructions>
                 </configuration>
             </plugin>
@@ -158,5 +150,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

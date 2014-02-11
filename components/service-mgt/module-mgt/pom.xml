@@ -37,54 +37,35 @@
         <module>org.wso2.carbon.module.mgt.ui</module>
     </modules>
 
-    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
-                <version>${wso2carbon.version.module-mgt}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2</artifactId>
-                <version>${axis2.wso2.version.module-mgt}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.utils</artifactId>
-                <version>${wso2carbon.version.module-mgt}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt</artifactId>
-                <version>${previous.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ui</artifactId>
-                <version>${wso2carbon.version.module-mgt}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit.version.module-mgt}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <artifactId>commons-fileupload</artifactId>
                 <groupId>commons-fileupload.wso2</groupId>
-                <version>${orbit.version.commons.fileuploader.module.mgt}</version>
             </dependency>
         </dependencies>
-    </dependencyManagement>
-
-    <properties>
-        <wso2carbon.version.module-mgt>${project.version}</wso2carbon.version.module-mgt>
-        <axis2.wso2.version.module-mgt>${orbit.version.axis2}</axis2.wso2.version.module-mgt>
-        <axis2.osgi.version.range.module-mgt>${axis2.osgi.version.range}</axis2.osgi.version.range.module-mgt>
-        <axiom.osgi.version.range.module-mgt>${axiom.osgi.version.range}</axiom.osgi.version.range.module-mgt>
-        <junit.version.module-mgt>${junit.version}</junit.version.module-mgt>
-        <orbit.version.commons.fileuploader.module.mgt>${orbit.version.commons.fileuploader}</orbit.version.commons.fileuploader.module.mgt>
-    </properties>
-
 </project>

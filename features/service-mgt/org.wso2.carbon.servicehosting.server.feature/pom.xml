@@ -14,7 +14,7 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-        
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -23,7 +23,7 @@
         <groupId>org.wso2.carbon</groupId>
         <artifactId>service-hosting-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -31,7 +31,8 @@
     <packaging>pom</packaging>
     <name>Service Hosting Core Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the core bundles required for Back-end Service hosting functionality</description>
+    <description>This feature contains the core bundles required for Back-end Service hosting functionality
+    </description>
 
     <dependencies>
         <dependency>
@@ -39,31 +40,19 @@
             <artifactId>org.wso2.carbon.aarservices.server.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-	    </dependency>
-       <!-- <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.dataservices.server.feature</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-	    </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.jarservices.server.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-	    </dependency>
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.jaxwsservices.server.feature</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-	    </dependency-->
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.springservices.server.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-	    </dependency>
+        </dependency>
     </dependencies>
 
     <build>
@@ -85,14 +74,17 @@
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef> 
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
                                 </properties>
                             </adviceFile>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.aarservices.server.feature</includedFeatureDef>
-                               <!-- <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.dataservices.server.feature</includedFeatureDef>-->
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.jarservices.server.feature</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.springservices.server.feature</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.aarservices.server.feature
+                                </includedFeatureDef>
+                                <!-- <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.dataservices.server.feature</includedFeatureDef>-->
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.jarservices.server.feature
+                                </includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.springservices.server.feature
+                                </includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

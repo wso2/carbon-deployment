@@ -43,24 +43,16 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.jaxwsservices</artifactId>
-                <version>${wso2carbon.version.jaxwsservices}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.jaxwsservices.ui</artifactId>
-                <version>${wso2carbon.version.jaxwsservices}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.jaxwsservices.stub</artifactId>
-                <version>${wso2carbon.version.jaxwsservices}</version>
             </dependency>
         </dependencies>
-    </dependencyManagement>
-
-    <properties>
-        <wso2carbon.version.jaxwsservices>${wso2carbon.version}</wso2carbon.version.jaxwsservices>
-    </properties>
 
 </project>
 

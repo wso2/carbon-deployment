@@ -16,10 +16,11 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 
- <parent>
+    <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>carbon-deployment</artifactId>
         <relativePath>../../pom.xml</relativePath>
@@ -33,60 +34,48 @@
     <description>WSO2 Carbon Service Management</description>
     <url>http://wso2.org</url>
 
-	<modules>
-		<module>org.wso2.carbon.aarservices.stub</module>
-		<module>org.wso2.carbon.jarservices.stub</module>
-		<module>org.wso2.carbon.springservices.stub</module>
-		<module>org.wso2.carbon.repomanager.axis2.stub</module>
-		<module>org.wso2.carbon.module.mgt.stub</module>
-		<module>org.wso2.carbon.operation.mgt.stub</module>
-		<module>org.wso2.carbon.service.mgt.stub</module>
-	</modules>
+    <modules>
+        <module>org.wso2.carbon.aarservices.stub</module>
+        <module>org.wso2.carbon.jarservices.stub</module>
+        <module>org.wso2.carbon.springservices.stub</module>
+        <module>org.wso2.carbon.repomanager.axis2.stub</module>
+        <module>org.wso2.carbon.module.mgt.stub</module>
+        <module>org.wso2.carbon.operation.mgt.stub</module>
+        <module>org.wso2.carbon.service.mgt.stub</module>
+    </modules>
 
-   <dependencies>
+    <dependencies>
         <dependency>
-                <groupId>wsdl4j.wso2</groupId>
-                <artifactId>wsdl4j</artifactId>
-                <version>${wsdl4j.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.axis2.wso2</groupId>
-                <artifactId>axis2</artifactId>
-		<version>${orbit.version.axiom}</version>
-            </dependency>
-                        <dependency>
-                <groupId>org.apache.neethi.wso2</groupId>
-                <artifactId>neethi</artifactId>
-                <version>${neethi.osgi.version}</version>
-                                <exclusions>
-                                        <exclusion>
-                                                <groupId>org.apache.neethi</groupId>
-                                                <artifactId>neethi</artifactId>
-                                        </exclusion>
-                                </exclusions>
-            </dependency>
-            <!--dependency>
-                <groupId>org.apache.ws.commons.schema.wso2</groupId>
-                <artifactId>XmlSchema</artifactId>
-                <version>${xmlschema.version}</version>
-            </dependency-->
-                        <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>1.1.1</version>
-            </dependency>
-                        <dependency>
-                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-                <artifactId>axiom</artifactId>
-                <version>${axiom.wso2.version}</version>
-            </dependency>
-	    <dependency>
-	            <groupId>org.apache.axis2.wso2</groupId>
-        	    <artifactId>axis2-client</artifactId>
-            	    <version>${orbit.version.axis2}</version>
+            <groupId>wsdl4j.wso2</groupId>
+            <artifactId>wsdl4j</artifactId>
         </dependency>
-
-                </dependencies>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.neethi.wso2</groupId>
+            <artifactId>neethi</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.neethi</groupId>
+                    <artifactId>neethi</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2-client</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

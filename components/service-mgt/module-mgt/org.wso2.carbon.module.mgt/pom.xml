@@ -24,7 +24,7 @@
         <groupId>org.wso2.carbon</groupId>
         <artifactId>module-mgt</artifactId>
         <version>4.3.0-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -39,7 +39,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                
+
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -54,7 +54,7 @@
                             !org.wso2.carbon.module.mgt,
                             org.apache.neethi.*,
                             org.apache.axis2.*; version="${axis2.osgi.version.range.module-mgt}",
-			                org.apache.axiom.*; version="${axiom.osgi.version.range.module-mgt}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range.module-mgt}",
                             javax.xml.stream.*; version="1.0.1",
                             *;resolution:=optional
                         </Import-Package>
@@ -78,26 +78,18 @@
 
     </build>
 
-    <dependencies>        
+    <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.core</artifactId>
-	    <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
-	    <version>${project.version}</version>
         </dependency>
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.caching.core</artifactId>
-            <version>${project.version}</version>
-        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.core</artifactId>
-	    <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
@@ -106,12 +98,10 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-	    <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.security.mgt</artifactId>
-            <version>${previous.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.rampart.wso2</groupId>
@@ -128,27 +118,25 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-            <dependency>
-                <groupId>com.h2database.wso2</groupId>
-                <artifactId>h2-database-engine</artifactId>
-                <version>${orbit.version.h2.engine}</version>
-                <exclusions>
-                    <exclusion> 
-                        <groupId>org.eclipse.osgi</groupId>
-                        <artifactId>org.eclipse.osgi</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-			<dependency>
-				<groupId>org.apache.woden.wso2</groupId>
-				<artifactId>woden</artifactId>
-				<scope>test</scope>
-				<version>${orbit.version.woden}</version>
-			</dependency>
+        <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.osgi</groupId>
+                    <artifactId>org.eclipse.osgi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.woden.wso2</groupId>
+            <artifactId>woden</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-    
+
 </project>

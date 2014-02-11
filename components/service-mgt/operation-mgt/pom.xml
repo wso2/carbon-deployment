@@ -37,44 +37,27 @@
         <module>org.wso2.carbon.operation.mgt.ui</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.core</artifactId>
-                <version>${wso2carbon.version.operation-mgt}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.axis2.wso2</groupId>
-                <artifactId>axis2</artifactId>
-                <version>${axis2.wso2.version.operation-mgt}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.ui</artifactId>
-                <version>${wso2carbon.version.operation-mgt}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.utils</artifactId>
-                <version>${wso2carbon.version.operation-mgt}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.neethi.wso2</groupId>
-                <artifactId>neethi</artifactId>
-                <version>${neethi.osgi.version.operation-mgt}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <properties>
-        <wso2carbon.version.operation-mgt>${project.version}</wso2carbon.version.operation-mgt>
-        <axis2.wso2.version.operation-mgt>${orbit.version.axis2}</axis2.wso2.version.operation-mgt>
-        <axis2.osgi.version.range.operation-mgt>${axis2.osgi.version.range}</axis2.osgi.version.range.operation-mgt>
-        <axiom.osgi.version.range.operation-mgt>${axiom.osgi.version.range}</axiom.osgi.version.range.operation-mgt>
-        <neethi.osgi.version.range.operation-mgt>${neethi.osgi.version.range}</neethi.osgi.version.range.operation-mgt>
-        <neethi.osgi.version.operation-mgt>${neethi.osgi.version}</neethi.osgi.version.operation-mgt>
-    </properties>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.neethi.wso2</groupId>
+            <artifactId>neethi</artifactId>
+        </dependency>
+    </dependencies>
 </project>
 

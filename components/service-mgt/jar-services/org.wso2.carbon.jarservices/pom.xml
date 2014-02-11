@@ -14,58 +14,55 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
-		<groupId>org.wso2.carbon</groupId>
-		<artifactId>jar-services</artifactId>
-		<version>4.3.0-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>jar-services</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.jarservices</artifactId>
-	<packaging>bundle</packaging>
-	<name>WSO2 Carbon - JAR Services BE</name>
-	<url>http://wso2.org</url>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.jarservices</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - JAR Services BE</name>
+    <url>http://wso2.org</url>
 
-	<build>
-		<plugins>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
 
-			
-
-
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-						<Export-Package>
+                        <Export-Package>
                             org.wso2.carbon.jarservices.*,
                         </Export-Package>
-						<Import-Package>
+                        <Import-Package>
                             !org.wso2.carbon.jarservices.*,
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
                             org.apache.commons.logging.*,
                             *;resolution:=optional,
                         </Import-Package>
-					</instructions>
-				</configuration>
-			</plugin>
-		</plugins>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
 
-	</build>
+    </build>
 
-	<dependencies>
-		<dependency>
+    <dependencies>
+        <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
@@ -73,6 +70,6 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
-	</dependencies>
+    </dependencies>
 
 </project>
