@@ -122,7 +122,7 @@
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
-	    <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.service.mgt</artifactId>
                 <version>${project.version}</version>
@@ -132,7 +132,7 @@
                 <artifactId>org.wso2.carbon.service.mgt.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
-	    <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.operation.mgt</artifactId>
                 <version>${project.version}</version>
@@ -148,60 +148,60 @@
                 <version>${project.version}</version>
             </dependency>
 
-	    <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.module.mgt.server.feature</artifactId>
-	    <version>${project.version}</version>
-            <type>zip</type>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.module.mgt.server.feature</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
             </dependency>
-	   <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.module.mgt.ui.feature</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.throttle.server.feature</artifactId>
-	    <version>${previous.version}</version>
-            <type>zip</type>
-            </dependency>
-	    <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.throttle.ui.feature</artifactId>
-            <version>${previous.version}</version>
-            <type>zip</type>
-            </dependency>
-	   <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.security.mgt.ui.feature</artifactId>
-            <version>${previous.version}</version>
-            <type>zip</type>
-            </dependency>
-	   <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.caching.ui.feature</artifactId>
-            <version>${previous.version}</version>
-            <type>zip</type>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.module.mgt.ui.feature</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
             </dependency>
 
-	   <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rm.ui.feature</artifactId>
-            <version>${previous.version}</version>
-            <type>zip</type>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.throttle.server.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.throttle.ui.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.security.mgt.ui.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.caching.ui.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
             </dependency>
 
-	    <dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.rm.ui.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
+            </dependency>
+
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.policyeditor</artifactId>
-                        <version>${previous.version}</version>
+                <version>${previous.version}</version>
             </dependency>
-                <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.policyeditor.ui</artifactId>
-                    <version>${previous.version}</version>
+                <version>${previous.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -235,7 +235,7 @@
             </dependency>
 
 
-	   <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.module.mgt</artifactId>
                 <version>${project.version}</version>
@@ -255,64 +255,64 @@
                 <artifactId>json</artifactId>
                 <version>${orbit.version.json}</version>
             </dependency>
-	    <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.repomanager.axis2.server.feature</artifactId>
-	    <version>${project.version}</version>
-            <type>zip</type>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.repomanager.axis2.server.feature</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
             </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.repomanager.axis2.ui.feature</artifactId>
-	    <version>${project.version}</version>
-            <type>zip</type>
-            </dependency>
-
-	   <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.caching.server.feature</artifactId>
-            <version>${previous.version}</version>
-            <type>zip</type>
-            </dependency>
-	<dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.service.mgt.server.feature</artifactId>
-	    <version>${project.version}</version>
-            <type>zip</type>
-            </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.service.mgt.ui.feature</artifactId>
-	    <version>${project.version}</version>
-            <type>zip</type>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.repomanager.axis2.ui.feature</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
             </dependency>
 
-
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rm.server.feature</artifactId>
-            <!--version>${project.parent.version}</version-->
-            <version>${previous.version}</version>
-            <type>zip</type>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.caching.server.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.service.mgt.server.feature</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.service.mgt.ui.feature</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
             </dependency>
 
-	   <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
-            <version>${previous.version}</version>
-            <type>zip</type>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.rm.server.feature</artifactId>
+                <!--version>${project.parent.version}</version-->
+                <version>${previous.version}</version>
+                <type>zip</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
+                <version>${previous.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
-	     <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
-	    <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2</artifactId>
                 <version>${project.version}</version>
@@ -981,8 +981,8 @@
         <geronimo-jms.version>1.1.1</geronimo-jms.version>
         <geronimo-jpa.version>1.1</geronimo-jpa.version>
         <geronimo-jta.version>1.1.1</geronimo-jta.version>
-	
-	<!--json wso2-->
+
+        <!--json wso2-->
         <version.json.wso2>2.0.0.wso2v1</version.json.wso2>
 
     </properties>

@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>module-mgt-feature</artifactId>
-	<version>4.3.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,13 +32,14 @@
     <version>4.3.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Module Management Core Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the core bundles required for Back-end Module Management functionality</description>
+    <description>This feature contains the core bundles required for Back-end Module Management functionality
+    </description>
 
     <dependencies>
-	<dependency>
-	    <groupId>org.wso2.carbon</groupId>
-	    <artifactId>org.wso2.carbon.module.mgt</artifactId>
-	</dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.module.mgt</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

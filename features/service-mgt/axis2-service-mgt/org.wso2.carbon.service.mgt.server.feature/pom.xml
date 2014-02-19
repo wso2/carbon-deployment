@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>axis2-service-mgt-feature</artifactId>
-	<version>4.3.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
 
     </parent>
@@ -33,7 +33,8 @@
     <version>4.3.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Service Management Core Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the core bundles required for Back-end Service Management functionality</description>
+    <description>This feature contains the core bundles required for Back-end Service Management functionality
+    </description>
 
     <dependencies>
         <dependency>
@@ -48,27 +49,27 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.module.mgt.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.throttle.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.caching.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rm.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
     </dependencies>
 
     <build>
@@ -97,15 +98,20 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.service.mgt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.operation.mgt</bundleDef>
                             </bundles>
-                               <!--<importBundles>-->
-                                <!--<importBundleDef>org.wso2.carbon:org.wso2.carbon.reporting.common</importBundleDef>-->
+                            <!--<importBundles>-->
+                            <!--<importBundleDef>org.wso2.carbon:org.wso2.carbon.reporting.common</importBundleDef>-->
                             <!--</importBundles>-->
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.security.mgt.server:${carbon.platform.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.module.mgt.server:${carbon.platform.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.throttle.server:${carbon.platform.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.caching.server:${carbon.platform.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.security.mgt.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.module.mgt.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.throttle.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.caching.server:${carbon.platform.version}
+                                </importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.rm.server:${project.parent.version}</importFeatureDef>
                                 <!--<importFeatureDef>org.wso2.carbon.transport.mgt.server</importFeatureDef>-->
                                 <!--<importFeatureDef>org.wso2.carbon.tryit.server</importFeatureDef>-->

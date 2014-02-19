@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>axis2-service-mgt-feature</artifactId>
-	<version>4.3.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -39,12 +39,12 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.service.mgt.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.service.mgt.ui.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
     </dependencies>
 
     <build>
@@ -67,8 +67,10 @@
                                 <importFeatureDef>org.wso2.carbon.core:${carbon.platform.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.server.feature</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.ui.feature:4.2.0</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.server.feature
+                                </includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.ui.feature:4.2.0
+                                </includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>
