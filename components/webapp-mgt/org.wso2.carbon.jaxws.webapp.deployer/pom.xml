@@ -45,8 +45,8 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Import-Package>
-                            org.apache.axis2.*; version="${axis2.osgi.version.range.service-mgt}",
-                            org.apache.axiom.*; version="${axiom.osgi.version.range.service-mgt}",
+                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             org.osgi.framework.*,
                             *;resolution:=optional
                         </Import-Package>

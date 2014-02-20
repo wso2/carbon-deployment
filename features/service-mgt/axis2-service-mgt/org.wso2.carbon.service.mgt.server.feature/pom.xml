@@ -104,15 +104,15 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.security.mgt.server:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.security.mgt.server:${previous.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.module.mgt.server:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.module.mgt.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.throttle.server:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.throttle.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.caching.server:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.caching.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.rm.server:${project.parent.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.rm.server:${project.version}</importFeatureDef>
                                 <!--<importFeatureDef>org.wso2.carbon.transport.mgt.server</importFeatureDef>-->
                                 <!--<importFeatureDef>org.wso2.carbon.tryit.server</importFeatureDef>-->
                             </importFeatures>

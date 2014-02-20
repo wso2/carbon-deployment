@@ -50,8 +50,8 @@
                             org.apache.commons.fileupload.*,
                             javax.servlet.http.*;version="2.4.0",
                             org.wso2.carbon.utils.*,
-                            org.apache.axiom.*; version="${axiom.osgi.version.range.spring-services}",
-                            org.springframework.*; version="${spring.osgi.version.range.spring-services}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
+                            org.springframework.*; version="${imp.pkg.version.spring}",
                             *;resolution:=optional
                         </Import-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>

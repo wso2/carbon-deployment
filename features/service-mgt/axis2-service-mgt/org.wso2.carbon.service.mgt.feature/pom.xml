@@ -69,7 +69,7 @@
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.server.feature
                                 </includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.ui.feature:4.2.0
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.service.mgt.ui.feature:${project.version}
                                 </includedFeatureDef>
                             </includedFeatures>
                         </configuration>

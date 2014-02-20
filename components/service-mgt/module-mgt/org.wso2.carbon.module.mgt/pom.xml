@@ -53,8 +53,8 @@
                             !org.wso2.carbon.module.mgt.service,
                             !org.wso2.carbon.module.mgt,
                             org.apache.neethi.*,
-                            org.apache.axis2.*; version="${axis2.osgi.version.range.module-mgt}",
-                            org.apache.axiom.*; version="${axiom.osgi.version.range.module-mgt}",
+                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             javax.xml.stream.*; version="1.0.1",
                             *;resolution:=optional
                         </Import-Package>
