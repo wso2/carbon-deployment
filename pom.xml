@@ -499,7 +499,7 @@
             </dependency>
             <!-- end of OpenJPA dependancies-->
 
-            <!-- common dependancies -->
+            <!-- common dependencies -->
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
@@ -510,7 +510,7 @@
                 <artifactId>commons-collections</artifactId>
                 <version>${commons-collections.version}</version>
             </dependency>
-            <!-- end of common dependancies-->
+            <!-- end of common dependencies-->
 
             <dependency>
                 <groupId>org.codehaus.mojo</groupId>
@@ -518,6 +518,11 @@
                 <version>1.8</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
