@@ -21,25 +21,41 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>carbon-deployment</artifactId>
-        <relativePath>../../pom.xml</relativePath>
+        <artifactId>service-mgt-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>service-mgt-feature</artifactId>
+    <artifactId>repomanager-axis2-feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Service Hosting Feature Aggregator Module</name>
+    <name>WSO2 Carbon - Axis2 Repository Management Feature</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>axis2-repo-mgt</module>
-        <module>axis2-service-mgt</module>
-        <module>service-hosting</module>
-        <module>module-mgt</module>
+        <module>org.wso2.carbon.repomanager.axis2.feature</module>
+        <module>org.wso2.carbon.repomanager.axis2.server.feature</module>
+        <module>org.wso2.carbon.repomanager.axis2.ui.feature</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.repomanager.axis2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.repomanager.axis2.ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.repomanager.axis2.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
 

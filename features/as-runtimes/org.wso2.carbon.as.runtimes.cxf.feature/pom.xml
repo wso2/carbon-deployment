@@ -222,9 +222,9 @@
                             <id>org.wso2.carbon.as.runtimes.cxf</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.webapp.mgt.server:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.webapp.mgt.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.jaxws.webapp.mgt.server:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.jaxws.webapp.mgt.server:${project.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>

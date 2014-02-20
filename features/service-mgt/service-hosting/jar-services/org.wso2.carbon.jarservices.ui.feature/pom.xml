@@ -21,26 +21,27 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>aar-services-feature</artifactId>
+        <artifactId>jar-services-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.aarservices.ui.feature</artifactId>
+    <artifactId>org.wso2.carbon.jarservices.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <name>Axis2 Service Hosting UI Feature</name>
+    <name>Jar Service Hosting UI Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the bundles required for Front-end Axis2 Service hosting functionality
+    <description>
+        This feature contains the bundles required for Front-end Jar Service hosting functionality
     </description>
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.aarservices.ui</artifactId>
+            <artifactId>org.wso2.carbon.jarservices.ui</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
+            <artifactId>org.wso2.carbon.jarservices.stub</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -57,7 +58,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.aarservices.ui</id>
+                            <id>org.wso2.carbon.jarservices.ui</id>
                             <propertiesFile>../../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -66,11 +67,11 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.aarservices.ui</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.aarservices.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.jarservices.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.jarservices.stub</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.service.mgt.ui:${service.mgt.version}
+                                <importFeatureDef>org.wso2.carbon.service.mgt.ui:${project.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>

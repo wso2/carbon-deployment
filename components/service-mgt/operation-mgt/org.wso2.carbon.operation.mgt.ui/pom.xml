@@ -72,8 +72,8 @@
                             org.wso2.carbon.operation.mgt.ui.*,
                         </Export-Package>
                         <Import-Package>
-                            org.apache.axis2.*; version="${axis2.osgi.version.range.operation-mgt}",
-                            org.apache.axiom.*; version="${axiom.osgi.version.range.operation-mgt}",
+                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             javax.servlet;version="${imp.pkg.version.javax.servlet}",
                             javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
                             javax.servlet.jsp;version="${imp.pkg.version.javax.servlet.jsp}",
