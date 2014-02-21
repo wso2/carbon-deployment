@@ -694,6 +694,19 @@
                 <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
+
+        <dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>${libthrift.wso2.version}</version>
+        </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -905,6 +918,8 @@
 
         <!-- Rampart Version -->
         <rampart.wso2.version>1.6.1.wso2v9</rampart.wso2.version>
+
+        <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
 
         <!-- JSON Version -->
         <orbit.version.json>2.0.0.wso2v1</orbit.version.json>
