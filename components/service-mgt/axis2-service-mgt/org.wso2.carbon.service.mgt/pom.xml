@@ -125,9 +125,9 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.service.mgt,
-                            org.wso2.carbon.service.mgt.util,
-                            org.wso2.carbon.service.mgt.multitenancy
+                            org.wso2.carbon.service.mgt;version=${project.version},
+                            org.wso2.carbon.service.mgt.util;version=${project.version},
+                            org.wso2.carbon.service.mgt.multitenancy;version=${project.version}
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Require-CarbonUIComponents>${project.artifactId}.ui-${project.parent.version}

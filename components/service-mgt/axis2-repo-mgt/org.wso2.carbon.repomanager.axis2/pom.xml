@@ -48,7 +48,7 @@
                         </Bundle-SymbolicName>
                         <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
                         <Export-Package>
-                            org.wso2.carbon.repomanager.axis2.*,
+                            org.wso2.carbon.repomanager.axis2.*;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.repomanager.axis2.*,

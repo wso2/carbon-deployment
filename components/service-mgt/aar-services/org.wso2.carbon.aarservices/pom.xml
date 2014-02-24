@@ -47,7 +47,7 @@
                         </Bundle-SymbolicName>
                         <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
                         <Export-Package>
-                            org.wso2.carbon.aarservices.*,
+                            org.wso2.carbon.aarservices.*;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.aarservices.*,

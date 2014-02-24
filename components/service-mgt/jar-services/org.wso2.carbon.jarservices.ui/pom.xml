@@ -42,7 +42,7 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
                         <Export-Package>
-                            org.wso2.carbon.jarservices.ui.*,
+                            org.wso2.carbon.jarservices.ui.*;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.jarservices.ui.*,

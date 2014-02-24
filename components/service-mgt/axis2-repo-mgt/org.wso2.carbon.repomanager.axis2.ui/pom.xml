@@ -47,7 +47,7 @@
                         </Bundle-SymbolicName>
                         <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
                         <Export-Package>
-                            org.wso2.carbon.repomanager.axis2.ui.*;version="${carbon.platform.package.export.version}"
+                            org.wso2.carbon.repomanager.axis2.ui.*;version=${project.version}"
                         </Export-Package>
                         <Import-Package>
                             javax.servlet.http.*;version="${imp.pkg.version.javax.servlet}",

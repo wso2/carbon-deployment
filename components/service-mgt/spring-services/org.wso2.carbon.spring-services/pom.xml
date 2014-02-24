@@ -49,7 +49,7 @@
                         <Import-Package>
                             !org.wso2.carbon.springservices,
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
-                            org.springframework.*; version="${spring.osgi.version.range}",
+                            org.springframework.*; version="${imp.pkg.version.spring}",
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>

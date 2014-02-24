@@ -46,8 +46,8 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.module.mgt.service,
-                            org.wso2.carbon.module.mgt,
+                            org.wso2.carbon.module.mgt.service;version=${project.version},
+                            org.wso2.carbon.module.mgt;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.module.mgt.service,
