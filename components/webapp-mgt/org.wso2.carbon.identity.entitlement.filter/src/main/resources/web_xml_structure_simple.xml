@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         id="WebApp_ID" version="2.5">
+
+    <!-- Sample deployment descriptor configuration for EntitlementFilter -->
+
+    <security-constraint>
+        <display-name>Example Security Constraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Protected Area</web-resource-name>
+            <!-- Protected URL -->
+            <url-pattern>/protected.jsp</url-pattern>
+            <!-- If you list http methods, only those methods are protected -->
+            <http-method>DELETE</http-method>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>PUT</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <!-- Anyone with one of the listed roles may access this area -->
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Default login configuration uses form-based authentication -->
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <!--<auth-method>FORM</auth-method>-->
+        <realm-name>Example Form-Based Authentication Area</realm-name>
+        <form-login-config>
+            <form-login-page>/protected.jsp</form-login-page>
+        </form-login-config>
+    </login-config>
+
+    <!-- Security roles referenced by this web application -->
+    <security-role>
+        <role-name>everyone</role-name>
+    </security-role>
+    <security-role>
+        <role-name>admin</role-name>
+    </security-role>
+
+    <!-- The username to perform EntitlementService query-->
+    <context-param>
+        <param-name>remoteServiceUserName</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+
+    <!-- The password to perform EntitlementService query -->
+    <context-param>
+        <param-name>password</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+
+    <!-- The URL to perform EntitlementService query-->
+    <context-param>
+        <param-name>remoteServiceUrl</param-name>
+        <param-value>https://localhost:9443/services</param-value>
+    </context-param>
+
+    <!-- EntitlementFilter Settings -->
+    <filter>
+        <filter-name>EntitlementFilter</filter-name>
+        <filter-class>org.wso2.carbon.identity.entitlement.filter.EntitlementFilter</filter-class>
+
+        <!-- URL ro redirect to if authorization fails -->
+        <init-param>
+            <param-name>authRedirectUrl</param-name>
+            <param-value>/index.jsp</param-value>
+        </init-param>
+
+    </filter>
+
+    <!-- Filter mappings used to configure URLs that need to be authorized  -->
+    <filter-mapping>
+        <filter-name>EntitlementFilter</filter-name>
+        <url-pattern>/protected.jsp</url-pattern>
+    </filter-mapping>
+
+</web-app>

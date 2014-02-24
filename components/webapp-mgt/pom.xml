@@ -41,6 +41,7 @@
         <module>org.wso2.carbon.jaxws.webapp.deployer</module>
         <module>org.wso2.carbon.jaxws.webapp.mgt</module>
         <module>org.wso2.carbon.jaxws.webapp.mgt.ui</module>
+        <module>org.wso2.carbon.identity.entitlement.filter</module>
     </modules>
 
     <dependencies>
