@@ -46,7 +46,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.user.mgt</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -186,32 +186,32 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.throttle.server.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.throttle.ui.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.ui.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.caching.ui.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.rm.ui.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
 
@@ -228,7 +228,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -293,7 +293,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.caching.server.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -314,14 +314,14 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.rm.server.feature</artifactId>
                 <!--version>${project.parent.version}</version-->
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
-                <version>${previous.version}</version>
+                <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
