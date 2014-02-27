@@ -42,9 +42,8 @@
         <module>org.wso2.carbon.jaxws.webapp.mgt</module>
         <module>org.wso2.carbon.jaxws.webapp.mgt.ui</module>
         <module>org.wso2.carbon.identity.entitlement.filter</module>
-<!--        <module>org.wso2.carbon.bam.webapp.stat.publisher</module>
+        <module>org.wso2.carbon.bam.webapp.stat.publisher</module>
         <module>org.wso2.carbon.bam.webapp.stat.publisher.ui</module>
--->
     </modules>
 
     <dependencies>
