@@ -38,6 +38,7 @@
         <module>axis2-service-mgt</module>
         <module>service-hosting</module>
         <module>module-mgt</module>
+        <module>bam-data-agents-feature</module>
     </modules>
 
 

@@ -42,6 +42,7 @@
         <module>org.wso2.carbon.module.mgt.stub</module>
         <module>org.wso2.carbon.operation.mgt.stub</module>
         <module>org.wso2.carbon.service.mgt.stub</module>
+        <module>org.wso2.carbon.bam.service.data.publisher.stub</module>
     </modules>
 
     <dependencies>

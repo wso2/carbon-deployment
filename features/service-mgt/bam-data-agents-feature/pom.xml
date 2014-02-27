@@ -21,29 +21,22 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>carbon-deployment</artifactId>
+        <artifactId>service-mgt-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
-    <artifactId>carbon-component-deployment</artifactId>
-    <version>4.3.0-SNAPSHOT</version>
+    <artifactId>bam-service-data-agent-feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Deployment Aggregator Module</name>
+    <name>WSO2 Carbon - BAM Service Data Agent Feature Aggregator Module</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>aar-services</module>
-        <module>axis2-repo-mgt</module>
-        <module>jar-services</module>
-        <module>module-mgt</module>
-        <module>operation-mgt</module>
-        <module>axis2-service-mgt</module>
-        <module>spring-services</module>
-        <module>bam-data-agents</module>
+        <module>org.wso2.carbon.bam.service.agent.server.feature</module>
+        <module>org.wso2.carbon.bam.service.agent.ui.feature</module>
+	<module>org.wso2.carbon.bam.service.agent.feature</module>
     </modules>
 
-
 </project>
+
