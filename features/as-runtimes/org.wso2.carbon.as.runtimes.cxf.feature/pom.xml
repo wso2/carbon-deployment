@@ -224,8 +224,8 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.webapp.mgt.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.jaxws.webapp.mgt.server:${project.version}
-                                </importFeatureDef>
+                                <!--<importFeatureDef>org.wso2.carbon.jaxws.webapp.mgt.server:${project.version}
+                                </importFeatureDef>-->
                             </importFeatures>
                         </configuration>
                     </execution>
