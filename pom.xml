@@ -538,6 +538,11 @@
                 <version>${commons.lang.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.cxf.xjc-utils</groupId>
                 <artifactId>cxf-xjc-runtime</artifactId>
                 <version>${cxf.version}</version>
@@ -1120,6 +1125,7 @@
         <!--json wso2-->
         <version.json.wso2>2.0.0.wso2v1</version.json.wso2>
 
+        <javax.ws.rs-api.version>2.0-m10</javax.ws.rs-api.version>
     </properties>
 
     <repositories>
