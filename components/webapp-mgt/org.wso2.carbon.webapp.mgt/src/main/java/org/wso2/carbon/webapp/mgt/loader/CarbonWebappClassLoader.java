@@ -21,6 +21,14 @@ import org.apache.catalina.loader.WebappClassLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 /**
  * Customized WebappClassloader for Carbon. This class introduces a new classloading pattern which is based on the
  * webapp-classloading.xml file. The default behaviour is specified in the container level configuration file.
@@ -32,8 +40,14 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
     private WebappClassloadingContext webappCC;
 
+    private static List<String> systemPackages;
+
     public CarbonWebappClassLoader(ClassLoader parent) {
         super(parent);
+
+        String launchIniPath = System.getProperty("carbon.home") + File.separator + "repository" +
+                File.separator + "conf" + File.separator + "etc" + File.separator + "launch.ini";
+        readSystemPackagesList(launchIniPath);
     }
 
     public void setWebappCC(WebappClassloadingContext classloadingContext) {
@@ -176,4 +190,60 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         }
         return (clazz);
     }
+
+        @Override
+        public InputStream getResourceAsStream(String name) {
+            InputStream stream = super.getResourceAsStream(name);
+            if (stream != null) {
+                return stream;
+            } else if (name.endsWith(".class") && isSystemPackage(name)) {
+                ClassLoader loader = system;
+                stream = loader.getResourceAsStream(name);
+
+                if (stream != null) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("  --> Returning stream from system classloader");
+                    }
+                    return stream;
+                }
+            }
+
+            return null;
+        }
+
+    private boolean isSystemPackage(String resourceName) {
+        resourceName = resourceName.replace(".class", "").
+                replace("/", ".");
+        String packageName = resourceName.lastIndexOf(".") == -1 ?
+                resourceName : resourceName.substring(0, resourceName.lastIndexOf("."));
+
+        return systemPackages.contains(packageName);
+    }
+
+    private void readSystemPackagesList(String launchIniPath) {
+        Properties properties = new Properties();
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(launchIniPath);
+            properties.load(fileInputStream);
+
+            String rawSystemPackages = properties.getProperty("org.osgi.framework.system.packages");
+
+            String[] systemPackagesArray = rawSystemPackages.split("[ ]?,[ ]?");
+            this.systemPackages = Arrays.asList(systemPackagesArray);
+
+        } catch (IOException e) {
+            log.warn("Error reading system packages list from launch.ini", e);
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
+        }
+
+    }
+
 }
