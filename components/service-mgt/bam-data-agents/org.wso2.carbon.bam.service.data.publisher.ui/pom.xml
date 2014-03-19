@@ -39,36 +39,13 @@
                             javax.servlet.jsp.resources;version="${imp.pkg.version.javax.servlet.jsp}",
                             javax.servlet.jsp.tagext;version="${imp.pkg.version.javax.servlet.jsp}",
                             javax.servlet.resources;version="${imp.pkg.version.javax.servlet}",
-                            org.apache.taglibs.standard,
-                            org.apache.taglibs.standard.extra.spath,
-                            org.apache.taglibs.standard.functions,
-                            org.apache.taglibs.standard.lang.jstl,
-                            org.apache.taglibs.standard.lang.jstl.parser,
-                            org.apache.taglibs.standard.lang.jstl.test,
-                            org.apache.taglibs.standard.lang.jstl.test.beans,
-                            org.apache.taglibs.standard.lang.support,
-                            org.apache.taglibs.standard.resources,
-                            org.apache.taglibs.standard.tag.common.core,
-                            org.apache.taglibs.standard.tag.common.fmt,
-                            org.apache.taglibs.standard.tag.common.sql,
-                            org.apache.taglibs.standard.tag.common.xml,
-                            org.apache.taglibs.standard.tag.el.core,
-                            org.apache.taglibs.standard.tag.el.fmt,
-                            org.apache.taglibs.standard.tag.el.sql,
-                            org.apache.taglibs.standard.tag.el.xml,
-                            org.apache.taglibs.standard.tag.rt.core,
-                            org.apache.taglibs.standard.tag.rt.fmt,
-                            org.apache.taglibs.standard.tag.rt.sql,
-                            org.apache.taglibs.standard.tag.rt.xml,
-                            org.apache.taglibs.standard.tei,
-                            org.apache.taglibs.standard.tlv,
-                            org.eclipse.equinox.http.helper,
-                            org.eclipse.equinox.jsp.jasper,
+                            org.apache.taglibs.standard.*,
                             org.wso2.carbon.bam.service.data.publisher.stub.*;version="${carbon.platform.package.import.version.range}",
                             org.wso2.carbon.bam.service.data.publisher.stub.axis2.*;version="${carbon.platform.package.import.version.range}",
                             org.wso2.carbon.bam.service.data.publisher.stub.config.*;version="${carbon.platform.package.import.version.range}",
                             *;resolution:=optional
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                         <Fragment-Host>org.wso2.carbon.ui</Fragment-Host>
                         <Carbon-Component>UIBundle</Carbon-Component>
                     </instructions>
