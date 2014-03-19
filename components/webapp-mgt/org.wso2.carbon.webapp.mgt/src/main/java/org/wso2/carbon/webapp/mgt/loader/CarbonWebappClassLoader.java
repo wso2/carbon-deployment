@@ -94,7 +94,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         // (0.2) Try loading the class with the system class loader, to prevent
         //       the webapp from overriding J2SE classes
         try {
-            clazz = system.loadClass(name);
+            clazz = j2seClassLoader.loadClass(name);
             if (clazz != null) {
                 if (resolve)
                     resolveClass(clazz);
@@ -158,7 +158,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             log.debug("  Delegating to parent classloader1 " + parent);
         ClassLoader loader = parent;
         if (loader == null)
-            loader = system;
+            loader = j2seClassLoader;
         try {
             clazz = Class.forName(name, false, loader);
             if (clazz != null) {
@@ -197,7 +197,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             if (stream != null) {
                 return stream;
             } else if (name.endsWith(".class") && isSystemPackage(name)) {
-                ClassLoader loader = system;
+                ClassLoader loader = j2seClassLoader;
                 stream = loader.getResourceAsStream(name);
 
                 if (stream != null) {
