@@ -99,13 +99,7 @@ public class PublisherUtil {
     }
 
     public static int getTenantId(MessageContext msgContext) {
-
-        int tenantID = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
-        if (tenantID == MultitenantConstants.INVALID_TENANT_ID) {
-            AxisConfiguration axisConfiguration = msgContext.getConfigurationContext().getAxisConfiguration();
-            tenantID = PrivilegedCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
-        }
-        return tenantID;
+        return PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
     }
 
      public static ArrayList<String> getReceiverGroups(String urls) {

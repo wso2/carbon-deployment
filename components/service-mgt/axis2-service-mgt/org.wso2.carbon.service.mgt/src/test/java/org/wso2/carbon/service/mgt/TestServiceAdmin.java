@@ -109,9 +109,9 @@ public class TestServiceAdmin extends BaseTestCase {
 
 
         handleNewModuleAddition(newModule, newModule.getName(), newModule.getVersion().toString());
-        PrivilegedCarbonContext.getCurrentContext(axisConfig).setRegistry(
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setRegistry(
                 RegistryType.SYSTEM_CONFIGURATION, configRegistry);
-        PrivilegedCarbonContext.getCurrentContext(axisConfig).setRegistry(
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setRegistry(
                 RegistryType.SYSTEM_CONFIGURATION, governanceRegistry);
             
         // The following line of code is kept for backward compatibility. Remove this once we

@@ -77,9 +77,9 @@ public class TestModuleAdminService extends BaseTestCase {
                     .createConfigurationContextFromFileSystem(REPO_PATH);
             axisConfig = configContext.getAxisConfiguration();
 
-            PrivilegedCarbonContext.getCurrentContext(axisConfig).setRegistry(
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setRegistry(
                     RegistryType.SYSTEM_CONFIGURATION, registry);
-            PrivilegedCarbonContext.getCurrentContext(axisConfig).setRegistry(
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setRegistry(
                     RegistryType.SYSTEM_CONFIGURATION, governanceRegistry);
 
             // The following line of code is kept for backward compatibility. Remove this once we

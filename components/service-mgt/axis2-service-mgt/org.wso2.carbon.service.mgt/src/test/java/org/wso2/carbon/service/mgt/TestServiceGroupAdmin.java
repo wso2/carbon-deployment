@@ -60,9 +60,9 @@ public class TestServiceGroupAdmin extends BaseTestCase {
         axisCon = confContext.getAxisConfiguration();
         axisCon.setRepository(new URL("file://"+new File(repoPath).getAbsolutePath()));
         createAnAxisService();
-        PrivilegedCarbonContext.getCurrentContext(axisCon).setRegistry(
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setRegistry(
                 RegistryType.SYSTEM_CONFIGURATION, configRegistry);
-        PrivilegedCarbonContext.getCurrentContext(axisCon).setRegistry(
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setRegistry(
                 RegistryType.SYSTEM_CONFIGURATION, governanceRegistry);
             
         // The following line of code is kept for backward compatibility. Remove this once we
