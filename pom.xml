@@ -197,6 +197,11 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.tomcat.wso2</groupId>
+                <artifactId>tomcat</artifactId>
+                <version>${orbit.version.tomcat}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -983,6 +988,9 @@
         </carbon.platform.package.export.version>
         <carbon.platform.package.import.version.range>[4.3.0.SNAPSHOT, 4.4.0)
         </carbon.platform.package.import.version.range>
+
+        <version.tomcat>7.0.52</version.tomcat>
+        <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>
 
         <!-- Stratos Version -->
         <stratos.version>2.3.0-SNAPSHOT</stratos.version>
