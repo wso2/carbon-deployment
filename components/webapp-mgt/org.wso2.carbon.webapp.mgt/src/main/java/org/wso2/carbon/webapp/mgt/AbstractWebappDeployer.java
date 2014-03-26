@@ -52,7 +52,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             log.warn("Could not create directory " + webappsDirFile.getAbsolutePath());
         }
         PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.
-                getCurrentContext(configCtx);
+                getThreadLocalCarbonContext();
         int tenantId = privilegedCarbonContext.getTenantId();
         String tenantDomain = privilegedCarbonContext.getTenantDomain();
         String webContextPrefix = (tenantDomain != null && !MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ?

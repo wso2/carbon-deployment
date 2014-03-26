@@ -888,8 +888,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         String fileName = null;
         for (Iterator<AxisService> serviceIter = asGroup.getServices(); serviceIter.hasNext(); ) {
             PrivilegedCarbonContext privilegedCarbonContext =
-                    PrivilegedCarbonContext.getCurrentContext();
-            PrivilegedCarbonContext.startTenantFlow();
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//            PrivilegedCarbonContext.startTenantFlow();
             AxisService axisService = serviceIter.next();
             URL fn = axisService.getFileName();
             if (fn != null) {
@@ -927,11 +927,11 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
            }
 
-            PrivilegedCarbonContext.endTenantFlow();
+//            PrivilegedCarbonContext.endTenantFlow();
 
             // If service was deployed by CApp we need to manualy undeploy the service when deleting service group
             // since the artifact is not inside hot deployment directory
-            if (fileName.contains("carbonapps")) {
+            if (fileName != null && fileName.contains("carbonapps")) {
                 // if its a proxy deployed using CApp it can be removed form above check
                 if (axisConfig.getService(axisService.getName()) != null){
                     axisConfig.removeService(axisService.getName());

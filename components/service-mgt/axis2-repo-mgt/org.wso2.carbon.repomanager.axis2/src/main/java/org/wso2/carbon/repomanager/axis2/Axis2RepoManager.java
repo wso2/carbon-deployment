@@ -270,7 +270,7 @@ public class Axis2RepoManager extends AbstractAdmin {
      * reload request fails
      */
     public boolean restartAxis2Server() throws AxisFault {
-        if (CarbonContext.getCurrentContext().getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
+        if (CarbonContext.getThreadLocalCarbonContext().getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // If a super tenant initiates a reload repo, it is equivalent to a restart server request
             try {
                 new ServerAdmin().restart();

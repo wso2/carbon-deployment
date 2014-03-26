@@ -355,6 +355,7 @@ public class WebApplication {
     }
 
     private void lazyUnload(Context context) throws CarbonException {
+        if(DataHolder.getCarbonTomcatService() != null){
         Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
         try {
             if (context.getAvailable()) {
@@ -376,6 +377,7 @@ public class WebApplication {
             }
         } catch (Exception e) {
             throw new CarbonException("Cannot lazy unload webapp " + this.context, e);
+        }
         }
     }
 

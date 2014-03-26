@@ -67,22 +67,17 @@ public class WebappUnloader implements ArtifactUnloader {
     }
 
     private void unloadInactiveWebapps(ConfigurationContext configCtx,
-                                       String
-
-                                               tenantDomain) {
+                                       String tenantDomain) {
         WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
                 configCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
-        int tenantId = MultitenantUtils.getTenantId(configCtx);
 
         try {
             PrivilegedCarbonContext.startTenantFlow();
             PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
-                ctx.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-                ctx.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
+                ctx.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, true);
             } else {
-                ctx.setTenantId(tenantId);
-                ctx.setTenantDomain(tenantDomain);
+                ctx.setTenantDomain(tenantDomain, true);
             }
 
             if (webApplicationsHolder != null) {

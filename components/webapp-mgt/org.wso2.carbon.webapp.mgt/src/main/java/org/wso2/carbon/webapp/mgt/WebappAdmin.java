@@ -952,7 +952,7 @@ public class WebappAdmin extends AbstractAdmin {
 
     public void changeDefaultAppVersion(String appGroupName, String fileName) throws AxisFault, ArtifactMetadataException {
         String appGroup = "";
-        String tenantDomain = CarbonContext.getCurrentContext().getTenantDomain();
+        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
         if(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)){
             appGroup = appGroupName.replace("/", "");
         } else{
