@@ -21,13 +21,13 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>carbon-component-deployment</artifactId>
+        <artifactId>service-mgt</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>service-mgt</artifactId>
+    <artifactId>axis2-service-mgt</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Service Management Aggregator Module</name>
     <description>A custom wso2 products or solution</description>
