@@ -573,6 +573,16 @@
                 <version>${cxf.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-api</artifactId>
+                <version>${cxf.bundle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.bundle.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
                 <version>${ehcache.core.version}</version>
@@ -699,9 +709,9 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.webapp.ext</groupId>
-                <artifactId>carbon-cxf</artifactId>
-                <version>${carbon.cxf.webapp.ext}</version>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cxf.ext</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
 
