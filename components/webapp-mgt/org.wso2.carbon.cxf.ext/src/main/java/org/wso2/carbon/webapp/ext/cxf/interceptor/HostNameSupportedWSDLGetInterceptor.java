@@ -84,8 +84,13 @@ public class HostNameSupportedWSDLGetInterceptor extends WSDLGetInterceptor {
         }
         String part = locationAttr.substring(locationAttr.indexOf("://") + 3);
         int idx = part.indexOf(":");
-        String host = part.substring(0, idx);
-        String port = part.substring(idx, part.indexOf("/"));
+        String host;
+        if (idx != -1) {
+        	host = part.substring(0, idx);
+        	String port = part.substring(idx, part.indexOf("/"));
+        } else {
+        	host = part.substring(0, part.indexOf("/"));
+        } 
         String location = locationAttr.replace(host, hostName);
 //        location = location.replace(port, "");
         return location;
