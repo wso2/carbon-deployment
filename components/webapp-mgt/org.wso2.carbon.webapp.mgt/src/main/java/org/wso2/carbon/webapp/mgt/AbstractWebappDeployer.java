@@ -181,11 +181,17 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         File warFile = null;
         if(fileName.endsWith(".war")){
             warFile = new File(fileName);
-            if(!warFile.exists()){
-                handleUndeployment(fileName,warFile);
-            }else{
-                handleUndeployment(fileName,warFile);
-                handleRedeployment(warFile);
+            // Since CApp extracted artifact is not in hot deployemnt directory the file will available in the
+            // extracted location though it need to me undeployed
+            if (fileName.contains("carbonapps")) {
+                handleUndeployment(fileName, warFile);
+            } else {
+                if (!warFile.exists()) {
+                    handleUndeployment(fileName, warFile);
+                } else {
+                    handleUndeployment(fileName, warFile);
+                    handleRedeployment(warFile);
+                }
             }
         }else{
             warFile = new File(fileName.concat(".war"));
