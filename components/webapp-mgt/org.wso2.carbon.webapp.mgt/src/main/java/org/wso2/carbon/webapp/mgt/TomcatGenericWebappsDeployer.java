@@ -108,11 +108,28 @@ public class TomcatGenericWebappsDeployer {
         long lastModifiedTime = webappFile.lastModified();
         WebApplication deployedWebapp =
                 webappsHolder.getStartedWebapps().get(webappFile.getName());
+
+        WebApplication deployedUnpackedWebapp = null;
+        if(deployedWebapp == null && (webappName.contains(".war") || webappName.contains(".zip"))){
+            String unpackDirName = webappName.endsWith(".war") ? webappName.replace(".war", "") : webappName;
+            unpackDirName = webappName.endsWith(".zip") ? unpackDirName.replace(".zip", "") : unpackDirName;
+            deployedUnpackedWebapp = webappsHolder.getStartedWebapps().get(unpackDirName);
+        }
+
         WebApplication undeployedWebapp =
                 webappsHolder.getStoppedWebapps().get(webappFile.getName());
         WebApplication faultyWebapp =
                 webappsHolder.getFaultyWebapps().get(webappFile.getName());
-        if (deployedWebapp == null && faultyWebapp == null && undeployedWebapp == null) {
+
+        WebApplication faultyUnpackedWebapp = null;
+        if (deployedWebapp == null && (webappName.contains(".war") || webappName.contains(".zip"))) {
+            String unpackDirName = webappName.endsWith(".war") ? webappName.replace(".war", "") : webappName;
+            unpackDirName = webappName.endsWith(".zip") ? unpackDirName.replace(".zip", "") : unpackDirName;
+            faultyUnpackedWebapp = webappsHolder.getFaultyWebapps().get(unpackDirName);
+        }
+
+        if (deployedWebapp == null && faultyWebapp == null && undeployedWebapp == null
+                && deployedUnpackedWebapp == null && faultyUnpackedWebapp == null) {
             handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
         } else if (deployedWebapp != null &&
                    deployedWebapp.getLastModifiedTime() != lastModifiedTime) {
@@ -120,6 +137,16 @@ public class TomcatGenericWebappsDeployer {
         } else if (faultyWebapp != null &&
                    faultyWebapp.getLastModifiedTime() != lastModifiedTime) {
             handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
+        } else if (deployedUnpackedWebapp != null &&
+                deployedUnpackedWebapp.getLastModifiedTime() != lastModifiedTime) {
+            undeploy(deployedUnpackedWebapp.getWebappFile());
+            deployedUnpackedWebapp.delete();
+            handleWarWebappDeployment(webappFile, webContextParams, applicationEventListeners);
+        } else if (faultyUnpackedWebapp != null &&
+                faultyUnpackedWebapp.getLastModifiedTime() != lastModifiedTime) {
+            clearFaultyWebapp(faultyUnpackedWebapp.getWebappFile().getName());
+            handleWarWebappDeployment(webappFile, webContextParams, applicationEventListeners);
+
         }
     }
 
@@ -344,6 +371,7 @@ public class TomcatGenericWebappsDeployer {
     public void undeploy(File webappFile) throws CarbonException {
         Map<String, WebApplication> deployedWebapps = webappsHolder.getStartedWebapps();
         Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
+        Map<String, WebApplication> faultyWebapps = webappsHolder.getFaultyWebapps();
         String fileName = webappFile.getName();
 
         removeMetadata(fileName);
@@ -361,6 +389,10 @@ public class TomcatGenericWebappsDeployer {
         //also checking the stopped webapps.
         else if (stoppedWebapps.containsKey(fileName)) {
             undeploy(stoppedWebapps.get(fileName));
+        }
+
+        else if (faultyWebapps.containsKey(fileName)) {
+            undeploy(faultyWebapps.get(fileName));
         }
 
         clearFaultyWebapp(fileName);

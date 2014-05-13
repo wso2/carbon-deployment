@@ -399,22 +399,14 @@ public class WebApplication {
         if (webappFile.getAbsolutePath().endsWith(".war")) {
             String filePath = webappFile.getAbsolutePath();
             webappDir = new File(filePath.substring(0, filePath.lastIndexOf('.')));
-            warFile = webappFile;
         } else {
             webappDir = webappFile;
-            warFile = new File(webappFile.getAbsolutePath().concat(".war"));
         }
         // Delete the exploded dir of war based webapps upon undeploy. But omit deleting
-        // Delete the exploded dir of war based webapps upon undeploy. But omit deleting
         // directory based webapps.
-        //Also delete .war file upon deletion of the relevant exploded dir
         if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !webappFile.isDirectory() &&
                 !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
-        }
-        if (TomcatUtil.checkUnpackWars() && webappFile.isDirectory() && warFile.exists() &&
-                 !FileManipulator.deleteDir(warFile)) {
-            throw new CarbonException("Webapp file " + warFile + " deletion failed");
         }
 
     }
