@@ -371,6 +371,7 @@ public class TomcatGenericWebappsDeployer {
     public void undeploy(File webappFile) throws CarbonException {
         Map<String, WebApplication> deployedWebapps = webappsHolder.getStartedWebapps();
         Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
+        Map<String, WebApplication> faultyWebapps = webappsHolder.getFaultyWebapps();
         String fileName = webappFile.getName();
 
         removeMetadata(fileName);
@@ -388,6 +389,10 @@ public class TomcatGenericWebappsDeployer {
         //also checking the stopped webapps.
         else if (stoppedWebapps.containsKey(fileName)) {
             undeploy(stoppedWebapps.get(fileName));
+        }
+
+        else if (faultyWebapps.containsKey(fileName)) {
+            undeploy(faultyWebapps.get(fileName));
         }
 
         clearFaultyWebapp(fileName);
