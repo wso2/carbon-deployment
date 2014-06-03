@@ -394,14 +394,14 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             String base = path.substring(0, path.lastIndexOf(File.separator));
             int index = base.lastIndexOf(File.separator) + 1;
             String baseName = base.substring(index);
-            if (base != null && !"webapps".equals(baseName)) {
-                // .WAR file is not directly under "webapps" dir hence ignore.
+            if (base != null && !webappsDir.equals(baseName)) {
+                // .WAR file is not directly under $webappsDir dir hence ignore.
                 return true;
             } else {
-                // make sure .WAR file is not under a webapp called as "webapps"
+                // make sure .WAR file is not under a webapp called as $webappsDir
                 String preBase = base.substring(0, index - 1);
                 String preBaseName = preBase.substring(preBase.lastIndexOf(File.separator) + 1);
-                if (preBaseName != null && "webapps".equals(preBaseName)) {
+                if (preBaseName != null && webappsDir.equals(preBaseName)) {
                     return true;
                 }
             }

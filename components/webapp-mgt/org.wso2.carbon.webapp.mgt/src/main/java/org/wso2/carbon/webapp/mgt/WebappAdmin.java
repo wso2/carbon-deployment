@@ -858,10 +858,11 @@ public class WebappAdmin extends AbstractAdmin {
         } else {
             if(WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP.equalsIgnoreCase(webappType)) {
                 webappDeploymentDir = WebappsConstants.JAGGERY_WEBAPP_REPO;
+                return getAxisConfig().getRepository().getPath() + webappDeploymentDir + File.separator + fileName;
             } else {
-                webappDeploymentDir = WebappsConstants.WEBAPP_DEPLOYMENT_FOLDER;
+                webappDeploymentDir = WebappsConstants.WEBAPP_DEPLOYMENT_FOLDER; //TODO this returns the "webapps" folder
+                return webappFile.getAbsolutePath();
             }
-            return getAxisConfig().getRepository().getPath() + File.separator + webappDeploymentDir + File.separator + fileName;
         }
     }
 
