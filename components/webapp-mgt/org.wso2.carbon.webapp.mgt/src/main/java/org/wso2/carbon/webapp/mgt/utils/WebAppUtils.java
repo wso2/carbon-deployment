@@ -1,9 +1,13 @@
 package org.wso2.carbon.webapp.mgt.utils;
 
 import org.apache.catalina.Container;
+import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardWrapper;
+import org.wso2.carbon.tomcat.api.CarbonTomcatService;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,5 +37,31 @@ public class WebAppUtils {
         Matcher matcher = pattern.matcher(filename);
         boolean isMatch = matcher.matches();
         return isMatch;
+    }
+
+    public static String getWebappsBaseDir(String webappFilePath){
+        String baseDir = webappFilePath.substring(0,webappFilePath.lastIndexOf(File.separator));
+        return baseDir;
+    }
+    public static String getMatchingHostname(String filePath){
+        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+        Container[] childHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
+        for(Container host:childHosts){
+            Host vhost = (Host)host;
+            String appBase = vhost.getAppBase();
+            if(appBase.endsWith(File.separator)){
+                appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
+            }
+            if(appBase.equals(filePath)){
+                return vhost.getName();
+            }
+        }
+        return "";
+    }
+
+    public static String getWebappKey(File webappFile){
+        String baseDir = getWebappsBaseDir(webappFile.getAbsolutePath());
+        String hostname = getMatchingHostname(baseDir);
+        return hostname+":"+webappFile.getName();
     }
 }

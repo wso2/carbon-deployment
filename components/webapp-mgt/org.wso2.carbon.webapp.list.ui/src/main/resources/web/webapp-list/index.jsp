@@ -488,13 +488,15 @@
 <%
     int position = 0;
     String urlPrefix = null;
+    String urlSuffix = null;
+    String url = null;
 
     if(webappsWrapper.getHttpPort() != 0) {
-        urlPrefix = "http://" + webappsWrapper.getHostName() + ":" +
-                webappsWrapper.getHttpPort();
+        urlPrefix = "http://";
+        urlSuffix = ":" + webappsWrapper.getHttpPort();
     } else {
-        urlPrefix = "https://" + webappsWrapper.getHostName() + ":" +
-                webappsWrapper.getHttpsPort();
+        urlPrefix = "https://";
+        urlSuffix = ":" + webappsWrapper.getHttpsPort();
     }
 
     for (VersionedWebappMetadata webapp : webapps) {
@@ -512,7 +514,15 @@
                 version = "default";
             }*/
 
-            String webappURL = urlPrefix + vWebapp.getContext();
+            String hostName = null;
+            if(vWebapp.getHostName().length() !=0){
+                  url =  urlPrefix + vWebapp.getHostName() + urlSuffix;
+                  hostName = vWebapp.getHostName();
+            }else{
+                  url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
+                  hostName = webappsWrapper.getHostName();
+            }
+            String webappURL = url + vWebapp.getContext();
             if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
                 webappURL += vWebapp.getServletContext() + vWebapp.getServiceListPath();
             } else {
@@ -539,7 +549,7 @@
     <td <%= rowspanHtmlAtt %> >
            <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
               URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
-              webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
+              hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
               <%=vWebapp.getContext()%>
            </a>
     </td>
@@ -552,7 +562,7 @@
         <% } else { %>
         <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
                     URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
-                     webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
+                     hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
             <%= version %>
         </a>
         <% } %>

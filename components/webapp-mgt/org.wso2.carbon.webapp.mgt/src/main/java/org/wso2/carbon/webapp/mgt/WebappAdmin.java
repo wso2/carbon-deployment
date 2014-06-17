@@ -167,6 +167,8 @@ public class WebappAdmin extends AbstractAdmin {
 
         webappMetadata.setDisplayName(webApplication.getDisplayName());
         webappMetadata.setContext(webApplication.getContextName());
+        webappMetadata.setHostName(webApplication.getHostName());
+        webappMetadata.setWebappKey(WebAppUtils.getWebappKey(webApplication.getWebappFile()));
         webappMetadata.setServletContext(appContext);
         webappMetadata.setLastModifiedTime(webApplication.getLastModifiedTime());
         webappMetadata.setWebappFile(webApplication.getWebappFile().getName());
@@ -311,6 +313,8 @@ public class WebappAdmin extends AbstractAdmin {
             }
             WebappMetadata webappMetadata = new WebappMetadata();
             webappMetadata.setContext(webapp.getContextName());
+            webappMetadata.setHostName(webapp.getHostName());
+            webappMetadata.setWebappKey(WebAppUtils.getWebappKey(webapp.getWebappFile()));
             webappMetadata.setLastModifiedTime(webapp.getLastModifiedTime());
             webappMetadata.setWebappFile(webapp.getWebappFile().getName());
             webappMetadata.setStarted(false); //TODO
@@ -1043,6 +1047,5 @@ public class WebappAdmin extends AbstractAdmin {
                 Boolean.parseBoolean(System.getProperty(WebappsConstants.WEB_APP_DEFAULT_VERSION_SUPPORT)) :
                 defaultVersionManagement;
     }
-
 
 }

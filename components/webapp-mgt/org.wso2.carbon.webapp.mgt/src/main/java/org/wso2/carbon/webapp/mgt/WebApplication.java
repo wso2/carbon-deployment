@@ -16,13 +16,7 @@
 package org.wso2.carbon.webapp.mgt;
 
 import org.apache.axis2.AxisFault;
-import org.apache.catalina.Container;
-import org.apache.catalina.Context;
-import org.apache.catalina.Engine;
-import org.apache.catalina.Host;
-import org.apache.catalina.LifecycleState;
-import org.apache.catalina.Manager;
-import org.apache.catalina.Session;
+import org.apache.catalina.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
@@ -31,6 +25,7 @@ import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import javax.servlet.ServletRegistration;
 import java.io.File;
@@ -61,6 +56,7 @@ public class WebApplication {
     private Map<String, Object> properties = new HashMap<String, Object>();
     private TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer;
     private String version;
+    private String hostName;
 
     // We need this variable to use in the Statistics inner class which is static
     private boolean isThisGhost = false;
@@ -68,6 +64,7 @@ public class WebApplication {
     public WebApplication(TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer, Context context, File webappFile) {
         this.tomcatGenericWebappsDeployer = tomcatGenericWebappsDeployer;
         this.context = context;
+        this.hostName = WebAppUtils.getMatchingHostname(WebAppUtils.getWebappsBaseDir(webappFile.getAbsolutePath()));
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
 
@@ -642,6 +639,14 @@ public class WebApplication {
         this.version = version;
     }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
     /**
      * Represents statistics corresponding to this webapp
      */
@@ -747,4 +752,9 @@ public class WebApplication {
     public void setIsGhostWebapp(boolean isThisGhost) {
         this.isThisGhost = isThisGhost;
     }
+
+    private String getWebappKey(){
+        return hostName+":"+webappFile.getName();
+    }
 }
+

@@ -48,6 +48,7 @@
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
     String webappType = request.getParameter("webappType");
+    String defaultHostName = request.getParameter("defaultHostName");
 
     WebAppDataExtractor webAppDataExtractor =new WebAppDataExtractor();
     List wsdlURLS=null;
@@ -57,6 +58,7 @@
     String servletContext = "/";
 
     String urlPrefix = "http://" + hostName + ":" + httpPort;
+    String defaultPrefix = "http://" + defaultHostName + ":" + httpPort;
 
     if (webappState == null) {
         webappState = "started";
@@ -671,7 +673,7 @@
                                 System.out.println(wadlURLS.get(i).toString().substring(0,wadlURLS.get(i).toString().indexOf("services")));
                                 System.out.println(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + " : "+ request.getContextPath());*/
                             %>
-                                <a href="<%=urlPrefix%>/services?wadltryit&resourceurl=<%=URLEncoder.encode(wadlURLS.get(i).toString().replace("?_wadl", ""), "UTF-8")%>" class="icon-link" style="background-image:url(images/tryit.gif);" target="_blank">  Try this </a>
+                                <a href="<%=defaultPrefix%>/services?wadltryit&resourceurl=<%=URLEncoder.encode(wadlURLS.get(i).toString().replace("?_wadl", ""), "UTF-8")%>" class="icon-link" style="background-image:url(images/tryit.gif);" target="_blank">  Try this </a>
                             </td>
                         </tr>
                         <tr>

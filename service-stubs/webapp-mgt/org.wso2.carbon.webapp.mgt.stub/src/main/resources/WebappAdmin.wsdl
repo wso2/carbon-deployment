@@ -313,6 +313,7 @@
                     <xs:element minOccurs="0" name="displayName" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="faultException" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="faulty" type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="lastModifiedTime" type="xs:long"></xs:element>
                     <xs:element minOccurs="0" name="running" type="xs:boolean"></xs:element>
                     <xs:element minOccurs="0" name="serviceListPath" nillable="true" type="xs:string"></xs:element>
@@ -321,6 +322,7 @@
                     <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="statistics" nillable="true" type="ax2425:WebappStatistics"></xs:element>
                     <xs:element minOccurs="0" name="webappFile" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="webappType" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
