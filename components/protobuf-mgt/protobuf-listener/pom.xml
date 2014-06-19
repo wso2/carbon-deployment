@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>protobuf-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+ 
+  <artifactId>protobuf-listener</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <name>WSO2 Carbon - Protocol Buffer Service Listener</name>
+  <url>http://wso2.org</url>
+  
+  <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>protobuf-annotation</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>protobuf-registry</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+
+                        <!-- <Bundle-Activator>org.wso2.carbon.as.protobuf.listener.Activator</Bundle-Activator>-->
+                        <Private-Package>
+                        </Private-Package>
+                        <Import-Package>
+                            *
+                        </Import-Package>
+                        <Export-Package>
+                            org.wso2.carbon.as.protobuf.listener.*
+                        </Export-Package>
+
+                        <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"
+                        </Require-Capability>
+                        <Provide-Capability>osgi.serviceloader;
+                            osgi.serviceloader=javax.servlet.ServletContainerInitializer
+                        </Provide-Capability>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
