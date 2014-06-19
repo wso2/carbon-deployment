@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * 
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -60,15 +60,17 @@ import com.googlecode.protobuf.pro.duplex.timeout.TimeoutExecutor;
 import com.googlecode.protobuf.pro.duplex.util.RenamingThreadFactoryProxy;
 
 /*
- * This class starts an RPC Client which makes a TCP connection to 
- * the Binary Services Server that is running on WSO2 Application Server 
+ * This class starts an RPC Client which makes a TCP connection to
+ * the Binary Services Server that is running on WSO2 Application Server
  * and keeps the connection alive until bundle is shut down.
  * 
- * It reads configuration information such as server name, server port, thread pool sizes etc,
- * from pbs xml which should be placed inside repository/config/etc directory of WSO2 ESB.
+ * It reads configuration information such as server name, server port, thread
+ * pool sizes etc,
+ * from pbs xml which should be placed inside repository/config/etc directory of
+ * WSO2 ESB.
  * 
- * If WSO2 AS is not running when starting WSO2 ESB, RPC Client will not be started up.
- * 
+ * If WSO2 AS is not running when starting WSO2 ESB, RPC Client will not be
+ * started up.
  */
 public class Activator implements BundleActivator {
 
@@ -81,35 +83,31 @@ public class Activator implements BundleActivator {
 
 		log.info("Starting Binary Service ESB Client...");
 
-		//load configuration information from pbs xml
+		// load configuration information from pbs xml
 		ProtobufClientConfig clientConfig = new ProtobufClientConfig();
 
-		//if start up failed due to some errors in pbs xml
+		// if start up failed due to some errors in pbs xml
 		if (clientConfig.isStartUpFailed()) {
 			log.info("PBS Client StartUp Failed...");
 			return;
 		}
 
-		//if Binary Service ESB Client is not enabled in pbs xml
+		// if Binary Service ESB Client is not enabled in pbs xml
 		if (!clientConfig.isEnablePbs()) {
 			log.debug("Binary Services ESB Client is not enabled");
 			return;
 		}
 
-		//client information
-		PeerInfo client =
-		                  new PeerInfo(clientConfig.getClientHostName(),
-		                               clientConfig.getClientPort());
-		//server information
-		PeerInfo server =
-		                  new PeerInfo(clientConfig.getServerHostName(),
-		                               clientConfig.getServerPort());
+		// client information
+		PeerInfo client = new PeerInfo(clientConfig.getClientHostName(), clientConfig.getClientPort());
+		// server information
+		PeerInfo server = new PeerInfo(clientConfig.getServerHostName(), clientConfig.getServerPort());
 
-		//It works with netty to construct TCP Channel
+		// It works with netty to construct TCP Channel
 		DuplexTcpClientPipelineFactory clientFactory = new DuplexTcpClientPipelineFactory();
 		clientFactory.setClientInfo(client);
 
-		//if SSL encryption is enabled
+		// if SSL encryption is enabled
 		if (clientConfig.isEnableSSL()) {
 			RpcSSLContext sslCtx = new RpcSSLContext();
 			sslCtx.setKeystorePassword(clientConfig.getKeystorePassword());
@@ -127,13 +125,10 @@ public class Activator implements BundleActivator {
 			clientFactory.setSslContext(sslCtx);
 		}
 
-		//client will terminate after waiting this much of time
+		// client will terminate after waiting this much of time
 		clientFactory.setConnectResponseTimeoutMillis(10000);
 
-		RpcTimeoutExecutor timeoutExecutor =
-		                                     new TimeoutExecutor(
-		                                                         clientConfig.getTimeoutExecutorCorePoolSize(),
-		                                                         clientConfig.getTimeoutExecutorMaxPoolSize());
+		RpcTimeoutExecutor timeoutExecutor = new TimeoutExecutor(clientConfig.getTimeoutExecutorCorePoolSize(), clientConfig.getTimeoutExecutorMaxPoolSize());
 		RpcTimeoutChecker checker = new TimeoutChecker();
 		checker.setTimeoutExecutor(timeoutExecutor);
 		checker.startChecking(clientFactory.getRpcClientRegistry());
@@ -165,15 +160,10 @@ public class Activator implements BundleActivator {
 		rpcEventNotifier.setEventListener(listener);
 		clientFactory.registerConnectionEventListener(rpcEventNotifier);
 
-		//creates netty bootstrap
+		// creates netty bootstrap
 		Bootstrap bootstrap = new Bootstrap();
 
-		EventLoopGroup workers =
-		                         new NioEventLoopGroup(
-		                                               clientConfig.getChannelHandlersPoolSize(),
-		                                               new RenamingThreadFactoryProxy(
-		                                                                              "workers",
-		                                                                              Executors.defaultThreadFactory()));
+		EventLoopGroup workers = new NioEventLoopGroup(clientConfig.getChannelHandlersPoolSize(), new RenamingThreadFactoryProxy("workers", Executors.defaultThreadFactory()));
 
 		bootstrap.group(workers);
 		bootstrap.handler(clientFactory);
@@ -183,23 +173,23 @@ public class Activator implements BundleActivator {
 		bootstrap.option(ChannelOption.SO_SNDBUF, clientConfig.getChannelHandlersSendBufferSize());
 		bootstrap.option(ChannelOption.SO_RCVBUF, clientConfig.getChannelHandlersRecieveBufferSize());
 
-		//to shut down the channel gracefully
+		// to shut down the channel gracefully
 		CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
 		shutdownHandler.addResource(checker);
 		shutdownHandler.addResource(timeoutExecutor);
 		shutdownHandler.addResource(bootstrap.group());
 
 		try {
-			//connect with server
+			// connect with server
 			channel = clientFactory.peerWith(server, bootstrap);
 			controller = channel.newRpcController();
-			
+
 			// Register Binary Service Client as an OSGi service
 			BinaryServiceClient binaryServiceClient = new BinaryServiceClient(channel, controller);
 			bundleContext.registerService(BinaryServiceClient.class.getName(), binaryServiceClient, null);
-			
+
 		} catch (IOException e) {
-			//can happen if Address is already in use and so on
+			// can happen if Address is already in use and so on
 			String msg = "IOException " + e.getLocalizedMessage();
 			log.error(msg);
 		}
@@ -207,7 +197,7 @@ public class Activator implements BundleActivator {
 	}
 
 	public void stop(BundleContext bundleContext) {
-		//shut down the channel
+		// shut down the channel
 		channel.close();
 		log.info("RPC Client Shutting Down...");
 	}

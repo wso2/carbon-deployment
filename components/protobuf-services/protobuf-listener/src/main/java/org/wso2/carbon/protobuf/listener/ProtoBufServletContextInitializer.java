@@ -67,13 +67,13 @@ public class ProtoBufServletContextInitializer implements ServletContainerInitia
 		ServletRegistration.Dynamic dynamic = servletContext.addServlet("ProtoBufServlet", ProtoBufServlet.class);
 
 		for (Class<?> clazz : classes) {
-			
+
 			// Getting binary service registry
 			BinaryServiceRegistry binaryServiceRegistry = (BinaryServiceRegistry) PrivilegedCarbonContext.getThreadLocalCarbonContext().getOSGiService(BinaryServiceRegistry.class);
-			
+
 			// Is it a blocking service or not
 			boolean blocking = clazz.getAnnotation(ProtoBufService.class).blocking();
-			
+
 			Method myMethod = null;
 			Object obj = null;
 
@@ -81,7 +81,8 @@ public class ProtoBufServletContextInitializer implements ServletContainerInitia
 
 				if (blocking) {
 
-					//getting newReflectiveBlocking method which will return a blocking service
+					// getting newReflectiveBlocking method which will return a
+					// blocking service
 					myMethod = clazz.getInterfaces()[0].getDeclaringClass().getMethod("newReflectiveBlockingService", clazz.getInterfaces()[0]);
 
 					// Since it is a static method, we pass null
@@ -89,13 +90,14 @@ public class ProtoBufServletContextInitializer implements ServletContainerInitia
 
 					BlockingService blockingService = (BlockingService) obj;
 
-					//register service into Binary Service Registry
+					// register service into Binary Service Registry
 					String serviceName = binaryServiceRegistry.registerBlockingService(blockingService);
 					String serviceType = "BlockingService";
 
-					//keeps PB service information in a bean
-					//we need these when removing the services from Binary Service Registry
-					//we are using these beans instances inside our destroyer
+					// keeps PB service information in a bean
+					// we need these when removing the services from Binary
+					// Service Registry
+					// we are using these beans instances inside our destroyer
 					serviceList.add(new PBService(serviceName, serviceType));
 					servletContext.setAttribute("services", serviceList);
 
@@ -103,7 +105,8 @@ public class ProtoBufServletContextInitializer implements ServletContainerInitia
 
 				} else {
 
-					//getting newReflectiveService which will return a non blocking service
+					// getting newReflectiveService which will return a non
+					// blocking service
 					myMethod = clazz.getInterfaces()[0].getDeclaringClass().getMethod("newReflectiveService", clazz.getInterfaces()[0]);
 
 					// Since it is a static method, we pass null
@@ -111,13 +114,14 @@ public class ProtoBufServletContextInitializer implements ServletContainerInitia
 
 					Service service = (Service) obj;
 
-					//register service into Binary Service Registry
+					// register service into Binary Service Registry
 					String serviceName = binaryServiceRegistry.registerService(service);
 					String serviceType = "NonBlockingService";
 
-					//keeps PB service information in a bean
-					//we need these information to remove the service from Binary Service Registry later
-					//we are using these bean instances in our destroyer
+					// keeps PB service information in a bean
+					// we need these information to remove the service from
+					// Binary Service Registry later
+					// we are using these bean instances in our destroyer
 					serviceList.add(new PBService(serviceName, serviceType));
 					servletContext.setAttribute("services", serviceList);
 

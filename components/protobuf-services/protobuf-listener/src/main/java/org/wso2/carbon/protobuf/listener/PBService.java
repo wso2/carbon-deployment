@@ -20,32 +20,36 @@ package org.wso2.carbon.protobuf.listener;
 
 /*
  * This bean class keeps information of a PB service.
- * We need these information when we remove a PB service from Binary Service Registry.
+ * We need these information when we remove a PB service from Binary Service
+ * Registry.
  * 
  * serviceName - Name of the service implementation (not service definition)
  * serviceType - whether it is a blocking service or non blocking service
- * 
  */
 public class PBService {
-    private String serviceName;
-    private String serviceType;
+	private String serviceName;
+	private String serviceType;
 
-    public PBService(String serviceName, String serviceType) {
+	public PBService(String serviceName, String serviceType) {
 
-        this.serviceName = serviceName;
-        this.serviceType = serviceType;
+		this.serviceName = serviceName;
+		this.serviceType = serviceType;
 
-    }
-    public String getServiceName() {
-        return serviceName;
-    }
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-    public String getServiceType() {
-        return serviceType;
-    }
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
 }

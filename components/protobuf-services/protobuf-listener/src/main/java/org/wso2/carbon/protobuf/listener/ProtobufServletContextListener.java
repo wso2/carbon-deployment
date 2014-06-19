@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /*
- * This class will remove services from Binary Services Registry when PB wars are undeployed.
+ * This class will remove services from Binary Services Registry when PB wars
+ * are undeployed.
  */
 public class ProtobufServletContextListener implements ServletContextListener {
 	@Override
@@ -38,26 +39,26 @@ public class ProtobufServletContextListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		
+
 		ServletContext servletContext = servletContextEvent.getServletContext();
-		
-		//getting Binary Service Registry from OSGI run time
+
+		// getting Binary Service Registry from OSGI run time
 		BinaryServiceRegistry binaryServiceRegistry = (BinaryServiceRegistry) PrivilegedCarbonContext.getThreadLocalCarbonContext().getOSGiService(BinaryServiceRegistry.class);
-		
-		//getting all the services for the corresponding servlet context
-		//Please note that, a PB war can contain many PB services
-		//Therefore we should remove all of them when the war is undeployed
+
+		// getting all the services for the corresponding servlet context
+		// Please note that, a PB war can contain many PB services
+		// Therefore we should remove all of them when the war is undeployed
 		ArrayList<PBService> serviceList = (ArrayList<PBService>) servletContext.getAttribute("services");
-		
+
 		for (Iterator iterator = serviceList.iterator(); iterator.hasNext();) {
 
-			//getting service information from PBService bean
+			// getting service information from PBService bean
 			PBService pbService = (PBService) iterator.next();
 
 			String serviceName = pbService.getServiceName();
 			String serviceType = pbService.getServiceType();
 
-			//if PB service is a blocking service
+			// if PB service is a blocking service
 			if (serviceType.equals("BlockingService")) {
 
 				binaryServiceRegistry.removeBlockingService(serviceName);

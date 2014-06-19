@@ -59,7 +59,8 @@ public class ProtoBufMediator extends AbstractMediator {
 	// hold all the proto stubs which are loaded from components/lib directory
 	private static ConcurrentHashMap<String, ConcurrentHashMap<String, Class>> serviceStubs = new ConcurrentHashMap<String, ConcurrentHashMap<String, Class>>();
 
-	// These three properties are must in order to find a correct PB method to call.
+	// These three properties are must in order to find a correct PB method to
+	// call.
 	private String stub;
 	private String service;
 	private String method;

@@ -23,8 +23,7 @@ public class ProtobufClientConfig {
 
 	private static Logger log = LoggerFactory.getLogger(BinaryServiceClient.class);
 
-	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) +
-	                                   "/repository/conf/etc/pbs.xml";
+	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) + "/repository/conf/etc/pbs.xml";
 
 	public ProtobufClientConfig() {
 		init();
@@ -279,17 +278,14 @@ public class ProtobufClientConfig {
 
 			doc.getDocumentElement().normalize();
 
-			this.enablePbs =
-			                 Boolean.parseBoolean(doc.getElementsByTagName(ProtobufClientConfigXMLConstants.ENABLE_PBS)
-			                                         .item(0).getTextContent());
+			this.enablePbs = Boolean.parseBoolean(doc.getElementsByTagName(ProtobufClientConfigXMLConstants.ENABLE_PBS).item(0).getTextContent());
 
 			// return if pbs is not needed
 			if (!this.enablePbs) {
 				return;
 			}
 
-			NodeList clientSettingsList =
-			                              doc.getElementsByTagName(ProtobufClientConfigXMLConstants.CLIENT_SETTINGS);
+			NodeList clientSettingsList = doc.getElementsByTagName(ProtobufClientConfigXMLConstants.CLIENT_SETTINGS);
 			for (int temp = 0; temp < clientSettingsList.getLength(); temp++) {
 
 				Node nNode = clientSettingsList.item(temp);
@@ -298,86 +294,52 @@ public class ProtobufClientConfig {
 
 					Element eElement = (Element) nNode;
 
-					this.serverHostName =
-					                      eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.SERVER_HOST_NAME)
-					                              .item(0).getTextContent();
+					this.serverHostName = eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.SERVER_HOST_NAME).item(0).getTextContent();
 					log.debug("Server Host Name					:" + this.serverHostName);
-					this.serverPort =
-					                  Integer.parseInt(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.SERVER_PORT)
-					                                           .item(0).getTextContent());
+					this.serverPort = Integer.parseInt(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.SERVER_PORT).item(0).getTextContent());
 					log.debug("Server Port				:" + this.serverPort);
 
-					this.clientHostName =
-					                      eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.CLIENT_HOST_NAME)
-					                              .item(0).getTextContent();
+					this.clientHostName = eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.CLIENT_HOST_NAME).item(0).getTextContent();
 					log.debug("Client Host Name					:" + this.clientHostName);
-					this.clientPort =
-					                  Integer.parseInt(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.CLIENT_PORT)
-					                                           .item(0).getTextContent());
+					this.clientPort = Integer.parseInt(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.CLIENT_PORT).item(0).getTextContent());
 					log.debug("Client Port				:" + this.clientPort);
 
-					this.enableSSL =
-					                 Boolean.parseBoolean(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.ENABLE_SSL)
-					                                              .item(0).getTextContent());
+					this.enableSSL = Boolean.parseBoolean(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.ENABLE_SSL).item(0).getTextContent());
 					log.debug("Enable SSL					:" + this.enableSSL);
 
 					if (this.enableSSL) {
 						ServerConfiguration configuration = ServerConfiguration.getInstance();
-						this.keystorePath =
-						                    configuration.getFirstProperty("Security.KeyStore.Location");
-						this.keystorePassword =
-						                        configuration.getFirstProperty("Security.KeyStore.Password");
-						this.truststorePath =
-						                      configuration.getFirstProperty("Security.TrustStore.Location");
-						this.truststorePassword =
-						                          configuration.getFirstProperty("Security.TrustStore.Password");
+						this.keystorePath = configuration.getFirstProperty("Security.KeyStore.Location");
+						this.keystorePassword = configuration.getFirstProperty("Security.KeyStore.Password");
+						this.truststorePath = configuration.getFirstProperty("Security.TrustStore.Location");
+						this.truststorePassword = configuration.getFirstProperty("Security.TrustStore.Password");
 					}
 
-					NodeList timeoutExecutorList =
-					                               eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL);
+					NodeList timeoutExecutorList = eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL);
 					Element timeoutExecutorElements = (Element) timeoutExecutorList.item(0);
-					this.timeoutExecutorCorePoolSize =
-					                                   Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ProtobufClientConfigXMLConstants.CORE_POOL_SIZE)
-					                                                                           .item(0)
-					                                                                           .getTextContent());
-					log.debug("Timeout Executor Core Pool Size		:" +
-					         this.timeoutExecutorCorePoolSize);
+					this.timeoutExecutorCorePoolSize = Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ProtobufClientConfigXMLConstants.CORE_POOL_SIZE).item(0).getTextContent());
+					log.debug("Timeout Executor Core Pool Size		:" + this.timeoutExecutorCorePoolSize);
 
-					this.timeoutExecutorMaxPoolSize =
-					                                  Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ProtobufClientConfigXMLConstants.MAX_POOL_SIZE)
-					                                                                          .item(0)
-					                                                                          .getTextContent());
+					this.timeoutExecutorMaxPoolSize = Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ProtobufClientConfigXMLConstants.MAX_POOL_SIZE).item(0).getTextContent());
 
 					log.debug("Timeout Executor Max Pool Size		:" + this.timeoutExecutorMaxPoolSize);
 
-					this.timeoutExecutorPoolKeepAliveTime =
-					                                        Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL_KEEP_ALIVE_TIME)
-					                                                                                .item(0)
-					                                                                                .getTextContent());
+					this.timeoutExecutorPoolKeepAliveTime = Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL_KEEP_ALIVE_TIME).item(0).getTextContent());
 
-					log.debug("Timeout Executor KeepAliveTime		:" +
-					         this.timeoutExecutorPoolKeepAliveTime);
+					log.debug("Timeout Executor KeepAliveTime		:" + this.timeoutExecutorPoolKeepAliveTime);
 
-					NodeList timeoutCheckerList =
-					                              eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_CHECKER_THREADPOOL);
+					NodeList timeoutCheckerList = eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_CHECKER_THREADPOOL);
 					Element timeoutCheckerElements = (Element) timeoutCheckerList.item(0);
-					this.timeoutCheckerCorePoolSize =
-					                                  Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ProtobufClientConfigXMLConstants.CORE_POOL_SIZE)
-					                                                                         .item(0)
-					                                                                         .getTextContent());
+					this.timeoutCheckerCorePoolSize = Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ProtobufClientConfigXMLConstants.CORE_POOL_SIZE).item(0).getTextContent());
 					log.debug("Timeout Checker Core Pool Size		:" + this.timeoutCheckerCorePoolSize);
 
-					this.timeoutPeriod =
-					                     Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_PERIOD)
-					                                                            .item(0)
-					                                                            .getTextContent());
+					this.timeoutPeriod = Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ProtobufClientConfigXMLConstants.TIMEOUT_PERIOD).item(0).getTextContent());
 					log.debug("Timeout Checker Timeout Period		:" + this.timeoutPeriod);
 
 				}
 			}
 
-			NodeList transportSettingsList =
-			                                 doc.getElementsByTagName(ProtobufClientConfigXMLConstants.TRANSPORT_SETTINGS);
+			NodeList transportSettingsList = doc.getElementsByTagName(ProtobufClientConfigXMLConstants.TRANSPORT_SETTINGS);
 			for (int temp = 0; temp < transportSettingsList.getLength(); temp++) {
 
 				Node nNode = transportSettingsList.item(temp);
@@ -386,66 +348,40 @@ public class ProtobufClientConfig {
 
 					Element eElement = (Element) nNode;
 
-					NodeList acceptorsList =
-					                         eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.ACCEPTORS);
+					NodeList acceptorsList = eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.ACCEPTORS);
 					Element acceptorsElements = (Element) acceptorsList.item(0);
-					this.acceptorsPoolSize =
-					                         Integer.parseInt(acceptorsElements.getElementsByTagName(ProtobufClientConfigXMLConstants.POOL_SIZE)
-					                                                           .item(0)
-					                                                           .getTextContent());
+					this.acceptorsPoolSize = Integer.parseInt(acceptorsElements.getElementsByTagName(ProtobufClientConfigXMLConstants.POOL_SIZE).item(0).getTextContent());
 					log.debug("Acceptors Pool Size			:" + this.acceptorsPoolSize);
 
-					this.acceptorsSendBufferSize =
-					                               Integer.parseInt(acceptorsElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_SNDBUF)
-					                                                                 .item(0)
-					                                                                 .getTextContent());
+					this.acceptorsSendBufferSize = Integer.parseInt(acceptorsElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_SNDBUF).item(0).getTextContent());
 					log.debug("Acceptors Send Buffer Size			:" + this.acceptorsSendBufferSize);
 
-					this.acceptorsRecieveBufferSize =
-					                                  Integer.parseInt(acceptorsElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_RCVBUF)
-					                                                                    .item(0)
-					                                                                    .getTextContent());
+					this.acceptorsRecieveBufferSize = Integer.parseInt(acceptorsElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_RCVBUF).item(0).getTextContent());
 					log.debug("Acceptors Recieve Buffer Size		:" + this.acceptorsRecieveBufferSize);
 
-					NodeList channelHandlersList =
-					                               eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.CHANNEL_HANDLERS);
+					NodeList channelHandlersList = eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.CHANNEL_HANDLERS);
 					Element channelHandlersElements = (Element) channelHandlersList.item(0);
-					this.channelHandlersPoolSize =
-					                               Integer.parseInt(channelHandlersElements.getElementsByTagName(ProtobufClientConfigXMLConstants.POOL_SIZE)
-					                                                                       .item(0)
-					                                                                       .getTextContent());
+					this.channelHandlersPoolSize = Integer.parseInt(channelHandlersElements.getElementsByTagName(ProtobufClientConfigXMLConstants.POOL_SIZE).item(0).getTextContent());
 					log.debug("ChannelHandlers Pool Size			:" + this.channelHandlersPoolSize);
 
-					this.channelHandlersSendBufferSize =
-					                                     Integer.parseInt(channelHandlersElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_SNDBUF)
-					                                                                             .item(0)
-					                                                                             .getTextContent());
-					log.debug("ChannelHandlers Send Buffer Size		:" +
-					         this.channelHandlersSendBufferSize);
+					this.channelHandlersSendBufferSize = Integer.parseInt(channelHandlersElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_SNDBUF).item(0).getTextContent());
+					log.debug("ChannelHandlers Send Buffer Size		:" + this.channelHandlersSendBufferSize);
 
-					this.channelHandlersRecieveBufferSize =
-					                                        Integer.parseInt(channelHandlersElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_RCVBUF)
-					                                                                                .item(0)
-					                                                                                .getTextContent());
-					log.debug("ChannelHandlers Recieve Buffer Size	:" +
-					         this.channelHandlersRecieveBufferSize);
+					this.channelHandlersRecieveBufferSize = Integer.parseInt(channelHandlersElements.getElementsByTagName(ProtobufClientConfigXMLConstants.SO_RCVBUF).item(0).getTextContent());
+					log.debug("ChannelHandlers Recieve Buffer Size	:" + this.channelHandlersRecieveBufferSize);
 
-					this.TCP_NODELAY =
-					                   Boolean.parseBoolean(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.TCP_NODELAY)
-					                                                .item(0).getTextContent());
+					this.TCP_NODELAY = Boolean.parseBoolean(eElement.getElementsByTagName(ProtobufClientConfigXMLConstants.TCP_NODELAY).item(0).getTextContent());
 					log.debug("TCP_NODELAY				:" + this.TCP_NODELAY);
 
 				}
 			}
-			
-			String msg = "PBS Client is running { server host/port : "+this.getServerHostName()+"@"+this.getServerPort()+", client host/port : "+this.getClientHostName()+"@"+this.clientPort+" }";
+
+			String msg = "PBS Client is running { server host/port : " + this.getServerHostName() + "@" + this.getServerPort() + ", client host/port : " + this.getClientHostName() + "@" + this.clientPort + " }";
 			log.info(msg);
-			
+
 		} catch (ParserConfigurationException e) {
 			this.startUpFailed = true;
-			String msg =
-			             "The underlying parser does not support the requested features. " +
-			                     e.getLocalizedMessage();
+			String msg = "The underlying parser does not support the requested features. " + e.getLocalizedMessage();
 			log.info(msg);
 		} catch (FactoryConfigurationError e) {
 			this.startUpFailed = true;

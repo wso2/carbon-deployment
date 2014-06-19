@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * 
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -42,21 +42,17 @@ import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.protobuf.registry.BinaryServiceRegistry;
 import org.xml.sax.SAXException;
 
-
 /*
- * This class reads server configuration information from pbs xml 
+ * This class reads server configuration information from pbs xml
  * pbs xml should be places inside AS's components/repository/lib directory
- * 
  */
 public class ServerConfig {
 
 	private static Logger log = LoggerFactory.getLogger(BinaryServiceRegistry.class);
 
-	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) +
-	                                   "/repository/conf/etc/pbs.xml";
+	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) + "/repository/conf/etc/pbs.xml";
 
-	private static String pbsSchemaPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) +
-	                                      "/repository/conf/etc/pbsSchema.xsd";
+	private static String pbsSchemaPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) + "/repository/conf/etc/pbsSchema.xsd";
 
 	public ServerConfig() {
 		init();
@@ -95,7 +91,7 @@ public class ServerConfig {
 	public boolean isEnablePbs() {
 		return enablePbs;
 	}
-	
+
 	public boolean isStartUpFailed() {
 		return startUpFailed;
 	}
@@ -201,24 +197,21 @@ public class ServerConfig {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(new File(pbsxmlPath));
 
-//			if( !(isValidXML(doc, pbsSchemaPath))) {
-//				this.startUpFailed = true;
-//				return;
-//			}
+			// if( !(isValidXML(doc, pbsSchemaPath))) {
+			// this.startUpFailed = true;
+			// return;
+			// }
 
 			doc.getDocumentElement().normalize();
 
-			this.enablePbs =
-			                 Boolean.parseBoolean(doc.getElementsByTagName(ServerConfigXMLConstants.ENABLE_PBS)
-			                                         .item(0).getTextContent());
+			this.enablePbs = Boolean.parseBoolean(doc.getElementsByTagName(ServerConfigXMLConstants.ENABLE_PBS).item(0).getTextContent());
 
 			// return if pbs is not needed
 			if (!this.enablePbs) {
 				return;
 			}
 
-			NodeList serverSettingsList =
-			                              doc.getElementsByTagName(ServerConfigXMLConstants.SERVER_SETTINGS);
+			NodeList serverSettingsList = doc.getElementsByTagName(ServerConfigXMLConstants.SERVER_SETTINGS);
 			for (int temp = 0; temp < serverSettingsList.getLength(); temp++) {
 
 				Node nNode = serverSettingsList.item(temp);
@@ -227,94 +220,55 @@ public class ServerConfig {
 
 					Element eElement = (Element) nNode;
 
-					this.hostName =
-					                eElement.getElementsByTagName(ServerConfigXMLConstants.HOST_NAME)
-					                        .item(0).getTextContent();
+					this.hostName = eElement.getElementsByTagName(ServerConfigXMLConstants.HOST_NAME).item(0).getTextContent();
 					log.debug("Host Name					:" + this.hostName);
-					this.serverPort =
-					                  Integer.parseInt(eElement.getElementsByTagName(ServerConfigXMLConstants.SERVER_PORT)
-					                                           .item(0).getTextContent());
+					this.serverPort = Integer.parseInt(eElement.getElementsByTagName(ServerConfigXMLConstants.SERVER_PORT).item(0).getTextContent());
 					log.debug("Server Port				:" + this.serverPort);
 
-					this.enableSSL =
-					                 Boolean.parseBoolean(eElement.getElementsByTagName(ServerConfigXMLConstants.ENABLE_SSL)
-					                                              .item(0).getTextContent());
+					this.enableSSL = Boolean.parseBoolean(eElement.getElementsByTagName(ServerConfigXMLConstants.ENABLE_SSL).item(0).getTextContent());
 					log.debug("Enable SSL					:" + this.enableSSL);
 
 					if (this.enableSSL) {
 						ServerConfiguration configuration = ServerConfiguration.getInstance();
-						this.keystorePath =
-						                    configuration.getFirstProperty("Security.KeyStore.Location");
-						this.keystorePassword =
-						                        configuration.getFirstProperty("Security.KeyStore.Password");
-						this.truststorePath =
-						                      configuration.getFirstProperty("Security.TrustStore.Location");
-						this.truststorePassword =
-						                          configuration.getFirstProperty("Security.TrustStore.Password");
+						this.keystorePath = configuration.getFirstProperty("Security.KeyStore.Location");
+						this.keystorePassword = configuration.getFirstProperty("Security.KeyStore.Password");
+						this.truststorePath = configuration.getFirstProperty("Security.TrustStore.Location");
+						this.truststorePassword = configuration.getFirstProperty("Security.TrustStore.Password");
 					}
 
-					NodeList callExecutorList =
-					                            eElement.getElementsByTagName(ServerConfigXMLConstants.SERVER_CALL_EXECUTOR_THREADPOOL);
+					NodeList callExecutorList = eElement.getElementsByTagName(ServerConfigXMLConstants.SERVER_CALL_EXECUTOR_THREADPOOL);
 					Element callExecutorElements = (Element) callExecutorList.item(0);
-					this.serverCallExecutorCorePoolSize =
-					                                      Integer.parseInt(callExecutorElements.getElementsByTagName(ServerConfigXMLConstants.CORE_POOL_SIZE)
-					                                                                           .item(0)
-					                                                                           .getTextContent());
-					log.debug("Server Call Executor Core Pool Size	:" +
-					         this.serverCallExecutorCorePoolSize);
+					this.serverCallExecutorCorePoolSize = Integer.parseInt(callExecutorElements.getElementsByTagName(ServerConfigXMLConstants.CORE_POOL_SIZE).item(0).getTextContent());
+					log.debug("Server Call Executor Core Pool Size	:" + this.serverCallExecutorCorePoolSize);
 
-					this.serverCallExecutorMaxPoolSize =
-					                                     Integer.parseInt(callExecutorElements.getElementsByTagName(ServerConfigXMLConstants.MAX_POOL_SIZE)
-					                                                                          .item(0)
-					                                                                          .getTextContent());
-					log.debug("Server Call Executor Max Pool Size		:" +
-					         this.serverCallExecutorMaxPoolSize);
+					this.serverCallExecutorMaxPoolSize = Integer.parseInt(callExecutorElements.getElementsByTagName(ServerConfigXMLConstants.MAX_POOL_SIZE).item(0).getTextContent());
+					log.debug("Server Call Executor Max Pool Size		:" + this.serverCallExecutorMaxPoolSize);
 
-					NodeList timeoutExecutorList =
-					                               eElement.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL);
+					NodeList timeoutExecutorList = eElement.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL);
 					Element timeoutExecutorElements = (Element) timeoutExecutorList.item(0);
-					this.timeoutExecutorCorePoolSize =
-					                                   Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ServerConfigXMLConstants.CORE_POOL_SIZE)
-					                                                                           .item(0)
-					                                                                           .getTextContent());
-					log.debug("Timeout Executor Core Pool Size		:" +
-					         this.timeoutExecutorCorePoolSize);
+					this.timeoutExecutorCorePoolSize = Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ServerConfigXMLConstants.CORE_POOL_SIZE).item(0).getTextContent());
+					log.debug("Timeout Executor Core Pool Size		:" + this.timeoutExecutorCorePoolSize);
 
-					this.timeoutExecutorMaxPoolSize =
-					                                  Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ServerConfigXMLConstants.MAX_POOL_SIZE)
-					                                                                          .item(0)
-					                                                                          .getTextContent());
+					this.timeoutExecutorMaxPoolSize = Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ServerConfigXMLConstants.MAX_POOL_SIZE).item(0).getTextContent());
 
 					log.debug("Timeout Executor Max Pool Size		:" + this.timeoutExecutorMaxPoolSize);
 
-					this.timeoutExecutorPoolKeepAliveTime =
-					                                        Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL_KEEP_ALIVE_TIME)
-					                                                                                .item(0)
-					                                                                                .getTextContent());
+					this.timeoutExecutorPoolKeepAliveTime = Integer.parseInt(timeoutExecutorElements.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL_KEEP_ALIVE_TIME).item(0).getTextContent());
 
-					log.debug("Timeout Executor KeepAliveTime		:" +
-					         this.timeoutExecutorPoolKeepAliveTime);
+					log.debug("Timeout Executor KeepAliveTime		:" + this.timeoutExecutorPoolKeepAliveTime);
 
-					NodeList timeoutCheckerList =
-					                              eElement.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_CHECKER_THREADPOOL);
+					NodeList timeoutCheckerList = eElement.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_CHECKER_THREADPOOL);
 					Element timeoutCheckerElements = (Element) timeoutCheckerList.item(0);
-					this.timeoutCheckerCorePoolSize =
-					                                  Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ServerConfigXMLConstants.CORE_POOL_SIZE)
-					                                                                         .item(0)
-					                                                                         .getTextContent());
+					this.timeoutCheckerCorePoolSize = Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ServerConfigXMLConstants.CORE_POOL_SIZE).item(0).getTextContent());
 					log.debug("Timeout Checker Core Pool Size		:" + this.timeoutCheckerCorePoolSize);
 
-					this.timeoutPeriod =
-					                     Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_PERIOD)
-					                                                            .item(0)
-					                                                            .getTextContent());
+					this.timeoutPeriod = Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_PERIOD).item(0).getTextContent());
 					log.debug("Timeout Checker Timeout Period		:" + this.timeoutPeriod);
 
 				}
 			}
 
-			NodeList transportSettingsList =
-			                                 doc.getElementsByTagName(ServerConfigXMLConstants.TRANSPORT_SETTINGS);
+			NodeList transportSettingsList = doc.getElementsByTagName(ServerConfigXMLConstants.TRANSPORT_SETTINGS);
 			for (int temp = 0; temp < transportSettingsList.getLength(); temp++) {
 
 				Node nNode = transportSettingsList.item(temp);
@@ -323,66 +277,40 @@ public class ServerConfig {
 
 					Element eElement = (Element) nNode;
 
-					NodeList acceptorsList =
-					                         eElement.getElementsByTagName(ServerConfigXMLConstants.ACCEPTORS);
+					NodeList acceptorsList = eElement.getElementsByTagName(ServerConfigXMLConstants.ACCEPTORS);
 					Element acceptorsElements = (Element) acceptorsList.item(0);
-					this.acceptorsPoolSize =
-					                         Integer.parseInt(acceptorsElements.getElementsByTagName(ServerConfigXMLConstants.POOL_SIZE)
-					                                                           .item(0)
-					                                                           .getTextContent());
+					this.acceptorsPoolSize = Integer.parseInt(acceptorsElements.getElementsByTagName(ServerConfigXMLConstants.POOL_SIZE).item(0).getTextContent());
 					log.debug("Acceptors Pool Size			:" + this.acceptorsPoolSize);
 
-					this.acceptorsSendBufferSize =
-					                               Integer.parseInt(acceptorsElements.getElementsByTagName(ServerConfigXMLConstants.SO_SNDBUF)
-					                                                                 .item(0)
-					                                                                 .getTextContent());
+					this.acceptorsSendBufferSize = Integer.parseInt(acceptorsElements.getElementsByTagName(ServerConfigXMLConstants.SO_SNDBUF).item(0).getTextContent());
 					log.debug("Acceptors Send Buffer Size			:" + this.acceptorsSendBufferSize);
 
-					this.acceptorsRecieveBufferSize =
-					                                  Integer.parseInt(acceptorsElements.getElementsByTagName(ServerConfigXMLConstants.SO_RCVBUF)
-					                                                                    .item(0)
-					                                                                    .getTextContent());
+					this.acceptorsRecieveBufferSize = Integer.parseInt(acceptorsElements.getElementsByTagName(ServerConfigXMLConstants.SO_RCVBUF).item(0).getTextContent());
 					log.debug("Acceptors Recieve Buffer Size		:" + this.acceptorsRecieveBufferSize);
 
-					NodeList channelHandlersList =
-					                               eElement.getElementsByTagName(ServerConfigXMLConstants.CHANNEL_HANDLERS);
+					NodeList channelHandlersList = eElement.getElementsByTagName(ServerConfigXMLConstants.CHANNEL_HANDLERS);
 					Element channelHandlersElements = (Element) channelHandlersList.item(0);
-					this.channelHandlersPoolSize =
-					                               Integer.parseInt(channelHandlersElements.getElementsByTagName(ServerConfigXMLConstants.POOL_SIZE)
-					                                                                       .item(0)
-					                                                                       .getTextContent());
+					this.channelHandlersPoolSize = Integer.parseInt(channelHandlersElements.getElementsByTagName(ServerConfigXMLConstants.POOL_SIZE).item(0).getTextContent());
 					log.debug("ChannelHandlers Pool Size			:" + this.channelHandlersPoolSize);
 
-					this.channelHandlersSendBufferSize =
-					                                     Integer.parseInt(channelHandlersElements.getElementsByTagName(ServerConfigXMLConstants.SO_SNDBUF)
-					                                                                             .item(0)
-					                                                                             .getTextContent());
-					log.debug("ChannelHandlers Send Buffer Size		:" +
-					         this.channelHandlersSendBufferSize);
+					this.channelHandlersSendBufferSize = Integer.parseInt(channelHandlersElements.getElementsByTagName(ServerConfigXMLConstants.SO_SNDBUF).item(0).getTextContent());
+					log.debug("ChannelHandlers Send Buffer Size		:" + this.channelHandlersSendBufferSize);
 
-					this.channelHandlersRecieveBufferSize =
-					                                        Integer.parseInt(channelHandlersElements.getElementsByTagName(ServerConfigXMLConstants.SO_RCVBUF)
-					                                                                                .item(0)
-					                                                                                .getTextContent());
-					log.debug("ChannelHandlers Recieve Buffer Size	:" +
-					         this.channelHandlersRecieveBufferSize);
+					this.channelHandlersRecieveBufferSize = Integer.parseInt(channelHandlersElements.getElementsByTagName(ServerConfigXMLConstants.SO_RCVBUF).item(0).getTextContent());
+					log.debug("ChannelHandlers Recieve Buffer Size	:" + this.channelHandlersRecieveBufferSize);
 
-					this.TCP_NODELAY =
-					                   Boolean.parseBoolean(eElement.getElementsByTagName(ServerConfigXMLConstants.TCP_NODELAY)
-					                                                .item(0).getTextContent());
+					this.TCP_NODELAY = Boolean.parseBoolean(eElement.getElementsByTagName(ServerConfigXMLConstants.TCP_NODELAY).item(0).getTextContent());
 					log.debug("TCP_NODELAY				:" + this.TCP_NODELAY);
 
 				}
 			}
-			
-			String msg = "PBS Server is running { server host/port : "+this.getHostName()+"@"+this.getServerPort()+" }";
+
+			String msg = "PBS Server is running { server host/port : " + this.getHostName() + "@" + this.getServerPort() + " }";
 			log.info(msg);
 
 		} catch (ParserConfigurationException e) {
 			this.startUpFailed = true;
-			String msg =
-			             "The underlying parser does not support the requested features. " +
-			                     e.getLocalizedMessage();
+			String msg = "The underlying parser does not support the requested features. " + e.getLocalizedMessage();
 			log.info(msg);
 		} catch (FactoryConfigurationError e) {
 			this.startUpFailed = true;
@@ -402,32 +330,31 @@ public class ServerConfig {
 
 	private boolean isValidXML(Document document, String schemaPath) {
 
-		SchemaFactory schemaFactory =
-		                              SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
 		try {
-			
+
 			Schema schema = schemaFactory.newSchema(new StreamSource(schemaPath));
 			Validator validator = schema.newValidator();
-	        validator.validate(new DOMSource(document));
-	        
-        } catch (SAXException e) {
-        	
-    		String msg = "PBS Schema Validation failed! " + e.getLocalizedMessage();
-    		log.info(msg);
-    		return false;
-    		
-        } catch (IOException e) {
-        	
-    		String msg = "PBS Schema Validation failed! " + e.getLocalizedMessage();
-    		log.info(msg);
-    		return false;
-        }
-		
+			validator.validate(new DOMSource(document));
+
+		} catch (SAXException e) {
+
+			String msg = "PBS Schema Validation failed! " + e.getLocalizedMessage();
+			log.info(msg);
+			return false;
+
+		} catch (IOException e) {
+
+			String msg = "PBS Schema Validation failed! " + e.getLocalizedMessage();
+			log.info(msg);
+			return false;
+		}
+
 		// arrives here only if the validation was successful
 		String msg = "PBS Schema Validation is successful!";
 		log.info(msg);
 		return true;
-		
+
 	}
 }

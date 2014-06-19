@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * 
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -53,11 +53,11 @@ import com.googlecode.protobuf.pro.duplex.timeout.TimeoutExecutor;
 import com.googlecode.protobuf.pro.duplex.util.RenamingThreadFactoryProxy;
 
 /*
- * This class starts an RPC server and register its registry as an OSGI service for binary services.
+ * This class starts an RPC server and register its registry as an OSGI service
+ * for binary services.
  * 
- * It reads configuration information from pbs xml which should be placed 
+ * It reads configuration information from pbs xml which should be placed
  * inside AS's components/repository/lib directory.
- *  
  */
 public class Activator implements BundleActivator {
 
@@ -66,46 +66,46 @@ public class Activator implements BundleActivator {
 	static DuplexTcpServerPipelineFactory serverFactory;
 
 	public void start(BundleContext bundleContext) {
-		
+
 		log.info("Starting PBS Server...");
-		
+
 		ServerConfig serverConfig = new ServerConfig();
 
-		if(serverConfig.isStartUpFailed()){
+		if (serverConfig.isStartUpFailed()) {
 			log.info("RPC Server StartUp Failed...");
 			return;
 		}
-		
+
 		if (!serverConfig.isEnablePbs()) {
-	        return;
-        }
-		
-		//server information
+			return;
+		}
+
+		// server information
 		PeerInfo serverInfo = new PeerInfo(serverConfig.getHostName(), serverConfig.getServerPort());
 
 		RpcServerCallExecutor executor = new ThreadPoolCallExecutor(serverConfig.getServerCallExecutorCorePoolSize(), serverConfig.getServerCallExecutorMaxPoolSize(), 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000), Executors.defaultThreadFactory());
-		
+
 		serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
 
 		serverFactory.setRpcServerCallExecutor(executor);
-		
-		//if SSL encryption is enabled
-        if (serverConfig.isEnableSSL()) {
-        	RpcSSLContext sslCtx = new RpcSSLContext();
-        	sslCtx.setKeystorePassword(serverConfig.getKeystorePassword());
-        	sslCtx.setKeystorePath(serverConfig.getKeystorePath());
-        	sslCtx.setTruststorePassword(serverConfig.getTruststorePassword());
-        	sslCtx.setTruststorePath(serverConfig.getTruststorePath());
-        	
-        	try {
-	            sslCtx.init();
-            } catch (Exception e) {
-            	log.error("Couldn't create SSL Context : " + e.getLocalizedMessage());
-            	log.info("SSL not enanbled");
-            }
-        	
-        	serverFactory.setSslContext(sslCtx);
-        }
+
+		// if SSL encryption is enabled
+		if (serverConfig.isEnableSSL()) {
+			RpcSSLContext sslCtx = new RpcSSLContext();
+			sslCtx.setKeystorePassword(serverConfig.getKeystorePassword());
+			sslCtx.setKeystorePath(serverConfig.getKeystorePath());
+			sslCtx.setTruststorePassword(serverConfig.getTruststorePassword());
+			sslCtx.setTruststorePath(serverConfig.getTruststorePath());
+
+			try {
+				sslCtx.init();
+			} catch (Exception e) {
+				log.error("Couldn't create SSL Context : " + e.getLocalizedMessage());
+				log.info("SSL not enanbled");
+			}
+
+			serverFactory.setSslContext(sslCtx);
+		}
 
 		RpcTimeoutExecutor timeoutExecutor = new TimeoutExecutor(serverConfig.getTimeoutExecutorCorePoolSize(), serverConfig.getTimeoutExecutorMaxPoolSize());
 		RpcTimeoutChecker timeoutChecker = new TimeoutChecker();
@@ -138,27 +138,17 @@ public class Activator implements BundleActivator {
 		};
 		rpcEventNotifier.setEventListener(listener);
 		serverFactory.registerConnectionEventListener(rpcEventNotifier);
-		
-		//CategoryPerServiceLogger logger = new CategoryPerServiceLogger();
-		//logger.setLogRequestProto(false);
-		//logger.setLogResponseProto(false);
-		//logger.setLogEventProto(false);
+
+		// CategoryPerServiceLogger logger = new CategoryPerServiceLogger();
+		// logger.setLogRequestProto(false);
+		// logger.setLogResponseProto(false);
+		// logger.setLogEventProto(false);
 		serverFactory.setLogger(null);
 
 		// Configure the server.
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		NioEventLoopGroup boss =
-		                         new NioEventLoopGroup(
-		                                               serverConfig.getAcceptorsPoolSize(),
-		                                               new RenamingThreadFactoryProxy(
-		                                                                              "boss",
-		                                                                              Executors.defaultThreadFactory()));
-		NioEventLoopGroup workers =
-		                            new NioEventLoopGroup(
-		                                                  serverConfig.getChannelHandlersPoolSize(),
-		                                                  new RenamingThreadFactoryProxy(
-		                                                                                 "worker",
-		                                                                                 Executors.defaultThreadFactory()));
+		NioEventLoopGroup boss = new NioEventLoopGroup(serverConfig.getAcceptorsPoolSize(), new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory()));
+		NioEventLoopGroup workers = new NioEventLoopGroup(serverConfig.getChannelHandlersPoolSize(), new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory()));
 		bootstrap.group(boss, workers);
 		bootstrap.channel(NioServerSocketChannel.class);
 		bootstrap.option(ChannelOption.SO_SNDBUF, serverConfig.getAcceptorsSendBufferSize());
@@ -178,7 +168,7 @@ public class Activator implements BundleActivator {
 
 		// Bind and start to accept incoming connections.
 		bootstrap.bind();
-		
+
 		log.info("Serving " + serverInfo);
 
 		// Register Binary Service Registry as an OSGi service
