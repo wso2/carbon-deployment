@@ -51,12 +51,11 @@
 
 	<dependencies>
 
+		<!-- This library is not avilable to -->
 		<dependency>
-			<groupId>javax.servlet.api</groupId>
-			<artifactId>protobuf</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>/home/rajkumar/workspace/Binary-Protocol-AS/NEW_Artifacts/servlet-api.jar</systemPath>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>7.0.52</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
