@@ -31,7 +31,7 @@
 	<name>WSO2 Carbon - Protocol Buffer Service ESB Mediator</name>
 	<url>http://wso2.org</url>
 
-<properties>
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<synapse.version>2.1.0</synapse.version>
 		<axis2.version>1.6.2</axis2.version>
@@ -40,7 +40,7 @@
 	</properties>
 
 	<dependencies>
- 
+
 		<dependency>
 			<groupId>org.apache.synapse</groupId>
 			<artifactId>synapse-core</artifactId>
@@ -59,14 +59,14 @@
 			<version>${axis2.version}</version>
 			<scope>provided</scope>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-jms_1.1_spec</artifactId>
 			<version>${geronimo.jms.spec.version}</version>
 			<scope>provided</scope>
 		</dependency>
- 
+
 
 		<dependency>
 			<groupId>com.googlecode.protobuf-java-format</groupId>
@@ -79,7 +79,5 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-
-
 
 </project>
