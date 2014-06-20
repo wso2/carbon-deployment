@@ -203,7 +203,7 @@ public class ProtoBufMediator extends AbstractMediator {
 			OMElement element = AXIOMUtil.stringToOM(XmlFormat.printToString((Message) response));
 
 			// removing request
-			mc.getEnvelope().getBody().getFirstOMChild().detach();
+			mc.getEnvelope().getBody().getFirstElement().detach();
 
 			// adding response
 			mc.getEnvelope().getBody().addChild(element);

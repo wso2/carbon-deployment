@@ -31,7 +31,7 @@
 	<artifactId>protobuf-listener</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>WSO2 Carbon - Protocol Buffer Service Registry</name>
+	<name>WSO2 Carbon - Protocol Buffer Service Listener</name>
 	<url>http://wso2.org</url>
 
 	<dependencies>
