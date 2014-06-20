@@ -77,7 +77,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>${project.artifactId}</Bundle-Name>
 
 						<!-- <Bundle-Activator>org.wso2.carbon.as.protobuf.listener.Activator</Bundle-Activator> -->

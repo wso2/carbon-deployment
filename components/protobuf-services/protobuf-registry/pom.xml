@@ -43,7 +43,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-SymbolicName>${pom.groupId}.${pom.artifactId}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>${pom.name}</Bundle-Name>
 						<Bundle-Version>${pom.version}</Bundle-Version>
 						<Bundle-Activator>org.wso2.carbon.protobuf.registry.Activator</Bundle-Activator>
