@@ -84,7 +84,6 @@
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>${project.artifactId}</Bundle-Name>
 
-						<!-- <Bundle-Activator>org.wso2.carbon.as.protobuf.listener.Activator</Bundle-Activator> -->
 						<Private-Package>
 						</Private-Package>
 						<Import-Package>
