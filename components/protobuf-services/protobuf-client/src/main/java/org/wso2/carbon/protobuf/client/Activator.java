@@ -69,20 +69,20 @@ public class Activator implements BundleActivator {
 
 	public void start(BundleContext bundleContext) {
 
-		log.info("Starting Binary Service ESB Client...");
+		log.info("Starting Binary Service Client...");
 
 		// load configuration information from pbs xml
 		ProtobufClientConfig clientConfig = new ProtobufClientConfig();
 
 		// if start up failed due to some errors in pbs xml
 		if (clientConfig.isStartUpFailed()) {
-			log.info("PBS Client StartUp Failed...");
+			log.info("Binary Service Client StartUp Failed...");
 			return;
 		}
 
 		// if Binary Service ESB Client is not enabled in pbs xml
 		if (!clientConfig.isEnablePbs()) {
-			log.debug("Binary Services ESB Client is not enabled");
+			log.debug("Binary Service Client is not enabled in pbs xml");
 			return;
 		}
 
@@ -172,7 +172,7 @@ public class Activator implements BundleActivator {
 			channel = clientFactory.peerWith(server, bootstrap);
 			controller = channel.newRpcController();
 
-			// Register Binary Service Client as an OSGi service
+			// register Binary Service Client as an OSGi service
 			BinaryServiceClient binaryServiceClient = new BinaryServiceClient(channel, controller);
 			bundleContext.registerService(BinaryServiceClient.class.getName(), binaryServiceClient, null);
 
@@ -187,6 +187,6 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext bundleContext) {
 		// shut down the channel
 		channel.close();
-		log.info("RPC Client Shutting Down...");
+		log.info("Binary Service Client Shutting Down...");
 	}
 }

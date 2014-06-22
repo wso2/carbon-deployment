@@ -65,16 +65,17 @@ public class Activator implements BundleActivator {
 
 	public void start(BundleContext bundleContext) {
 
-		log.info("Starting PBS Server...");
+		log.info("Starting Binary Service Server...");
 
 		ServerConfig serverConfig = new ServerConfig();
 
 		if (serverConfig.isStartUpFailed()) {
-			log.info("RPC Server StartUp Failed...");
+			log.info("Binary Service Server StartUp Failed...");
 			return;
 		}
 
 		if (!serverConfig.isEnablePbs()) {
+			log.debug("Binary Service Server is not enabled in pbs xml");
 			return;
 		}
 
@@ -182,6 +183,6 @@ public class Activator implements BundleActivator {
 	}
 
 	public void stop(BundleContext bundleContext) {
-		log.info("RPC Server Shutting Down...");
+		log.info("Binary Service Server Shutting Down...");
 	}
 }
