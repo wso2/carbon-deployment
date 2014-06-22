@@ -19,12 +19,9 @@
 package org.wso2.carbon.protobuf.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.bootstrap.ServerBootstrap;
-
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.IOException;
@@ -32,27 +29,18 @@ import java.util.concurrent.Executors;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.protobuf.client.utils.ProtobufClientConfig;
 
-import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.RpcController;
-import com.google.protobuf.ServiceException;
 import com.googlecode.protobuf.pro.duplex.CleanShutdownHandler;
-import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.RpcConnectionEventNotifier;
 import com.googlecode.protobuf.pro.duplex.RpcSSLContext;
 import com.googlecode.protobuf.pro.duplex.client.DuplexTcpClientPipelineFactory;
-import com.googlecode.protobuf.pro.duplex.client.RpcClientConnectionWatchdog;
-import com.googlecode.protobuf.pro.duplex.execute.RpcServerCallExecutor;
-import com.googlecode.protobuf.pro.duplex.execute.ThreadPoolCallExecutor;
 import com.googlecode.protobuf.pro.duplex.listener.RpcConnectionEventListener;
-import com.googlecode.protobuf.pro.duplex.logging.CategoryPerServiceLogger;
-import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import com.googlecode.protobuf.pro.duplex.timeout.RpcTimeoutChecker;
 import com.googlecode.protobuf.pro.duplex.timeout.RpcTimeoutExecutor;
 import com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker;

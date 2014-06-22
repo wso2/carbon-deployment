@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.protobuf.client;
 
 import com.google.protobuf.RpcChannel;
