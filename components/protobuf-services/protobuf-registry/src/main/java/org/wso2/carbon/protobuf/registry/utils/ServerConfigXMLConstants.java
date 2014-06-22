@@ -31,6 +31,7 @@ public class ServerConfigXMLConstants {
 	public final static String SERVER_CALL_EXECUTOR_THREADPOOL = "serverCallExecutorThreadPool";
 	public final static String CORE_POOL_SIZE = "corePoolSize";
 	public final static String MAX_POOL_SIZE = "maxPoolSize";
+	public final static String SERVER_CALL_EXECUTOR_MAX_THREADPOOL_TIMEOUT = "maxPoolTimeout";
 	public final static String TIMEOUT_EXECUTOR_THREADPOOL = "timeoutExecutorThreadPool";
 	public final static String TIMEOUT_EXECUTOR_THREADPOOL_KEEP_ALIVE_TIME = "keepAliveTime";
 	public final static String TIMEOUT_CHECKER_THREADPOOL = "timeoutCheckerThreadPool";

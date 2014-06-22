@@ -64,6 +64,11 @@ public class ServerConfig {
 	private int serverPort;
 	private int serverCallExecutorCorePoolSize;
 	private int serverCallExecutorMaxPoolSize;
+	private int serverCallExecutorMaxPoolTimeout;
+
+	public int getServerCallExecutorMaxPoolTimeout() {
+		return serverCallExecutorMaxPoolTimeout;
+	}
 
 	private int timeoutExecutorCorePoolSize;
 	private int timeoutExecutorMaxPoolSize;
@@ -91,8 +96,6 @@ public class ServerConfig {
 	private boolean logReqProto;
 	private boolean logResProto;
 	private boolean logEventProto;
-	
-	
 
 	public boolean isLogReqProto() {
 		return logReqProto;
@@ -261,6 +264,9 @@ public class ServerConfig {
 
 					this.serverCallExecutorMaxPoolSize = Integer.parseInt(callExecutorElements.getElementsByTagName(ServerConfigXMLConstants.MAX_POOL_SIZE).item(0).getTextContent());
 					log.debug("Server Call Executor Max Pool Size		:" + this.serverCallExecutorMaxPoolSize);
+
+					this.serverCallExecutorMaxPoolTimeout = Integer.parseInt(callExecutorElements.getElementsByTagName(ServerConfigXMLConstants.SERVER_CALL_EXECUTOR_MAX_THREADPOOL_TIMEOUT).item(0).getTextContent());
+					log.debug("Server Call Executor Max Pool Timeout		:" + this.serverCallExecutorMaxPoolTimeout);
 
 					NodeList timeoutExecutorList = eElement.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_EXECUTOR_THREADPOOL);
 					Element timeoutExecutorElements = (Element) timeoutExecutorList.item(0);

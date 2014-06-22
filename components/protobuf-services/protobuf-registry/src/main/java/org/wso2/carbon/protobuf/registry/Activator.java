@@ -81,7 +81,7 @@ public class Activator implements BundleActivator {
 		// server information
 		PeerInfo serverInfo = new PeerInfo(serverConfig.getHostName(), serverConfig.getServerPort());
 
-		RpcServerCallExecutor executor = new ThreadPoolCallExecutor(serverConfig.getServerCallExecutorCorePoolSize(), serverConfig.getServerCallExecutorMaxPoolSize(), 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000), Executors.defaultThreadFactory());
+		RpcServerCallExecutor executor = new ThreadPoolCallExecutor(serverConfig.getServerCallExecutorCorePoolSize(), serverConfig.getServerCallExecutorMaxPoolSize(), serverConfig.getServerCallExecutorMaxPoolTimeout(), TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000), Executors.defaultThreadFactory());
 
 		serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
 
