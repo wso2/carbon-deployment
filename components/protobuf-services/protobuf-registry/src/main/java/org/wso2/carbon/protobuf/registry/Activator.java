@@ -19,19 +19,16 @@
 package org.wso2.carbon.protobuf.registry;
 
 import io.netty.bootstrap.ServerBootstrap;
-
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.protobuf.registry.utils.ServerConfig;
@@ -59,6 +56,7 @@ import com.googlecode.protobuf.pro.duplex.util.RenamingThreadFactoryProxy;
  * It reads configuration information from pbs xml which should be placed
  * inside AS's components/repository/lib directory.
  */
+
 public class Activator implements BundleActivator {
 
 	private static Logger log = LoggerFactory.getLogger(BinaryServiceRegistry.class);
@@ -139,12 +137,18 @@ public class Activator implements BundleActivator {
 		rpcEventNotifier.setEventListener(listener);
 		serverFactory.registerConnectionEventListener(rpcEventNotifier);
 
-		// CategoryPerServiceLogger logger = new CategoryPerServiceLogger();
-		// logger.setLogRequestProto(false);
-		// logger.setLogResponseProto(false);
-		// logger.setLogEventProto(false);
-		serverFactory.setLogger(null);
-
+		//Binary Services Server Logger
+		CategoryPerServiceLogger logger = new CategoryPerServiceLogger();
+		logger.setLogRequestProto(serverConfig.isLogReqProto());
+		logger.setLogResponseProto(serverConfig.isLogResProto());
+		logger.setLogEventProto(serverConfig.isLogEventProto());
+		
+		if(!serverConfig.isLogEventProto() && !serverConfig.isLogReqProto() && !serverConfig.isLogResProto()){
+			serverFactory.setLogger(null);
+		} else {
+			serverFactory.setLogger(logger);
+		}
+		
 		// Configure the server.
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		NioEventLoopGroup boss = new NioEventLoopGroup(serverConfig.getAcceptorsPoolSize(), new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory()));

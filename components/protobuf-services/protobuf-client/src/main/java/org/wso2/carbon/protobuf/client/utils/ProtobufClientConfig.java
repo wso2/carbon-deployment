@@ -47,7 +47,7 @@ public class ProtobufClientConfig {
 
 	private static Logger log = LoggerFactory.getLogger(BinaryServiceClient.class);
 
-	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) + "/repository/conf/etc/pbs.xml";
+	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"etc"+File.separator+"pbs.xml";
 
 	public ProtobufClientConfig() {
 		init();

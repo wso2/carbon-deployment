@@ -43,5 +43,8 @@ public class ServerConfigXMLConstants {
 	public final static String CHANNEL_HANDLERS = "channelHandlers";
 	public final static String TCP_NODELAY = "TCP_NODELAY";
 	public final static String ENABLE_SSL = "enableSSL";
-
+	public final static String LOGGER = "logger";
+	public final static String LOG_REQ_PROTO = "logReqProto";
+	public final static String LOG_RES_PROTO = "logResProto";
+	public final static String LOG_EVENT_PROTO = "logEventProto";
 }

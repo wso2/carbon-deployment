@@ -50,9 +50,9 @@ public class ServerConfig {
 
 	private static Logger log = LoggerFactory.getLogger(BinaryServiceRegistry.class);
 
-	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) + "/repository/conf/etc/pbs.xml";
+	private static String pbsxmlPath = System.getProperty(CarbonBaseConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"etc"+File.separator+"pbs.xml";
 
-	private static String pbsSchemaPath = System.getProperty(CarbonBaseConstants.CARBON_HOME) + "/repository/conf/etc/pbsSchema.xsd";
+	private static String pbsSchemaPath = System.getProperty(CarbonBaseConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"etc"+File.separator+"pbsSchema.xsd";
 
 	public ServerConfig() {
 		init();
@@ -87,6 +87,24 @@ public class ServerConfig {
 	private String keystorePath;
 	private String truststorePassword;
 	private String truststorePath;
+	
+	private boolean logReqProto;
+	private boolean logResProto;
+	private boolean logEventProto;
+	
+	
+
+	public boolean isLogReqProto() {
+		return logReqProto;
+	}
+
+	public boolean isLogResProto() {
+		return logResProto;
+	}
+
+	public boolean isLogEventProto() {
+		return logEventProto;
+	}
 
 	public boolean isEnablePbs() {
 		return enablePbs;
@@ -265,6 +283,20 @@ public class ServerConfig {
 					this.timeoutPeriod = Integer.parseInt(timeoutCheckerElements.getElementsByTagName(ServerConfigXMLConstants.TIMEOUT_PERIOD).item(0).getTextContent());
 					log.debug("Timeout Checker Timeout Period		:" + this.timeoutPeriod);
 
+					NodeList loggerList = eElement.getElementsByTagName(ServerConfigXMLConstants.LOGGER);
+					Element loggerElements = (Element) loggerList.item(0);
+					this.logReqProto = Boolean.parseBoolean(loggerElements.getElementsByTagName(ServerConfigXMLConstants.LOG_REQ_PROTO).item(0).getTextContent());
+					log.debug("Log Request Proto ?		:" + this.logReqProto);
+
+					this.logResProto = Boolean.parseBoolean(loggerElements.getElementsByTagName(ServerConfigXMLConstants.LOG_RES_PROTO).item(0).getTextContent());
+
+					log.debug("Log Response Proto ?		:" + this.logResProto);
+
+					this.logEventProto = Boolean.parseBoolean(loggerElements.getElementsByTagName(ServerConfigXMLConstants.LOG_EVENT_PROTO).item(0).getTextContent());
+
+					log.debug("Log Event Proto ?		:" + this.logEventProto);
+
+					
 				}
 			}
 
