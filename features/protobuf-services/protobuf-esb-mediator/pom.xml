@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>protobuf-services-feature</artifactId>
+        <groupId>org.wso2.carbon</groupId>
+        <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>protobuf-esb-mediator-feature</artifactId>
+    <packaging>pom</packaging>
+    <name>Protobuf ESB Mediator Feature</name>
+    <url>http://wso2.org</url>
+    <modules>
+        <module>org.wso2.carbon.protobuf.esb.mediator.server.feature</module>
+    </modules>
+
+
+
+</project>
