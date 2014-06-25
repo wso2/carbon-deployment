@@ -343,9 +343,6 @@ public class ServerConfig {
 				}
 			}
 
-			String msg = "PBS Server is running { server host/port : " + this.getHostName() + "@" + this.getServerPort() + " }";
-			log.info(msg);
-
 		} catch (ParserConfigurationException e) {
 			this.startUpFailed = true;
 			String msg = "The underlying parser does not support the requested features. " + e.getLocalizedMessage();

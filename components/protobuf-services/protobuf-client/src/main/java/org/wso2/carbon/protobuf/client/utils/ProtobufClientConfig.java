@@ -400,9 +400,6 @@ public class ProtobufClientConfig {
 				}
 			}
 
-			String msg = "PBS Client is running { server host/port : " + this.getServerHostName() + "@" + this.getServerPort() + ", client host/port : " + this.getClientHostName() + "@" + this.clientPort + " }";
-			log.info(msg);
-
 		} catch (ParserConfigurationException e) {
 			this.startUpFailed = true;
 			String msg = "The underlying parser does not support the requested features. " + e.getLocalizedMessage();
