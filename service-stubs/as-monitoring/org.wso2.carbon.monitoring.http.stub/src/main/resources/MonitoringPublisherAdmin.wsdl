@@ -1,0 +1,310 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:ns1="http://org.apache.axis2/xsd"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:tns="http://services.http.monitoring.carbon.wso2.org"
+                  xmlns:ax2236="http://conf.http.monitoring.carbon.wso2.org/xsd"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  targetNamespace="http://services.http.monitoring.carbon.wso2.org">
+    <wsdl:documentation>MonitoringPublisherAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2237="http://conf.http.monitoring.carbon.wso2.org/xsd"
+                   attributeFormDefault="qualified"
+                   elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://conf.http.monitoring.carbon.wso2.org/xsd"></xs:import>
+            <xs:element name="isCloudDeployment">
+                <xs:complexType>
+                    <xs:sequence></xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isCloudDeploymentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerConfigBAMServerURL">
+                <xs:complexType>
+                    <xs:sequence></xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerConfigBAMServerURLResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true"
+                                    type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEventingConfigData">
+                <xs:complexType>
+                    <xs:sequence></xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEventingConfigDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true"
+                                    type="ax2237:ServiceEventingConfigData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MonitoringPublisherAdminException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="MonitoringPublisherAdminException"
+                                    nillable="true" type="ns1:Exception"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true"
+                                type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="configureEventing">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="eventingConfigData" nillable="true"
+                                    type="ax2237:ServiceEventingConfigData"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://conf.http.monitoring.carbon.wso2.org/xsd">
+            <xs:complexType name="ServiceEventingConfigData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="description" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="monitoringEnabled"
+                                type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="msgDumpingEnabled"
+                                type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="nickName" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="password" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties"
+                                nillable="true" type="ax2236:Property"></xs:element>
+                    <xs:element minOccurs="0" name="publishingEnabled"
+                                type="xs:boolean"></xs:element>
+                    <xs:element minOccurs="0" name="streamName" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="url" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="userName" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="version" nillable="true"
+                                type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Property">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="key" nillable="true"
+                                type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="value" nillable="true"
+                                type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="configureEventingRequest">
+        <wsdl:part name="parameters" element="ns1:configureEventing"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="MonitoringPublisherAdminException">
+        <wsdl:part name="parameters" element="ns1:MonitoringPublisherAdminException"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getServerConfigBAMServerURLRequest">
+        <wsdl:part name="parameters" element="ns1:getServerConfigBAMServerURL"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getServerConfigBAMServerURLResponse">
+        <wsdl:part name="parameters" element="ns1:getServerConfigBAMServerURLResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="isCloudDeploymentRequest">
+        <wsdl:part name="parameters" element="ns1:isCloudDeployment"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="isCloudDeploymentResponse">
+        <wsdl:part name="parameters" element="ns1:isCloudDeploymentResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getEventingConfigDataRequest">
+        <wsdl:part name="parameters" element="ns1:getEventingConfigData"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getEventingConfigDataResponse">
+        <wsdl:part name="parameters" element="ns1:getEventingConfigDataResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="MonitoringPublisherAdminPortType">
+        <wsdl:operation name="configureEventing">
+            <wsdl:input message="tns:configureEventingRequest"
+                        wsaw:Action="urn:configureEventing"></wsdl:input>
+            <wsdl:fault message="tns:MonitoringPublisherAdminException"
+                        name="MonitoringPublisherAdminException"
+                        wsaw:Action="urn:configureEventingMonitoringPublisherAdminException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerConfigBAMServerURL">
+            <wsdl:input message="tns:getServerConfigBAMServerURLRequest"
+                        wsaw:Action="urn:getServerConfigBAMServerURL"></wsdl:input>
+            <wsdl:output message="tns:getServerConfigBAMServerURLResponse"
+                         wsaw:Action="urn:getServerConfigBAMServerURLResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isCloudDeployment">
+            <wsdl:input message="tns:isCloudDeploymentRequest"
+                        wsaw:Action="urn:isCloudDeployment"></wsdl:input>
+            <wsdl:output message="tns:isCloudDeploymentResponse"
+                         wsaw:Action="urn:isCloudDeploymentResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <wsdl:input message="tns:getEventingConfigDataRequest"
+                        wsaw:Action="urn:getEventingConfigData"></wsdl:input>
+            <wsdl:output message="tns:getEventingConfigDataResponse"
+                         wsaw:Action="urn:getEventingConfigDataResponse"></wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MonitoringPublisherAdminSoap11Binding"
+                  type="tns:MonitoringPublisherAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+                      style="document"></soap:binding>
+        <wsdl:operation name="configureEventing">
+            <soap:operation soapAction="urn:configureEventing" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:fault name="MonitoringPublisherAdminException">
+                <soap:fault use="literal" name="MonitoringPublisherAdminException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerConfigBAMServerURL">
+            <soap:operation soapAction="urn:getServerConfigBAMServerURL"
+                            style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isCloudDeployment">
+            <soap:operation soapAction="urn:isCloudDeployment" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <soap:operation soapAction="urn:getEventingConfigData"
+                            style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MonitoringPublisherAdminSoap12Binding"
+                  type="tns:MonitoringPublisherAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"
+                        style="document"></soap12:binding>
+        <wsdl:operation name="configureEventing">
+            <soap12:operation soapAction="urn:configureEventing"
+                              style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:fault name="MonitoringPublisherAdminException">
+                <soap12:fault use="literal" name="MonitoringPublisherAdminException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerConfigBAMServerURL">
+            <soap12:operation soapAction="urn:getServerConfigBAMServerURL"
+                              style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isCloudDeployment">
+            <soap12:operation soapAction="urn:isCloudDeployment"
+                              style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <soap12:operation soapAction="urn:getEventingConfigData"
+                              style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MonitoringPublisherAdminHttpBinding"
+                  type="tns:MonitoringPublisherAdminPortType">
+        <http:binding verb="POST"></http:binding>
+        <wsdl:operation name="configureEventing">
+            <http:operation location="configureEventing"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServerConfigBAMServerURL">
+            <http:operation location="getServerConfigBAMServerURL"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isCloudDeployment">
+            <http:operation location="isCloudDeployment"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <http:operation location="getEventingConfigData"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MonitoringPublisherAdmin">
+        <wsdl:port name="MonitoringPublisherAdminHttpsSoap11Endpoint"
+                   binding="tns:MonitoringPublisherAdminSoap11Binding">
+            <soap:address
+                    location="https://10.113.9.186:9443/services/MonitoringPublisherAdmin.MonitoringPublisherAdminHttpsSoap11Endpoint/"></soap:address>
+        </wsdl:port>
+        <wsdl:port name="MonitoringPublisherAdminHttpsSoap12Endpoint"
+                   binding="tns:MonitoringPublisherAdminSoap12Binding">
+            <soap12:address
+                    location="https://10.113.9.186:9443/services/MonitoringPublisherAdmin.MonitoringPublisherAdminHttpsSoap12Endpoint/"></soap12:address>
+        </wsdl:port>
+        <wsdl:port name="MonitoringPublisherAdminHttpsEndpoint"
+                   binding="tns:MonitoringPublisherAdminHttpBinding">
+            <http:address
+                    location="https://10.113.9.186:9443/services/MonitoringPublisherAdmin.MonitoringPublisherAdminHttpsEndpoint/"></http:address>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

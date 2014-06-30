@@ -1,0 +1,5 @@
+<BamConfig>
+	<ServiceDataPublishing>disable</ServiceDataPublishing>
+	<WebappDataPublishing>disable</WebappDataPublishing>
+    <MonitoringDataPublishing>enable</MonitoringDataPublishing>
+</BamConfig>
