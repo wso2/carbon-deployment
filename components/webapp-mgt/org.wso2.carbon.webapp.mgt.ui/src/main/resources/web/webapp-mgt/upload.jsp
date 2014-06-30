@@ -18,8 +18,44 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.context.CarbonContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.webapp.mgt.ui.WebappAdminClient" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.ResourceBundle" %>
+
 <!-- This page is included to display messages which are set to request scope or session scope -->
 <jsp:include page="../dialog/display_messages.jsp"/>
+
+<%
+   String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+
+    ConfigurationContext configContext =
+               (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+
+       String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+       String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+
+       WebappAdminClient client;
+       VhostHolder vhostHolder = null;
+
+        try {
+               client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
+               vhostHolder = client.getVhostHolder();
+
+           } catch (Exception e) {
+                     response.setStatus(500);
+                     CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
+                     session.setAttribute(CarbonUIMessage.ID, uiMsg);
+         }
+%>
 
 <fmt:bundle basename="org.wso2.carbon.webapp.mgt.ui.i18n.Resources">
     <carbon:breadcrumb label="add.webapp"
@@ -167,7 +203,9 @@
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
-            oCell.innerHTML = "<input type='text' name='version' value=''><input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
+            oCell.innerHTML = "<select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %><option><%=vhostName%>"+
+                                 "</option><%}%></select><input type='text' name='version' value=''>"+
+                                 "<input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
             oCell.className = "formRow";
 
             alternateTableRows('webappTbl', 'tableEvenRow', 'tableOddRow');
@@ -205,6 +243,11 @@
                             <label>Version</label>
                         </td>
                         <td class="formRow">
+                            <select name="hostName">
+                              <%    for(String vhostName:vhostHolder.getVhosts()){  %>
+                              <option><%=vhostName%></option>
+                              <%      }                      %>
+                            </select>
                             <input type="text" name="version" value="">
                             <input type="button"  width='20px' class="button" onclick="addRow();" value=" + "/>
                         </td>

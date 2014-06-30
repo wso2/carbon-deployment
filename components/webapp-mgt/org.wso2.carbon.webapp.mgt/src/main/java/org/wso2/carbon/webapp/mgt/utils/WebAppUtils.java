@@ -8,6 +8,8 @@ import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,8 +46,7 @@ public class WebAppUtils {
         return baseDir;
     }
     public static String getMatchingHostname(String filePath){
-        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-        Container[] childHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
+        Container[] childHosts = findHostChildren();
         for(Container host:childHosts){
             Host vhost = (Host)host;
             String appBase = vhost.getAppBase();
@@ -63,5 +64,34 @@ public class WebAppUtils {
         String baseDir = getWebappsBaseDir(webappFile.getAbsolutePath());
         String hostname = getMatchingHostname(baseDir);
         return hostname+":"+webappFile.getName();
+    }
+
+    public static List<String> getVhostNames(){
+        List<String> vhosts = new ArrayList<String>();
+        Container[] childHosts = findHostChildren();
+        for(Container vhost:childHosts){
+            Host host = (Host)vhost;
+            vhosts.add(host.getName());
+        }
+        return vhosts;
+    }
+
+    public static String getAppbase(String hostName){
+        String appBase = "";
+        Container[] childHosts = findHostChildren();
+        for(Container host:childHosts){
+            Host vhost = (Host)host;
+            if(vhost.getName().equals(hostName)){
+                appBase = vhost.getAppBase();
+                break;
+            }
+        }
+        return appBase;
+    }
+
+    private static Container[] findHostChildren(){
+        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+        Container[] childHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
+        return childHosts;
     }
 }

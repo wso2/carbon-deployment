@@ -792,12 +792,13 @@ public class WebappAdmin extends AbstractAdmin {
      */
     public boolean uploadWebapp(WebappUploadData[] webappUploadDataList) throws AxisFault {
         AxisConfiguration axisConfig = getAxisConfig();
-        File webappsDir = new File(getWebappDeploymentDirPath(WebappsConstants.WEBAPP_FILTER_PROP));
-        if (!webappsDir.exists() && !webappsDir.mkdirs()) {
-            log.warn("Could not create directory " + webappsDir.getAbsolutePath());
-        }
 
         for (WebappUploadData uploadData : webappUploadDataList) {
+            File webappsDir = new File(getWebappDeploymentDirPath(WebappsConstants.WEBAPP_FILTER_PROP,uploadData.getHostName()));
+            if (!webappsDir.exists() && !webappsDir.mkdirs()) {
+                log.warn("Could not create directory " + webappsDir.getAbsolutePath());
+            }
+
             String fileName = uploadData.getFileName();
             String version = uploadData.getVersion();
             if(version != "" && version != null){
@@ -834,10 +835,22 @@ public class WebappAdmin extends AbstractAdmin {
         return true;
     }
 
+    protected String getWebappDeploymentDirPath(String webappType,String hostName) {
+        String webappDeploymentDir;
+        if(WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP.equalsIgnoreCase(webappType)) {
+            webappDeploymentDir = WebappsConstants.JAGGERY_WEBAPP_REPO;
+            return getAxisConfig().getRepository().getPath() + File.separator + webappDeploymentDir;
+        } else {
+            return WebAppUtils.getAppbase(hostName);
+        }
+
+    }
+
     protected String getWebappDeploymentDirPath(String webappType) {
         String webappDeploymentDir;
         if(WebappsConstants.JAGGERY_WEBAPP_FILTER_PROP.equalsIgnoreCase(webappType)) {
             webappDeploymentDir = WebappsConstants.JAGGERY_WEBAPP_REPO;
+
         } else {
             webappDeploymentDir = WebappsConstants.WEBAPP_DEPLOYMENT_FOLDER;
         }
@@ -1041,11 +1054,19 @@ public class WebappAdmin extends AbstractAdmin {
         }
     }
 
+    private String getVhostAppbase(String hostName){
+        return WebAppUtils.getAppbase(hostName);
+    }
+
 
     public boolean isDefaultVersionManagementEnabled() {
         return (defaultVersionManagement == null) ?
                 Boolean.parseBoolean(System.getProperty(WebappsConstants.WEB_APP_DEFAULT_VERSION_SUPPORT)) :
                 defaultVersionManagement;
+    }
+
+    public VhostHolder getVhostHolder(){
+        return new VhostHolder();
     }
 
 }

@@ -2,9 +2,6 @@ package org.wso2.carbon.webapp.deployer.internal;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.Host;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.component.xml.config.DeployerConfig;
@@ -25,16 +22,14 @@ import java.util.List;
  */
 public class WebAppDeployerServiceComponent implements Axis2DeployerProvider {
 
-    private static final Log log = LogFactory.getLog(WebAppDeployerServiceComponent.class);
     private List<DeployerConfig> deployerConfigs;
-    private ServiceRegistration registration;
 
 
     protected void activate(ComponentContext ctx) {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         Container[] virtualhosts = carbonTomcatService.getTomcat().getEngine().findChildren();
         deployerConfigs = new ArrayList<DeployerConfig>();
-        registration = (ctx.getBundleContext()).registerService(Axis2DeployerProvider.class.getName(), this, null);
+        (ctx.getBundleContext()).registerService(Axis2DeployerProvider.class.getName(), this, null);
         addDeployers(virtualhosts);
 
     }
@@ -60,8 +55,8 @@ public class WebAppDeployerServiceComponent implements Axis2DeployerProvider {
     }
 
     public String getDirectoryName(String appBase){
-        String basedir =  "";
-        if(appBase.endsWith("/")){
+        String basedir;
+        if(appBase.endsWith(File.separator)){
             basedir = appBase.substring(0, appBase.lastIndexOf(File.separator));
         } else {
             basedir = appBase;

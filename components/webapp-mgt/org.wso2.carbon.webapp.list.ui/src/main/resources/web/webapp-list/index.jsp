@@ -456,6 +456,9 @@
         <nobr><fmt:message key="webapp.display.name"/></nobr>
     </th>
     <th>
+            <nobr><fmt:message key="webapp.hostname"/></nobr>
+    </th>
+    <th>
         <nobr><fmt:message key="webapp.state"/></nobr>
     </th>
     <th>
@@ -568,6 +571,8 @@
         <% } %>
     </td>
     <td><%= (vWebapp.getDisplayName() != null ? vWebapp.getDisplayName() : "") %>
+    </td>
+    <td><%=hostName%>
     </td>
     <td><%= (vWebapp.getState() != null ? vWebapp.getState() : "Started") %>
     </td>

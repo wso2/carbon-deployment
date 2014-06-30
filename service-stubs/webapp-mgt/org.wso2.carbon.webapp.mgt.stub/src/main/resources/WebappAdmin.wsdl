@@ -86,6 +86,17 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getVhostHolder">
+                <xs:complexType
+                        ><xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getVhostHolderResponse">
+                <xs:complexType><xs:sequence>
+                    <xs:element minOccurs="0" name="return" nillable="true" type="ax2425:VhostHolder"/>
+                </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getStoppedWebapp">
                 <xs:complexType>
                     <xs:sequence>
@@ -303,6 +314,12 @@
                     <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary"></xs:element>
                     <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="version" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="VhostHolder">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="vhosts" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="WebappMetadata">
@@ -400,6 +417,12 @@
     </wsdl:message>
     <wsdl:message name="deleteStoppedWebappsRequest">
         <wsdl:part name="parameters" element="ns1:deleteStoppedWebapps"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getVhostHolderRequest">
+        <wsdl:part name="parameters" element="ns1:getVhostHolder"/>
+    </wsdl:message>
+    <wsdl:message name="getVhostHolderResponse">
+        <wsdl:part name="parameters" element="ns1:getVhostHolderResponse"/>
     </wsdl:message>
     <wsdl:message name="getPagedWebappsSummaryRequest">
         <wsdl:part name="parameters" element="ns1:getPagedWebappsSummary"></wsdl:part>
@@ -523,6 +546,10 @@
         </wsdl:operation>
         <wsdl:operation name="deleteStoppedWebapps">
             <wsdl:input message="tns:deleteStoppedWebappsRequest" wsaw:Action="urn:deleteStoppedWebapps"></wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getVhostHolder">
+            <wsdl:input message="tns:getVhostHolderRequest" wsaw:Action="urn:getVhostHolder"/>
+            <wsdl:output message="tns:getVhostHolderResponse" wsaw:Action="urn:getVhostHolderResponse"/>
         </wsdl:operation>
         <wsdl:operation name="getPagedWebappsSummary">
             <wsdl:input message="tns:getPagedWebappsSummaryRequest" wsaw:Action="urn:getPagedWebappsSummary"></wsdl:input>
@@ -664,6 +691,15 @@
             <wsdl:input>
                 <soap:body use="literal"></soap:body>
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getVhostHolder">
+            <soap:operation soapAction="urn:getVhostHolder" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="isDefaultVersionManagementEnabled">
             <soap:operation soapAction="urn:isDefaultVersionManagementEnabled" style="document"></soap:operation>
@@ -887,6 +923,15 @@
                 <soap12:body use="literal"></soap12:body>
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="getVhostHolder">
+            <soap12:operation soapAction="urn:getVhostHolder" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="isDefaultVersionManagementEnabled">
             <soap12:operation soapAction="urn:isDefaultVersionManagementEnabled" style="document"></soap12:operation>
             <wsdl:input>
@@ -1105,6 +1150,15 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getVhostHolder">
+            <http:operation location="getVhostHolder"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="isDefaultVersionManagementEnabled">
             <http:operation location="isDefaultVersionManagementEnabled"></http:operation>
