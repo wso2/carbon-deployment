@@ -526,17 +526,17 @@
                   hostName = webappsWrapper.getHostName();
             }
             String webappURL = url + vWebapp.getContext();
-            if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
-                webappURL += vWebapp.getServletContext() + vWebapp.getServiceListPath();
-            } else {
-                webappURL = webappURL + "/";
-            }
+                if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
+                    webappURL += vWebapp.getServletContext() + vWebapp.getServiceListPath();
+                } else {
+                    webappURL = webappURL + "/";
+                }
 %>
 
 <tr bgcolor="<%= bgColor%>">
     <td width="10px" style="text-align:center; !important">
         <input type="checkbox" name="webappFileName"
-               value="<%= vWebapp.getWebappFile() %>"
+               value="<%=vWebapp.getHostName()+':'+vWebapp.getWebappFile()%>"
                onclick="resetVars()" class="chkBox"/>
     </td>
     <%
@@ -605,7 +605,7 @@
                 if (vWebapp.getStatistics().getActiveSessions() != 0) {
         %>
         <a href="sessions.jsp?webappFileName=<%=
-              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8") %>">
+              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8") %>&hostName=<%=vWebapp.getHostName()%>">
             <%= vWebapp.getStatistics().getActiveSessions() %>
         </a>
         <%
@@ -654,7 +654,7 @@
     <td>
         &nbsp;
         <% if (!"/default".equals(version) && !(webapp.getVersionGroups().length == 1)) { %>
-            <a href="set_default_version.jsp?appGroupName=<%=webapp.getAppVersionRoot()%>&appFileName=<%=URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>"
+            <a href="set_default_version.jsp?appGroupName=<%=webapp.getAppVersionRoot()%>&appFileName=<%=URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&hostName=<%=vWebapp.getHostName()%>"
                     style='background:url(images/default-icon.png) no-repeat;padding-left:20px;display:block;white-space: nowrap;height:16px;'>
                 <fmt:message key="make.default"/>
             </a>
@@ -662,7 +662,7 @@
     </td>
     <%}%>
     <td>  &nbsp;
-        <a href="download-ajaxprocessor.jsp?name=<%=vWebapp.getWebappFile()%>&type=<%=vWebapp.getWebappType()%>"
+        <a href="download-ajaxprocessor.jsp?name=<%=vWebapp.getWebappFile()%>&hostName=<%=vWebapp.getHostName()%>&type=<%=vWebapp.getWebappType()%>"
            target="_self"
            style='background:url(images/download.gif) no-repeat;padding-left:20px;display:block;white-space: nowrap;height:16px;'>
             <fmt:message key="download"/>

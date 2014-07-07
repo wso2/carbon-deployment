@@ -203,8 +203,8 @@
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
-            oCell.innerHTML = "<select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %><option><%=vhostName%>"+
-                                 "</option><%}%></select><input type='text' name='version' value=''>"+
+            oCell.innerHTML = "<input type='text' name='version' value=''><select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %><option><%=vhostName%>"+
+                                 "</option><%}%></select>"+
                                  "<input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
             oCell.className = "formRow";
 
@@ -243,12 +243,12 @@
                             <label>Version</label>
                         </td>
                         <td class="formRow">
+                            <input type="text" name="version" value="">
                             <select name="hostName">
                               <%    for(String vhostName:vhostHolder.getVhosts()){  %>
                               <option><%=vhostName%></option>
                               <%      }                      %>
                             </select>
-                            <input type="text" name="version" value="">
                             <input type="button"  width='20px' class="button" onclick="addRow();" value=" + "/>
                         </td>
                     </tr>

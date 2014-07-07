@@ -64,7 +64,7 @@ public class WebApplication {
     public WebApplication(TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer, Context context, File webappFile) {
         this.tomcatGenericWebappsDeployer = tomcatGenericWebappsDeployer;
         this.context = context;
-        this.hostName = WebAppUtils.getMatchingHostname(WebAppUtils.getWebappsBaseDir(webappFile.getAbsolutePath()));
+        this.hostName = WebAppUtils.getMatchingHostname(WebAppUtils.getWebappDirPath(webappFile.getAbsolutePath()));
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
 
@@ -271,12 +271,12 @@ public class WebApplication {
      * @throws ArtifactMetadataException
      */
     protected String getBamEnableFromWebappMetaData() throws AxisFault, ArtifactMetadataException {
-        return tomcatGenericWebappsDeployer.recievePersistedWebappMetaData(getWebappFile().getName(), WebappsConstants.ENABLE_BAM_STATISTICS);
+        return tomcatGenericWebappsDeployer.recievePersistedWebappMetaData(getWebappFile(), WebappsConstants.ENABLE_BAM_STATISTICS);
     }
 
     protected void updateWebappMetaDataforBam(String value) {
         try {
-            tomcatGenericWebappsDeployer.setPersistedWebappMetaData(getWebappFile().getName(), WebappsConstants.ENABLE_BAM_STATISTICS, value);
+            tomcatGenericWebappsDeployer.setPersistedWebappMetaData(getWebappFile(), WebappsConstants.ENABLE_BAM_STATISTICS, value);
             reload();
         } catch (Exception e) {
             log.error("Unable to persist data - bam enable",e);

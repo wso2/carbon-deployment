@@ -20,7 +20,6 @@ import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.webapp.mgt.AbstractWebappDeployer;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
@@ -48,7 +47,7 @@ public class JaxwsWebappDeployer extends AbstractWebappDeployer {
     @Override
     protected TomcatGenericWebappsDeployer createTomcatGenericWebappDeployer(
             String webContextPrefix, int tenantId, String tenantDomain) {
-        return new TomcatGenericWebappsDeployer(webContextPrefix, tenantId, tenantDomain, webappsHolder, configContext);
+        return new TomcatGenericWebappsDeployer(webContextPrefix, tenantId, tenantDomain, webApplicationsHolderList, configContext);
     }
 
     @Override

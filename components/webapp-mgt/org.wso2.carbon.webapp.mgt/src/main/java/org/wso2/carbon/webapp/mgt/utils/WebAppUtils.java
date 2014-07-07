@@ -1,15 +1,19 @@
 package org.wso2.carbon.webapp.mgt.utils;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.catalina.Container;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardWrapper;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
+import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +45,7 @@ public class WebAppUtils {
         return isMatch;
     }
 
-    public static String getWebappsBaseDir(String webappFilePath){
+    public static String getWebappDirPath(String webappFilePath){
         String baseDir = webappFilePath.substring(0,webappFilePath.lastIndexOf(File.separator));
         return baseDir;
     }
@@ -57,11 +61,11 @@ public class WebAppUtils {
                 return vhost.getName();
             }
         }
-        return "";
+        return getDefaultHost();
     }
 
     public static String getWebappKey(File webappFile){
-        String baseDir = getWebappsBaseDir(webappFile.getAbsolutePath());
+        String baseDir = getWebappDirPath(webappFile.getAbsolutePath());
         String hostname = getMatchingHostname(baseDir);
         return hostname+":"+webappFile.getName();
     }
@@ -89,9 +93,40 @@ public class WebAppUtils {
         return appBase;
     }
 
+    public static WebApplicationsHolder getwebappHolder(String webappFilePath, ConfigurationContext configurationContext){
+        String basedir = getwebappDir(webappFilePath);
+        Map<String,WebApplicationsHolder> webApplicationsHolderList = (Map<String,WebApplicationsHolder>) configurationContext.getProperty("carbon.webapps.holderlist");
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderList.get(basedir);
+        if(webApplicationsHolder == null){
+            webApplicationsHolder = (WebApplicationsHolder) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+        }
+        return webApplicationsHolder;
+    }
+
+    public static String getwebappDir(String webappFilepth){
+        String baseDir = getWebappDirPath(webappFilepth);
+        return baseDir.substring(baseDir.lastIndexOf(File.separator)+1,baseDir.length());
+    }
+
+    public static String getWebappName(String webappFilePath){
+        String webappName = webappFilePath.substring(webappFilePath.lastIndexOf(File.separator)+1,webappFilePath.length());
+        return webappName;
+    }
+
+    public static Map<String,WebApplicationsHolder> getWebapplicationHolders(ConfigurationContext configurationContext){
+        Map<String,WebApplicationsHolder> webApplicationsHolderList = (Map<String,WebApplicationsHolder>) configurationContext.getProperty("carbon.webapps.holderlist");
+
+        return webApplicationsHolderList;
+    }
+
     private static Container[] findHostChildren(){
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         Container[] childHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
         return childHosts;
+    }
+
+    public static String getDefaultHost(){
+        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+        return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
     }
 }

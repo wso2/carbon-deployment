@@ -42,6 +42,7 @@ public final class WebappsConstants {
 //    public static final String TOMCAT_JAX_WEBAPP_DEPLOYER = "tomcatJaxWebappsDeplyer";
 
     public static final String WEBAPP_METADATA_DIR = "artifactMetafiles" + File.separator + "webapp";
+    public static final String WEBAPP_METADATA_BASE_DIR = "artifactMetafiles";
     public static final String WEBAPP_GROUP_METADATA_DIR = "artifactMetafiles" + File.separator + "webappDefaultVersion";
 
     public static final String ENABLE_BAM_STATISTICS = "enable.statistics";
