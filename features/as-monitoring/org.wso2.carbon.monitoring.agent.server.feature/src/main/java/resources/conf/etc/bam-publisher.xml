@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<bamPublisher>
+    <streams>
+        <stream name="monitoring.connector">
+            <enabled>true</enabled>
+            <nickName>BAM.Monitoring.Connector.Publisher</nickName>
+            <streamVersion>0.0.1</streamVersion>
+            <username>admin</username>
+            <password>admin</password>
+            <receiverUrl>ssl://localhost:7711</receiverUrl>
+            <description>Connector details are published to this stream</description>
+        </stream>
+        <stream name="monitoring.webapp.resource">
+            <enabled>true</enabled>
+            <nickName>BAM.Monitoring.WebApp.Resource.Publisher</nickName>
+            <streamVersion>0.0.2</streamVersion>
+            <username>admin</username>
+            <password>admin</password>
+            <receiverUrl>ssl://localhost:7711</receiverUrl>
+            <description>Webapp Resource details are published to this stream</description>
+        </stream>
+    </streams>
+</bamPublisher>

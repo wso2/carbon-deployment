@@ -42,6 +42,7 @@
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
+                        <Bundle-Activator>org.wso2.carbon.monitoring.api.MonitoringActivator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>
