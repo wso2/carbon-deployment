@@ -13,10 +13,10 @@
     <modules>
         <module>service-stubs/service-mgt</module>
         <module>service-stubs/webapp-mgt</module>
-        <module>service-stubs/as-monitoring</module>
+        <module>service-stubs/monitoring</module>
         <module>components/service-mgt</module>
         <module>components/webapp-mgt</module>
-        <module>components/as-monitoring</module>
+        <module>components/monitoring</module>
         <module>features/as-runtimes</module>
         <module>features/service-mgt</module>
         <module>features/webapp-mgt</module>
@@ -823,6 +823,12 @@
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.core</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.monitoring.http</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
@@ -852,6 +858,7 @@
                 <artifactId>ua-parser</artifactId>
                 <version>${ua.parser.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -894,7 +901,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.7.2</version>
+                    <version>1.7.4</version>
                     <executions>
                         <execution>
                             <id>generate-scr-scrdescriptor</id>

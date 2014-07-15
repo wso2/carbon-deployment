@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>carbon-deployment</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>monitoring</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Monitoring Component Parent Module</name>
+    <description>WSO2 Carbon Application Server Monitoring</description>
+    <url>http://wso2.org</url>
+
+    <modules>
+        <module>org.wso2.carbon.monitoring.core</module>
+        <module>org.wso2.carbon.monitoring.http</module>
+        <module>org.wso2.carbon.monitoring.http.ui</module>
+        <module>org.wso2.carbon.monitoring.stat.collector.jmx</module>
+        <module>org.wso2.carbon.monitoring.publisher.bam</module>
+    </modules>
+
+</project>
