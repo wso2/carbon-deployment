@@ -35,8 +35,8 @@
                         <Import-Package>
                             javax.servlet;version="${imp.pkg.version.javax.servlet}",
                             javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
-                            org.apache.axis2.*; version=${orbit.version.axis2},
-                            org.apache.thrift.*; version=0.0.0,
+                            org.wso2.carbon.monitoring.core.publisher.api;version="${project.version}",
+                            org.apache.axis2.context;version="${axis2.wso2.version}",
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -48,14 +48,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -64,12 +56,12 @@
             <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.securevault</artifactId>
-        </dependency>
-        <dependency>
             <groupId>ua.parser.wso2</groupId>
             <artifactId>ua-parser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.monitoring.core</artifactId>
         </dependency>
     </dependencies>
 </project>

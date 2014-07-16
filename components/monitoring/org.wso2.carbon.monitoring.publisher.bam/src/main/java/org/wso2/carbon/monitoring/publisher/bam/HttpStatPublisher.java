@@ -1,5 +1,7 @@
 package org.wso2.carbon.monitoring.publisher.bam;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.databridge.commons.AttributeType;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
@@ -10,6 +12,9 @@ import java.util.List;
 
 
 public class HttpStatPublisher extends PublisherBase {
+
+	private static final Log log = LogFactory.getLog(HttpStatPublisher.class);
+
 	public void publish(WebappMonitoringEvent e) {
 
 		List<Object> payload = new ArrayList<Object>();
@@ -57,6 +62,7 @@ public class HttpStatPublisher extends PublisherBase {
 		Event event = new Event();
 		event.setPayloadData(payload.toArray());
 		event.setMetaData(metaData.toArray());
+		publish(event);
 	}
 
 	@Override
