@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <bamPublisher>
     <streams>
-        <stream name="monitoring.connector">
+        <stream id="monitoring.connector">
             <enabled>true</enabled>
+            <streamName>monitoring.connector</streamName>
             <nickName>BAM.Monitoring.Connector.Publisher</nickName>
             <streamVersion>0.0.1</streamVersion>
             <username>admin</username>
@@ -10,8 +11,9 @@
             <receiverUrl>ssl://localhost:7711</receiverUrl>
             <description>Connector details are published to this stream</description>
         </stream>
-        <stream name="monitoring.webapp.resource">
+        <stream id="monitoring.webapp.resource">
             <enabled>true</enabled>
+            <streamName>monitoring.webapp.resource</streamName>
             <nickName>BAM.Monitoring.WebApp.Resource.Publisher</nickName>
             <streamVersion>0.0.2</streamVersion>
             <username>admin</username>
@@ -19,8 +21,9 @@
             <receiverUrl>ssl://localhost:7711</receiverUrl>
             <description>Webapp Resource details are published to this stream</description>
         </stream>
-        <stream name="monitoring.webapp.calls">
+        <stream id="monitoring.webapp.calls">
             <enabled>true</enabled>
+            <streamName>monitoring.webapp.calls</streamName>
             <nickName>BAM.Monitoring.WebApp.Calls.Publisher</nickName>
             <streamVersion>0.0.1</streamVersion>
             <username>admin</username>

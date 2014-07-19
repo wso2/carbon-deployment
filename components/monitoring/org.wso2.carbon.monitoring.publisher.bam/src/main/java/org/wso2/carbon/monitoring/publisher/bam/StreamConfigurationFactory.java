@@ -31,7 +31,7 @@ public class StreamConfigurationFactory {
 
 	private static Log log = LogFactory.getLog(StreamConfigurationFactory.class);
 	private static Document document;
-	private static String xPathBase = "//bamPublisher/streams/stream[@name='%s']/%s";
+	private static String xPathBase = "//bamPublisher/streams/stream[@id='%s']/%s";
 
 	private static ConcurrentHashMap<String, StreamConfigContext> configCache = new ConcurrentHashMap<String, StreamConfigContext>();
 
@@ -67,31 +67,31 @@ public class StreamConfigurationFactory {
 	 * </streams>
 	 * </bamPublisher>
 	 */
-	public static StreamConfigContext getConnectorStreamConfiguration(String streamName) {
-		if (configCache.containsKey(streamName)) {
-			return configCache.get(streamName);
+	public static StreamConfigContext getConnectorStreamConfiguration(String id) {
+		if (configCache.containsKey(id)) {
+			return configCache.get(id);
 		}
 
 		StreamConfigContext streamConfigContext = new StreamConfigContext();
-		streamConfigContext.setStreamName(streamName);
 
-		String value = getValue(streamName, "enabled");
+		String value = getValue(id, "enabled");
 		streamConfigContext.setEnabled(Boolean.parseBoolean(value));
 
-		streamConfigContext.setNickName(getValue(streamName, "nickName"));
-		streamConfigContext.setStreamVersion(getValue(streamName, "streamVersion"));
-		streamConfigContext.setUsername(getValue(streamName, "username"));
-		streamConfigContext.setPassword(getValue(streamName, "password"));
-		streamConfigContext.setReceiverUrl(getValue(streamName, "receiverUrl"));
-		streamConfigContext.setDescription(getValue(streamName, "description"));
+		streamConfigContext.setStreamName(getValue(id, "streamName"));
+		streamConfigContext.setNickName(getValue(id, "nickName"));
+		streamConfigContext.setStreamVersion(getValue(id, "streamVersion"));
+		streamConfigContext.setUsername(getValue(id, "username"));
+		streamConfigContext.setPassword(getValue(id, "password"));
+		streamConfigContext.setReceiverUrl(getValue(id, "receiverUrl"));
+		streamConfigContext.setDescription(getValue(id, "description"));
 
-		configCache.put(streamName, streamConfigContext);
+		configCache.put(id, streamConfigContext);
 		return streamConfigContext;
 
 	}
 
-	private static String getValue(String streamName, String property) {
-		String xPathQuery = String.format(xPathBase, streamName, property);
+	private static String getValue(String id, String property) {
+		String xPathQuery = String.format(xPathBase, id, property);
 		try {
 			return xPath.compile(xPathQuery).evaluate(document);
 		} catch (XPathExpressionException e) {

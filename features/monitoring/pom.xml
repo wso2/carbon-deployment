@@ -27,15 +27,16 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>as-monitoring-feature</artifactId>
+    <artifactId>monitoring-feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - AS Monitoring Feature Aggregator Module</name>
+    <name>WSO2 Carbon - Monitoring Feature Aggregator Module</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.monitoring.agent.server.feature</module>
-        <module>org.wso2.carbon.monitoring.agent.ui.feature</module>
-        <module>org.wso2.carbon.monitoring.agent.feature</module>
+        <module>org.wso2.carbon.monitoring.publisher.bam.feature</module>
+        <module>org.wso2.carbon.monitoring.stat.collector.feature</module>
+        <module>org.wso2.carbon.monitoring.core.feature</module>
+
     </modules>
 
 </project>

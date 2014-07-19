@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.monitoring.http</artifactId>
+    <artifactId>org.wso2.carbon.monitoring.stat.collector.http</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Webapp Monitoring</name>
 

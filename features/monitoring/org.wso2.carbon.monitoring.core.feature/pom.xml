@@ -3,27 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>as-monitoring-feature</artifactId>
+        <artifactId>monitoring-feature</artifactId>
         <groupId>org.wso2.carbon</groupId>
         <version>4.3.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>org.wso2.carbon.monitoring.agent.feature</artifactId>
+    <artifactId>org.wso2.carbon.monitoring.core.feature</artifactId>
 
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - AS Monitoring Agent Aggregate Feature</name>
+    <name>WSO2 Carbon - Monitoring Aggregate Feature</name>
     <url>http://wso2.org</url>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.monitoring.agent.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.monitoring.publisher.bam.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.monitoring.agent.ui.feature</artifactId>
+            <artifactId>org.wso2.carbon.monitoring.stat.collector.feature</artifactId>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -52,8 +52,8 @@
                                 <importFeatureDef>org.wso2.carbon.core:${carbon.platform.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.monitoring.agent.server.feature:${carbon.platform.version}</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.monitoring.agent.ui.feature:${carbon.platform.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.monitoring.stat.collector.feature:${carbon.platform.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.monitoring.publisher.bam.feature:${carbon.platform.version}</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

@@ -21,15 +21,15 @@
 
     <parent>
         <groupId>org.wso2.carbon</groupId>
-        <artifactId>as-monitoring-feature</artifactId>
+        <artifactId>monitoring-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.monitoring.agent.server.feature</artifactId>
+    <artifactId>org.wso2.carbon.monitoring.publisher.bam.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - AS Monitoring Agent Server Feature</name>
+    <name>WSO2 Carbon - Monitoring BAM Publisher  Feature</name>
     <url>http://wso2.org</url>
 
     <description>This feature contains the core bundles required for AS Monitoring Agent functionality
@@ -39,15 +39,13 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.monitoring.http</artifactId>
+            <artifactId>org.wso2.carbon.monitoring.publisher.bam</artifactId>
         </dependency>
         <dependency>
-            <groupId>ua.parser.wso2</groupId>
-            <artifactId>ua-parser</artifactId>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.monitoring.core</artifactId>
         </dependency>
     </dependencies>
-
-
 
     <build>
         <plugins>
@@ -63,7 +61,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.monitoring.agent.server</id>
+                            <id>org.wso2.carbon.monitoring.publisher.bam</id>
                             <propertiesFile>../feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -73,10 +71,10 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon:org.wso2.carbon.monitoring.http:${project.version}
+                                    org.wso2.carbon:org.wso2.carbon.monitoring.publisher.bam:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    ua.parser.wso2:ua-parser:${ua.parser.version}
+                                    org.wso2.carbon:org.wso2.carbon.monitoring.core:${project.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
