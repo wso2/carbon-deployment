@@ -30,6 +30,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="java.util.ArrayList" %>
 
 <jsp:include page="../dialog/display_messages.jsp"/>
 
@@ -189,16 +190,6 @@
                          alt="<%= service.getServiceType()%>"/>
                 </td>
             </tr>
-            <tr>
-                <td><fmt:message key="service.deployed.time"/></td>
-                <td><%=service.getServiceDeployedTime()%>
-                </td>
-            </tr>
-            <tr>
-                <td><fmt:message key="service.up.time"/></td>
-                <td><%=service.getServiceUpTime()%>
-                </td>
-            </tr>
         </table>
     </td>
 
@@ -337,8 +328,38 @@
 </tr>
 <tr>
 <%
+    List<String> items = null;
+    boolean hasUIExtension = false;
+    boolean hasExtraConfig = false;
+    String serviceTypePath = null;
+    BundleContext bundleContext = CarbonUIUtil.getBundleContext();
+    hasUIExtension = false;
+    if (bundleContext != null) {
+        ServiceTracker tracker = new ServiceTracker(bundleContext,
+                                                    ServiceManagementUIExtender.class.getName(),
+                                                    null);
+        tracker.open();
+        ServiceManagementUIExtender extender = (ServiceManagementUIExtender) tracker.getService();
+
+        if (extender != null && extender.getItems().size() > 0) {
+            hasUIExtension = true;
+            items = extender.getItems();
+        }
+        tracker.close();
+    }
+
+    hasExtraConfig = false;
+    String serviceType = service.getServiceType();
+    serviceTypePath = "/" + serviceType + "/";
+    Set resourcePaths = config.getServletContext().getResourcePaths(serviceTypePath);
+
+    if (resourcePaths != null && resourcePaths.contains(serviceTypePath + "extra_config.jsp")) {
+        hasExtraConfig = true;
+    }
+
     String colspan = "";
-    if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+    if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service") &&
+       (hasExtraConfig || hasUIExtension)){
         colspan = " colspan=\"3\" ";
 %>
 <td>
@@ -348,254 +369,33 @@
         <th colspan="2" align="left"><fmt:message key="quality.of.service.configuration"/></th>
     </tr>
 </thead>
-<tr>
-    <td colspan="2">
-        <nobr>
-            <%
-                request.setAttribute("serviceName", serviceName);
-                request.setAttribute("isActive", String.valueOf(service.getActive()));
-				request.setAttribute("serviceURL", service.getTryitURL().substring(0, service.getTryitURL().indexOf("?tryit")));
-            %>
-            <div id="serviceStateDiv">
-                <%@ include file="service_state_include.jsp" %>
-            </div>
-        </nobr>
-        <script type="text/javascript">
-            jQuery.noConflict();
-            function changeServiceState(active) {
-                var url = 'change_service_state_ajaxprocessor.jsp?serviceName=<%= request.getAttribute("serviceName")%>&isActive=' + active;
-                jQuery("#serviceStateDiv").load(url, null, function (responseText, status, XMLHttpRequest) {
-                    if (status != "success") {
-                        CARBON.showErrorDialog('<fmt:message key="could.not.change.service.state"/>');
-                    } else {
-                        if(active){
-                            document.getElementById('serviceClientDiv').style.display = '';
-                            document.getElementById('statsDiv').style.display = '';
-                            refresh = setInterval("refreshStats()", 6000);
-                        } else {
-                            document.getElementById('serviceClientDiv').style.display = 'none';
-                            stopRefreshStats();
-                            document.getElementById('statsDiv').style.display = 'none';
-                        }
-                    }
-                });
+    <%
+        if (hasUIExtension) {
+            for (String item : items) {
+    %>
+    `
+    <tr>
+        <td colspan="2" align="left"><%= item%>
+        </td>
+    </tr>
+    <%
             }
-        </script>
-    </td>
-</tr>
+        }
 
-<tr>
-    <td>
-        <%
-            if(CarbonUIUtil.isContextRegistered(config, "/securityconfig/")){
-        %>
-        <nobr>
-        <a href="../securityconfig/index.jsp?serviceName=<%=serviceName%>"
-           class="icon-link-nofloat"
-           style="background-image:url(images/security.gif);">
-            <fmt:message key="security"/>&nbsp;&nbsp;&nbsp;
-        <%= service.getSecurityScenarioId() != null ?
-                "<img src='images/secured.gif' title='Secured using "+  service.getSecurityScenarioId()  +"'/>":
-                "<img src='images/unsecured.gif' title='Unsecured'/>"%>
-         </a>
-        <%
-            }
-        %>
-        </nobr>
-    </td>
-    <td>
-        <a href="policy_editor_proxy.jsp?serviceName=<%=serviceName%>"
-           class="icon-link-nofloat"
-           style="background-image:url(images/policies.gif);">
-            <fmt:message key="policies"/>
-        </a>
-    </td>
-</tr>
-<tr>
-    <td>
-        <%
-            if(CarbonUIUtil.isContextRegistered(config, "/rm/")){
-        %>
-        <a href="" onclick="submitHiddenForm('../rm/index.jsp?serviceName=<%=serviceName%>');return false;"
-           class="icon-link-nofloat"
-           style="background-image:url(images/rm.gif);">
-            <fmt:message key="reliable.messaging"/>
-        </a>
-         <%
-            }
-        %>
-    </td>
-    <td>
-         <%
-            if(CarbonUIUtil.isContextRegistered(config, "/transport-mgt/")){
-        %>
-        <a href="../transport-mgt/service_transport.jsp?serviceName=<%=serviceName%>"
-           class="icon-link-nofloat"
-           style="background-image:url(images/transports.gif);">
-            <fmt:message key="transports"/>
-        </a>
-         <%
-            }
-        %>
-    </td>
-
-</tr>
-<tr>
-    <td>
-        <%
-            if(CarbonUIUtil.isContextRegistered(config, "/caching/")){
-        %>
-        <a href="" onclick="submitHiddenForm('../caching/index.jsp?serviceName=<%=serviceName%>');return false;"
-           class="icon-link-nofloat"
-           style="background-image:url(images/caching.gif);">
-            <fmt:message key="response.caching"/>
-        </a>
-        <%
-            }
-        %>
-    </td>
-    <td>
-         <%
-            if(CarbonUIUtil.isContextRegistered(config, "/modulemgt/")){
-        %>
-        <a href="../modulemgt/service_modules.jsp?serviceName=<%=serviceName%>"
-           class="icon-link-nofloat"
-           style="background-image:url(images/modules.gif);">
-            <fmt:message key="modules"/>
-        </a>
-        <%
-            }
-        %>
-    </td>
-</tr>
-<tr>
-    <td>
-         <%
-            if(CarbonUIUtil.isContextRegistered(config, "/throttling/")){
-        %>
-        <a href="" onclick="submitHiddenForm('../throttling/index.jsp?serviceName=<%=serviceName%>');return false;"
-           class="icon-link-nofloat"
-           style="background-image:url(images/throttling.gif);">
-            <fmt:message key="access.throttling"/>
-        </a>
-        <%
-            }
-        %>
-    </td>
-    <td>
-         <%
-            if(CarbonUIUtil.isContextRegistered(config, "/operation/")){
-        %>
-        <a href="../operation/index.jsp?serviceName=<%=serviceName%>"
-           class="icon-link-nofloat"
-           style="background-image:url(images/operations.gif);">
-            <fmt:message key="operations"/>
-        </a>
-        <%
-            }
-        %>
-    </td>
-</tr>
-<tr>
-    <td>
-        <span class="icon-text" style="background-image:url(images/service.gif);">MTOM&nbsp;&nbsp;</span>
-        <select id="mtomSelector" onchange="changeMtomState()" style="margin-top:2px !important;">
-            <%
-                if (service.getMtomStatus().equalsIgnoreCase("true")) {
-            %>
-            <option value="true" selected="true">True</option>
-            <%
-            } else {
-            %>
-            <option value="true"><fmt:message key="true"/></option>
-            <% } %>
-
-            <%
-                if (service.getMtomStatus().equalsIgnoreCase("false")) {
-            %>
-            <option value="false" selected="true"><fmt:message key="false"/></option>
-            <%
-            } else {
-            %>
-            <option value="false"><fmt:message key="false"/></option>
-            <% } %>
-
-            <%
-                if (service.getMtomStatus().equalsIgnoreCase("optional")) {
-            %>
-            <option value="optional" selected="true"><fmt:message key="optional"/></option>
-            <%
-            } else {
-            %>
-            <option value="optional"><fmt:message key="optional"/></option>
-            <% } %>
-        </select>
-
-        <div id="mtomOutput"></div>
-        <script type="text/javascript">
-            jQuery.noConflict();
-            function changeMtomState() {
-                var state = document.getElementById('mtomSelector').value;
-                var url = 'mtom_ajaxprocessor.jsp?serviceName=<%= request.getAttribute("serviceName")%>&mtomState=' + state;
-                jQuery("#mtomOutput").load(url, null, function (responseText, status, XMLHttpRequest) {
-                    if (status != "success") {
-                        CARBON.showErrorDialog('<fmt:message key="could.not.change.mtom.state.for.service"/>');
-                    } else {
-                        CARBON.showInfoDialog('<fmt:message key="changed.mtom.state.for.service"/>');
-                    }
-                });
-            }
-        </script>
-    </td>
-    <td>
-        <a href="edit_service_params.jsp?serviceName=<%=serviceName%>"
-           class="icon-link-nofloat"
-           style="background-image:url(images/edit2.gif);">
-            <fmt:message key="parameters"/>
-        </a>
-    </td>
-</tr>
-
-                        <tr>
-<%
-     // Add UI Extensions that may have  been provided by other UI components
-     BundleContext bundleContext =  CarbonUIUtil.getBundleContext();
-     if (bundleContext != null) {
-         ServiceTracker tracker = new ServiceTracker(bundleContext,
-                                                     ServiceManagementUIExtender.class.getName(),
-                                                     null);
-         tracker.open();
-         ServiceManagementUIExtender extender = (ServiceManagementUIExtender) tracker.getService();
-
-         if(extender != null){
-             List<String> items = extender.getItems();
-             for (String item: items) {
-%>
-    `           <tr>
-                  <td colspan="2" align="left"><%= item%></td>
-                </tr>
-<%
-             }
-             tracker.close();
-         }
-     }
-
-    String serviceType = service.getServiceType();
-    String serviceTypePath = "/" + serviceType + "/";
-    String extraConfig = ".." + serviceTypePath + "extra_config.jsp?serviceName="+serviceName;
-    Set resourcePaths = config.getServletContext().getResourcePaths(serviceTypePath);
-    if (resourcePaths != null && resourcePaths.contains(serviceTypePath + "extra_config.jsp")) { //TODO: How to handle this
-%>
-        <tr>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-        <tr>
-            <td colspan="2" align="left"><strong><fmt:message key="specific.configuration"/></strong></td>
-        </tr>
-        <jsp:include page="<%= extraConfig%>"/>
-<%
-    }
-%>
+        if (hasExtraConfig) { //TODO: How to handle this
+            String extraConfig = ".." + serviceTypePath + "extra_config.jsp?serviceName=" + serviceName;
+    %>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2" align="left"><strong><fmt:message key="specific.configuration"/></strong>
+        </td>
+    </tr>
+    <jsp:include page="<%= extraConfig%>"/>
+    <%
+        }
+    %>
 </table>
 </td>
 <td>&nbsp;</td>
