@@ -98,11 +98,10 @@ public class GhostWebappDeployerUtils {
         synchronized (ghostWebapp.getContextName().intern()) {
             // there can be situations in which the actual webapp is already deployed and
             // available in the webapps holder
-
-            WebApplicationsHolder webApplicationsHolder = WebAppUtils.getwebappHolder(ghostWebapp.getWebappFile().getAbsolutePath(),configurationContext);
-
-            if (webApplicationsHolder != null) {
-                WebApplication deployedWebapp = webApplicationsHolder.getStartedWebapps().
+            WebApplicationsHolder webappsHolder = (WebApplicationsHolder)
+                    configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+            if (webappsHolder != null) {
+                WebApplication deployedWebapp = webappsHolder.getStartedWebapps().
                         get(ghostWebapp.getWebappFile().getName());
                 if (deployedWebapp == null) {
                     return null;
@@ -130,7 +129,7 @@ public class GhostWebappDeployerUtils {
                                     getTransitGhostWebAppsMap(configurationContext);
                             transitGhostList.put(deployedWebapp.getContextName(), deployedWebapp);
 
-                            webApplicationsHolder.undeployWebapp(deployedWebapp);
+                            webappsHolder.undeployWebapp(deployedWebapp);
 
                             TomcatGenericWebappsDeployer tomcatWebappDeployer =
                                     deployedWebapp.getTomcatGenericWebappsDeployer();
@@ -156,7 +155,7 @@ public class GhostWebappDeployerUtils {
                             tomcatWebappDeployer.deploy(dfd.getFile(),
                                     servletContextParameters,
                                     listeners);
-                            newWebApp = webApplicationsHolder.getStartedWebapps().get(dfd.getFile().
+                            newWebApp = webappsHolder.getStartedWebapps().get(dfd.getFile().
                                     getName());
                             newWebApp.setProperty(CarbonConstants.GHOST_WEBAPP_PARAM, "false");
                             // Check for jaxwebapps or jaggery apps
@@ -591,17 +590,18 @@ public class GhostWebappDeployerUtils {
      * file absolute path.
      *
      * @param configurationContext - configurationContext instance that has the webapps holder property
-     * @param webappFilePath           - absolute path of the webapp to be compared with other webapps in the holder
+     * @param webappName           - absolute path of the webapp to be compared with other webapps in the holder
      * @return webapplicatioon found by the comparison or null
      */
     public static WebApplication findDeployedWebapp(ConfigurationContext configurationContext,
-                                                    String webappFilePath) {
+                                                    String webappName) {
 
         try {
-            WebApplicationsHolder webApplicationsHolder = WebAppUtils.getwebappHolder(webappFilePath,configurationContext);
+            WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
+                    configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 
             if (webApplicationsHolder != null) {
-                return webApplicationsHolder.getStartedWebapps().get(WebAppUtils.getWebappName(webappFilePath));
+                return webApplicationsHolder.getStartedWebapps().get(webappName);
             }
 
         } catch (Exception e) {
@@ -712,7 +712,8 @@ public class GhostWebappDeployerUtils {
                 try {
                     WebApplication ghostWebApplication = GhostWebappDeployerUtils.createGhostWebApp(
                             ghostFile, ghostFile, null, configContext);
-                    WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(ghostFile.getAbsolutePath(),configContext);
+                    WebApplicationsHolder webappsHolder = (WebApplicationsHolder) configContext.
+                            getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 
                     String ghostWebappFileName = ghostWebApplication.getWebappFile().getName();
                     String webappFileProperty = (String) ghostWebApplication.

@@ -10,7 +10,6 @@ public class WebappUploadData {
     private String fileName;
     private String version;
     private DataHandler dataHandler;
-    private String hostName;
 
     public String getVersion() {
         return version;
@@ -34,13 +33,5 @@ public class WebappUploadData {
 
     public void setDataHandler(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
-    }
-
-    public String getHostName() {
-        return hostName;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
     }
 }
