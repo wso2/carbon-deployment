@@ -26,6 +26,7 @@
 
 <%
     String webappFileName = request.getParameter("webappFileName");
+    String hostName = request.getParameter("hostName");
     String value = request.getParameter("value");
 
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
@@ -37,7 +38,7 @@
             cookie, backendServerURL, configContext, request.getLocale());
 
     try{
-        client.setBamConfig(webappFileName, value);
+        client.setBamConfig(webappFileName, value,hostName);
     } catch (Exception e) {
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
         session.setAttribute(CarbonUIMessage.ID, uiMsg);

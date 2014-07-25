@@ -42,12 +42,13 @@
     WebappAdminClient client;
     String fileName = request.getParameter("name");
     String webappType = request.getParameter("type");
+    String hostName = request.getParameter("hostName");
 
     out.clear();
     out = pageContext.pushBody();
     out.clearBuffer();
     client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
-    client.downloadWarFileHandler(fileName, webappType, response);
+    client.downloadWarFileHandler(fileName,hostName, webappType, response);
     out.close();
 
 %>

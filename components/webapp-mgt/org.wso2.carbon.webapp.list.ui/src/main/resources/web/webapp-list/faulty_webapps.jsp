@@ -205,7 +205,7 @@
                     <tr>
                         <td>
                             <input type="checkbox" name="webappFileName"
-                                   value="<%= webappFile %>"
+                                   value="<%= webapp.getHostName()+":"+webappFile %>"
                                    onclick="resetVars()"/>
                         </td>
                         <td width="300px">

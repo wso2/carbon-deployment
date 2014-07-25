@@ -439,20 +439,31 @@
         <%
             int position = 0;
             String urlPrefix = null;
+            String urlSuffix = null;
+            String url = null;
 
             if(webappsWrapper.getHttpPort() != 0) {
-                urlPrefix = "http://" + webappsWrapper.getHostName() + ":" +
-                               webappsWrapper.getHttpPort();
+                urlPrefix = "http://";
+                urlSuffix = ":" + webappsWrapper.getHttpPort();
             } else {
-                urlPrefix = "https://" + webappsWrapper.getHostName() + ":" +
-                               webappsWrapper.getHttpsPort();
+                urlPrefix = "http://";
+                urlSuffix = ":" + webappsWrapper.getHttpsPort();
             }
 
 
             for (WebappMetadata webapp : webapps) {
+                String hostName = null;
                 String bgColor = ((position % 2) == 1) ? "#EEEFFB" : "white";
                 position++;
-                String webappURL = urlPrefix + webapp.getContext();
+
+                if(webapp.getHostName().length() !=0){
+                      url =  urlPrefix + webapp.getHostName() + urlSuffix;
+                      hostName = webapp.getHostName();
+                }else{
+                      url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
+                      hostName = webappsWrapper.getHostName();
+                }
+                String webappURL = url + webapp.getContext();
         %>
 
         <tr bgcolor="<%= bgColor%>">
@@ -462,7 +473,7 @@
                        onclick="resetVars()" class="chkBox"/>
             </td>
             <td>
-                <a href="webapp_info.jsp?webappFileName=<%= webapp.getWebappFile()%>&webappState=<%= webappState %>&hostName=<%= webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>">
+                <a href="webapp_info.jsp?webappFileName=<%= webapp.getWebappFile()%>&webappState=<%= webappState %>&hostName=<%= hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>">
                     <%= webapp.getContext()%>
                 </a>
             </td>

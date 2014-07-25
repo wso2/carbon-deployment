@@ -72,7 +72,7 @@
     }
 
     try {
-        client.changeDefaultAppVersion(appGroupName, appFileName);
+        client.changeDefaultAppVersion(appGroupName, appFileName, hostName);
         CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.changed.default.version"),
                 CarbonUIMessage.INFO, request);
 %>
