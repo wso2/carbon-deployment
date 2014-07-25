@@ -39,6 +39,7 @@
     if (redirectPage == null) {
         redirectPage = "index.jsp";
     }
+    String redirectName = webappFileNames[0].split(":")[1];
 %>
 
 <%
@@ -77,7 +78,7 @@
         }
 %>
 <script>
-    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8")%>'
+    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>'
                      <% if (hostName != null && httpPort != null) { %>
             + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&webappState=all'
             <% } %> ;
@@ -88,7 +89,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8")%>"
+    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>"
                    <% if (hostName != null && httpPort != null) { %>
                     +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
                     <% } %> ;

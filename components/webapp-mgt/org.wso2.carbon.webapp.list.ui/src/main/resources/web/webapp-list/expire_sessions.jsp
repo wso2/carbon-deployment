@@ -25,7 +25,7 @@
 <%@ page import="java.net.URLEncoder" %>
 
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+    String[] webappKeys = request.getParameterValues("webappFileName");
     String pageNumber = request.getParameter("pageNumber");
     String expireAllSessions = request.getParameter("expireAll");
     String hostName = request.getParameter("hostName");
@@ -75,17 +75,17 @@
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
                                                 CarbonUIMessage.INFO, request);
         } else if (sessionExpTime != -1) {
-            client.expireSessionsInWebapp(webappFileNames[0], sessionExpTime);
+            client.expireSessionsInWebapp(webappKeys[0], sessionExpTime);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
                                                 CarbonUIMessage.INFO, request);
         } else {
-            client.expireSessionsInWebapps(webappFileNames);
+            client.expireSessionsInWebapps(webappKeys);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
                                                 CarbonUIMessage.INFO, request);
         }
 %>
 <script>
-    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8") %>'
+    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappKeys[0].split(":")[1], "UTF-8") %>'
             <% if (hostName != null && httpPort != null) { %>
             + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
             <% } %> ;
@@ -96,7 +96,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8") %>"
+    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappKeys[0].split(":")[1], "UTF-8") %>"
                     <% if (hostName != null && httpPort != null) { %>
                     +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
                     <% } %> ;
