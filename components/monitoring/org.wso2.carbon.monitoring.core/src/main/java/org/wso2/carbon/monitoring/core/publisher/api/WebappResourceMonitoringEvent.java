@@ -1,19 +1,36 @@
+/*
+ * Copyright 2004,2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.monitoring.core.publisher.api;
 
+/**
+ * This class represents the Resource Monitoring Statistics
+ */
 public class WebappResourceMonitoringEvent extends MonitoringEvent{
 
 	private String context;
 	private String host;
 
-	private Integer errorCount;
 	private Long processingTime;
-	private Integer requestCount;
 	private Integer activeSessions;
 	private Integer rejectedSessions;
 	private Long expiredSessions;
 	private Integer jspCount;
 	private Integer jspReloadCount;
-	private Integer jspUnloadCount;
+	private Integer jspErrorCount;
 	private Long accessCount;
 	private Long hitsCount;
 	private Integer cacheSize;
@@ -35,28 +52,12 @@ public class WebappResourceMonitoringEvent extends MonitoringEvent{
 		this.host = host;
 	}
 
-	public Integer getErrorCount() {
-		return errorCount;
-	}
-
-	public void setErrorCount(Integer errorCount) {
-		this.errorCount = errorCount;
-	}
-
 	public Long getProcessingTime() {
 		return processingTime;
 	}
 
 	public void setProcessingTime(Long processingTime) {
 		this.processingTime = processingTime;
-	}
-
-	public Integer getRequestCount() {
-		return requestCount;
-	}
-
-	public void setRequestCount(Integer requestCount) {
-		this.requestCount = requestCount;
 	}
 
 	public Integer getActiveSessions() {
@@ -99,12 +100,12 @@ public class WebappResourceMonitoringEvent extends MonitoringEvent{
 		this.jspReloadCount = jspReloadCount;
 	}
 
-	public Integer getJspUnloadCount() {
-		return jspUnloadCount;
+	public Integer getJspErrorCount() {
+		return jspErrorCount;
 	}
 
-	public void setJspUnloadCount(Integer jspUnloadCount) {
-		this.jspUnloadCount = jspUnloadCount;
+	public void setJspErrorCount(Integer jspErrorCount) {
+		this.jspErrorCount = jspErrorCount;
 	}
 
 	public Long getAccessCount() {
@@ -140,15 +141,13 @@ public class WebappResourceMonitoringEvent extends MonitoringEvent{
 		       ", clusterSubDomain='" + clusterSubDomain + '\'' +
 		       ", context='" + context + '\'' +
 		       ", host='" + host + '\'' +
-		       ", errorCount=" + errorCount +
 		       ", processingTime=" + processingTime +
-		       ", requestCount=" + requestCount +
 		       ", activeSessions=" + activeSessions +
 		       ", rejectedSessions=" + rejectedSessions +
 		       ", expiredSessions=" + expiredSessions +
 		       ", jspCount=" + jspCount +
 		       ", jspReloadCount=" + jspReloadCount +
-		       ", jspUnloadCount=" + jspUnloadCount +
+		       ", jspErrorCount=" + jspErrorCount +
 		       ", accessCount=" + accessCount +
 		       ", hitsCount=" + hitsCount +
 		       ", cacheSize=" + cacheSize +

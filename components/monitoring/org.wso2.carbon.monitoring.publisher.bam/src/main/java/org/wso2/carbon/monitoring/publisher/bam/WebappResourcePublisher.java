@@ -1,3 +1,19 @@
+/*
+ * Copyright 2004,2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.monitoring.publisher.bam;
 
 import org.apache.commons.logging.Log;
@@ -11,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * Publisher stream for Webapp Resource Data stream
+ */
 public class WebappResourcePublisher extends PublisherBase {
 
 	private static Log log = LogFactory.getLog(WebappResourcePublisher.class);
@@ -26,15 +44,13 @@ public class WebappResourcePublisher extends PublisherBase {
 		metaData.add(mapNull(e.getContext()));
 
 		List<Object> payloadData = new ArrayList<Object>();
-		payloadData.add(mapNull(e.getErrorCount()));
 		payloadData.add(mapNull(e.getProcessingTime()));
-		payloadData.add(mapNull(e.getRequestCount()));
 		payloadData.add(mapNull(e.getActiveSessions()));
 		payloadData.add(mapNull(e.getRejectedSessions()));
 		payloadData.add(mapNull(e.getExpiredSessions()));
 		payloadData.add(mapNull(e.getJspCount()));
 		payloadData.add(mapNull(e.getJspReloadCount()));
-		payloadData.add(mapNull(e.getJspUnloadCount()));
+		payloadData.add(mapNull(e.getJspErrorCount()));
 		payloadData.add(mapNull(e.getAccessCount()));
 		payloadData.add(mapNull(e.getHitsCount()));
 		payloadData.add(mapNull(e.getCacheSize()));
@@ -50,15 +66,13 @@ public class WebappResourcePublisher extends PublisherBase {
 
 	@Override
 	protected void addPayloadDataAttributes(StreamDefinition definition) {
-		definition.addPayloadData("errorCount", AttributeType.INT);
 		definition.addPayloadData("processingTime", AttributeType.LONG);
-		definition.addPayloadData("requestCount", AttributeType.INT);
 		definition.addPayloadData("activeSessions", AttributeType.INT);
 		definition.addPayloadData("rejectedSessions", AttributeType.INT);
 		definition.addPayloadData("expiredSessions", AttributeType.LONG);
 		definition.addPayloadData("jspCount", AttributeType.INT);
 		definition.addPayloadData("jspReloadCount", AttributeType.INT);
-		definition.addPayloadData("jspUnloadCount", AttributeType.INT);
+		definition.addPayloadData("jspErrorCount", AttributeType.INT);
 		definition.addPayloadData("cacheAccessCount", AttributeType.LONG);
 		definition.addPayloadData("cacheHitsCount", AttributeType.LONG);
 		definition.addPayloadData("cacheSize", AttributeType.INT);

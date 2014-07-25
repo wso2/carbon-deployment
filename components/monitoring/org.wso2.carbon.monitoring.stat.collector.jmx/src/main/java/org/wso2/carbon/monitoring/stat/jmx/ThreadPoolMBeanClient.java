@@ -3,6 +3,9 @@ package org.wso2.carbon.monitoring.stat.jmx;
 import javax.management.AttributeList;
 import javax.management.ObjectName;
 
+/**
+ * Catalina Threadpool MBean Client
+ */
 public class ThreadPoolMBeanClient extends MBeanClient {
 
 	private static final String THREAD_POOL_NAME = "Catalina:type=ThreadPool,name=*";

@@ -1,5 +1,8 @@
 package org.wso2.carbon.monitoring.publisher.bam;
 
+/**
+ * The configuration context for a give data stream
+ */
 public class StreamConfigContext {
 	private boolean isEnabled;
 	private String receiverUrl;

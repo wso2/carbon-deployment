@@ -10,7 +10,9 @@ import org.wso2.carbon.monitoring.core.publisher.api.WebappMonitoringEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * The Http Webapp Call stat publisher
+ */
 public class HttpStatPublisher extends PublisherBase {
 
 	private static final Log log = LogFactory.getLog(HttpStatPublisher.class);
@@ -70,7 +72,7 @@ public class HttpStatPublisher extends PublisherBase {
 		definition.addMetaData("serverAddress", AttributeType.STRING);
 		definition.addMetaData("serverName", AttributeType.STRING);
 		definition.addMetaData("clusterDomain", AttributeType.STRING);
-		definition.addMetaData("clusterDomain", AttributeType.STRING);
+		definition.addMetaData("clusterSubDomain", AttributeType.STRING);
 		definition.addMetaData("tenantId", AttributeType.INT);
 		definition.addMetaData("webappOwnerTenant", AttributeType.STRING);
 		definition.addMetaData("userTenant", AttributeType.STRING);
