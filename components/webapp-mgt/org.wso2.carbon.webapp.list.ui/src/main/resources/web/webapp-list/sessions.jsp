@@ -49,13 +49,12 @@
     } catch (NumberFormatException ignored) {
     }
     String webappFileName = request.getParameter("webappFileName");
-    String hostname = request.getParameter("hostName");
     SessionMetadata[] sessions;
 
     SessionsWrapper sessionsWrapper;
     try {
         client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
-        sessionsWrapper = client.getActiveSessionsInWebapp(webappFileName, pageNumberInt,hostname);
+        sessionsWrapper = client.getActiveSessionsInWebapp(webappFileName, pageNumberInt);
         numberOfPages = sessionsWrapper.getNumberOfPages();
         sessions = sessionsWrapper.getSessions();
     } catch (Exception e) {
@@ -91,7 +90,7 @@
         if (allSessionsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="expire.all.sessions.prompt"><fmt:param value="<%= activeSessions%>"/></fmt:message>",
                                           function() {
-                                              location.href = 'expire_webapp_sessions.jsp?expireAll=true&webappFileName=<%= webappFileName %>&hostName=<%=hostname%>';
+                                              location.href = 'expire_webapp_sessions.jsp?expireAll=true&webappFileName=<%= webappFileName %>';
                                           }
                     );
         } else {
@@ -214,7 +213,6 @@
 
         <form action="expire_webapp_sessions.jsp" name="sessionsForm" method="post">
             <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
-            <input type="hidden" name="hostName" value="<%= hostname%>"/>
             <input type="hidden" name="webappFileName" value="<%= webappFileName%>"/>
             <table class="styledLeft" id="webappsTable" width="100%">
                 <thead>
