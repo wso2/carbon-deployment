@@ -62,7 +62,6 @@ public class WarFileUploadExecutor extends AbstractFileUploadExecutor {
 
         Map<String, ArrayList<java.lang.String>> formFieldsMap = getFormFieldsMap();
         List<String> versions = formFieldsMap.get("version");
-        List<String> hostNames = formFieldsMap.get("hostName");
          int i = 0;
         try {
             for (FileItemData filedata : tempDataList) {
@@ -71,7 +70,6 @@ public class WarFileUploadExecutor extends AbstractFileUploadExecutor {
                 tempData.setFileName(getFileName(filedata.getFileItem().getName()));
                 tempData.setDataHandler(filedata.getDataHandler());
                 tempData.setVersion(versions.get(i));
-                tempData.setHostName(hostNames.get(i));
                 webappUploadDataList.add(tempData);
                 i++;
             }

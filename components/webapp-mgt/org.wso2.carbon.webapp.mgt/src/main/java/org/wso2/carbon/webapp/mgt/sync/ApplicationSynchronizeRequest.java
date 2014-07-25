@@ -8,18 +8,16 @@ import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
-import org.wso2.carbon.webapp.mgt.WebapplicationHelper;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.WebappsConstants.ApplicationOpType;
-import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,18 +30,18 @@ public class ApplicationSynchronizeRequest extends ClusteringMessage {
     private String tenantDomain;
     private UUID messageId;
     private ApplicationOpType operation;
-    private List<WebapplicationHelper> webapplicationHelperList;
+    private String[] webappFileNames;
 
     public ApplicationSynchronizeRequest() {
     }
 
     public ApplicationSynchronizeRequest(int tenantId, String tenantDomain, UUID messageId,
-                                         ApplicationOpType applicationOpType, List<WebapplicationHelper> webapplicationHelperList) {
+                                         ApplicationOpType applicationOpType, String[] webappFileNames) {
         this.tenantId = tenantId;
         this.tenantDomain = tenantDomain;
         this.messageId = messageId;
         this.operation = applicationOpType;
-        this.webapplicationHelperList = webapplicationHelperList;
+        this.webappFileNames = webappFileNames;
     }
 
     public void setTenantId(int tenantId) {
@@ -73,16 +71,17 @@ public class ApplicationSynchronizeRequest extends ClusteringMessage {
                 } else {
                     tenantConfigurationContext = TenantAxisUtils.getTenantConfigurationContexts(configContext).get(tenantDomain);
                 }
-                Map<String,WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebapplicationHolders(configContext);
+                WebApplicationsHolder webappsHolder = (WebApplicationsHolder)
+                        tenantConfigurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
                 switch (operation) {
                     case STOP:
-                        stopApplications(webApplicationsHolderMap);
+                        stopApplications(webappsHolder);
                         break;
                     case START:
-                        startApplications(tenantConfigurationContext, webApplicationsHolderMap);
+                        startApplications(tenantConfigurationContext, webappsHolder);
                         break;
                     case RELOAD:
-                        reloadApplications(webApplicationsHolderMap);
+                        reloadApplications(webappsHolder);
                         break;
                 }
             } finally {
@@ -95,69 +94,58 @@ public class ApplicationSynchronizeRequest extends ClusteringMessage {
         }
     }
 
-    private void startApplications(ConfigurationContext configContext, Map<String,WebApplicationsHolder> webApplicationsHolderMap) {
-        for(WebApplicationsHolder webApplicationsHolder:webApplicationsHolderMap.values()){
-            Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
-            Deployer webappDeployer =
-                    ((DeploymentEngine) configContext.getAxisConfiguration().getConfigurator()).
-                            getDeployer(webApplicationsHolder.getWebappsDir().getName(),
-                                    WebappsConstants.WEBAPP_EXTENSION);
-            for(WebapplicationHelper webapplicationHelper:webapplicationHelperList){
-                  WebApplication webApplication = stoppedWebapps.get(webapplicationHelper.getWebappName());
-                  if(webApplication!=null && (webapplicationHelper.getHostName()).equals(webApplication.getHostName())){
-                      try {
-                          boolean started = webApplication.start();
-                          if (started) {
-                              String startedWebappFileName = webApplication.getWebappFile().getName();
-                              stoppedWebapps.remove(startedWebappFileName);
-                              Map<String, WebApplication> startedWebapps = webApplicationsHolder.getStartedWebapps();
-                              startedWebapps.put(startedWebappFileName, webApplication);
-                          }
-                      } catch (CarbonException e) {
-                          String msg = "Cannot start Application " + webApplication;
-                          log.error(msg, e);
-                      }
-                  } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("No stopped webapp " + webapplicationHelper.getWebappName() + "found for tenant:" + tenantDomain);
-                    }
-                  }
-            }
-        }
-
-    }
-
-    private void reloadApplications(Map<String,WebApplicationsHolder> webApplicationsHolderMap) {
-        for(WebApplicationsHolder webApplicationsHolder:webApplicationsHolderMap.values()){
-            for(WebapplicationHelper webapplicationHelper:webapplicationHelperList){
-                WebApplication webApplication = webApplicationsHolder.getStartedWebapps().get(webapplicationHelper.getWebappName());
-                if(webApplication!=null && (webapplicationHelper.getHostName()).equals(webApplication.getHostName())){
-                    webApplication.reload();
-                }
-            }
-        }
-    }
-
-    private void stopApplications(Map<String,WebApplicationsHolder> webApplicationsHolderMap) {
-        for(WebApplicationsHolder webApplicationsHolder:webApplicationsHolderMap.values()){
-            Map<String, WebApplication> startedWebapps = webApplicationsHolder.getStartedWebapps();
-            for(WebapplicationHelper webapplicationHelper:webapplicationHelperList){
-                try{
-                    WebApplication webApplication = startedWebapps.get(webapplicationHelper.getWebappName());
-                    if(webApplication!=null &&  (webapplicationHelper.getHostName()).equals(webApplication.getHostName())){
-                        webApplicationsHolder.stopWebapp(webApplication);
-                    } else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("No started webapp " + webapplicationHelper.getWebappName() + "found for tenant:" + tenantDomain);
-                        }
+    private void startApplications(ConfigurationContext configContext, WebApplicationsHolder webappsHolder) {
+        Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
+        Deployer webappDeployer =
+                ((DeploymentEngine) configContext.getAxisConfiguration().getConfigurator()).
+                        getDeployer(WebappsConstants.WEBAPP_DEPLOYMENT_FOLDER,
+                                WebappsConstants.WEBAPP_EXTENSION);
+        for (String webappFileName : webappFileNames) {
+            WebApplication webapp = stoppedWebapps.get(webappFileName);
+            if (webapp != null) {
+                try {
+                    boolean started = webapp.start();
+                    if (started) {
+                        String startedWebappFileName = webapp.getWebappFile().getName();
+                        stoppedWebapps.remove(startedWebappFileName);
+                        Map<String, WebApplication> startedWebapps = webappsHolder.getStartedWebapps();
+                        startedWebapps.put(startedWebappFileName, webapp);
                     }
                 } catch (CarbonException e) {
-                    log.error("Error occurred while undeploying Applications", e);
+                    String msg = "Cannot start Application " + webapp;
+                    log.error(msg, e);
+                }
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("No stopped webapp " + webappFileName + "found for tenant:" + tenantDomain);
                 }
             }
         }
     }
 
+    private void reloadApplications(WebApplicationsHolder webappsHolder) {
+        for (String webappFileName : webappFileNames) {
+            webappsHolder.getStartedWebapps().get(webappFileName).reload();
+        }
+    }
+
+    private void stopApplications(WebApplicationsHolder webappsHolder) {
+        Map<String, WebApplication> startedWebapps = webappsHolder.getStartedWebapps();
+        for (String webappFileName : webappFileNames) {
+            try {
+                WebApplication webApplication = startedWebapps.get(webappFileName);
+                if (webApplication != null) {
+                    webappsHolder.stopWebapp(webApplication);
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("No started webapp " + webappFileName + "found for tenant:" + tenantDomain);
+                    }
+                }
+            } catch (CarbonException e) {
+                log.error("Error occurred while undeploying Applications", e);
+            }
+        }
+    }
 
     public ClusteringCommand getResponse() {
         return null;
