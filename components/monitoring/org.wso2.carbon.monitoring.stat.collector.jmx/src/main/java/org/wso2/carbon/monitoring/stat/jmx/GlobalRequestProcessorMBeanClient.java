@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.monitoring.stat.jmx;
 
+import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.ObjectName;
 
@@ -40,7 +41,13 @@ public class GlobalRequestProcessorMBeanClient extends MBeanClient {
 	@Override
 	protected AttributeList getPropertiesFromKey(ObjectName objectName) {
 		// No attributes required from the ObjectName
-		return new AttributeList();
+		AttributeList list = new AttributeList();
+		String name = objectName.getKeyProperty("name");
+		if(name != null){
+			name = name.replace("\"","");
+		}
+		list.add(new Attribute("connectorName", name));
+		return list;
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class GlobalRequestProcessorMBeanClient extends MBeanClient {
 		if (name != null) {
 			String[] parts = name.split("-");
 			if (parts.length > 0) {
-				return parts[parts.length - 1].replace("\"","");
+				return parts[parts.length - 1].replace("\"", "");
 			}
 		}
 

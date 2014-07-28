@@ -83,6 +83,7 @@ public class ConnectorStatCollector extends PeriodicStatCollector {
 			Result threadPool = collectorUtil.getResultByCorrelator(threadPools, correlator);
 			collectorUtil.mapResultAttributesToPoJo(threadPool, event);
 
+			event.setTimestamp(System.currentTimeMillis());
 			collectorUtil.mapMetaData(event);
 			events.add(event);
 		}
