@@ -244,6 +244,8 @@ public class TomcatGenericWebappsDeployer {
     protected void handleWebappDeployment(File webappFile, String contextStr,
                                           List<WebContextParameter> webContextParams,
                                           List<Object> applicationEventListeners) throws CarbonException {
+        PrivilegedCarbonContext privilegedCarbonContext =
+                PrivilegedCarbonContext.getThreadLocalCarbonContext();
         String filename = webappFile.getName();
         try {
             Context context =
@@ -315,6 +317,8 @@ public class TomcatGenericWebappsDeployer {
             webappsHolder.getFaultyWebapps().put(filename, webapp);
             webappsHolder.getStartedWebapps().remove(filename);
             throw new CarbonException(msg, e);
+        }  finally {
+            privilegedCarbonContext.setApplicationName(null);
         }
     }
 
