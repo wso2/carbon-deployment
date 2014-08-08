@@ -36,15 +36,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.tomee</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.wso2.tomee</groupId>
+            <artifactId>tomee</artifactId>
+            <version>${tomee.orbit.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>2.1</version>
+            <groupId>org.wso2.tomee</groupId>
+            <artifactId>tomee-resources</artifactId>
+            <version>${tomee.orbit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.openwebbeans</groupId>
+            <artifactId>openwebbeans-jsf</artifactId>
+            <version>${openwebbeans.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.openwebbeans</groupId>
+            <artifactId>openwebbeans-el22</artifactId>
+            <version>${openwebbeans.orbit.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.wso2.serp</groupId>
             <artifactId>serp</artifactId>
@@ -55,7 +66,29 @@
             <artifactId>tribes</artifactId>
             <version>7.0.34.wso2v1</version>
         </dependency>
+        <dependency>
+            <groupId>commons-digester</groupId>
+            <artifactId>commons-digester</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils.wso2</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.0.wso2v1</version>
+        </dependency>
     </dependencies>
+
+    <properties>
+        <tomee.version>1.6.0.1</tomee.version>
+        <tomee.orbit.version>${tomee.version}.wso2v1</tomee.orbit.version>
+        <openwebbeans.version>1.2.1</openwebbeans.version>
+        <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
+    </properties>
 
     <build>
         <plugins>
@@ -103,10 +136,17 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.tomee</bundleDef>
-                                <bundleDef>commons-digester:commons-digester</bundleDef>
+                                <bundleDef>org.wso2.tomee:tomee</bundleDef>
+                                <bundleDef>org.wso2.tomee:tomee-resources</bundleDef>
+                                <bundleDef>org.wso2.openwebbeans:openwebbeans-jsf</bundleDef>
+                                <bundleDef>org.wso2.openwebbeans:openwebbeans-el22</bundleDef>
+
                                 <bundleDef>org.wso2.serp:serp</bundleDef>
                                 <bundleDef>org.apache.tomcat.wso2:tribes</bundleDef>
+                                <bundleDef>commons-digester:commons-digester</bundleDef>
+                                <bundleDef>org.apache.commons:commons-lang3</bundleDef>
+                                <bundleDef>commons-beanutils.wso2:commons-beanutils</bundleDef>
+
                             </bundles>
                             <!--<importFeatures>-->
                                 <!--<importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}-->
