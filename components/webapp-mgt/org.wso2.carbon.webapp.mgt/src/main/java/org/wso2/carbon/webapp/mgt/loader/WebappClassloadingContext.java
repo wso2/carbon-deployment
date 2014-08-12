@@ -51,6 +51,8 @@ public class WebappClassloadingContext {
         }
     }
 
+    private String[] environments;
+
     public static ClassloadingConfiguration getClassloadingConfig() {
         return classloadingConfig;
     }
@@ -178,5 +180,13 @@ public class WebappClassloadingContext {
             }
         }
         return false;
+    }
+
+    public void setEnvironments(String[] environments) {
+        this.environments = environments;
+    }
+
+    public String[] getEnvironments() {
+        return environments;
     }
 }
