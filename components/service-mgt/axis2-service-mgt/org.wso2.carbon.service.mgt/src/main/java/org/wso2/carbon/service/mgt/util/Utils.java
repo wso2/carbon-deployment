@@ -106,8 +106,17 @@ public final class Utils {
         if (!isServletTransport(axisConfig)) {
             int tenantIndex = tryitPrefix.indexOf("/t/");
             if (tenantIndex != -1) {
-                tryitPrefix = tryitPrefix.substring(
-                        tryitPrefix.substring(0, tryitPrefix.indexOf("/t/")).lastIndexOf("/"));
+                String tmpTryitPrefix = tryitPrefix.substring(
+                        tryitPrefix.substring(0, tryitPrefix.indexOf("/t/")).lastIndexOf("/"));  
+                //Check if the  Webapp context root of WSO2 Carbon is set.
+                tryitPrefix = tryitPrefix.replaceFirst("//", "");
+                if(tryitPrefix.substring(0, tryitPrefix.indexOf("/services/")).lastIndexOf("/") > -1){
+                    tryitPrefix = tryitPrefix.substring(
+                            tryitPrefix.substring(0, tryitPrefix.indexOf("/services/")).lastIndexOf("/"));                
+                }else{
+                	tryitPrefix = tmpTryitPrefix;	
+                }
+                
             } else {
                 tryitPrefix = configurationContext.getServiceContextPath() + "/";
             }
