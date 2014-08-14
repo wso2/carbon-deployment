@@ -21,6 +21,7 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -35,12 +36,20 @@ public class WebappClassloadingContext {
     private String[] delegatedPackageStems;
     private String[] excludeedPackages;
     private String[] excludeedPackageStems;
+    private String[] delegatedResources;
+    private String[] delegatedResourceStems;
+    private String[] excludeedResources;
+    private String[] excludeedResourceStems;
     private boolean noExcludedPackages = true;
+    private boolean noExcludedResources = true;
+
 
     private String[] repositories;
 
     private static ClassloadingConfiguration classloadingConfig;
     private boolean delegateAllPackages = false;
+    private boolean delegateAllResources = false;
+
 
     static {
         try {
@@ -188,5 +197,96 @@ public class WebappClassloadingContext {
 
     public String[] getEnvironments() {
         return environments;
+    }
+
+    public boolean isExcludedResources(String name) {
+        if (noExcludedResources) {
+            return false;
+        }
+
+        if (name == null)
+            return false;
+
+        for (String excludedRes : excludeedResourceStems) {
+            if (name.startsWith(excludedRes)) {
+                return true;
+            }
+        }
+
+        for (String excludedRes : excludeedResources) {
+            if (name.equals(excludedRes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isDelegatedResource(String name) {
+        if (delegateAllResources) {
+            return true;
+        }
+
+        if (name == null)
+            return false;
+
+        for (String delegatedRes : delegatedResourceStems) {
+            if (name.startsWith(delegatedRes)) {
+                return true;
+            }
+        }
+
+        for (String delegatedRes : delegatedResources) {
+            if (name.equals(delegatedRes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setDelegatedResources(String[] delegatedResourceList) {
+        List<String> delegatedResList = new ArrayList<String>();
+        List<String> delegatedResStemList = new ArrayList<String>();
+        Collection<String> excludedResList = new ArrayList<String>();
+        Collection<String>  excludedResStemList = new ArrayList<String>();
+
+        for (String resourceName : delegatedResourceList) {
+            // Detect excluded package or delegated package.
+            if (resourceName.startsWith("!")) {
+                // Remove the "!" part.
+                resourceName = resourceName.substring(1);
+                if (resourceName.endsWith("/*")) {
+                    excludedResStemList.add(resourceName.substring(0, resourceName.length() - 2));
+                } else {
+                    excludedResList.add(resourceName);
+                }
+
+            } else {
+
+                if (resourceName.equals("*")) {
+                    delegateAllResources = true;
+                } else if (resourceName.endsWith("/*")) {
+                    delegatedResStemList.add(resourceName.substring(0, resourceName.length() - 2));
+                } else {
+                    delegatedResList.add(resourceName);
+                }
+
+            }
+        }
+
+        if(excludedResList.size() > 0 || excludedResStemList.size() > 0){
+            noExcludedResources = false;
+        }
+
+        if(!noExcludedResources){
+            excludeedResources = excludedResList.toArray(new  String[excludedResList.size()]);
+            excludeedResourceStems = excludedResStemList.toArray(new String[excludedResStemList.size()]);
+
+        }
+
+        if (!delegateAllResources) {
+            delegatedResources= delegatedResList.toArray(new String[delegatedResList.size()]);
+            delegatedResourceStems = delegatedResStemList.toArray(new String[delegatedResStemList.size()]);
+        }
+
     }
 }
