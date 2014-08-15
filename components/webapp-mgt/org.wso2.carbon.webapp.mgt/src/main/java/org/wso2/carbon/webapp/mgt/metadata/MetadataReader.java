@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.webapp.mgt.metadata;
 
 import org.w3c.dom.*;
@@ -13,31 +30,21 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by sagara on 7/29/14.
- */
 public class MetadataReader {
 
     private Map<String, Object> metadata;
 
-
     private MetadataReader() {
-
         metadata = new HashMap<String, Object>();
-
-
     }
 
 
     public static MetadataReader getInstance() {
-
         return new MetadataReader();
-
     }
 
 
     public Map<String, Object> readApplicationDescriptor(ServletContext servletContext) {
-
         Document appDesc = loadApplicationDescriptor(servletContext);
         if (appDesc != null) {
             processDocument(appDesc);
@@ -45,7 +52,7 @@ public class MetadataReader {
         return metadata;
     }
 
-    private void processDocument(Document document){
+    private void processDocument(Document document) {
         Element applicationEle = document.getDocumentElement();
         if (WebappsConstants.APPLICATION_ELE.equals(applicationEle.getTagName())) {
             NodeList elements = applicationEle.getChildNodes();
@@ -60,13 +67,12 @@ public class MetadataReader {
 
         } else {
 
-            throw  new RuntimeException("Unexepted element in application.xml file");
+            throw new RuntimeException("Unexepted element in application.xml file");
         }
 
     }
 
     private void processNode(String elementName, Element element) {
-
         String key = elementName;
         NamedNodeMap namedNodeMap = element.getAttributes();
         //If 'id' attribute present append to node name to make unique key
@@ -91,14 +97,13 @@ public class MetadataReader {
     }
 
     private void processAttributes(String nodeName, NamedNodeMap namedNodeMap) {
-
         if (namedNodeMap != null) {
             for (int i = 0; i < namedNodeMap.getLength(); i++) {
                 Attr attr = (Attr) namedNodeMap.item(i);
                 String attrName = attr.getName();
                 //Don't add "id" attribute
                 if (!WebappsConstants.APPLICATION_ID_ATTR.equals(attrName)) {
-                    metadata.put(nodeName  + "." + attrName, attr.getValue());
+                    metadata.put(nodeName + "." + attrName, attr.getValue());
                 }
             }
         }
@@ -106,7 +111,6 @@ public class MetadataReader {
 
 
     private Document loadApplicationDescriptor(ServletContext servletContext) {
-
         //Load "META-INF/application.xml" file.
         InputStream in = servletContext.getResourceAsStream(WebappsConstants.APPLICATION_DESCRIPTOR_FILE);
         //Proceed if file exists.
@@ -126,6 +130,5 @@ public class MetadataReader {
         return null;
 
     }
-
 
 }
