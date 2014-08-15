@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://wso2.org/projects/ns/application-descriptor" version="1.0">
+    <manged-api enabled="true"/>
+    <discovery enabled="true" />
+    <monitring id="bam" enabled="true"/>
+    <monitring id="cep" enabled="false"/>
+    <feature id="index" enabled="false">
+        <sub-feature enabled="false">
+            <sub-sub-feature id="as" version="2.0" label="x, y" />
+            <sub-sub-feature version="1.0"  />
+        </sub-feature>
+    </feature>
+</applications>

@@ -48,6 +48,11 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.url.mapper</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -85,7 +90,8 @@
                             org.wso2.carbon.webapp.mgt.utils,
                             org.wso2.carbon.webapp.mgt.multitenancy,
                             org.wso2.carbon.webapp.mgt.sync,
-                            org.wso2.carbon.webapp.mgt.version
+                            org.wso2.carbon.webapp.mgt.version,
+                            org.wso2.carbon.webapp.mgt.metadata
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Axis2Deployer>WebappMetadataDeployer</Axis2Deployer>

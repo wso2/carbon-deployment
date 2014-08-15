@@ -65,6 +65,17 @@ public final class WebappsConstants {
     public static final String KEEP_WEBAPP_METADATA_HISTORY_PARAM = "keepWebappMetadataHistory";
     //Meta data handling strategies
     public  static  final  int KEEP_DEFAULT_VERSION_META_DATA_STRATEGY = 1;
+    public  static  final  String APPLICATION_DESCRIPTOR_FILE = "META-INF/application.xml";
+    public  static  final  String APPLICATION_META_DATA = "app_metadata";
+
+    public  static  final  String APPLICATION_ID_ATTR = "id";
+
+    public  static  final  String APPLICATION_ELE = "application";
+    public  static  final  String APPLICATION_MANAGED_API_ELE = "manged-api";
+
+
+
+
 
     public static final class WebappState {
         public static final String STARTED = "started";
