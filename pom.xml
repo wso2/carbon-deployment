@@ -19,7 +19,7 @@
         <module>features/as-runtimes</module>
         <module>features/service-mgt</module>
         <module>features/webapp-mgt</module>
-       <!-- <module>features/javaee</module> -->
+        <module>features/javaee</module>
     </modules>
 
     <dependencyManagement>
@@ -984,6 +984,7 @@
     </profiles>
 
     <properties>
+        <carbon.deployment.version>4.3.0-SNAPSHOT</carbon.deployment.version>
         <previous.version>4.2.0</previous.version>
         <version.jettison>1.3.4</version.jettison>
         <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>

@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.javaee</artifactId>
+    <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - JavaEE WSO2 Extensions</name>
     <url>http://wso2.org</url>

@@ -33,7 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.javaee</module>
+        <module>org.wso2.carbon.javaee.tomee</module>
     </modules>
 
 
