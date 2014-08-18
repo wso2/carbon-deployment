@@ -26,6 +26,7 @@ import org.apache.openejb.util.OpenEjbVersion;
 import org.apache.tomee.catalina.ServerListener;
 import org.apache.tomee.loader.TomcatHelper;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
@@ -119,6 +120,7 @@ public class ASTomEEServerListener extends ServerListener {
             }
 
             // ###### WSO2 START PATCH ###### //
+            readSystemPropertiesConf();
             ASTomcatLoader loader = new ASTomcatLoader();
             loader.init(properties);
             // ###### WSO2 END PATCH ###### //
@@ -131,9 +133,9 @@ public class ASTomEEServerListener extends ServerListener {
     }
 
     private void installServerInfo() {
-        if (SystemInstance.get().getOptions().get("tomee.keep-server-info", false)) {
-            return;
-        }
+//        if (SystemInstance.get().getOptions().get("tomee.keep-server-info", false)) {
+//            return;
+//        }
 
         // force static init
         final String value = ServerInfo.getServerInfo();
@@ -156,5 +158,26 @@ public class ASTomEEServerListener extends ServerListener {
             }
         }
     }
+
+    private void readSystemPropertiesConf() {
+        String systemPropertiesPath = new File(System.getProperty("carbon.home")).getAbsolutePath() +
+                File.separator + "repository" + File.separator + "conf" + File.separator +
+                "tomee" + File.separator + "system.properties";
+
+        File file = new File(systemPropertiesPath);
+        if (!file.exists()) {
+            return;
+        }
+
+        final Properties systemProperties;
+        try {
+            systemProperties = IO.readProperties(file);
+        } catch (IOException e) {
+            return;
+        }
+
+        SystemInstance.get().getProperties().putAll(systemProperties);
+    }
+
 
 }

@@ -19,7 +19,6 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardServer;
 import org.apache.tomee.catalina.TomcatWebAppBuilder;
 import org.apache.tomee.loader.TomcatHelper;
-import org.wso2.carbon.javaee.tomee.ASGlobalListenerSupport;
 
 public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
 
