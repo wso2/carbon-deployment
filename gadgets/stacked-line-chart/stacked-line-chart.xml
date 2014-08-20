@@ -24,9 +24,9 @@
               display_name="Chart Options"
               default_value="/portal/gadgets/stacked-chart/js/options-stack.js">
     </UserPref-->
-    <UserPref name="updateGraph"
-              display_name="Update Interval (s)"
-              default_value="No">
+    <UserPref name="appStatType"
+              display_name="App Stat Type"
+              default_value="request">
     </UserPref>
     <Content type="html">
     <![CDATA[
