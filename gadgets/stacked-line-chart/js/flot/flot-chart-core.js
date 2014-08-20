@@ -175,15 +175,13 @@ function isNumber(n) {
 }
 
 
-
-
 gadgets.HubSettings.onConnect = function () {
 
-
-    gadgets.Hub.subscribe('activeDiv',
+    gadgets.Hub.subscribe('wso2.gadgets.charts.timeRangeChange',
         function (topic, data, subscriberData) {
-            activeDiv = data;
-        });
-
+            console.log(data)
+            fetchData()
+        }
+    );
 
 };
