@@ -167,7 +167,7 @@ if (action == "node_list") {
     var sql = "SELECT sum(averageRequestCount) as total_request_count,  round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from REFERRER " + where + ")),2) as percentage_request_count, referrer FROM REFERRER " + where + " GROUP BY referrer ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
     print(shrinkResultset(results, 5, "Other referrals"));
-} else if (action == "summery") {
+} else if (action == "request") {
     var dataArray = [];
     var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
     var results = executeQuery(String(sql1));
