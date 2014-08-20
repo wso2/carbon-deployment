@@ -2,6 +2,9 @@ var render = function (theme, data, meta, require) {
 
     if(data.error.length == 0 ){
     theme('index', {
+    config: [{
+        context: data.config
+    }],
     title: [{
         context:{
             page_title:'AS Dashboard'
