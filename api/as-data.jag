@@ -171,7 +171,6 @@ if (action == "node_list") {
     var dataArray = [];
     var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
     var results = executeQuery(String(sql1));
-    //print(results);
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
         dataArray.push([i,row['request_per_minute']]);
@@ -179,6 +178,33 @@ if (action == "node_list") {
     print([
         {"series1": {"label": "s", "data": dataArray}}, require('/gadgets/stacked-line-chart/config/chart-options.json')
     ]);
+} else if (action == "response") {
+    var dataArray = [];
+    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
+    var results = executeQuery(String(sql1));
+    for (var i = 0; i < results.length; i++) {
+        var row = results[i];
+        dataArray.push([i,row['request_per_minute']]);
+    }
+    var opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
+    opt.colors = ["#bacf0b"];
+    print([
+        {"series1": {"label": "s", "data": dataArray}}, opt
+    ]);
+} else if (action == "error") {
+    var dataArray = [];
+    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
+    var results = executeQuery(String(sql1));
+    for (var i = 0; i < results.length; i++) {
+        var row = results[i];
+        dataArray.push([i,row['request_per_minute']]);
+    }
+    var opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
+    opt.colors = ["#e7912a"];
+    print([
+        {"series1": {"label": "s", "data": dataArray}}, opt
+    ]);
+
 }
 
 function getBrowser(){
