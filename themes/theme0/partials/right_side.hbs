@@ -214,7 +214,22 @@
 
 		<div class="panel panel-default">
 			<div class="panel-body">
-				main app table goes here
+				<table id="main_app_table" class="display" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th rowspan="2">Application / Service</th>
+              <th rowspan="2">Type</th>
+              <th colspan="3">Average request count</th>
+              <th rowspan="2">Total number of requests</th>
+              <th rowspan="2">Percentage error</th>
+            </tr>
+            <tr>
+              <th>Last minute</th>
+              <th>Last hour</th>
+              <th>Last Day</th>
+            </tr>
+          </thead>
+        </table>
 			</div>
 		</div>
 	</div>
@@ -284,5 +299,12 @@
 			</ul>
 		</div>
 
+    <script language="javascript">
+      $(document).ready(function() {
+        $('#main_app_table').dataTable( {
+            "ajax" :  '/dashboard/api/as-data.jag?action=apps'
+          } );
+      } );
+    </script>
 	</div>
 </div>
