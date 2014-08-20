@@ -67,12 +67,12 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-Package>org.wso2.carbon.service.mgt.internal</Private-Package>
+                        <Private-Package>org.wso2.carbon.javaee.tomee.internal</Private-Package>
                         <Import-Package>
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.javaee.*;version=${project.version}
+                            org.wso2.carbon.javaee.tomee.*;version=${project.version}
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
