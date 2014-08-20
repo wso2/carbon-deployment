@@ -173,3 +173,17 @@ function filterSeries(data) {
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
+
+
+
+
+gadgets.HubSettings.onConnect = function () {
+
+
+    gadgets.Hub.subscribe('activeDiv',
+        function (topic, data, subscriberData) {
+            activeDiv = data;
+        });
+
+
+};
