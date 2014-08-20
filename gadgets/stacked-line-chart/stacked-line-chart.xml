@@ -6,7 +6,16 @@
                  scrolling="true"  category="Templates"
                  tags="charts,stacked,visualization,template"
                  description="A generic Stacked Chart gadget, takes a json datasource as an input. It can be be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
-     </ModulePrefs>
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="" name="wso2.gadgets.charts.timeRangeChange"
+                description="time range for filtering has been changed" type="object"
+                subscribe="true"/>
+                ]]>
+            </Param>
+        </Require>
+    </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
               default_value="/publisher/config/defaults/gadgets/stacked-line-chart/datasource/dataFile1.jag">
