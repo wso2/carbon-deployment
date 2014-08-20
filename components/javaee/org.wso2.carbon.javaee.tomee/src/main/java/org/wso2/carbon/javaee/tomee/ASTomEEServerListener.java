@@ -120,6 +120,7 @@ public class ASTomEEServerListener extends ServerListener {
             }
 
             // ###### WSO2 START PATCH ###### //
+            setServiceManager(properties);
             readSystemPropertiesConf();
             ASTomcatLoader loader = new ASTomcatLoader();
             loader.init(properties);
@@ -130,6 +131,11 @@ public class ASTomEEServerListener extends ServerListener {
             LOGGER.log(Level.SEVERE, "TomEE Listener can't start OpenEJB", e);
             // e.printStackTrace(System.err);
         }
+    }
+
+    protected void setServiceManager(Properties properties) {
+        properties.put("openejb.service.manager.class",
+                "org.wso2.carbon.javaee.tomee.osgi.ASServiceManagerExtender");
     }
 
     private void installServerInfo() {
