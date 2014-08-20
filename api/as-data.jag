@@ -168,9 +168,9 @@ if (action == "node_list") {
     var results = executeQuery(sql);
     print(shrinkResultset(results, 5, "Other referrals"));
 } else if (action == "summery") {
-    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time > (NOW() - INTERVAL 1 DAY) ' + where + ' GROUP BY substring(time,1,13);";
-    var results = executeQuery(sql);
-    print(shrinkResultset(results, 5, "Other referrals"));
+    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
+    var results = executeQuery(String(sql1));
+    print(results);
 }
 
 function getBrowser(){
