@@ -100,7 +100,7 @@ var drawChart = function (data, options) {
     });
 }
 
-function fetchData(startTime) {
+function fetchData(startTime,endTime) {
     var url = pref.getString("dataSource");
 
     $.ajax({
@@ -108,7 +108,8 @@ function fetchData(startTime) {
         type: "GET",
         dataType: "json",
         data:{
-            start_time:startTime
+            start_time:startTime,
+            end_time:endTime
         },
         success: onDataReceived
     });
