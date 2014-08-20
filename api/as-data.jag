@@ -1,0 +1,175 @@
+<%
+//var db = new Database("AS_MONITORING_DATASOURCE");
+var db = new Database("jdbc:mysql://localhost:3306/as_dashboard_test", "root", "root");
+
+
+// execute a given SQL
+function executeQuery(sql) {
+    return db.query(sql);
+}
+
+// get list of nodes reporting stats to the monitoring system
+function getAllNodes() {
+    var nodes = executeQuery("SELECT DISTINCT serverName AS node FROM REQUESTS_SUMMARY_PER_MINUTE;");
+    return nodes;
+}
+
+var action = request.getParameter("action");
+
+var where = buildWhere();
+
+// build the where clause of the sql based on start_time, end_time and node values
+function buildWhere() {
+    var startTime = request.getParameter("start_time");
+    var endTime = request.getParameter("end_time");
+    var node = request.getParameter("node");
+    var webapp = request.getParameter("webapp");
+
+    if (startTime == null && endTime == null && node == null && webapp == null) {
+        return "";
+    }
+
+    var where = ""
+    if (startTime != null) {
+        where = appendCondition(where, "time >= \"" + startTime + "\"");
+    }
+    if (endTime != null) {
+        where = appendCondition(where, "time <= \"" + endTime + "\"");
+    }
+    if (node != null) {
+        where = appendCondition(where, "serverName = \"" + node + "\"");
+    }
+    if (webapp != null) {
+        where = appendCondition(where, "webappName= \"" + webapp + "\"");
+    }
+
+    return where;
+}
+
+function appendCondition(where, condition) {
+    if (where == "") {
+        where = " WHERE ";
+    } else {
+        where = where + " AND ";
+    }
+
+    return where + condition;
+}
+
+function shrinkResultset(resultset, visibleNumber, groupName) {
+    var shrinkedResultset = [];
+    var total = 0;
+    var percentage = 0;
+
+    if (visibleNumber >= resultset.length) {
+        return resultset;
+    }
+
+    shrinkedResultset = resultset.slice(0, visibleNumber);
+
+    for (var i = visibleNumber; i < resultset.length; i++) {
+        total = total + resultset[i]['request_count'];
+        percentage = percentage + resultset[i]['percentage_request_count'];
+    }
+
+    shrinkedResultset.push({"request_count": total, "percentage_request_count": percentage.toFixed(2), "name": groupName});
+
+    return shrinkedResultset;
+}
+
+//send the requested data based on the action and the conditions provided
+if (action == "node_list") {
+    print(getAllNodes());
+} else if (action == "webapp_list") {
+
+    var sql = "SELECT sum(averageRequestCount) as total_requests\
+		, max(averageRequestCount) as max_request, min(averageRequestCount) as min_request\
+		, avg(averageRequestCount) as avg_request, max(averageResponseTime) as max_response\
+		, min(averageResponseTime) as min_response, avg(averageResponseTime) as avg_response\
+		, sum(sessionCount) as total_session, avg(sessionCount) as avg_session\
+		, sum(httpSuccessCount) as total_success, sum(httpErrorCount) as total_error \
+		 FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
+
+    var results = executeQuery(sql);
+    print(results);
+} else if (action == "apps") {
+
+    var lastMinute = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time  > (NOW() - INTERVAL 1 MINUTE) " + where + " GROUP BY webappName;");
+    var lastHour = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time > (NOW() - INTERVAL 1 HOUR) " + where + " GROUP BY webappName;");
+    var lastDay = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time > (NOW() - INTERVAL 1 DAY) " + where + " GROUP BY webappName;");
+
+    var apps = executeQuery("select webappName, webappType, sum(averageRequestCount) as total_requests, sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error from REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY webappName ORDER BY webappName;")
+
+    var appList = new Array();
+
+    for (var i = 0; i < apps.length; i++) {
+        var app = new Object();
+        var webappName = apps[i]["webappName"];
+
+        app["webappName"] = webappName;
+        app["webappType"] = apps[i]["webappType"];
+        app["totalRequests"] = apps[i]["total_requests"];
+        app["percentageError"] = (apps[i]["total_http_error"] / (apps[i]["total_http_error"] + apps[i]["total_http_success"])).toFixed(2);
+        app["lastMinute"] = "-";
+        app["lastHour"] = "-";
+        app["lastDay"] = "-";
+
+        for (var j = 0; j < lastMinute.length; j++) {
+            if (lastMinute[j]["webappName"] == webappName) {
+                app["lastMinute"] = lastMinute[j]["averageRequestCount"];
+                break;
+            }
+        }
+
+        for (var j = 0; j < lastHour.length; j++) {
+            if (lastHour[j]["webappName"] == webappName) {
+                app["lastHour"] = lastHour[j]["averageRequestCount"];
+                break;
+            }
+        }
+
+        for (var j = 0; j < lastDay.length; j++) {
+            if (lastDay[j]["webappName"] == webappName) {
+                app["lastDay"] = last_day[j]["averageRequestCount"];
+                break;
+            }
+        }
+
+        appList.push([app["webappName"], app["webappType"], app["lastMinute"], app["lastHour"], app["lastDay"], app["totalRequests"], app["percentageError"]]);
+    }
+
+    print(appList);
+} else if (action == "browser") {
+//    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
+//    var results = executeQuery(sql);
+//    print(JSON.stringify(shrinkResultset(results, 4, "Other browsers")));
+} else if (action == "operatingSystem") {
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count, operatingSystem as name FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    print(JSON.stringify(shrinkResultset(results, 5, "Other operating systems")));
+} else if (action == "language") {
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    print(shrinkResultset(results, 5, "Other languages"));
+} else if (action == "deviceType") {
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    print(JSON.stringify(shrinkResultset(results, 5, "Other devices")));
+} else if (action == "country") {
+    var sql = "SELECT sum(averageRequestCount) as total_request_count, country from COUNTRY " + where + " GROUP BY country;";
+    var results = executeQuery(sql);
+    print(shrinkResultset(results, 5, "Other countries"));
+} else if (action == "context") {
+    var sql = "SELECT sum(averageRequestCount) as total_request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from WEBAPP_CONTEXT " + where + ")),2) as percentage_request_count, webappcontext FROM WEBAPP_CONTEXT " + where + "GROUP BY webappcontext ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    print(shrinkResultset(results, 5, "Other contexts"));
+} else if (action == "referral") {
+    var sql = "SELECT sum(averageRequestCount) as total_request_count,  round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from REFERRER " + where + ")),2) as percentage_request_count, referrer FROM REFERRER " + where + " GROUP BY referrer ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    print(shrinkResultset(results, 5, "Other referrals"));
+}
+
+function getBrowser(){
+}
+
+%>
