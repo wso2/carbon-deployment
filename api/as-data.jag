@@ -168,9 +168,17 @@ if (action == "node_list") {
     var results = executeQuery(sql);
     print(shrinkResultset(results, 5, "Other referrals"));
 } else if (action == "summery") {
+    var dataArray = [];
     var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
     var results = executeQuery(String(sql1));
-    print(results);
+    //print(results);
+    for (var i = 0; i < results.length; i++) {
+        var row = results[i];
+        dataArray.push([i,row['request_per_minute']]);
+    }
+    print([
+        {"series1": {"label": "s", "data": dataArray}}, require('/gadgets/stacked-line-chart/config/chart-options.json')
+    ]);
 }
 
 function getBrowser(){

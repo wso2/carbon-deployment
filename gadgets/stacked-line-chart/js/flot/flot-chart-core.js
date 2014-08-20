@@ -100,13 +100,16 @@ var drawChart = function (data, options) {
     });
 }
 
-function fetchData() {
+function fetchData(startTime) {
     var url = pref.getString("dataSource");
 
     $.ajax({
         url: url,
         type: "GET",
         dataType: "json",
+        data:{
+            start_time:startTime
+        },
         success: onDataReceived
     });
     var pauseBtn = $("button.pause");
@@ -179,8 +182,7 @@ gadgets.HubSettings.onConnect = function () {
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.timeRangeChange',
         function (topic, data, subscriberData) {
-            console.log(data)
-            fetchData()
+            fetchData(data.start.format('YYYY-MM-DD HH:mm'), data.end.format('YYYY-MM-DD HH:mm'))
         }
     );
 
