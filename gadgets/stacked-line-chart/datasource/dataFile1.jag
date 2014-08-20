@@ -16,7 +16,7 @@ function getRandomData() {
             var x1 = Math.random();
             var x2 = Math.random();
             var x = x1 + i * (Math.abs(x2 - x1)) / 100;
-            data1.push([i,8+ Math.sin(x * Math.sin(x))]);
+            data1.push([i,500 + 100* Math.sin(x * Math.sin(x))]);
         }
     }
 
