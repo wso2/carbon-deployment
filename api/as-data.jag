@@ -1,6 +1,6 @@
 <%
 //var db = new Database("AS_MONITORING_DATASOURCE");
-var db = new Database("jdbc:mysql://localhost:3306/as_dashboard_test", "root", "root");
+var db = new Database("jdbc:mysql://localhost:3306/asmonitoring", "root", "root");
 
 
 // execute a given SQL
@@ -169,8 +169,8 @@ if (action == "node_list") {
     print(shrinkResultset(results, 5, "Other referrals"));
 } else if (action == "request") {
     var dataArray = [];
-    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
-    var results = executeQuery(String(sql1));
+    var sql= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
+    var results = executeQuery(String(sql));
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
         dataArray.push([i,row['request_per_minute']]);
@@ -180,7 +180,7 @@ if (action == "node_list") {
     ]);
 } else if (action == "response") {
     var dataArray = [];
-    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
+    var sql1= "SELECT avg(averageResponseTime) as response_time_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
     var results = executeQuery(String(sql1));
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
@@ -193,7 +193,7 @@ if (action == "node_list") {
     ]);
 } else if (action == "error") {
     var dataArray = [];
-    var sql1= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE  " + where + " GROUP BY substring(time,1,13);";
+    var sql1= "SELECT sum(httpErrorCount) as error_count, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), \'%Y-%m-%d %H:\')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
     var results = executeQuery(String(sql1));
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
