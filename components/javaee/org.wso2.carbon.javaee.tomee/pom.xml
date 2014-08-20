@@ -67,6 +67,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Activator>org.wso2.carbon.javaee.tomee.osgi.internal.Activator</Bundle-Activator>
                         <Private-Package>org.wso2.carbon.javaee.tomee.internal</Private-Package>
                         <Import-Package>
                             *;resolution:=optional
