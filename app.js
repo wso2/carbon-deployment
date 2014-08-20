@@ -1,7 +1,7 @@
 var caramel = require('caramel');
 
 caramel.configs({
-    context: '/as',
+    context: '/dashboard',
     cache: true,
     negotiation: true,
     themer: function () {
