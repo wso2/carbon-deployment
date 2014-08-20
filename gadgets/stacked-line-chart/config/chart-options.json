@@ -13,13 +13,13 @@
     "grid": {
         "show": true,
         "aboveData": false,
-        "color": "#000000",
+        "color": "#aaa",
         "backgroundColor": "#FFFFFF",
         "labelMargin": 8,
         "axisMargin": null,
         "markings": null,
         "borderWidth": 0.2,
-        "borderColor": "#FFFFFF",
+        "borderColor": "#aaa",
         "minBorderMargin": null,
         "clickable": false,
         "hoverable": true,
@@ -53,7 +53,7 @@
         "labelHeight": null,
         "reserveSpace": null,
 
-        "axisLabel": "Y Axis Label",
+        "axisLabel": "",
         "axisLabelUseCanvas": true,
         "axisLabelFontSizePixels": 14,
         "axisLabelFontFamily": "Arial",
@@ -88,9 +88,9 @@
         "labelHeight": null,
         "reserveSpace": null,
 
-        "axisLabel": "X Axis Label",
+        "axisLabel": "Time",
         "axisLabelUseCanvas": true,
-        "axisLabelFontSizePixels": 14,
+        "axisLabelFontSizePixels": 12,
         "axisLabelFontFamily": "Arial",
         "axisLabelPadding": 5,
 
