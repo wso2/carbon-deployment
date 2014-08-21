@@ -12,6 +12,9 @@ var render = function (theme, data, meta, require) {
                     page_title:'AS Dashboard'
                 }
             }],
+            appname: [{
+                context:data.appname
+            }],
             left_side:[
                 {
                     partial: 'left_side',
