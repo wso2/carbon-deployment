@@ -36,6 +36,7 @@
 	<title>Bar Chart</title>
 	<link href="css/flot-graph.css" rel="stylesheet" type="text/css">
 	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="css/custom.css" rel="stylesheet" type="text/css">
 	<script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/bootstrap.js"></script>
@@ -52,12 +53,42 @@
 </head>
 
 <body>
-	<div class="gadgetInnerWrapper">			
-			<div id="placeholder" class="demo-placeholder" style="height:100%"></div>
-	</div>
-<script type="text/javascript">
+        <div class="panel panel-one panel-stat">
+            <div class="panel-heading">
 
-</script>
+                <div class="statistics">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <small class="statistics-main">Total Requests</small>
+                            <h2>4,243,625</h2>
+                        </div>
+                        <div class="col-xs-4">
+
+                        </div>
+                    </div><!-- row -->
+                    <div class="arrow-box"></div>
+                    <div class="row">
+                        <small class="measure-label">Per min</small>
+
+                        <div class="col-xs-4 panel-bottom-box left-radius box-one-color">
+                            <h4>350,100</h4>
+                            <small class="stat-label">Max</small>
+                        </div>
+
+                        <div class="col-xs-4 line-seperator panel-bottom-box box-one-color">
+                            <h4>5100</h4>
+                            <small class="stat-label">Avg</small>
+                        </div>
+
+                        <div class="col-xs-4 line-seperator panel-bottom-box right-radius box-one-color">
+                            <h4>100</h4>
+                            <small class="stat-label">Min</small>
+                        </div>
+                    </div><!-- row -->
+                </div><!-- statistics -->
+
+            </div><!-- panel-heading -->
+        </div><!-- panel -->
 </body>
 </html>
 
