@@ -25,7 +25,7 @@ var render = function (theme, data, meta, require) {
      right_side: [
 
             {
-            	partial: 'right_side',
+            	partial: 'aggregated-index',
             	context:{
                     user_name: 'dakshika@wso2.com ',
                     user_avatar:'dakshika',
@@ -44,8 +44,8 @@ var render = function (theme, data, meta, require) {
          ],
          header:[
                     {
-                    partial: 'header_login',
-                }
+                        partial: 'header_login'
+                    }
          ],
          body: [
 
