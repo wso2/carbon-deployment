@@ -1,1 +1,8 @@
-{"gadgetsUrlBase": "http://localhost:9763/dashboard/gadgets"}
+{
+    "gadgetsUrlBase": "http://localhost:9763/dashboard/gadgets",
+    "database": {
+        "url": "jdbc:mysql://localhost:3306/as_dashboard_test",
+        "username": "root",
+        "password": "root"
+    }
+}

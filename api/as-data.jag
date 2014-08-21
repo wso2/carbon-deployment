@@ -1,6 +1,7 @@
 <%
 //var db = new Database("AS_MONITORING_DATASOURCE");
-var db = new Database("jdbc:mysql://localhost:3306/asmonitoring", "root", "root");
+var config = require('/config/config.json');
+var db = new Database(config.database.url, config.database.username, config.database.password);
 
 
 // execute a given SQL
