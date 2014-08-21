@@ -238,40 +238,11 @@
 
 <div class="row row-overide">
 
-	<div class="col-sm-4">
-		<div class="panel panel-as">
-			<div class="panel-heading panel-heading-as">
-				Average request count for the last 24 hours
-			</div>
-			<div class="panel-body">
-                <div class="gadget-holder" data-type="request" id="request-graph" style="height: 300px"></div>
-			</div>
-		</div>
-	</div>
+    {{>request-panel}}
+    {{>response-panel}}
+    {{>error-panel}}
 
 
-	<div class="col-sm-4">
-		<div class="panel panel-as">
-			<div class="panel-heading panel-heading-as">
-				Average request count for the last 24 hours
-			</div>
-			<div class="panel-body">
-                <div class="gadget-holder" data-type="response" id="response-graph" style="height: 300px"></div>
-            </div>
-		</div>
-	</div>
-
-
-	<div class="col-sm-4">
-		<div class="panel panel-as">
-			<div class="panel-heading panel-heading-as">
-				Average request count for the last 24 hours
-			</div>
-			<div class="panel-body">
-                <div class="gadget-holder" data-type="error" id="error-graph" style="height: 300px"></div>
-            </div>
-		</div>
-	</div>
 </div>
 
 <div class="row row-overide">
