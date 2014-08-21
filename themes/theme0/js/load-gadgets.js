@@ -1,11 +1,10 @@
 $(function(){
-//    var opt = {prefs: {dataSource: caramel.context + '/gadgets/stacked-line-chart/datasource/dataFile1.jag'} };
     var gadgetUrl = config.gadgetsUrlBase + '/stacked-line-chart/stacked-line-chart.xml';
     var opt;
-    var gadgetTypes = {'request-graph': 'request', 'response-graph': 'response', 'error-graph': 'error'};
-    for (var gadgetElmId in gadgetTypes) {
+    $('.gadget-holder').each(function (i, el) {
+        var $el = $(el);
         opt = {prefs: {dataSource: caramel.context + '/api/as-data.jag'} };
-        opt.prefs.appStatType = gadgetTypes[gadgetElmId];
-        UESContainer.renderGadget(gadgetElmId, gadgetUrl, opt);
-    }
+        opt.prefs.appStatType = $el.attr('data-type');
+        UESContainer.renderGadget($el.attr('id'), gadgetUrl, opt);
+    });
 });
