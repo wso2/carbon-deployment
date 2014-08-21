@@ -25,7 +25,7 @@ var render = function (theme, data, meta, require) {
             right_side: [
 
                 {
-                    partial: 'right_side',
+                    partial: 'app-index',
                     context:{
                         user_name: 'dakshika@wso2.com ',
                         user_avatar:'dakshika',

@@ -1,69 +1,5 @@
-<div class="header-nav">
-    <a class="toggle-sidebar" data-toggle="tooltip" data-placement="right" title="Click to Show/Hide menu">
-        <i class="fa fa-bars"></i>
-    </a>
-    <div class="title">HTTP Monitoring</div>
-    <div class="header-nav-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-	        <span class="user-image">
-	           <img src="{{url "/themes/theme0/ui/img/avatar/"}}{{user_avatar}}.png" alt="Profile-image{{user_avatar}}">
-	        </span>
-                    {{user_name}}
-                    <span class="caret"></span>
-                </a>
-
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<div class="subheader">
-
-    <h2 class="pull-left col-md-4">
-  	<span class="fa-stack fa-lg">
-  		<i class="fa fa-home fa-stack-1x" ></i>
-  		 <i class="fa fa-circle-thin fa-stack-2x"></i>
-  	</span>
-        Application Home
-        <span>/</span>
-    </h2>
-
-  <span class="subheader-right pull-right col-md-8">
-
-    <div class="btn-group quick-selection ">
-        <button type="button" class="btn btn-default">Hour</button>
-        <button type="button" class="btn btn-default">Day</button>
-        <button type="button" class="btn btn-default">Week</button>
-        <button type="button" class="btn btn-default">Month</button>
-    </div>
-
-   	<span class="dropdown server-select ">
-    	Servers:
-		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-              All
-              <span class="caret"></span>
-          </button>
-		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 1</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 2</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 3</a></li>
-          </ul>
-		</span>
-
-		<span id="reportrange" class="pull-right btn btn-default btn-sm">
-		    <i class="fa fa-calendar fa-lg"></i>
-		    <span>July 16, 2014 - July 23, 2014 </span><b class="caret"></b>
-		</span>
-
-  </span>
-
-</div>
+{{> header}}
+{{> sub-header}}
 
 <div class="row row-overide">
 
@@ -238,6 +174,7 @@
 
 <div class="row row-overide">
 
+
     {{>request-panel}}
     {{>response-panel}}
     {{>error-panel}}
@@ -245,37 +182,11 @@
 
 </div>
 
-<div class="row row-overide">
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="tabbable tabs-below">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="one_">Lorem ipsum dolor sit amet, charetra varius quam sit amet vulputate.
-                            Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero.</div>
-                        <div class="tab-pane" id="two_">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                            Aliquam in felis sit amet augue.</div>
-                        <div class="tab-pane" id="twee_">Thirdamuno, ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                            Quisque mauris augue, molestie tincidunt condimentum vitae. </div>
-                    </div>
+<script language="javascript">
+    $(document).ready(function() {
+        $('#main_app_table').dataTable( {
+            "ajax" :  '/dashboard/api/as-data.jag?action=apps'
+        } );
+    } );
+</script>
 
-                </div>
-            </div>
-            <ul class="nav nav-tabs">
-                <li><a href="#one_" data-toggle="tab">One</a></li>
-                <li><a href="#two_" data-toggle="tab">Two</a></li>
-                <li><a href="#two_" data-toggle="tab">Three</a></li>
-                <li><a href="#twee_" data-toggle="tab">Four</a></li>
-                <li><a href="#twee_" data-toggle="tab">Five</a></li>
-            </ul>
-        </div>
-
-        <script language="javascript">
-            $(document).ready(function() {
-                $('#main_app_table').dataTable( {
-                    "ajax" :  '/dashboard/api/as-data.jag?action=apps'
-                } );
-            } );
-        </script>
-    </div>
-</div>
