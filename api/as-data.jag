@@ -80,7 +80,12 @@ function shrinkResultset(resultset, visibleNumber, groupName) {
 
 //send the requested data based on the action and the conditions provided
 if (action == "node_list") {
-    print(getAllNodes());
+    var dataArray = [];
+    var results = getAllNodes();
+    for(var i = 0; i < results.length; i++){
+        dataArray.push(results["node"]);
+    }
+    print(dataArray);
 } else if (action == "webapp_list") {
 
     var sql = "SELECT sum(averageRequestCount) as total_requests\
