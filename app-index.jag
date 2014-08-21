@@ -1,7 +1,8 @@
 <%
 var caramel = require('caramel');
-
+var uriMatcher = new URIMatcher(request.getRequestURI());
 caramel.render({
+    appname : uriMatcher.match('/{context}/webapp/{webapp}').webapp,
     error: [],
     config: require('/config/config.json')
 });
