@@ -1,9 +1,26 @@
 <%
 var caramel = require('caramel');
 var uriMatcher = new URIMatcher(request.getRequestURI());
+
+var mapper = function (path) {
+    return function () {
+        return path;
+    };
+};
+
+var elements = uriMatcher.match('/{context}/webapps/{webapp}/{aspect}');
+
+if (elements) {
+    request.getMappedPath = mapper('/' + elements.aspect + '.jag');
+} else {
+    elements = uriMatcher.match('/{context}/webapps/{webapp}');
+
+}
 caramel.render({
-    appname : uriMatcher.match('/{context}/webapps/{webapp}').webapp,
+    appname: elements.webapp,
     error: [],
     config: require('/config/config.json')
 });
+
+
 %>
