@@ -6,8 +6,10 @@
   		 <i class="fa fa-circle-thin fa-stack-2x"></i>
   	</span>
         Application Home
+        {{#if appname}}
         <span>/</span>
         <span>{{appname}}</span>
+        {{/if}}
         {{#if aspect}}
         <span>/</span>
         <span>{{aspect}}</span>
