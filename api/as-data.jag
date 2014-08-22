@@ -216,15 +216,29 @@ else if(action == "topHttpStatus"){
     print([
         {"series1": {"label": "s", "data": dataArray}}, opt
     ]);
-
-} else if (action == "infoBox"){
+} else if (action == "requestCount"){
     var sql = "SELECT sum(averageRequestCount) as totalRequest, max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, min(averageRequestCount) as minRequest, max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse, sum(sessionCount) as totalSession, avg(sessionCount) as avgSession, sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
-        "request" : {"total": results["totalRequest"], "max": results["maxRequest"], "avg": results["avgRequest"], "min": results["minRequest"]},
-        "response": {"max": results["maxResponse"], "avg": results["avgResponse"], "min": results["minResponse"]},
-        "session": {"total": results["totalSession"], "avg": results["avgSession"]},
-        "error": {"total": results["totalError"], "percentage": results["percentageError"]}
+        "total": results["totalRequest"], "max": results["maxRequest"], "avg": results["avgRequest"], "min": results["minRequest"]
+    });
+} else if (action == "responseCount"){
+    var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
+    var results = executeQuery(sql)[0];
+    print({
+        "max": results["maxResponse"], "avg": results["avgResponse"], "min": results["minResponse"]
+    });
+} else if (action == "sessionCount"){
+    var sql = "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
+    var results = executeQuery(sql)[0];
+    print({
+        "total": results["totalSession"], "avg": results["avgSession"]
+    });
+} else if (action == "errorCount"){
+    var sql = "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
+    var results = executeQuery(sql)[0];
+    print({
+        "total": results["totalError"], "percentage": results["percentageError"]
     });
 }
 
