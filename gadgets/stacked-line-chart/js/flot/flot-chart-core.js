@@ -103,15 +103,20 @@ var drawChart = function (data, options) {
 function fetchData(startTime,endTime) {
     var url = pref.getString("dataSource");
 
+    var data = {
+        start_time: startTime,
+        end_time: endTime,
+        action: pref.getString("appStatType")
+    };
+    var appname = pref.getString("appname");
+    if(appname!=""){
+        data.appname = appname;
+    }
     $.ajax({
         url: url,
         type: "GET",
         dataType: "json",
-        data:{
-            start_time:startTime,
-            end_time:endTime,
-            action:pref.getString("appStatType")
-        },
+        data: data,
         success: onDataReceived
     });
     var pauseBtn = $("button.pause");
