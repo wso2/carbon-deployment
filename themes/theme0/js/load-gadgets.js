@@ -5,6 +5,7 @@ $(function(){
         gadgetUrl = config.gadgetsUrlBase + '/' + $el.attr('data-gadget') + '/' + $el.attr('data-gadget') + '.xml';
         opt = {prefs: {dataSource: caramel.context + '/api/as-data.jag'} };
         opt.prefs.appStatType = $el.attr('data-type');
+        opt.prefs.appname = appname || '';
         UESContainer.renderGadget($el.attr('id'), gadgetUrl, opt);
     });
 });

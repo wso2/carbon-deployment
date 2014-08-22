@@ -20,6 +20,10 @@
               display_name="Data Source"
               default_value="/publisher/config/defaults/gadgets/stacked-line-chart/datasource/dataFile1.jag">
     </UserPref>
+    <UserPref name="appname"
+              display_name="Web App Name"
+              default_value="">
+    </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"
               default_value="/portal/gadgets/stacked-chart/js/options-stack.js">
