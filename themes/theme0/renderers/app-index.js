@@ -12,6 +12,9 @@ var render = function (theme, data, meta, require) {
                     page_title:'AS Dashboard'
                 }
             }],
+            appname: [{
+                context:data.appname
+            }],
             left_side:[
                 {
                     partial: 'left_side',
@@ -27,6 +30,7 @@ var render = function (theme, data, meta, require) {
                 {
                     partial: 'app-index',
                     context:{
+                        appname : data.appname,
                         user_name: 'dakshika@wso2.com ',
                         user_avatar:'dakshika',
                         data:  data.panels,

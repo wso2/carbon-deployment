@@ -80,7 +80,12 @@ function shrinkResultset(resultset, visibleNumber, groupName) {
 
 //send the requested data based on the action and the conditions provided
 if (action == "node_list") {
-    print(getAllNodes());
+    var dataArray = [];
+    var results = getAllNodes();
+    for(var i = 0; i < results.length; i++){
+        dataArray.push(results["node"]);
+    }
+    print(dataArray);
 } else if (action == "webapp_list") {
 
     var sql = "SELECT sum(averageRequestCount) as total_requests\
@@ -141,22 +146,27 @@ if (action == "node_list") {
 
     print({ "data" : appList });
     
-} else if (action == "browser") {
-//    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
-//    var results = executeQuery(sql);
-//    print(JSON.stringify(shrinkResultset(results, 4, "Other browsers")));
+}
+else if(action == "topHttpStatus"){
+    var sql = "SELECT sum(averageRequestCount) as request_count, responseHttpStatusCode FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
+    var results = executeQuery(sql);
+    print(results);
+}else if (action == "browser") {
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    print(JSON.stringify(shrinkResultset(results, 4, "Other browsers")));
 } else if (action == "operatingSystem") {
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count, operatingSystem as name FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
     print(JSON.stringify(shrinkResultset(results, 5, "Other operating systems")));
+} else if (action == "deviceType") {
+      var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
+      var results = executeQuery(sql);
+      print(JSON.stringify(shrinkResultset(results, 5, "Other devices")));
 } else if (action == "language") {
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
     print(shrinkResultset(results, 5, "Other languages"));
-} else if (action == "deviceType") {
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
-    var results = executeQuery(sql);
-    print(JSON.stringify(shrinkResultset(results, 5, "Other devices")));
 } else if (action == "country") {
     var sql = "SELECT sum(averageRequestCount) as total_request_count, country from COUNTRY " + where + " GROUP BY country;";
     var results = executeQuery(sql);
@@ -207,6 +217,15 @@ if (action == "node_list") {
         {"series1": {"label": "s", "data": dataArray}}, opt
     ]);
 
+} else if (action == "infoBox"){
+    var sql = "SELECT sum(averageRequestCount) as totalRequest, max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, min(averageRequestCount) as minRequest, max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse, sum(sessionCount) as totalSession, avg(sessionCount) as avgSession, sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
+    var results = executeQuery(sql)[0];
+    print({
+        "request" : {"total": results["totalRequest"], "max": results["maxRequest"], "avg": results["avgRequest"], "min": results["minRequest"]},
+        "response": {"max": results["maxResponse"], "avg": results["avgResponse"], "min": results["minResponse"]},
+        "session": {"total": results["totalSession"], "avg": results["avgSession"]},
+        "error": {"total": results["totalError"], "percentage": results["percentageError"]}
+    });
 }
 
 function getBrowser(){
