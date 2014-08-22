@@ -17,6 +17,7 @@ if (elements) {
 
 }
 caramel.render({
+    aspect : elements.aspect,
     appname: elements.webapp,
     error: [],
     config: require('/config/config.json')
