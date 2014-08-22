@@ -1,7 +1,7 @@
 {
     "gadgetsUrlBase": "http://localhost:9763/dashboard/gadgets",
     "database": {
-        "url": "jdbc:mysql://localhost:3306/as_dashboard_test",
+        "url": "jdbc:mysql://localhost:3306/wso2bam_db_real",
         "username": "root",
         "password": "root"
     }
