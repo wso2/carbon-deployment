@@ -30,6 +30,7 @@ var render = function (theme, data, meta, require) {
                 {
                     partial: 'technology',
                     context:{
+                        aspect:'Technology' ,
                         appname : data.appname,
                         user_name: 'dakshika@wso2.com ',
                         user_avatar:'dakshika',
