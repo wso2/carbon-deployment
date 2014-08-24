@@ -25,7 +25,6 @@ import org.apache.catalina.startup.ContextConfig;
 import org.apache.openejb.OpenEJBRuntimeException;
 import org.apache.openejb.loader.SystemInstance;
 import org.apache.openejb.util.LogCategory;
-import org.apache.tomee.catalina.OpenEJBContextConfig;
 import org.apache.tomee.catalina.TomcatWebAppBuilder;
 import org.apache.tomee.common.UserTransactionFactory;
 import org.apache.tomee.loader.TomcatHelper;
@@ -166,7 +165,7 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
         String globalContextXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
                 File.separator + "repository" + File.separator + "conf" + File.separator +
                 "tomcat" + File.separator + "context.xml";
-        ContextConfig contextConfig = new OpenEJBContextConfig(new StandardContextInfo(standardContext));
+        ContextConfig contextConfig = new ASOpenEJBContextConfig(new StandardContextInfo(standardContext));
         contextConfig.setDefaultWebXml(globalWebXml);
         contextConfig.setDefaultContextXml(globalContextXml);
 
