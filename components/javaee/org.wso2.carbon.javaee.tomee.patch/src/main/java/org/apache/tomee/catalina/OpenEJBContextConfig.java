@@ -56,7 +56,6 @@ import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomee.catalina.realm.TomEEDataSourceRealm;
 import org.apache.tomee.common.NamingUtil;
 import org.apache.tomee.common.ResourceFactory;
-import org.apache.tomee.loader.TomcatHelper;
 import org.apache.xbean.finder.IAnnotationFinder;
 
 import javax.servlet.ServletContainerInitializer;
@@ -101,6 +100,19 @@ public class OpenEJBContextConfig extends ContextConfig {
     public OpenEJBContextConfig(TomcatWebAppBuilder.StandardContextInfo standardContextInfo) {
         logger.debug("OpenEJBContextConfig({0})", standardContextInfo.toString());
         info = standardContextInfo;
+
+        // ############ START - WSO2 PATCH ############
+        //set wso2 maintained web.xml and context.xml
+        String globalWebXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
+                File.separator + "repository" + File.separator + "conf" + File.separator +
+                "tomcat" + File.separator + "web.xml";
+        String globalContextXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
+                File.separator + "repository" + File.separator + "conf" + File.separator +
+                "tomcat" + File.separator + "context.xml";
+        this.setDefaultWebXml(globalWebXml);
+        this.setDefaultContextXml(globalContextXml);
+        // ############ END - WSO2 PATCH ############
+
     }
 
     public void finder(final IAnnotationFinder finder, final ClassLoader tmpLoader) {
@@ -357,7 +369,12 @@ public class OpenEJBContextConfig extends ContextConfig {
 
     @Override
     protected void webConfig() {
-        TomcatHelper.configureJarScanner(context);
+        // ############ START - WSO2 PATCH ############
+        //TomEEJarScanner fails to work in OSGi environment.
+        // Until we figure out how to fix this, we should live
+        // with CarbonTomcatJarScanner. - KasunG
+//        TomcatHelper.configureJarScanner(context);
+        // ############ END - WSO2 PATCH ############
 
         // read the real config
         super.webConfig();
