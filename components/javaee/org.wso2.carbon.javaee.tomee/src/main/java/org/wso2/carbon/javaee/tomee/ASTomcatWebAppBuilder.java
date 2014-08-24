@@ -15,10 +15,15 @@
 */
 package org.wso2.carbon.javaee.tomee;
 
+import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardServer;
+import org.apache.catalina.startup.ContextConfig;
+import org.apache.tomee.catalina.OpenEJBContextConfig;
 import org.apache.tomee.catalina.TomcatWebAppBuilder;
 import org.apache.tomee.loader.TomcatHelper;
+
+import java.io.File;
 
 public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
 
@@ -55,9 +60,41 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
         //init will only get called if this is a JavaEE webapp.
         // So, we don't have to re-check the CRE
         standardContext.setIgnoreAnnotations(true);
+
+        //TomEE jar scanner with Carbon bits
+//        standardContext.setJarScanner(new ASTomEEJarScanner());
+
         super.init(standardContext);
+
+//        setContextConfig(standardContext);
     }
 
+    /**
+     * TomEE adds OpenEJBContextConfig in TomcatWebAppBuilder#init method.
+     * We need to remove that add our own custom TomEE ContextConfig.
+     * @param standardContext
+     */
+    protected void setContextConfig(StandardContext standardContext) {
+        final LifecycleListener[] listeners = standardContext.findLifecycleListeners();
+        for (final LifecycleListener l : listeners) {
+            if (l instanceof ContextConfig) {
+                standardContext.removeLifecycleListener(l);
+            }
+        }
+        //set default web.xml and context.xml
+        String globalWebXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
+                File.separator + "repository" + File.separator + "conf" + File.separator +
+                "tomcat" + File.separator + "web.xml";
+        String globalContextXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
+                File.separator + "repository" + File.separator + "conf" + File.separator +
+                "tomcat" + File.separator + "context.xml";
+        ContextConfig contextConfig = new OpenEJBContextConfig(new StandardContextInfo(standardContext));
+        contextConfig.setDefaultWebXml(globalWebXml);
+        contextConfig.setDefaultContextXml(globalContextXml);
+
+        standardContext.addLifecycleListener(contextConfig);
+
+    }
 
 
 }
