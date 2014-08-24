@@ -1,25 +1,33 @@
 {
     "legend": {
-        "show": false
+        "show": true,
+        "labelFormatter": null,
+        "labelBoxBorderColor": "#E9E8E8",
+        "noColumns": 1,
+        "position": "ne",
+        "backgroundColor": "#FFFFFF",
+        "backgroundOpacity": 0.8,
+        "container": null
     },
     "series": {
-        "stack": true,
-        "lines": {
+        "shadowSize": 1,
+        "bars": {
             "show": true,
-            "fill": true
+            "barWidth": 0.13,
+            "order": 1
         }
     },
-    "colors": ["#3da0ea", "#bacf0b", "#e7912a", "#4ec9ce", "#f377ab", "#ec7337", "#bacf0b", "#f377ab", "#3da0ea", "#e7912a", "#bacf0b"],
+    "colors": ["#FA0B43", "#41E328", "#F5A00C", "#061DA2","#C921E6", "#21CCE6","#55FFBB"],
     "grid": {
         "show": true,
         "aboveData": false,
-        "color": "#aaa",
-        "backgroundColor": "#FFFFFF",
+        "color": "#000000",
+        "backgroundColor": "#333333",
         "labelMargin": 8,
         "axisMargin": null,
         "markings": null,
         "borderWidth": 0.2,
-        "borderColor": "#aaa",
+        "borderColor": "#FFFFFF",
         "minBorderMargin": null,
         "clickable": false,
         "hoverable": true,
@@ -53,7 +61,7 @@
         "labelHeight": null,
         "reserveSpace": null,
 
-        "axisLabel": "",
+        "axisLabel": "Y Axis Label",
         "axisLabelUseCanvas": true,
         "axisLabelFontSizePixels": 14,
         "axisLabelFontFamily": "Arial",
@@ -80,6 +88,7 @@
         "inverseTransform": null,
 
         "ticks": null,
+        "tickLength": 0,
         "tickDecimals": null,
         "tickFormatter": null,
         "tickLength": null,
@@ -88,9 +97,9 @@
         "labelHeight": null,
         "reserveSpace": null,
 
-        "axisLabel": "Time",
+        "axisLabel": "X Axis Label",
         "axisLabelUseCanvas": true,
-        "axisLabelFontSizePixels": 12,
+        "axisLabelFontSizePixels": 14,
         "axisLabelFontFamily": "Arial",
         "axisLabelPadding": 5,
 
