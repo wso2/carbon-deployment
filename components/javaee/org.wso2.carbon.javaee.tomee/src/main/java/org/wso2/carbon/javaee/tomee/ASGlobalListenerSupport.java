@@ -37,6 +37,7 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
 
     public static final String JAVA_EE_CRE = "JavaEE";
     public static final String JAVA_EE_OLD_CRE = "J2EE";
+    public static final String IS_JAVA_EE_APP = "IS_JAVA_EE_APP";
 
     public ASGlobalListenerSupport(StandardServer standardServer, ContextListener contextListener) {
         super(standardServer, contextListener);
@@ -47,7 +48,14 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
             Object source = event.getSource();
             if (source instanceof StandardContext) {
                 StandardContext standardContext = (StandardContext) source;
-                boolean isJavaEEApp = isJavaEEApp(standardContext);
+
+                Boolean isJavaEEApp;
+                if ((isJavaEEApp = (Boolean) standardContext.getServletContext().
+                        getAttribute(IS_JAVA_EE_APP)) == null) {
+                    isJavaEEApp = isJavaEEApp(standardContext);
+                    standardContext.getServletContext().setAttribute(IS_JAVA_EE_APP, isJavaEEApp);
+                }
+
                 if (!isJavaEEApp) {
                     if (log.isDebugEnabled()) {
                         log.debug("JavaEE CRE was not found for this webapp. " +
