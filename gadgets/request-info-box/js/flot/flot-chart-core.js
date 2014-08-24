@@ -117,9 +117,29 @@ function fetchData(startTime,endTime) {
     var pauseBtn = $("button.pause");
     togglePause(pauseBtn);
 }
-function onDataReceived(series) {
-    chartData = series[0];
-    options = series[1];
+function onDataReceived(data) {
+    $('#total-count').text(data.total);
+    $('#max-count').text(data.max);
+    $('#avg-count').text(data.avg);
+    $('#min-count').text(data.min);
+    chartData = {"label" : "count", "data" : data.graph};
+    options =
+    {
+        "legend": {
+            "show": false
+        },
+        "series": {
+            "shadowSize": 1,
+            "bars": {
+                "show": true,
+                "barWidth": 0.13,
+                "order": 1
+            }
+        },
+        "grid": {
+            "show": false
+        }
+    };
     var chartOptions = options;
     var _chartData = [];
     addSeriesCheckboxes(chartData);
