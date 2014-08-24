@@ -42,11 +42,10 @@
 	<script language="javascript" type="text/javascript" src="js/bootstrap.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
-	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.stack.js"></script>
-	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.navigate.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.tickrotor.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.axislabels.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.orderBars.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/flot-chart-core.js"></script>
 
@@ -60,10 +59,10 @@
                     <div class="row">
                         <div class="col-xs-8">
                             <small class="statistics-main">Total Requests</small>
-                            <h2>4,243,625</h2>
+                            <h2 id="total-count"></h2>
                         </div>
                         <div class="col-xs-4">
-
+                            <div id="placeholder" class="demo-placeholder" style="top: 10%;height:40%; width: 20%; left: 50%"></div>
                         </div>
                     </div><!-- row -->
                     <div class="arrow-box"></div>
@@ -71,17 +70,17 @@
                         <small class="measure-label">Per min</small>
 
                         <div class="col-xs-4 panel-bottom-box left-radius box-one-color">
-                            <h4>350,100</h4>
+                            <h4 id="max-count">350,100</h4>
                             <small class="stat-label">Max</small>
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box box-one-color">
-                            <h4>5100</h4>
+                            <h4 id="avg-count">5100</h4>
                             <small class="stat-label">Avg</small>
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box right-radius box-one-color">
-                            <h4>100</h4>
+                            <h4 id="min-count">100</h4>
                             <small class="stat-label">Min</small>
                         </div>
                     </div><!-- row -->
