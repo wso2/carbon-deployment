@@ -41,6 +41,11 @@
             <DelegatedPackages>*,!org.springframework.*</DelegatedPackages>
         </DelegatedEnvironment>
 
+        <DelegatedEnvironment>
+            <Name>JavaEE</Name>
+            <DelegatedPackages>*,!org.springframework.*</DelegatedPackages>
+        </DelegatedEnvironment>
+
     </DelegatedEnvironments>
 
 

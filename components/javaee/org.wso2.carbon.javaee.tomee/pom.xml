@@ -27,16 +27,20 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.javaee</artifactId>
+    <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - JavaEE WSO2 Extensions</name>
     <url>http://wso2.org</url>
+
+<properties>
+   <tomee.version>1.6.0.1</tomee.version>
+</properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>tomee-catalina</artifactId>
-            <version>1.6.0.1</version>
+            <version>${tomee.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.wso2</groupId>
@@ -67,12 +71,13 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-Package>org.wso2.carbon.service.mgt.internal</Private-Package>
+                        <Bundle-Activator>org.wso2.carbon.javaee.tomee.osgi.internal.Activator</Bundle-Activator>
+                        <Private-Package>org.wso2.carbon.javaee.tomee.internal</Private-Package>
                         <Import-Package>
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.javaee.*;version=${project.version}
+                            org.wso2.carbon.javaee.tomee.*;version=${project.version}
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.javaee.server.feature</artifactId>
+    <artifactId>org.wso2.carbon.javaee.tomee.server.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - JavaEE Core Feature</name>
     <url>http://wso2.org</url>
@@ -36,6 +36,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
+            <version>${carbon.deployment.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.javaee.tomee.patch</artifactId>
+            <version>${carbon.deployment.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.tomee</groupId>
             <artifactId>tomee</artifactId>
             <version>${tomee.orbit.version}</version>
@@ -43,7 +53,7 @@
         <dependency>
             <groupId>org.wso2.tomee</groupId>
             <artifactId>tomee-resources</artifactId>
-            <version>${tomee.orbit.version}</version>
+            <version>${tomee.resources.orbit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.openwebbeans</groupId>
@@ -85,7 +95,8 @@
 
     <properties>
         <tomee.version>1.6.0.1</tomee.version>
-        <tomee.orbit.version>${tomee.version}.wso2v1</tomee.orbit.version>
+        <tomee.orbit.version>${tomee.version}.wso2v2</tomee.orbit.version>
+        <tomee.resources.orbit.version>${tomee.version}.wso2v1</tomee.resources.orbit.version>
         <openwebbeans.version>1.2.1</openwebbeans.version>
         <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
     </properties>
@@ -127,7 +138,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.javaee.server</id>
+                            <id>org.wso2.carbon.javaee.tomee.server</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -136,6 +147,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.javaee.tomee</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.javaee.tomee.patch</bundleDef>
                                 <bundleDef>org.wso2.tomee:tomee</bundleDef>
                                 <bundleDef>org.wso2.tomee:tomee-resources</bundleDef>
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-jsf</bundleDef>
@@ -148,10 +161,10 @@
                                 <bundleDef>commons-beanutils.wso2:commons-beanutils</bundleDef>
 
                             </bundles>
-                            <!--<importFeatures>-->
-                                <!--<importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}-->
-                                <!--</importFeatureDef>-->
-                            <!--</importFeatures>-->
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.webapp.mgt:${project.version}</importFeatureDef>
+                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>
