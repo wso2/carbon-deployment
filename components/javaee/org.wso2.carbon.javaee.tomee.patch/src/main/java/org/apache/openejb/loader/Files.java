@@ -16,6 +16,8 @@
  */
 package org.apache.openejb.loader;
 
+import org.eclipse.osgi.framework.internal.core.BundleURLConnection;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -381,6 +384,15 @@ public class Files {
                 path = path.substring(0, path.length() - 1);
             }
             return new File(path);
+        } else if ("bundleresource".equals(url.getProtocol())) {
+            //get the actual jar
+            try {
+                URLConnection conn = url.openConnection();
+                return toFile(
+                        ((BundleURLConnection) conn).getLocalURL());
+            } catch (IOException e) {
+                throw new IllegalStateException("Error opening connection for bundle url: " + url);
+            }
         } else {
             throw new IllegalArgumentException("Unsupported URL scheme: " + url.toExternalForm());
         }
