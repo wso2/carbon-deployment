@@ -15,15 +15,25 @@
 */
 package org.wso2.carbon.javaee.tomee;
 
+import org.apache.catalina.Engine;
 import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Service;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardServer;
+import org.apache.catalina.deploy.ContextTransaction;
 import org.apache.catalina.startup.ContextConfig;
+import org.apache.openejb.OpenEJBRuntimeException;
+import org.apache.openejb.loader.SystemInstance;
+import org.apache.openejb.util.LogCategory;
 import org.apache.tomee.catalina.OpenEJBContextConfig;
 import org.apache.tomee.catalina.TomcatWebAppBuilder;
+import org.apache.tomee.common.UserTransactionFactory;
 import org.apache.tomee.loader.TomcatHelper;
+import org.wso2.carbon.tomcat.ext.scan.CarbonTomcatJarScanner;
 
+import javax.servlet.ServletContext;
 import java.io.File;
+import java.lang.reflect.Method;
 
 public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
 
@@ -33,11 +43,47 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
      */
     private final ASGlobalListenerSupport globalListenerSupport;
 
+    private Class<?> sessionManagerClass = null;
+    private static final boolean FORCE_RELOADABLE = SystemInstance.get().getOptions().get("tomee.force-reloadable", false);
+    private static final boolean SKIP_TLD = SystemInstance.get().getOptions().get("tomee.skip-tld", false);
+    private static final org.apache.openejb.util.Logger logger = org.apache.openejb.util.Logger.
+            getInstance(LogCategory.OPENEJB.createChild("tomcat"), "org.apache.openejb.util.resources");
+    private String defaultHost = "localhost";
+    private static Method startInternal = null; // it just sucks but that's private
+    private static Method addMyFacesDefaultParameters = null; // it just sucks but that's private
+
+
+    static {
+        try {
+            startInternal = TomcatWebAppBuilder.class.getDeclaredMethod("startInternal", StandardContext.class);
+            startInternal.setAccessible(true);
+        } catch (final NoSuchMethodException e) {
+            throw new OpenEJBRuntimeException("can't find method isIgnored", e);
+        }
+
+        try {
+            addMyFacesDefaultParameters = TomcatWebAppBuilder.class.
+                    getDeclaredMethod("addMyFacesDefaultParameters", ClassLoader.class, ServletContext.class);
+            addMyFacesDefaultParameters.setAccessible(true);
+        } catch (final NoSuchMethodException e) {
+            throw new OpenEJBRuntimeException("can't find method isIgnored", e);
+        }
+
+
+    }
+
     public ASTomcatWebAppBuilder() {
         super();
+
         final StandardServer standardServer = TomcatHelper.getServer();
         globalListenerSupport = new ASGlobalListenerSupport(standardServer, this);
 
+        for (final Service service : standardServer.findServices()) {
+            if (service.getContainer() instanceof Engine) {
+                final Engine engine = (Engine) service.getContainer();
+                this.defaultHost = engine.getDefaultHost();
+            }
+        }
     }
 
     /**
@@ -62,17 +108,49 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
         standardContext.setIgnoreAnnotations(true);
 
         //TomEE jar scanner with Carbon bits
-//        standardContext.setJarScanner(new ASTomEEJarScanner());
+        standardContext.setJarScanner(new CarbonTomcatJarScanner());
 
-        super.init(standardContext);
+//        doInit(standardContext);
 
-//        setContextConfig(standardContext);
+      //  setContextConfig(standardContext);
+    }
+
+    @Override
+    public void configureStart(final StandardContext standardContext) {
+        if (TomcatHelper.isTomcat7()) {
+            //don't set this
+//            TomcatHelper.configureJarScanner(standardContext);
+
+            final ContextTransaction contextTransaction = new ContextTransaction();
+            contextTransaction.setProperty(org.apache.naming.factory.Constants.FACTORY, UserTransactionFactory.class.getName());
+            standardContext.getNamingResources().setTransaction(contextTransaction);
+            try {
+                startInternal.invoke(this, standardContext);
+            } catch (Exception e) {
+                logger.debug(e.getMessage(), e);
+                //ignore
+            }
+        }
+
+        // clear a bit log for default case
+        try {
+            addMyFacesDefaultParameters.invoke(this,
+                    standardContext.getLoader().getClassLoader(), standardContext.getServletContext());
+        } catch (Exception e) {
+            logger.debug(e.getMessage(), e);
+            //ignore
+        }
+
+        // breaks cdi
+        standardContext.setTldValidation(Boolean.parseBoolean(SystemInstance.get().getProperty("tomee.tld.validation", "false")));
+        // breaks jstl
+        standardContext.setXmlValidation(Boolean.parseBoolean(SystemInstance.get().getProperty("tomee.xml.validation", "false")));
     }
 
     /**
      * TomEE adds OpenEJBContextConfig in TomcatWebAppBuilder#init method.
      * We need to remove that add our own custom TomEE ContextConfig.
-     * @param standardContext
+     * @param standardContext ctx
      */
     protected void setContextConfig(StandardContext standardContext) {
         final LifecycleListener[] listeners = standardContext.findLifecycleListeners();
