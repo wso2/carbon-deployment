@@ -118,6 +118,47 @@ function getDataForRequestCountBarChart() {
      return arrList;
 }
 
+
+function getDataForResponseTimeBarChart() {
+
+    var startTime = new Date(request.getParameter("start_time"));
+    var endTime = new Date(request.getParameter("end_time"));
+    var timeDiff = 0;
+
+    if(request.getParameter("start_time") !=null && request.getParameter("end_time") !=null)    {
+         timeDiff = Math.abs((parseDate(request.getParameter("end_time")).getTime() - parseDate(request.getParameter("start_time")).getTime()) / 86400000);
+     }else {
+        timeDiff = 1;
+    }
+
+    var sql = "";
+    if (timeDiff > 1200) {
+        sql = "SELECT  AVG(averageResponseTime) as responseTime, YEAR(time) as toolTip FROM  REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY YEAR(time);";
+    } else if (timeDiff > 90) {
+         sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%b %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY MONTH(time);";
+     } else if (timeDiff > 30) {
+         sql = "SELECT   AVG(averageResponseTime) as responseTime, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), " - ", DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
+    } else if (timeDiff > 1) {
+          sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%b %d %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY DATE(time);";
+     } else if (timeDiff <= 1) {
+         sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%H:00') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY HOUR(time);";
+    }
+
+    var results = executeQuery(sql);
+    var arrList = new Array();
+
+     for (var i = 0; i < results.length; i++) {
+
+        var tempData = new Array();
+        tempData[0] = i;
+        tempData[1] = results[i]["responseTime"];
+        tempData[2] = results[i]["toolTip"] + " : " + results[i]["responseTime"];
+        arrList.push(tempData);
+     }
+
+     return arrList;
+}
+
 function parseDate(input) {
 
     var p = input.split(" ");
@@ -199,23 +240,9 @@ if (action == "node-list") {
     
 }
 else if(action == "top-http-status"){
-    var dataArray = [];
-    var ticks = [];
     var sql = "SELECT sum(averageRequestCount) as request_count, responseHttpStatusCode FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
     var results = executeQuery(sql);
-    for (var i = 0; i < results.length; i++) {
-        var row = results[i];
-        dataArray.push([i,row['request_count']]);
-        ticks.push([i, row['responseHttpStatusCode']]);
-    }
-    var opt = require('/gadgets/bar-chart/config/chart-options.json');
-    opt.legend.show = false;
-    opt.xaxis.ticks = ticks;
-    opt.xaxis.axisLabel = "HTTP Response code";
-    opt.yaxis.axisLabel = "Number of requests";
-    print([
-        {"series1": {"label": "s", "data": dataArray}}, opt
-    ]);
+    print(results);
 }else if (action == "browser") {
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
@@ -291,7 +318,7 @@ else if(action == "top-http-status"){
     var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
-        "max": results["maxResponse"], "avg": Math.round(results["avgResponse"]), "min": results["minResponse"]
+        "max": results["maxResponse"], "avg": Math.round(results["avgResponse"]), "min": results["minResponse"], "graph" : getDataForResponseTimeBarChart()
     });
 } else if (action == "session-count"){
     var sql = "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
