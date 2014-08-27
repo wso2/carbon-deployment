@@ -340,19 +340,19 @@ ul li{list-style: none;}
     padding-top: 10px;
 }
 
-.box-one-color{
+.request-count .box-one-color{
     background: #35677b;
 }
 
-.box-two-color{
+.response-count .box-one-color{
     background: #167164;
 }
 
-.box-three-color{
+.session-count .box-one-color{
     background: #b6651d;
 }
 
-.box-four-color{
+.error-count .box-one-color{
     background: #ac3b30;
 }
 
