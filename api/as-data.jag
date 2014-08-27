@@ -326,24 +326,28 @@ else if(action == "top-http-status"){
     var sql = "SELECT sum(averageRequestCount) as totalRequest, max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, min(averageRequestCount) as minRequest, max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse, sum(sessionCount) as totalSession, avg(sessionCount) as avgSession, sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
+        "title" : "Total Requests",
         "total": results["totalRequest"], "max": results["maxRequest"], "avg": Math.round(results["avgRequest"]), "min": results["minRequest"], "graph": getDataForRequestCountBarChart()
     });
 } else if (action == "response-count"){
     var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
+        "title" : "Total Response",
         "max": results["maxResponse"], "avg": Math.round(results["avgResponse"]), "min": results["minResponse"], "graph" : getDataForResponseTimeBarChart()
     });
 } else if (action == "session-count"){
     var sql = "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
+        "title" : "Session",
         "total": results["totalSession"], "avg": Math.round(results["avgSession"])
     });
 } else if (action == "error-count"){
     var sql = "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
+        "title" : "Total Errors",
         "total": results["totalError"], "percentage": results["percentageError"].toFixed(2)
     });
 }
