@@ -59,7 +59,7 @@
                     <div class="row">
                         <div class="col-xs-8">
                             <small class="statistics-main">Total Requests</small>
-                            <h2 id="total-count"></h2>
+                            <h2 id="total-count">N/A</h2>
                         </div>
                         <div class="col-xs-4">
                             <div id="placeholder" class="demo-placeholder" style="top: 10%;height:40%; width: 20%; left: 50%"></div>
@@ -70,17 +70,17 @@
                         <small class="measure-label">Per min</small>
 
                         <div class="col-xs-4 panel-bottom-box left-radius box-one-color">
-                            <h4 id="max-count">350,100</h4>
+                            <h4 id="max-count">N/A</h4>
                             <small class="stat-label">Max</small>
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box box-one-color">
-                            <h4 id="avg-count">5100</h4>
+                            <h4 id="avg-count">N/A</h4>
                             <small class="stat-label">Avg</small>
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box right-radius box-one-color">
-                            <h4 id="min-count">100</h4>
+                            <h4 id="min-count">N/A</h4>
                             <small class="stat-label">Min</small>
                         </div>
                     </div><!-- row -->
