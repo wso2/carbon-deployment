@@ -104,7 +104,7 @@ function fetchData(startTime,endTime) {
     var url = pref.getString("dataSource");
 
     var statType = pref.getString("appStatType");
-    $('.statistics').addClass(statType);
+    $('.panel-heading').addClass(statType);
     $.ajax({
         url: url,
         type: "GET",
