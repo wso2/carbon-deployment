@@ -103,6 +103,8 @@ var drawChart = function (data, options) {
 function fetchData(startTime,endTime) {
     var url = pref.getString("dataSource");
 
+    var statType = pref.getString("appStatType");
+    $('.statistics').addClass(statType);
     $.ajax({
         url: url,
         type: "GET",
@@ -110,7 +112,7 @@ function fetchData(startTime,endTime) {
         data:{
             start_time:startTime,
             end_time:endTime,
-            action:pref.getString("appStatType")
+            action: statType
         },
         success: onDataReceived
     });
