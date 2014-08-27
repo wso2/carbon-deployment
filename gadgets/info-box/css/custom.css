@@ -292,25 +292,25 @@ ul li{list-style: none;}
     border-radius: 5px;
 }
 
-.panel-one>.panel-heading {
+.panel-heading.request-count {
     color: #fff;
     background-color: #54add1;
     border-color: #54add1;
 }
 
-.panel-two>.panel-heading {
+.panel-heading.response-count {
     color: #fff;
     background-color: #1caf9a;
     border-color: #54add1;
 }
 
-.panel-three>.panel-heading {
+.panel-heading.session-count {
     color: #fff;
     background-color: #e67e22;
     border-color: #b6651d;
 }
 
-.panel-four>.panel-heading {
+.panel-heading.error-count {
     color: #fff;
     background-color: #e74c3c;
     border-color: #ac3b30;
