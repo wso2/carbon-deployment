@@ -847,6 +847,12 @@
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.monitoring.stat.collector.jmx</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.monitoring.publisher.bam.feature</artifactId>
             <version>${carbon.platform.version}</version>
             <type>zip</type>
@@ -864,7 +870,6 @@
             <artifactId>org.eclipse.osgi</artifactId>
             <version>${eclipse.osgi.version}</version>
         </dependency>
-
       </dependencies>
     </dependencyManagement>
 
