@@ -22,6 +22,10 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.monitoring.stat.collector.jmx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.monitoring.stat.collector.http</artifactId>
         </dependency>
         <dependency>
@@ -57,6 +61,9 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
+                                <bundleDef>
+                                    org.wso2.carbon:org.wso2.carbon.monitoring.stat.collector.jmx:${project.version}
+                                </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon:org.wso2.carbon.monitoring.stat.collector.http:${project.version}
                                 </bundleDef>
