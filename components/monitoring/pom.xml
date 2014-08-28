@@ -20,6 +20,7 @@
 
     <modules>
         <module>org.wso2.carbon.monitoring.core</module>
+        <module>org.wso2.carbon.monitoring.stat.collector.http</module>
         <module>org.wso2.carbon.monitoring.publisher.bam</module>
     </modules>
 

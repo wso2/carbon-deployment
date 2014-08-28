@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>monitoring</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.monitoring.stat.collector.http</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - Webapp Monitoring</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Axis2Module>${project.artifactId}-${project.version}</Axis2Module>
+                        <Export-Package>
+                            org.wso2.carbon.monitoring.http.*;version="${project.version}"
+                        </Export-Package>
+                        <Import-Package>
+                            javax.servlet;version="${imp.pkg.version.javax.servlet}",
+                            javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
+                            org.wso2.carbon.monitoring.core.publisher.api;version="${project.version}",
+                            org.apache.axis2.context;version="${axis2.wso2.version}",
+                            *;resolution:=optional
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ua.parser.wso2</groupId>
+            <artifactId>ua-parser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.monitoring.core</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+
+
