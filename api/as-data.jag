@@ -258,17 +258,47 @@ else if(action == "top-http-status"){
         {"series1": {"label": "s", "data": dataArray}}, opt
     ]);
 }else if (action == "browser") {
+    var dataObject = {};
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
-    print(JSON.stringify(shrinkResultset(results, 4, "Other browsers")));
+    var shrinkedResults = shrinkResultset(results, 4, "Other browsers");
+    for(var i = 0; i < shrinkedResults.length; i++){
+        var row = shrinkedResults[i];
+        var series = "series" + i;
+        var data = {"label" : row['name'], "data" : row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
 } else if (action == "operating-system") {
+    var dataObject = {};
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count, operatingSystem as name FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
-    print(JSON.stringify(shrinkResultset(results, 5, "Other operating systems")));
+    var shrinkedResults = shrinkResultset(results, 5, "Other operating systems");
+    for(var i = 0; i < shrinkedResults.length; i++){
+        var row = shrinkedResults[i];
+        var series = "series" + i;
+        var data = {"label" : row['name'], "data" : row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
 } else if (action == "device-type") {
-      var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
-      var results = executeQuery(sql);
-      print(JSON.stringify(shrinkResultset(results, 5, "Other devices")));
+    var dataObject = {};
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
+    var results = executeQuery(sql);
+    var shrinkedResults = shrinkResultset(results, 5, "Other devices");
+    for(var i = 0; i < shrinkedResults.length; i++){
+        var row = shrinkedResults[i];
+        var series = "series" + i;
+        var data = {"label" : row['name'], "data" : row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
 } else if (action == "language") {
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
