@@ -250,7 +250,6 @@ else if(action == "top-http-status"){
         ticks.push([i, row['responseHttpStatusCode']]);
     }
     var opt = require('/gadgets/bar-chart/config/chart-options.json');
-    opt.legend.show = false;
     opt.xaxis.ticks = ticks;
     opt.xaxis.axisLabel = "HTTP Response code";
     opt.yaxis.axisLabel = "Number of requests";
@@ -300,13 +299,31 @@ else if(action == "top-http-status"){
         dataObject, require('/gadgets/pie-chart/config/chart-options.json')
     ]);
 } else if (action == "language") {
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
+    var dataArray = [];
+    var ticks = [];
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC LIMIT 5;";
     var results = executeQuery(sql);
-    print(shrinkResultset(results, 5, "Other languages"));
+    for (var i = 0; i < results.length; i++) {
+        var row = results[i];
+        dataArray.push([i,row['request_count']]);
+        ticks.push([i, row['name']]);
+    }
+    var opt = require('/gadgets/bar-chart/config/chart-options.json');
+    opt.xaxis.ticks = ticks;
+    opt.xaxis.axisLabel = "Language";
+    opt.yaxis.axisLabel = "Number of requests";
+    print([
+        {"series1": {"label": "s", "data": dataArray}}, opt
+    ]);
 } else if (action == "country") {
+    var dataObject = {};
     var sql = "SELECT sum(averageRequestCount) as request_count, country from COUNTRY " + where + " GROUP BY country;";
     var results = executeQuery(sql);
-    print(results);
+    for(var i = 0; i < results.length; i++){
+        var row = results[i];
+        dataObject[row['country']] = row['request_count'];
+    }
+    print(dataObject);
 } else if (action == "context") {
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from WEBAPP_CONTEXT " + where + ")),2) as percentage_request_count, webappcontext FROM WEBAPP_CONTEXT " + where + "GROUP BY webappcontext ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
