@@ -31,10 +31,7 @@
               All
               <span class="caret"></span>
           </button>
-		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 1</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 2</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 3</a></li>
+		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="server-list">
           </ul>
 		</span>
 
@@ -46,3 +43,32 @@
   </span>
 
 </div>
+
+<script language="javascript">
+    $(document).ready(function () {
+        var url = '/dashboard/api/as-data.jag';
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            data: {
+                "action": "node-list"
+            },
+            success: function(data){
+                var serverList = document.getElementById('server-list');
+                for(var i = 0; i < data.length; i++){
+                    var link = document.createElement('a');
+                    var item = document.createElement('li');
+
+                    link.role = "menuitem";
+                    link.href = "#";
+                    link.innerHTML = data[i];
+                    item.role = "presentation";
+                    item.appendChild(link);
+                    serverList.appendChild(item);
+                }
+            }
+        });
+    });
+</script>
+
