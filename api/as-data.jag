@@ -24,7 +24,7 @@ function buildWhere() {
     var startTime = request.getParameter("start_time");
     var endTime = request.getParameter("end_time");
     var node = request.getParameter("node");
-    var webapp = request.getParameter("webapp");
+    var webapp = request.getParameter("appname");
 
     if (startTime == null && endTime == null && node == null && webapp == null) {
         return "";
