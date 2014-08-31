@@ -5,7 +5,7 @@
   		<i class="fa fa-home fa-stack-1x" ></i>
   		 <i class="fa fa-circle-thin fa-stack-2x"></i>
   	</span>
-        Application Home
+        <a href="" id="home" >Application Home</a>
         {{#if appname}}
         <span>/</span>
         <span>{{appname}}</span>
@@ -46,6 +46,7 @@
 
 <script language="javascript">
     $(document).ready(function () {
+        var home = document.location.origin + '/dashboard';
         var url = '/dashboard/api/as-data.jag';
         $.ajax({
             url: url,
@@ -69,6 +70,8 @@
                 }
             }
         });
+
+        $('#home').attr('href', home);
     });
 </script>
 
