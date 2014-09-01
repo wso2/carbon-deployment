@@ -3,6 +3,7 @@ var delay;
 var chartData = [];
 var options;
 var plot;
+var start, end, ip;
 $(function () {
 
     var pauseBtn = $("button.pause");
@@ -100,7 +101,7 @@ var drawChart = function (data, options) {
     });
 }
 
-function fetchData(startTime,endTime) {
+function fetchData() {
     var url = pref.getString("dataSource");
 
     var statType = pref.getString("appStatType");
@@ -110,8 +111,9 @@ function fetchData(startTime,endTime) {
         type: "GET",
         dataType: "json",
         data:{
-            start_time:startTime,
-            end_time:endTime,
+            start_time: start,
+            end_time: end,
+            node: ip,
             action: statType
         },
         success: onDataReceived
@@ -126,40 +128,42 @@ function onDataReceived(data) {
     $('.avg-count').text(data.avg);
     $('#min-count').text(data.min);
     $('.statistics-main').text(data.title);
-    chartData = {"label" : "count", "data" : data.graph};
-    options =
+    if( data.graph){
+        chartData = {"label" : "count", "data" : data.graph};
         options =
-        {
-            "legend": {
-                "show": false
-            },
-            "series": {
-                "shadowSize": 1,
-                "bars": {
-                    "show": true,
-                    lineWidth: 0, // in pixels
-                    barWidth: 0.8, // in units of the x axis
-                    fill: true,
-                    fillColor: '#ffffff',
-                    align: "center" // "left", "right", or "center"
+            options =
+            {
+                "legend": {
+                    "show": false
+                },
+                "series": {
+                    "shadowSize": 1,
+                    "bars": {
+                        "show": true,
+                        lineWidth: 0, // in pixels
+                        barWidth: 0.8, // in units of the x axis
+                        fill: true,
+                        fillColor: '#ffffff',
+                        align: "center" // "left", "right", or "center"
+                    }
+                },
+                "grid": {
+                    "show": false
                 }
-            },
-            "grid": {
-                "show": false
-            }
-        };
-    var chartOptions = options;
-    var _chartData = [];
-    addSeriesCheckboxes(chartData);
-    $.each(chartData, function (key, val) {
-        _chartData.push(chartData[key]);
-    });
-    //console.info(chartData);
-    drawChart(_chartData, chartOptions);
-    var seriesContainer = $("#optionsRight");
-    seriesContainer.find(":checkbox").click(function () {
-        filterSeries(chartData);
-    });
+            };
+        var chartOptions = options;
+        var _chartData = [];
+//    addSeriesCheckboxes(chartData);
+        $.each(chartData, function (key, val) {
+            _chartData.push(chartData[key]);
+        });
+        //console.info(chartData);
+        drawChart(_chartData, chartOptions);
+        var seriesContainer = $("#optionsRight");
+        seriesContainer.find(":checkbox").click(function () {
+            filterSeries(chartData);
+        });
+    }
 }
 
 function showTooltip(x, y, contents) {
@@ -212,7 +216,16 @@ gadgets.HubSettings.onConnect = function () {
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.timeRangeChange',
         function (topic, data, subscriberData) {
-            fetchData(data.start.format('YYYY-MM-DD HH:mm'), data.end.format('YYYY-MM-DD HH:mm'))
+            start = data.start.format('YYYY-MM-DD HH:mm');
+            end = data.end.format('YYYY-MM-DD HH:mm');
+            fetchData()
+        }
+    );
+
+    gadgets.Hub.subscribe('wso2.gadgets.charts.ipChange',
+        function (topic, data, subscriberData) {
+            ip = data;
+            fetchData()
         }
     );
 
