@@ -38,7 +38,7 @@
 	<title>Location</title>
 	<link href="css/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/open_sans.css" type="text/css" >
-
+	<link rel="stylesheet" href="css/custom.css" type="text/css" >
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery-jvectormap-1.2.2.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery-jvectormap-world-mill-en.js"></script>
