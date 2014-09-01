@@ -57,12 +57,12 @@
         <div class="panel panel-one panel-stat">
             <div class="panel-heading">
 
-                <div class="statistics">
+                <div class="statistics info-box-i-one" style="display:none">
                     <div class="row">
                         <div class="col-xs-8">
                             <small class="statistics-main">Total Requests</small>
-                            <h2 id="total-count">N/A</h2>
-                            <i class="fa fa-clock-o fa-3x" style="display:none"></i>
+                            <h2 class="total-count">N/A</h2>
+                            <i class="fa fa-clock-o fa-3x info-box-i-two" style="display:none"></i>
                         </div>
                         <div class="col-xs-4"  style="height:40%;">
                             <div id="placeholder" class="demo-placeholder" style="height:40%; width: 80%; "></div>
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box box-one-color">
-                            <h4 id="avg-count">N/A</h4>
+                            <h4 class="avg-count">N/A</h4>
                             <small class="stat-label">Avg</small>
                         </div>
 
@@ -87,7 +87,54 @@
                             <small class="stat-label">Min</small>
                         </div>
                     </div><!-- row -->
-                </div><!-- statistics -->
+                </div><!-- statistics box one and two-->
+
+                <div class="statistics info-box-i-three" style="display:none" >
+                	<div class="row">
+                  		<div class="col-xs-3">
+                     		<small class="statistics-main">Sessions</small>
+                    		<i class="fa fa-group fa-3x"></i>
+                  		</div>
+                  		<div class="col-xs-9">
+                   			<span class="total-count"></span>
+                  		</div>
+                	</div><!-- row -->
+                	<div class="arrow-box"></div>
+                	<div class="row">
+
+                  		<div class="col-xs-8 panel-bottom-box left-radius box-one-color">
+                  			<div class="h4-stat-label">Avg per min.</div>
+                    		<small class="stat-label">&nbsp;</small>
+                  		</div>
+
+                  		<div class="col-xs-4 panel-bottom-box  right-radius  box-one-color">
+                  			<h4 class="avg-count">120</h4>
+                    		<small class="stat-label">&nbsp;</small>
+                  		</div>
+                	</div><!-- row -->
+              </div><!-- statistics box three -->
+
+              <div class="statistics info-box-i-four" style="display:none" >
+                	<div class="row">
+                  		<div class="col-xs-3">
+                     		<small class="statistics-main">Errors</small>
+                    		<i class="fa fa-times-circle fa-3x"></i>
+
+                  		</div>
+                  		<div class="col-xs-9">
+                   			<span class="total-count">123</span>
+                  		</div>
+                	</div><!-- row -->
+                	<div class="arrow-box"></div>
+                	<div class="row">
+
+                  		<div class="col-xs-12 panel-bottom-box  right-radius left-radius  box-one-color">
+                  			<h4 >23%</h4>
+                    		<small class="stat-label">&nbsp;</small>
+                  		</div>
+                	</div><!-- row -->
+              </div><!-- statistics box four-->
+
 
             </div><!-- panel-heading -->
         </div><!-- panel -->
