@@ -89,9 +89,6 @@ position: relative;
 padding: 6px;
 }
 
-#reportrange{
-    padding: 7px;
-}
 
 .quick-selection {
 margin-right: 5%;}
@@ -552,6 +549,14 @@ border-radius: 0 0 4px 4px ;
 .nav-tabs>li {
 float: left;
 margin-bottom: -2px;
-width: 16%;
+width: 24%;
 background: #e4e2e2;
+}
+
+.gadget-holder{
+    height: 350px;
+}
+
+.info-box-height{
+    height: 14.286em;
 }

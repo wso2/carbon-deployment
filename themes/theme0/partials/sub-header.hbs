@@ -1,11 +1,12 @@
 <div class="subheader">
 
     <h2 class="pull-left col-md-4">
+    <a href="/dashboard/" id="home" >
   	<span class="fa-stack fa-lg">
   		<i class="fa fa-home fa-stack-1x" ></i>
   		 <i class="fa fa-circle-thin fa-stack-2x"></i>
   	</span>
-        <a href="" id="home" >Application Home</a>
+        Application Home</a>
         {{#if appname}}
         <span>/</span>
         <span>{{appname}}</span>
@@ -16,14 +17,7 @@
         {{/if}}
     </h2>
 
-  <span class="subheader-right pull-right col-md-8">
-
-    <div class="btn-group quick-selection ">
-        <button type="button" class="btn btn-default">Hour</button>
-        <button type="button" class="btn btn-default">Day</button>
-        <button type="button" class="btn btn-default">Week</button>
-        <button type="button" class="btn btn-default">Month</button>
-    </div>
+  <span class="subheader-right pull-right col-md-8 col-sm-7">
 
    	<span class="dropdown server-select ">
     	Servers:
@@ -35,10 +29,16 @@
           </ul>
 		</span>
 
-		<span id="reportrange" class="pull-right btn btn-default btn-sm">
-		    <i class="fa fa-calendar fa-lg"></i>
-		    <span>July 16, 2014 - July 23, 2014 </span><b class="caret"></b>
-		</span>
+		<div class="btn-group quick-selection pull-right">
+              <button type="button" class="btn btn-default date-rage-opt">Hour</button>
+              <button type="button" class="btn btn-default date-rage-opt">Day</button>
+              <button type="button" class="btn btn-default date-rage-opt">Week</button>
+              <button type="button" class="btn btn-default date-rage-opt">Month</button>
+              <button type="button" class="btn btn-default" id="reportrange" >
+                  <i class="fa fa-calendar fa-lg"></i>
+                  <span>July 16, 2014 - July 23, 2014 </span><b class="caret"></b>
+              </button>
+        </div>
 
   </span>
 

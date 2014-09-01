@@ -103,6 +103,8 @@ var drawChart = function (data, options) {
 function fetchData(startTime,endTime) {
     var url = pref.getString("dataSource");
 
+    var statType = pref.getString("appStatType");
+    $('.panel-heading').addClass(statType);
     $.ajax({
         url: url,
         type: "GET",
@@ -110,16 +112,41 @@ function fetchData(startTime,endTime) {
         data:{
             start_time:startTime,
             end_time:endTime,
-            action:pref.getString("appStatType")
+            action: statType
         },
         success: onDataReceived
     });
     var pauseBtn = $("button.pause");
     togglePause(pauseBtn);
 }
-function onDataReceived(series) {
-    chartData = series[0];
-    options = series[1];
+function onDataReceived(data) {
+    $('#total-count').text(data.total);
+    $('#max-count').text(data.max);
+    $('#avg-count').text(data.avg || data.percentage + ' %');
+    $('#min-count').text(data.min);
+    $('.statistics-main').text(data.title);
+    chartData = {"label" : "count", "data" : data.graph};
+    options =
+    {
+        "legend": {
+            "show": false
+        },
+        "series": {
+            "shadowSize": 1,
+            "bars": {
+                "show": true,
+                lineWidth: 0, // in pixels
+                barWidth: 0.8, // in units of the x axis
+                fill: true ,
+                fillColor: '#ffffff',
+                align: "center" // "left", "right", or "center"
+//                horizontal: false,
+            }
+        },
+        "grid": {
+            "show": false
+        }
+    };
     var chartOptions = options;
     var _chartData = [];
     addSeriesCheckboxes(chartData);
