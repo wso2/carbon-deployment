@@ -44,7 +44,9 @@ var drawChart = function (data, options) {
     plot = $.plot("#placeholder", data, options);
 
     var previousPoint = null;
-    $("#placeholder").bind("plothover", function (event, pos, item) {
+
+
+     $("#placeholder").bind("plothover", function (event, pos, item) {
 
         if ($("#enablePosition:checked").length > 0) {
             var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
@@ -61,7 +63,8 @@ var drawChart = function (data, options) {
                 var x = item.datapoint[0],
                     y = item.datapoint[1];
 
-                showTooltip(item.pageX, item.pageY,y);
+//                showTooltip(item.pageX, item.pageY,y,item.series.data[item.dataIndex][2]);
+                showTooltip(item.pageX, item.pageY,item.series.data[item.dataIndex][2]);
             }
         } else {
             $("#tooltip").remove();
@@ -70,36 +73,7 @@ var drawChart = function (data, options) {
     });
 
 
-    // connect graph and overview graph
-
-    $("#placeholder").bind("plotselected", function (event, ranges) {
-
-        // clamp the zooming to prevent eternal zoom
-
-        if (ranges.xaxis.to - ranges.xaxis.from < 0.00001) {
-            ranges.xaxis.to = ranges.xaxis.from + 0.00001;
-        }
-
-        if (ranges.yaxis.to - ranges.yaxis.from < 0.00001) {
-            ranges.yaxis.to = ranges.yaxis.from + 0.00001;
-        }
-
-        // do the zooming
-
-        plot = $.plot("#placeholder", data,
-            $.extend(true, {}, options, {
-                xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
-                yaxis: { min: ranges.yaxis.from, max: ranges.yaxis.to }
-            })
-        );
-
-        overview.setSelection(ranges, true);
-    });
-
-    $("#overview").bind("plotselected", function (event, ranges) {
-        plot.setSelection(ranges);
-    });
-}
+};
 
 function fetchData() {
     var url = pref.getString("dataSource");
@@ -148,7 +122,9 @@ function onDataReceived(data) {
                     }
                 },
                 "grid": {
-                    "show": false
+                    "show": false,
+                    hoverable: true,
+                    clickable: true
                 }
             };
         var chartOptions = options;
@@ -205,6 +181,7 @@ function filterSeries(data) {
             filteredData.push(data[key]);
         }
         drawChart(filteredData, options);
+
     });
 }
 function isNumber(n) {
@@ -230,3 +207,5 @@ gadgets.HubSettings.onConnect = function () {
     );
 
 };
+
+
