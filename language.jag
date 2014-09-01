@@ -1,0 +1,9 @@
+<%
+var caramel = require('caramel');
+caramel.render({
+    error: [],
+    config: require('/config/config.json')
+});
+
+
+%>
