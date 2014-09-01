@@ -121,6 +121,7 @@ function fetchData(startTime,endTime) {
 }
 function onDataReceived(data) {
     $('#total-count').text(data.total);
+    $('.measure-label').text(data.measure_label);
     $('#max-count').text(data.max);
     $('#avg-count').text(data.avg);
     $('#min-count').text(data.min);
