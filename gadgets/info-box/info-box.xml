@@ -62,7 +62,7 @@
                             <h2 id="total-count">N/A</h2>
                         </div>
                         <div class="col-xs-4">
-                            <div id="placeholder" class="demo-placeholder" style="top: 10%;height:40%; width: 20%; left: 50%"></div>
+                            <div id="placeholder" class="demo-placeholder" style="top: 15%;height:25%; width: 30%; left: 35%"></div>
                         </div>
                     </div><!-- row -->
                     <div class="arrow-box"></div>
