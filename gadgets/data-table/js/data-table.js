@@ -24,19 +24,21 @@ function fetchData(startTime, endTime) {
 }
 
 function onDataReceived(data) {
-    var tableData = data[0].data;
-    var tableHeadings = data[1].headings;
+    var tableData = data.data;
+    var tableHeadings = data.headings;
+    var orderColumn = data.orderColumn;
+    var headings = [];
+
+    for(var i = 0; i < tableHeadings.length; i++){
+        headings.push({"title": tableHeadings[i]});
+    }
 
     $('#placeholder').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="table" style="width: 100%"></table>');
 
     $('#table').dataTable({
         "data": tableData,
-        "order": [[2, 'desc']],
-        "columns": [
-            { "title": tableHeadings[0], "width": "80%" },
-            { "title": tableHeadings[1] },
-            { "title": tableHeadings[2] }
-        ]
+        "order": [orderColumn],
+        "columns" : headings
     });
 }
 
