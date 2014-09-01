@@ -9,10 +9,14 @@
         UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange', {start: start, end: end});
     };
 
+    var start = moment().subtract('days', 29);
+    var end = moment();
+
+    timeLabel.html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
     dateRangeCustom.daterangepicker(
         {
-            startDate: moment().subtract('days', 29),
-            endDate: moment()
+            startDate: start,
+            endDate: end
         },
         function (start, end) {
             dateRangeCustom.addClass('active');
