@@ -1,6 +1,0 @@
-<%
-var endpoint_url ='';
-
-//graph update interval
-var updateInterval =6000;
-%>

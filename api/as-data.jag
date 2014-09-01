@@ -24,7 +24,7 @@ function buildWhere() {
     var startTime = request.getParameter("start_time");
     var endTime = request.getParameter("end_time");
     var node = request.getParameter("node");
-    var webapp = request.getParameter("webapp");
+    var webapp = request.getParameter("appname");
 
     if (startTime == null && endTime == null && node == null && webapp == null) {
         return "";
@@ -242,15 +242,14 @@ if (action == "node-list") {
 else if(action == "top-http-status"){
     var dataArray = [];
     var ticks = [];
-    var sql = "SELECT sum(averageRequestCount) as request_count, responseHttpStatusCode FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
+    var sql = "SELECT sum(averageRequestCount) as request_count, responseHttpStatusCode as name FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
     var results = executeQuery(sql);
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
         dataArray.push([i,row['request_count']]);
-        ticks.push([i, row['responseHttpStatusCode']]);
+        ticks.push([i, row['name']]);
     }
     var opt = require('/gadgets/bar-chart/config/chart-options.json');
-    opt.legend.show = false;
     opt.xaxis.ticks = ticks;
     opt.xaxis.axisLabel = "HTTP Response code";
     opt.yaxis.axisLabel = "Number of requests";
@@ -258,33 +257,91 @@ else if(action == "top-http-status"){
         {"series1": {"label": "s", "data": dataArray}}, opt
     ]);
 }else if (action == "browser") {
+    var dataObject = {};
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
-    print(JSON.stringify(shrinkResultset(results, 4, "Other browsers")));
+    var shrinkedResults = shrinkResultset(results, 4, "Other browsers");
+    for(var i = 0; i < shrinkedResults.length; i++){
+        var row = shrinkedResults[i];
+        var series = "series" + i;
+        var data = {"label" : row['name'], "data" : row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
 } else if (action == "operating-system") {
+    var dataObject = {};
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count, operatingSystem as name FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
-    print(JSON.stringify(shrinkResultset(results, 5, "Other operating systems")));
+    var shrinkedResults = shrinkResultset(results, 5, "Other operating systems");
+    for(var i = 0; i < shrinkedResults.length; i++){
+        var row = shrinkedResults[i];
+        var series = "series" + i;
+        var data = {"label" : row['name'], "data" : row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
 } else if (action == "device-type") {
-      var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
-      var results = executeQuery(sql);
-      print(JSON.stringify(shrinkResultset(results, 5, "Other devices")));
-} else if (action == "language") {
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
+    var dataObject = {};
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
     var results = executeQuery(sql);
-    print(shrinkResultset(results, 5, "Other languages"));
+    var shrinkedResults = shrinkResultset(results, 5, "Other devices");
+    for(var i = 0; i < shrinkedResults.length; i++){
+        var row = shrinkedResults[i];
+        var series = "series" + i;
+        var data = {"label" : row['name'], "data" : row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
+} else if (action == "language") {
+    var dataArray = [];
+    var ticks = [];
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count, language as name FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC LIMIT 5;";
+    var results = executeQuery(sql);
+    for (var i = 0; i < results.length; i++) {
+        var row = results[i];
+        dataArray.push([i,row['request_count']]);
+        ticks.push([i, row['name']]);
+    }
+    var opt = require('/gadgets/bar-chart/config/chart-options.json');
+    opt.xaxis.ticks = ticks;
+    opt.xaxis.axisLabel = "Language";
+    opt.yaxis.axisLabel = "Number of requests";
+    print([
+        {"series1": {"label": "s", "data": dataArray}}, opt
+    ]);
 } else if (action == "country") {
+    var dataObject = {};
     var sql = "SELECT sum(averageRequestCount) as request_count, country from COUNTRY " + where + " GROUP BY country;";
     var results = executeQuery(sql);
-    print(results);
+    for(var i = 0; i < results.length; i++){
+        var row = results[i];
+        dataObject[row['country']] = row['request_count'];
+    }
+    print(dataObject);
 } else if (action == "context") {
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from WEBAPP_CONTEXT " + where + ")),2) as percentage_request_count, webappcontext FROM WEBAPP_CONTEXT " + where + "GROUP BY webappcontext ORDER BY percentage_request_count DESC;";
+    var dataArray = [];
+    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from WEBAPP_CONTEXT " + where + ")),2) as percentage_request_count, webappcontext FROM WEBAPP_CONTEXT " + where + "GROUP BY webappcontext;";
     var results = executeQuery(sql);
-    print(shrinkResultset(results, 5, "Other contexts"));
+    for(var i = 0; i < results.length; i++){
+        var row = results[i];
+        dataArray.push([row['webappcontext'], row['request_count'], row['percentage_request_count']]);
+    }
+    print([{"data" : dataArray}, {"headings": ["Context", "Request count", "Percentage"]}]);
 } else if (action == "referral") {
-    var sql = "SELECT sum(averageRequestCount) as request_count,  round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from REFERRER " + where + ")),2) as percentage_request_count, referrer FROM REFERRER " + where + " GROUP BY referrer ORDER BY percentage_request_count DESC;";
+    var dataArray = [];
+    var sql = "SELECT sum(averageRequestCount) as request_count,  round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from REFERRER " + where + ")),2) as percentage_request_count, referrer FROM REFERRER " + where + " GROUP BY referrer;";
     var results = executeQuery(sql);
-    print(shrinkResultset(results, 5, "Other referrals"));
+    for(var i = 0; i < results.length; i++){
+        var row = results[i];
+        dataArray.push([row['referrer'], row['request_count'], row['percentage_request_count']]);
+    }
+    print([{"data" : dataArray}, {"headings": ["Referee", "Request count", "Percentage"]}]);
 } else if (action == "request") {
     var dataArray = [];
     var sql= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";

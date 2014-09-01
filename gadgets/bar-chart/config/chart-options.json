@@ -1,6 +1,6 @@
 {
     "legend": {
-        "show": true,
+        "show": false,
         "labelFormatter": null,
         "labelBoxBorderColor": "#E9E8E8",
         "noColumns": 1,

@@ -1,11 +1,12 @@
 <div class="subheader">
 
     <h2 class="pull-left col-md-4">
+    <a href="/dashboard/" id="home" >
   	<span class="fa-stack fa-lg">
   		<i class="fa fa-home fa-stack-1x" ></i>
   		 <i class="fa fa-circle-thin fa-stack-2x"></i>
   	</span>
-        Application Home
+        Application Home</a>
         {{#if appname}}
         <span>/</span>
         <span>{{appname}}</span>
@@ -16,14 +17,7 @@
         {{/if}}
     </h2>
 
-  <span class="subheader-right pull-right col-md-8">
-
-    <div class="btn-group quick-selection ">
-        <button type="button" class="btn btn-default">Hour</button>
-        <button type="button" class="btn btn-default">Day</button>
-        <button type="button" class="btn btn-default">Week</button>
-        <button type="button" class="btn btn-default">Month</button>
-    </div>
+  <span class="subheader-right pull-right col-md-8 col-sm-7">
 
    	<span class="dropdown server-select ">
     	Servers:
@@ -31,18 +25,53 @@
               All
               <span class="caret"></span>
           </button>
-		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 1</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 2</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 3</a></li>
+		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="server-list">
           </ul>
 		</span>
 
-		<span id="reportrange" class="pull-right btn btn-default btn-sm">
-		    <i class="fa fa-calendar fa-lg"></i>
-		    <span>July 16, 2014 - July 23, 2014 </span><b class="caret"></b>
-		</span>
+		<div class="btn-group quick-selection pull-right">
+              <button type="button" class="btn btn-default date-rage-opt">Hour</button>
+              <button type="button" class="btn btn-default date-rage-opt">Day</button>
+              <button type="button" class="btn btn-default date-rage-opt">Week</button>
+              <button type="button" class="btn btn-default date-rage-opt">Month</button>
+              <button type="button" class="btn btn-default" id="reportrange" >
+                  <i class="fa fa-calendar fa-lg"></i>
+                  <span>July 16, 2014 - July 23, 2014 </span><b class="caret"></b>
+              </button>
+        </div>
 
   </span>
 
 </div>
+
+<script language="javascript">
+    $(document).ready(function () {
+        var home = document.location.origin + '/dashboard';
+        var url = '/dashboard/api/as-data.jag';
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            data: {
+                "action": "node-list"
+            },
+            success: function(data){
+                var serverList = document.getElementById('server-list');
+                for(var i = 0; i < data.length; i++){
+                    var link = document.createElement('a');
+                    var item = document.createElement('li');
+
+                    link.role = "menuitem";
+                    link.href = "#";
+                    link.innerHTML = data[i];
+                    item.role = "presentation";
+                    item.appendChild(link);
+                    serverList.appendChild(item);
+                }
+            }
+        });
+
+        $('#home').attr('href', home);
+    });
+</script>
+
