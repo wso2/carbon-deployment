@@ -12,7 +12,23 @@ var render = function (theme, data, meta, require) {
             page_title:'AS Dashboard'
         }
     }],
-     left_side:[
+    header: [
+        {
+            partial: 'header',
+            context:{
+                user_name: 'dakshika@wso2.com ',
+                user_avatar:'dakshika'
+            }
+        }
+    ],
+    'sub-header': [
+            {
+                partial: 'sub-header',
+                context:{
+                }
+            }
+        ],
+    left_side:[
               	{
                 partial: 'left_side',
                 context: {
@@ -27,8 +43,6 @@ var render = function (theme, data, meta, require) {
             {
             	partial: 'aggregated-index',
             	context:{
-                    user_name: 'dakshika@wso2.com ',
-                    user_avatar:'dakshika',
             		data:  data.panels,
                     updateInterval: data.updateInterval
             	}
