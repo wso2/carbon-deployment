@@ -95,6 +95,7 @@ table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr:hove
 table.dataTable.display tbody tr.odd:hover,
 table.dataTable.display tbody tr.even:hover {
   background-color: whitesmoke;
+  cursor: pointer;
 }
 table.dataTable.hover tbody tr:hover.selected,
 table.dataTable.hover tbody tr.odd:hover.selected,
