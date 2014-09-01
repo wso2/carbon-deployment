@@ -419,13 +419,13 @@ small.measure-label {
     margin: 6px 26px;
 }
 
-.arrow-box2 {
+.response-count .arrow-box {
     position: relative;
     background: #167164;
     border-top: 1px solid #c2e1f5;
     margin: 0 -15px;
 }
-.arrow-box2:after, .arrow-box2:before {
+.response-count .arrow-box:after, .response-count .arrow-box:before {
     bottom: 100%;
     left: 50%;
     border: solid transparent;
@@ -436,26 +436,26 @@ small.measure-label {
     pointer-events: none;
 }
 
-.arrow-box2:after {
+.response-count .arrow-box:after {
     border-color: rgba(136, 183, 213, 0);
     border-bottom-color: #167164;
     border-width: 10px;
     margin-left: -10px;
 }
-.arrow-box2:before {
+.response-count .arrow-box:before {
     border-color: rgba(194, 225, 245, 0);
     border-bottom-color: #c2e1f5;
     border-width: 11px;
     margin-left: -11px;
 }
 
-.arrow-box3 {
+.session-count .arrow-box {
     position: relative;
     background: #167164;
     border-top: 1px solid #eda362;
     margin: 0 -15px;
 }
-.arrow-box3:after, .arrow-box3:before {
+.session-count .arrow-box:after, .session-count .arrow-box:before {
     bottom: 100%;
     left: 50%;
     border: solid transparent;
@@ -466,26 +466,26 @@ small.measure-label {
     pointer-events: none;
 }
 
-.arrow-box3:after {
+.session-count .arrow-box:after {
     border-color: rgba(136, 183, 213, 0);
     border-bottom-color: #b6651d;
     border-width: 10px;
     margin-left: -10px;
 }
-.arrow-box3:before {
+.session-count .arrow-box:before {
     border-color: rgba(194, 225, 245, 0);
     border-bottom-color: #eda362;
     border-width: 11px;
     margin-left: -11px;
 }
 
-.arrow-box4 {
+.error-count .arrow-box {
     position: relative;
     background: #167164;
     border-top: 1px solid #ee8075;
     margin: 0 -15px;
 }
-.arrow-box4:after, .arrow-box4:before {
+.error-count .arrow-box:after, .error-count .arrow-box:before {
     bottom: 100%;
     left: 50%;
     border: solid transparent;
@@ -496,13 +496,13 @@ small.measure-label {
     pointer-events: none;
 }
 
-.arrow-box4:after {
+.error-count .arrow-box:after {
     border-color: rgba(136, 183, 213, 0);
     border-bottom-color: #ac3b30;
     border-width: 10px;
     margin-left: -10px;
 }
-.arrow-box4:before {
+.error-count .arrow-box:before {
     border-color: rgba(194, 225, 245, 0);
     border-bottom-color: #ee8075;
     border-width: 11px;

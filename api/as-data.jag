@@ -384,13 +384,15 @@ else if(action == "top-http-status"){
     var results = executeQuery(sql)[0];
     print({
         "title" : "Total Requests",
+        "measure_label":"Per min",
         "total": results["totalRequest"], "max": results["maxRequest"], "avg": Math.round(results["avgRequest"]), "min": results["minRequest"], "graph": getDataForRequestCountBarChart()
     });
 } else if (action == "response-count"){
     var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
-        "title" : "Total Response",
+        "title" : "Response Time",
+        "measure_label":"ms",
         "max": results["maxResponse"], "avg": Math.round(results["avgResponse"]), "min": results["minResponse"], "graph" : getDataForResponseTimeBarChart()
     });
 } else if (action == "session-count"){
