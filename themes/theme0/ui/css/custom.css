@@ -559,3 +559,7 @@ background: #e4e2e2;
 .gadget-holder{
     height: 350px;
 }
+
+.info-box-height{
+    height: 14.286em;
+}
