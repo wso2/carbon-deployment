@@ -332,7 +332,7 @@ else if(action == "top-http-status"){
         var row = results[i];
         dataArray.push([row['webappcontext'], row['request_count'], row['percentage_request_count']]);
     }
-    print([{"data" : dataArray}, {"headings": ["Context", "Request count", "Percentage"]}]);
+    print({"data" : dataArray, "headings": ["Context", "Request count", "Percentage"], "orderColumn" : [2, "desc"]});
 } else if (action == "referral") {
     var dataArray = [];
     var sql = "SELECT sum(averageRequestCount) as request_count,  round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from REFERRER " + where + ")),2) as percentage_request_count, referrer FROM REFERRER " + where + " GROUP BY referrer;";
@@ -341,7 +341,7 @@ else if(action == "top-http-status"){
         var row = results[i];
         dataArray.push([row['referrer'], row['request_count'], row['percentage_request_count']]);
     }
-    print([{"data" : dataArray}, {"headings": ["Referee", "Request count", "Percentage"]}]);
+    print({"data" : dataArray, "headings": ["Referee", "Request count", "Percentage"], "orderColumn" : [2, "desc"]});
 } else if (action == "request") {
     var dataArray = [];
     var sql= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
