@@ -37,6 +37,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Location</title>
 	<link href="css/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="{{url "/themes/theme0/ui/css/open_sans.css"}}" type="text/css" >
 
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery-jvectormap-1.2.2.min.js"></script>
@@ -46,8 +47,9 @@
 </head>
 
 <body>
-<div style="100%; height:300px">
-	<div id="world-map" style="width: 600px; height: 300px; margin: 0 auto;"></div>
+<div style="100%; height:300px" class="panel-color">
+    <h2>Geo - Location </h2>
+	<div id="world-map" style="height: 300px; margin: 0 auto;"></div>
 </div>
 
 <script>
