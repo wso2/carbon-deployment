@@ -169,27 +169,39 @@ function parseDate(input) {
     return new Date(parts[0], parts[1] - 1, parts[2]); // Note: months are 0-based
 }
 
-function getTabularData(dataSet, columnName){
+function getTabularData(dataSet, columns, sortColumn){
+    if (dataSet == null){
+        return;
+    }
+
     var dataArray = [];
     for(var i = 0; i < dataSet.length; i++){
-        var row = dataSet[i];
-        dataArray.push([row['name'], row['request_count'], row['percentage_request_count']]);
+        var row = []
+        for(var key in dataSet[i]){
+            row.push(dataSet[i][key]);
+        }
+        dataArray.push(row);
     }
-    return {"data" : dataArray, "headings": [columnName, "Request count", "Percentage"], "orderColumn" : [2, "desc"]};
+    return {"data" : dataArray, "headings": columns, "orderColumn" : [sortColumn, "desc"]};
 }
 
 function getBrowser(){
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count, userAgentFamily as name FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
+    var sql = "SELECT userAgentFamily as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
     return executeQuery(sql);
 }
 
 function getOperatingSystem(){
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count, operatingSystem as name FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
+    var sql = "SELECT operatingSystem as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
     return executeQuery(sql);
 }
 
 function getDeviceType(){
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count, deviceCategory as name FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
+    var sql = "SELECT deviceCategory as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
+    return executeQuery(sql);
+}
+
+function getTopHttpStatus(){
+    var sql = "SELECT responseHttpStatusCode as name, sum(averageRequestCount) as request_count FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
     return executeQuery(sql);
 }
 
@@ -261,12 +273,10 @@ if (action == "node-list") {
 
     print({ "data" : appList });
     
-}
-else if(action == "top-http-status"){
+} else if(action == "top-http-status"){
     var dataArray = [];
     var ticks = [];
-    var sql = "SELECT sum(averageRequestCount) as request_count, responseHttpStatusCode as name FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
-    var results = executeQuery(sql);
+    var results = getTopHttpStatus();
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
         dataArray.push([i,row['request_count']]);
@@ -279,6 +289,8 @@ else if(action == "top-http-status"){
     print([
         {"series1": {"label": "s", "data": dataArray}}, opt
     ]);
+} else if (action == "top-http-status-tabular") {
+    print(getTabularData(getTopHttpStatus(), ["HTTP Response Code", "Request Count"], "1"));
 }else if (action == "browser") {
     var dataObject = {};
     var shrinkedResults = shrinkResultset(getBrowser(), 4, "Other browsers");
@@ -292,7 +304,7 @@ else if(action == "top-http-status"){
         dataObject, require('/gadgets/pie-chart/config/chart-options.json')
     ]);
 } else if (action == "browser-tabular") {
-    print(getTabularData(getBrowser(), "Browser"));
+    print(getTabularData(getBrowser(), ["Browser", "Request Count", "Percentage"], "2"));
 } else if (action == "operating-system") {
     var dataObject = {};
     var shrinkedResults = shrinkResultset(getOperatingSystem(), 5, "Other operating systems");
@@ -306,7 +318,7 @@ else if(action == "top-http-status"){
         dataObject, require('/gadgets/pie-chart/config/chart-options.json')
     ]);
 } else if (action == "operating-system-tabular") {
-    print(getTabularData(getOperatingSystem(), "Operating System"));
+    print(getTabularData(getOperatingSystem(), ["Operating System", "Request Count", "Percentage"], "2"));
 } else if (action == "device-type") {
     var dataObject = {};
     var shrinkedResults = shrinkResultset(getDeviceType(), 5, "Other devices");
@@ -320,7 +332,7 @@ else if(action == "top-http-status"){
         dataObject, require('/gadgets/pie-chart/config/chart-options.json')
     ]);
 } else if (action == "device-type-tabular") {
-    print(getTabularData(getDeviceType(), "Device Type"));
+    print(getTabularData(getDeviceType(), ["Device Type", "Request Count", "Percentage"], "2"));
 } else if (action == "language") {
     var dataArray = [];
     var ticks = [];
