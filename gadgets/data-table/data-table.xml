@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Line Chart" author="WSO2 Gadget Server"
+                 height="230" scrolling="true" tags="charts,line,visualization,data,analytics"
+                 description="A generic Line Chart gadget, that takes a json datasource as an input. It can be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="" name="wso2.gadgets.charts.timeRangeChange"
+                description="time range for filtering has been changed" type="object"
+                subscribe="true"/>
+                ]]>
+            </Param>
+        </Require>
+    </ModulePrefs>
+    <UserPref name="dataSource"
+              display_name="Data Source"
+              default_value="https://localhost:9453/dashboard/gadgets/bar-chart/datasource/dataFile4.jag">
+    </UserPref>
+    <UserPref name="appname"
+              display_name="Web App Name"
+              default_value="">
+    </UserPref>
+    <!--UserPref name="options" display_name="Chart Options" default_value="/portal/gadgets/line-chart/js/options-line.js">
+        </UserPref> -->
+    <UserPref name="updateGraph" display_name="Update Interval (s)"
+              default_value="No">
+    </UserPref>
+    <UserPref name="appStatType"
+              display_name="App Stat Type"
+              default_value="request">
+    </UserPref>
+    <Content type="html">
+        <![CDATA[
+ <html>
+ <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Location</title>
+	<link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+
+	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="js/jquery.dataTables.js"></script>
+	<script language="javascript" type="text/javascript" src="js/data-table.js"></script>
+
+</head>
+
+<body>
+			<div id="placeholder" class="demo-placeholder"></div>
+</body>
+</html>
+    ]]>
+    </Content>
+</Module>
+
+

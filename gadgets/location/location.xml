@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Line Chart" author="WSO2 Gadget Server"
+                 height="230" scrolling="true" tags="charts,line,visualization,data,analytics"
+                 description="A generic Line Chart gadget, that takes a json datasource as an input. It can be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="" name="wso2.gadgets.charts.timeRangeChange"
+                description="time range for filtering has been changed" type="object"
+                subscribe="true"/>
+                ]]>
+            </Param>
+        </Require>
+    </ModulePrefs>
+    <UserPref name="dataSource"
+              display_name="Data Source"
+              default_value="https://localhost:9453/dashboard/gadgets/bar-chart/datasource/dataFile4.jag">
+    </UserPref>
+    <UserPref name="appname"
+              display_name="Web App Name"
+              default_value="">
+    </UserPref>
+    <!--UserPref name="options" display_name="Chart Options" default_value="/portal/gadgets/line-chart/js/options-line.js">
+        </UserPref> -->
+    <UserPref name="updateGraph" display_name="Update Interval (s)"
+              default_value="No">
+    </UserPref>
+    <UserPref name="appStatType"
+              display_name="App Stat Type"
+              default_value="request">
+    </UserPref>
+    <Content type="html">
+        <![CDATA[
+ <html>
+ <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Location</title>
+	<link href="css/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css">
+
+	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="js/jquery-jvectormap-1.2.2.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/jquery-jvectormap-world-mill-en.js"></script>
+	<script language="javascript" type="text/javascript" src="js/location.js"></script>
+
+</head>
+
+<body>
+<div style="100%; height:300px">
+	<div id="world-map" style="width: 600px; height: 300px; margin: 0 auto;"></div>
+</div>
+
+<script>
+    $('#world-map').vectorMap({
+        map: 'world_mill_en',
+        series: {
+            regions: [{
+                values: null,
+                scale: ['#C8EEFF', '#0071A4'],
+                normalizeFunction: 'polynomial'
+            }]
+        },
+        onRegionLabelShow: function(e, el, code){
+            var request_count_tooltip = 0;;
+
+            if(values[code]){
+                request_count_tooltip = values[code];
+            }
+            el.html('Country: ' + el.html()+ ' (total request count: ' + request_count_tooltip + ')');
+        }
+    });
+
+    fetchData();
+</script>
+
+</body>
+</html>
+    ]]>
+    </Content>
+</Module>
+
+
