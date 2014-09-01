@@ -122,7 +122,7 @@ function fetchData(startTime,endTime) {
 function onDataReceived(data) {
     $('#total-count').text(data.total);
     $('#max-count').text(data.max);
-    $('#avg-count').text(data.avg || data.percentage + ' %');
+    $('#avg-count').text(data.avg);
     $('#min-count').text(data.min);
     $('.statistics-main').text(data.title);
     chartData = {"label" : "count", "data" : data.graph};
@@ -135,12 +135,8 @@ function onDataReceived(data) {
             "shadowSize": 1,
             "bars": {
                 "show": true,
-                lineWidth: 0, // in pixels
-                barWidth: 0.8, // in units of the x axis
-                fill: true ,
-                fillColor: '#ffffff',
-                align: "center" // "left", "right", or "center"
-//                horizontal: false,
+                "barWidth": 0.13,
+                "order": 1
             }
         },
         "grid": {
