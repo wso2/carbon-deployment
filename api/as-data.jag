@@ -201,7 +201,7 @@ function getDeviceType(){
 }
 
 function getTopHttpStatus(){
-    var sql = "SELECT responseHttpStatusCode as name, sum(averageRequestCount) as request_count FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC LIMIT 5;";
+    var sql = "SELECT responseHttpStatusCode as name, sum(averageRequestCount) as request_count FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC;";
     return executeQuery(sql);
 }
 
@@ -277,7 +277,7 @@ if (action == "node-list") {
     var dataArray = [];
     var ticks = [];
     var results = getTopHttpStatus();
-    for (var i = 0; i < results.length; i++) {
+    for (var i = 0; (i < results.length) && (i < 5); i++) {
         var row = results[i];
         dataArray.push([i,row['request_count']]);
         ticks.push([i, row['name']]);
