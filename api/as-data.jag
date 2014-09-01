@@ -38,7 +38,11 @@ function buildWhere() {
         where = appendCondition(where, "time <= \"" + endTime + "\"");
     }
     if (node != null) {
-        where = appendCondition(where, "serverName = \"" + node + "\"");
+        if(node=="All"){
+            where= "";
+        }else {
+            where = appendCondition(where, "serverName = \"" + node + "\"");
+        }
     }
     if (webapp != null) {
         where = appendCondition(where, "webappName= \"" + webapp + "\"");
@@ -219,6 +223,7 @@ function getLanguage(){
 if (action == "node-list") {
     var dataArray = [];
     var results = getAllNodes();
+    dataArray.push("All");
     for(var i = 0; i < results.length; i++){
         dataArray.push(results[i]["node"]);
     }
