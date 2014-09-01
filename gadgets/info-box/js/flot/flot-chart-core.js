@@ -122,7 +122,7 @@ function fetchData(startTime,endTime) {
 function onDataReceived(data) {
     $('#total-count').text(data.total);
     $('#max-count').text(data.max);
-    $('#avg-count').text(data.avg);
+    $('#avg-count').text(data.avg || data.percentage + ' %');
     $('#min-count').text(data.min);
     $('.statistics-main').text(data.title);
     chartData = {"label" : "count", "data" : data.graph};
