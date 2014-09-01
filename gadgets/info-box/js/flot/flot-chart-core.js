@@ -120,10 +120,10 @@ function fetchData(startTime,endTime) {
     togglePause(pauseBtn);
 }
 function onDataReceived(data) {
-    $('#total-count').text(data.total);
+    $('.total-count').text(data.total);
     $('.measure-label').text(data.measure_label);
     $('#max-count').text(data.max);
-    $('#avg-count').text(data.avg);
+    $('.avg-count').text(data.avg);
     $('#min-count').text(data.min);
     $('.statistics-main').text(data.title);
     chartData = {"label" : "count", "data" : data.graph};

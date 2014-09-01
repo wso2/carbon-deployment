@@ -406,7 +406,7 @@ else if(action == "top-http-status"){
     var sql = "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
-        "title" : "Total Errors",
+        "title" : "Errors",
         "total": results["totalError"], "percentage": results["percentageError"].toFixed(2)
     });
 }

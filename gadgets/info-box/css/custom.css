@@ -555,3 +555,18 @@ small.measure-label {
     width: 16%;
     background: #e4e2e2;
 }
+
+
+.response-count .statistics h2{
+    display: none;
+}
+
+/* enable icon for info-boxes*/
+.request-count .info-box-i-one, .response-count .info-box-i-one, .response-count .info-box-i-two, .session-count .info-box-i-three, .error-count .info-box-i-four{
+    display: block !important;
+    display: block;
+}
+
+.response-count i, .session-count i, .error-count i {
+    margin: 6px 26px;
+}
