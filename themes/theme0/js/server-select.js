@@ -24,5 +24,14 @@ $(document).ready(function () {
         }
     });
 
+
+    $('#server-list').on('click', 'li', function (event) {
+        var $target = $(event.currentTarget);
+        var ip = $target.text();
+        $('#dropdownMenu1').text(ip);
+        UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',ip);
+        return true;
+    });
+
     $('#home').attr('href', home);
 });
