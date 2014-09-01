@@ -128,22 +128,26 @@ function onDataReceived(data) {
     $('.statistics-main').text(data.title);
     chartData = {"label" : "count", "data" : data.graph};
     options =
-    {
-        "legend": {
-            "show": false
-        },
-        "series": {
-            "shadowSize": 1,
-            "bars": {
-                "show": true,
-                "barWidth": 0.13,
-                "order": 1
+        options =
+        {
+            "legend": {
+                "show": false
+            },
+            "series": {
+                "shadowSize": 1,
+                "bars": {
+                    "show": true,
+                    lineWidth: 0, // in pixels
+                    barWidth: 0.8, // in units of the x axis
+                    fill: true,
+                    fillColor: '#ffffff',
+                    align: "center" // "left", "right", or "center"
+                }
+            },
+            "grid": {
+                "show": false
             }
-        },
-        "grid": {
-            "show": false
-        }
-    };
+        };
     var chartOptions = options;
     var _chartData = [];
     addSeriesCheckboxes(chartData);
