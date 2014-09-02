@@ -417,7 +417,7 @@ if (action == "node-list") {
     var results = executeQuery(String(sql));
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
-        dataArray.push([i,row['request_per_minute']]);
+        dataArray.push([row['time'],row['request_per_minute']]);
     }
     print([
         {"series1": {"label": "s", "data": dataArray}}, require('/gadgets/stacked-line-chart/config/chart-options.json')
@@ -428,7 +428,7 @@ if (action == "node-list") {
     var results = executeQuery(String(sql1));
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
-        dataArray.push([i,row['response_time_per_minute']]);
+        dataArray.push([row['time'],row['response_time_per_minute']]);
     }
     var opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
     opt.colors = ["#bacf0b"];
@@ -441,7 +441,7 @@ if (action == "node-list") {
     var results = executeQuery(String(sql1));
     for (var i = 0; i < results.length; i++) {
         var row = results[i];
-        dataArray.push([i,row['error_count']]);
+        dataArray.push([row['time'],row['error_count']]);
     }
     var opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
     opt.colors = ["#e7912a"];

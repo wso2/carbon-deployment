@@ -66,7 +66,7 @@
 
         "show": true,
         "position": "bottom",
-        "mode": null,
+        "mode": "time",
 
         "color": null,
         "tickColor": null,
