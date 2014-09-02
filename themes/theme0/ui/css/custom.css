@@ -551,3 +551,17 @@ background: #e4e2e2;
 .info-box-height{
     height: 14.286em;
 }
+
+thead th {
+    font-weight: 600 !important;
+}
+
+.panel h2 {
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    margin: 10px 0;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 200;
+    display: inline;
+    margin-left: 9px;
+}
