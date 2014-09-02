@@ -93,14 +93,6 @@ padding: 6px;
 .quick-selection {
 margin-right: 5%;}
 
-@media (max-width: 768px){
-   .quick-selection {
-display: none;
-} 
-}
-
-
-
 .navbar-nav.navbar-right:last-child {
  margin-right: 0px; 
 }
