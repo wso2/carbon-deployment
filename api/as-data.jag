@@ -220,7 +220,7 @@ function getCountry(){
 }
 
 function getLanguage(){
-    var sql = "SELECT language as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count  FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
+    var sql = "SELECT language, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count  FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
     return executeQuery(sql);
 }
 
@@ -370,7 +370,13 @@ if (action == "node-list") {
         {"series1": {"label": "s", "data": dataArray}}, opt
     ]);
 } else if (action == "language-tabular") {
-    print(getTabularData(getLanguage(), ["Language", "Request Count", "Percentage"], "2"));
+    var results = getLanguage();
+    var languageCodeLookup = require('/languages.json');
+    for(var i = 0; i < results.length; i++){
+        var languageCode = results[i]['language'];
+        results[i]['language'] = languageCodeLookup[languageCode] || languageCode;
+    }
+    print(getTabularData(results, ["Language", "Request Count", "Percentage"], "2"));
 } else if (action == "country") {
     var dataObject = {};
     var results = getCountry();
@@ -380,7 +386,13 @@ if (action == "node-list") {
     }
     print(dataObject);
 } else if (action == "country-tabular") {
-    print(getTabularData(getCountry(), ["Country", "Request Count", "Percentage"], "2"));
+    var results = getCountry();
+    var countryCodeLookup = require('/countries.json');
+    for(var i = 0; i < results.length; i++){
+        var countryCode = results[i]['country'];
+        results[i]['country'] = countryCodeLookup[countryCode] || countryCode;
+    }
+    print(getTabularData(results, ["Country", "Request Count", "Percentage"], "2"));
 } else if (action == "context") {
     var dataArray = [];
     var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from WEBAPP_CONTEXT " + where + ")),2) as percentage_request_count, webappcontext FROM WEBAPP_CONTEXT " + where + "GROUP BY webappcontext;";
