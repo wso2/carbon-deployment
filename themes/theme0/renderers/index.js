@@ -25,7 +25,8 @@ var render = function (theme, data, meta, require) {
             {
                 partial: 'sub-header',
                 context:{
-                    appname : data.appname
+                    appname : data.appname,
+                    aspect: data.aspect
                 }
             }
         ],

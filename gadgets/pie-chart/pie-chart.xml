@@ -58,7 +58,6 @@
 </head>
 
 <body>
-    <h2>Technology</h2>
     <div id="placeholder" class="demo-placeholder" style="height:90%"></div>
 </body>
 </html>

@@ -451,33 +451,64 @@ if (action == "node-list") {
 } else if (action == "request-count"){
     var sql = "SELECT sum(averageRequestCount) as totalRequest, max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, min(averageRequestCount) as minRequest, max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse, sum(sessionCount) as totalSession, avg(sessionCount) as avgSession, sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
-    print({
-        "title" : "Total Requests",
-        "measure_label":"Per min",
-        "total": results["totalRequest"] || 0, "max": results["maxRequest"] || 0, "avg": Math.round(results["avgRequest"]), "min": results["minRequest"] || "0", "graph": getDataForRequestCountBarChart()
-    });
+    var output = {};
+    output["title"] = "Total Requests";
+    output["measure_label"] = "Per min";
+
+    if(results["totalRequest"] != null){
+        output["total"] = results["totalRequest"];
+        output["max"] = results["maxRequest"];
+        output["avg"] = Math.round(results["avgRequest"]);
+        output["min"] = results["minRequest"]
+    } else{
+        output["total"] = output["max"] = output["avg"] = output["min"] = "N/A";
+    }
+    output["graph"] = getDataForRequestCountBarChart();
+
+    print(output);
 } else if (action == "response-count"){
     var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
-    print({
-        "title" : "Response Time",
-        "measure_label":"ms",
-        "max": results["maxResponse"] || "", "avg": Math.round(results["avgResponse"]) || "", "min": results["minResponse"] || "", "graph" : getDataForResponseTimeBarChart()
-    });
+    var output = {};
+    output["title"] = "Response Time";
+    output["measure_label"] = "ms";
+
+    if(results["maxResponse"] != null){
+        output["max"] = results["maxResponse"];
+        output["avg"] = Math.round(results["avgResponse"]);
+        output["min"] = results["minResponse"];
+    } else{
+        output["max"] = output["avg"] = output["min"] = "N/A";
+    }
+    output["graph"] = getDataForResponseTimeBarChart();
+
+    print(output);
 } else if (action == "session-count"){
     var sql = "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
-    print({
-        "title" : "Session",
-        "total": results["totalSession"] || 0, "avg": Math.round(results["avgSession"])
-    });
+    var output = {};
+    output["title"] = "Session";
+
+    if(results["totalSession"] != null){
+        output["total"] = results["totalSession"];
+        output["avg"] = Math.round(results["avgSession"]);
+    } else{
+        output["total"] = output["avg"] = "N/A";
+    }
+    print(output);
 } else if (action == "error-count"){
     var sql = "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
-    print({
-        "title" : "Errors",
-        "total": results["totalError"] || 0, "percentage": (results["percentageError"] ? results["percentageError"].toFixed(2) : 0)
-    });
+    var output = {};
+    output["title"] = "Errors";
+
+    if(results["totalError"] != null){
+        output["total"] = results["totalError"];
+        output["percentage"] = results["percentageError"].toFixed(2) + "%";
+    } else{
+        output["total"] = output["percentage"] = "N/A";
+    }
+    print(output);
 }
 
 %>
