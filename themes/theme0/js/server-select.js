@@ -32,10 +32,10 @@ $(document).ready(function () {
         UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',ip);
         state.node = ip;
 
-        $('a[href]').attr('href', function (index, href) {
+        $('.nav a[href]').attr('href', function (index, href) {
             var param = '?node=' + ip ;
             if (state.start) {
-                param = param + "?start-time=" + state.start + "&end-time=" + state.end;
+                param = param + "&start-time=" + state.start + "&end-time=" + state.end;
             }
             var i = href.indexOf('?');
             return href.substr(0, i < 0 ? href.length : i) + param;
