@@ -3,7 +3,9 @@ var delay;
 var chartData = [];
 var options;
 var plot;
-var start, end, ip;
+var node = pref.getString("node") || undefined;
+var start = pref.getString("startTime") || undefined;
+var end  = pref.getString("endTime") || undefined;
 $(function () {
 
     var pauseBtn = $("button.pause");
@@ -87,7 +89,7 @@ function fetchData() {
         data:{
             start_time: start,
             end_time: end,
-            node: ip,
+            node: node,
             action: statType
         },
         success: onDataReceived
@@ -202,7 +204,7 @@ gadgets.HubSettings.onConnect = function () {
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.ipChange',
         function (topic, data, subscriberData) {
-            ip = data;
+            node = data;
             fetchData()
         }
     );

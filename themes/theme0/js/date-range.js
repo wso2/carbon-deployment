@@ -5,8 +5,20 @@
     var picker;
 
     var changeRange = function (start, end) {
-        timeLabel.html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        var startStr = start.format('MMMM D, YYYY');
+        var endStr = end.format('MMMM D, YYYY');
+        timeLabel.html(startStr + ' - ' + endStr);
         UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange', {start: start, end: end});
+        $('a[href]').attr('href', function (index, href) {
+            var param = "?start-time=" + startStr + "&end-time=" + endStr;
+            if (state.node) {
+                param = param + '&node=' + state.node;
+            }
+            var i = href.indexOf('?');
+            return href.substr(0, i < 0 ? href.length : i) + param;
+        });
+        state.start = startStr;
+        state.end = endStr;
     };
 
     var start = moment().subtract('days', 29);
@@ -21,7 +33,7 @@
         function (start, end) {
             dateRangeCustom.addClass('active');
             $rangeOpt.removeClass('active');
-            changeRange(start,end);
+            changeRange(start, end);
         });
     picker = dateRangeCustom.data('daterangepicker');
 
