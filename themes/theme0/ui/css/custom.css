@@ -92,18 +92,6 @@ padding: 6px;
 .quick-selection {
 margin-right: 5%;}
 
-@media (max-width: 768px){
-   .quick-selection {
-display: none;
-} 
-}
-
-@media(max-width:767px){}
-@media(min-width:768px){.date-rage-opt{display: none;}}
-@media(min-width:992px){.date-rage-opt{display: block;}}
-@media(min-width:1200px){.date-rage-opt{display: block;}}
-
-
 .navbar-nav.navbar-right:last-child {
  margin-right: 0px; 
 }
