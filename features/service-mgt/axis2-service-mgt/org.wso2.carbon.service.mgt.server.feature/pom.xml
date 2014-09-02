@@ -50,7 +50,7 @@
             <artifactId>org.wso2.carbon.module.mgt.server.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.throttle.server.feature</artifactId>
             <type>zip</type>
@@ -64,7 +64,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rm.server.feature</artifactId>
             <type>zip</type>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
@@ -108,11 +108,11 @@
                                 </importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.module.mgt.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.throttle.server:${project.version}
+                                <!--importFeatureDef>org.wso2.carbon.throttle.server:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.caching.server:${project.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.rm.server:${project.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.rm.server:${project.version}</importFeatureDef-->
                                 <!--<importFeatureDef>org.wso2.carbon.transport.mgt.server</importFeatureDef>-->
                                 <!--<importFeatureDef>org.wso2.carbon.tryit.server</importFeatureDef>-->
                             </importFeatures>
