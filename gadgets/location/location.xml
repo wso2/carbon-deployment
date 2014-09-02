@@ -48,7 +48,6 @@
 
 <body>
 <div style="100%; height:300px" class="panel-color">
-    <h2>Geo - Location </h2>
 	<div id="world-map" style="height: 300px; margin: 0 auto;"></div>
 </div>
 
