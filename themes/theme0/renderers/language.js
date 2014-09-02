@@ -15,6 +15,22 @@ var render = function (theme, data, meta, require) {
             appname: [{
                 context:data.appname
             }],
+            header: [
+                {
+                    partial: 'header',
+                    context:{
+                        user_name: 'dakshika@wso2.com ',
+                        user_avatar:'dakshika'
+                    }
+                }
+            ],
+            'sub-header': [
+                {
+                    partial: 'sub-header',
+                    context:{
+                    }
+                }
+            ],
             left_side:[
                 {
                     partial: 'left_side',
