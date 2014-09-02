@@ -51,10 +51,10 @@ jQuery(document).ready(function() {
 
    // Toggle Left Menu
    jQuery('.left-content-list .nav-parent > a').on('click', function() {
-      
+
       var parent = jQuery(this).parent();
       var sub = parent.find('> ul');
-      
+
       if(!jQuery('as_body').hasClass('leftpanel-collapsed')) {
          if(sub.is(':visible')) {
             sub.slideUp(200, function(){
