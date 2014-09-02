@@ -104,7 +104,7 @@ function onDataReceived(data) {
     $('.avg-count').text(data.avg);
     $('#min-count').text(data.min);
     $('.statistics-main').text(data.title);
-    $('.error-percentage').text(data.percentage + "%");
+    $('.error-percentage').text(data.percentage);
     if( data.graph){
         chartData = {"label" : "count", "data" : data.graph};
         options =
