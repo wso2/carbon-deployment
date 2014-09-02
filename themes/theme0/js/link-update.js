@@ -50,7 +50,7 @@ $(function () {
         }
     }
     if(param!='?'){
-        $('.nav a[href]').attr('href', function (index, href) {
+        $('.in-link').attr('href', function (index, href) {
             var i = href.indexOf('?');
             return href.substr(0, i < 0 ? href.length : i) + param;
         });

@@ -9,7 +9,7 @@
         var endStr = end.format('MMMM D, YYYY');
         timeLabel.html(startStr + ' - ' + endStr);
         UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange', {start: start, end: end});
-        $('.nav a[href]').attr('href', function (index, href) {
+        $('.in-link').attr('href', function (index, href) {
             var param = "?start-time=" + start.unix() + "&end-time=" + end.unix();
             if (state.node) {
                 param = param + '&node=' + state.node;
