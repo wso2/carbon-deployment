@@ -36,17 +36,25 @@
  <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Location</title>
+	<link rel="stylesheet" href="css/open_sans.css" type="text/css" >
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+	<link href="css/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="css/custom.css" type="text/css" >
 
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery.dataTables.js"></script>
 	<script language="javascript" type="text/javascript" src="js/data-table.js"></script>
+
+
 
 </head>
 
 <body>
 			<div id="placeholder" class="demo-placeholder"></div>
 </body>
+<script language="javascript" type="text/javascript" src="js/dataTables.bootstrap.js"></script>
 </html>
     ]]>
     </Content>
