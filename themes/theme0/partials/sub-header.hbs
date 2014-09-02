@@ -9,7 +9,9 @@
         Application Home</a>
         {{#if appname}}
         <span>/</span>
-        <span>{{appname}}</span>
+        <a href="/dashboard/webapps/{{appname}}">
+            <span>{{appname}}</span>
+        </a>
         {{/if}}
         {{#if aspect}}
         <span>/</span>
