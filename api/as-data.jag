@@ -45,7 +45,12 @@ function buildWhere() {
         }
     }
     if (webapp != null) {
-        where = appendCondition(where, "webappName= \"" + webapp + "\"");
+        if(webapp=="null"){
+            where= "";
+        }else{
+            where = appendCondition(where, "webappName= \"" + webapp + "\"");
+        }
+
     }
 
     return where;
