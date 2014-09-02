@@ -544,8 +544,24 @@ width: 24%;
 background: #e4e2e2;
 }
 
+.tabbable .gadget-holder{
+    height: 310px;
+}
+
 .gadget-holder{
     height: 350px;
+}
+
+div#location-map {
+    margin-top: 15px;
+}
+
+div#context-table {
+    margin-top: 24px;
+}
+
+div#referral-table {
+    margin-top: 24px;
 }
 
 .info-box-height{
