@@ -447,12 +447,10 @@ padding:0 10px;
             <% if(isAuthorizedToManage) { %>
             <td style="text-align:left;" width="10px">
                 <nobr>
-                <%= service.getSecurityScenarioId() != null ?
-                "<a href='../securityconfig/index.jsp?serviceName=" + serviceName + "'  class='icon-link' style='background-image:url(images/secured.gif);' " +
-                "title='Secured using "+ service.getSecurityScenarioId() +"'>Secured</a>":
-                "<a href='../securityconfig/index.jsp?serviceName=" + serviceName +  "'  class='icon-link' style='background-image:url(images/unsecured.gif);' " +
-                "title='Unsecured'>Unsecured</a>"
-                %>
+                    <%= service.getSecurityScenarioId() != null ?
+                        "<img src='images/secured.gif' title='Secured using "+ service.getSecurityScenarioId() +"'>Secured" :
+                        "<img src='images/unsecured.gif' title='Unsecured'>Unsecured"
+                    %>
                  </nobr>
             </td>
             <% } %>
