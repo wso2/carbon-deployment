@@ -291,7 +291,8 @@ if (action == "node-list") {
         appList.push([app["webappName"], app["webappType"], app["lastMinute"], app["lastHour"], app["lastDay"], app["totalRequests"], app["percentageError"]]);
     }
 
-    print({ "data" : appList });
+    var headings = ["Application / Service", "Type", {"parent": "Average request count", "sub": ["Last minute", "Last hour", "Last day"]}, "Total number of requests", "Percentage error"];
+    print({ "data" : appList, "headings" : headings, "orderColumn" : ["1"], "applist" : "true"});
     
 } else if(action == "top-http-status"){
     var dataArray = [];
