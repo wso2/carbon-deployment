@@ -105,7 +105,7 @@ function getDataForRequestCountBarChart() {
     } else if (timeDiff > 90) {
          sql = "SELECT SUM(averageRequestCount) as requestCount, DATE_FORMAT(time, '%b %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY MONTH(time);";
      } else if (timeDiff > 30) {
-         sql = "SELECT  SUM(averageRequestCount) as requestCount, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), " - ", DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
+         sql = "SELECT  SUM(averageRequestCount) as requestCount, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), ' - ', DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
     } else if (timeDiff > 1) {
           sql = "SELECT SUM(averageRequestCount) as requestCount, DATE_FORMAT(time, '%b %d %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY DATE(time);";
      } else if (timeDiff <= 1) {
@@ -146,7 +146,7 @@ function getDataForResponseTimeBarChart() {
     } else if (timeDiff > 90) {
          sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%b %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY MONTH(time);";
      } else if (timeDiff > 30) {
-         sql = "SELECT   AVG(averageResponseTime) as responseTime, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), " - ", DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
+         sql = "SELECT   AVG(averageResponseTime) as responseTime, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), ' - ', DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
     } else if (timeDiff > 1) {
           sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%b %d %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY DATE(time);";
      } else if (timeDiff <= 1) {
@@ -454,7 +454,7 @@ if (action == "node-list") {
     print({
         "title" : "Total Requests",
         "measure_label":"Per min",
-        "total": results["totalRequest"], "max": results["maxRequest"], "avg": Math.round(results["avgRequest"]), "min": results["minRequest"], "graph": getDataForRequestCountBarChart()
+        "total": results["totalRequest"] || 0, "max": results["maxRequest"] || 0, "avg": Math.round(results["avgRequest"]), "min": results["minRequest"] || "0", "graph": getDataForRequestCountBarChart()
     });
 } else if (action == "response-count"){
     var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
@@ -462,21 +462,21 @@ if (action == "node-list") {
     print({
         "title" : "Response Time",
         "measure_label":"ms",
-        "max": results["maxResponse"], "avg": Math.round(results["avgResponse"]), "min": results["minResponse"], "graph" : getDataForResponseTimeBarChart()
+        "max": results["maxResponse"] || "", "avg": Math.round(results["avgResponse"]) || "", "min": results["minResponse"] || "", "graph" : getDataForResponseTimeBarChart()
     });
 } else if (action == "session-count"){
     var sql = "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
         "title" : "Session",
-        "total": results["totalSession"], "avg": Math.round(results["avgSession"])
+        "total": results["totalSession"] || 0, "avg": Math.round(results["avgSession"])
     });
 } else if (action == "error-count"){
     var sql = "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
     var results = executeQuery(sql)[0];
     print({
         "title" : "Errors",
-        "total": results["totalError"], "percentage": results["percentageError"].toFixed(2)
+        "total": results["totalError"] || 0, "percentage": (results["percentageError"] ? results["percentageError"].toFixed(2) : 0)
     });
 }
 
