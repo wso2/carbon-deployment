@@ -1,15 +1,15 @@
 <div class="subheader">
 
     <h2 class="pull-left col-md-4">
-    <a href="/dashboard/" id="home" >
+    <a href="{{url ""}}/" id="home" >
   	<span class="fa-stack fa-lg">
   		<i class="fa fa-home fa-stack-1x" ></i>
   		 <i class="fa fa-circle-thin fa-stack-2x"></i>
   	</span>
-        Application Home</a>
+        Home</a>
         {{#if appname}}
         <span>/</span>
-        <a href="/dashboard/webapps/{{appname}}">
+        <a href="{{url ""}}/webapps/{{appname}}">
             <span>{{appname}}</span>
         </a>
         {{/if}}

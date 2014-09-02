@@ -43,7 +43,7 @@
 <script language="javascript">
     $(document).ready(function() {
         var table = $('#main_app_table').dataTable( {
-            "ajax" :  '/dashboard/api/as-data.jag?action=apps'
+            "ajax" :  '{{url ""}}/api/as-data.jag?action=apps'
         } );
 
         $('#main_app_table tbody').on('click', 'tr', function(){
