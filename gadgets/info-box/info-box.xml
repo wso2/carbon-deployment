@@ -133,7 +133,7 @@
                 	<div class="row">
 
                   		<div class="col-xs-12 panel-bottom-box  right-radius left-radius  box-one-color">
-                  			<h4 >23%</h4>
+                  			<h4 class="error-percentage">23%</h4>
                     		<small class="stat-label">&nbsp;</small>
                   		</div>
                 	</div><!-- row -->
