@@ -71,7 +71,7 @@ window.onpopstate = function (event) {
         console.log('pop' + event.state);
         state.node && UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',state.node);
         state.start &&  UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange',
-            {start: state.start, end: state.end});
+            {start: moment(state.start,'X'), end:  moment(state.end,'X')});
     }
 //    alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
 };
