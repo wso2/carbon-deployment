@@ -581,3 +581,15 @@ thead th {
     display: inline;
     margin-left: 9px;
 }
+<<<<<<< HEAD
+=======
+
+/* pie chart box classes */
+.pie-chart-inside{
+    height:30em;
+}
+
+.data-table-inside{
+    height: 41.429em;
+}
+>>>>>>> 754f993... pie chart changes on all pages
