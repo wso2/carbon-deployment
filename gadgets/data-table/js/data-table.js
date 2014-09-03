@@ -90,8 +90,10 @@ function onDataReceived(data) {
                     param = 'node=' + node;
                 }
                 if (start  && end ) {
+
                     param = param + (param == '' ? '' : '&')  +
-                        "start-time=" + start + "&end-time=" + end;
+                        "start-time=" + moment(start,'YYYY-MM-DD HH:mm').format('X') +
+                        "&end-time=" + moment(end,'YYYY-MM-DD HH:mm').format('X');
                 }
 
                 var webapp = table.fnGetData(this)[0];
