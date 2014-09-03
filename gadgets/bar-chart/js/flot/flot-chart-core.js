@@ -145,6 +145,7 @@ function showTooltip(x, y, contents) {
         left: x + 10
     }).appendTo("body").fadeIn(200);
 }
+
 function addSeriesCheckboxes(data) {
     // insert checkboxes
     var seriesContainer = $("#optionsRight .series-toggle");
