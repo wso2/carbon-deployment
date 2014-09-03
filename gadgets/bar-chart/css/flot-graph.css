@@ -1,7 +1,8 @@
 * {	padding: 0; margin: 0; vertical-align: top; }
 
 body {
-	font: 18px/1.5em "proxima-nova", Helvetica, Arial, sans-serif;
+	font: 18px/1.5em 'Open Sans', sans-serif;
+    color: #777;
 }
 
 a {	color: #069; }

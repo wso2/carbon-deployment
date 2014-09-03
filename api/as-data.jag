@@ -37,20 +37,11 @@ function buildWhere() {
     if (endTime != null) {
         where = appendCondition(where, "time <= \"" + endTime + "\"");
     }
-    if (node != null) {
-        if(node=="All"){
-            where= "";
-        }else {
-            where = appendCondition(where, "serverName = \"" + node + "\"");
-        }
+    if (node != null && node != "All") {
+        where = appendCondition(where, "serverName = \"" + node + "\"");
     }
-    if (webapp != null) {
-        if(webapp=="null"){
-            where= "";
-        }else{
+    if (webapp != null && webapp != "null") {
             where = appendCondition(where, "webappName= \"" + webapp + "\"");
-        }
-
     }
 
     return where;
@@ -305,7 +296,7 @@ if (action == "node-list") {
     }
     var opt = require('/gadgets/bar-chart/config/chart-options.json');
     opt.xaxis.ticks = ticks;
-    opt.xaxis.axisLabel = "HTTP Response code";
+    opt.xaxis.axisLabel = "Top 5 HTTP Response codes";
     opt.yaxis.axisLabel = "Number of requests";
     print([
         {"series1": {"label": "s", "data": dataArray}}, opt
@@ -358,14 +349,15 @@ if (action == "node-list") {
     var dataArray = [];
     var ticks = [];
     var results = getLanguage();
+    var languageCodeLookup = require('/languages.json');
     for (var i = 0; (i < results.length) && (i < 5); i++) {
         var row = results[i];
         dataArray.push([i,row['request_count']]);
-        ticks.push([i, row['name']]);
+        ticks.push([i, languageCodeLookup[row['language']] || languageCode]);
     }
     var opt = require('/gadgets/bar-chart/config/chart-options.json');
     opt.xaxis.ticks = ticks;
-    opt.xaxis.axisLabel = "Language";
+    opt.xaxis.axisLabel = "Top 5 Languages";
     opt.yaxis.axisLabel = "Number of requests";
     print([
         {"series1": {"label": "s", "data": dataArray}}, opt

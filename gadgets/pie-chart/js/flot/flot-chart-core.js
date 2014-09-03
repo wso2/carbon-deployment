@@ -3,6 +3,10 @@ var delay;
 var chartData = [];
 var options;
 var plot;
+var node = pref.getString("node") || undefined;
+var start = pref.getString("startTime") || undefined;
+var end  = pref.getString("endTime") || undefined;
+
 $(function () {
 
     var pauseBtn = $("button.pause");
@@ -100,12 +104,13 @@ var drawChart = function (data, options) {
     });
 }
 
-function fetchData(startTime, endTime) {
+function fetchData() {
     var url = pref.getString("dataSource");
 
     var data = {
-        start_time: startTime,
-        end_time: endTime,
+        start_time: start,
+        end_time: end,
+        node: node,
         action: pref.getString("appStatType")
     };
     var appname = pref.getString("appname");
@@ -187,7 +192,16 @@ gadgets.HubSettings.onConnect = function () {
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.timeRangeChange',
         function (topic, data, subscriberData) {
-            fetchData(data.start.format('YYYY-MM-DD HH:mm'), data.end.format('YYYY-MM-DD HH:mm'))
+            start = data.start.format('YYYY-MM-DD HH:mm');
+            end = data.end.format('YYYY-MM-DD HH:mm');
+            fetchData();
+        }
+    );
+
+    gadgets.Hub.subscribe('wso2.gadgets.charts.ipChange',
+        function (topic, data, subscriberData) {
+            node = data;
+            fetchData();
         }
     );
 
