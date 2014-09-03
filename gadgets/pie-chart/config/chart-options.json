@@ -12,7 +12,7 @@
     "series": {
         "pie": {
             "show": true,
-            "radius": 0.92,
+            "radius": 0.75,
             "innerRadius": 0,
             "label":{
                 "show": true
@@ -23,7 +23,7 @@
 
 
 },
-    "colors": ["#255878", "#1695A3", "#EBB3F2", "#ABFF6D", "#EBA131", "#21CCE6", "#55FFBB"],
+    "colors": ["#005a32", "#238b45", "#41ab5d", "#74c476", "#a1d99b", "#c7e9c0", "#edf8e9"],
     "grid": {
         "show": true,
         "aboveData": false,
@@ -36,7 +36,7 @@
         "borderColor": "#FFFFFF",
         "minBorderMargin": null,
         "clickable": false,
-        "hoverable": true,
+        "hoverable": false,
         "autoHighlight": true,
         "mouseActiveRadius": 0.1
     },
