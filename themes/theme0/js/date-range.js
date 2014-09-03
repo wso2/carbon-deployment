@@ -7,7 +7,7 @@
     var changeRange = function (start, end) {
         var startStr = start.format('MMMM D, YYYY');
         var endStr = end.format('MMMM D, YYYY');
-        timeLabel.html(startStr + ' - ' + endStr);
+        timeLabel.text(startStr + ' - ' + endStr);
         UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange', {start: start, end: end});
         var param = "?start-time=" + start.unix() + "&end-time=" + end.unix();
         if (state.node) {
@@ -23,10 +23,10 @@
         history.pushState(state, '', param);
     };
 
-    var start = moment().subtract('days', 29);
-    var end = moment();
+    var start = state.start ?  moment(state.start,'X') : moment().subtract('days', 29);
+    var end  = state.end ?  moment(state.end,'X') : moment();
 
-    timeLabel.html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    timeLabel.text(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
     dateRangeCustom.daterangepicker(
         {
             startDate: start,
