@@ -53,9 +53,11 @@ var updateLinks = function () {
 };
 
 window.onpopstate = function (event) {
-    state = event.state;
-    updateLinks();
-    console.log('pop' + event.state);
+    if(event.state){
+        state = event.state;
+        updateLinks();
+        console.log('pop' + event.state);
+    }
 //    alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
 };
 
