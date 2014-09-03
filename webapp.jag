@@ -16,7 +16,11 @@ if (elements) {
     elements = uriMatcher.match('/{context}/webapps/{webapp}');
 
 }
+var nav = {};
+nav[elements.aspect] = true;
+
 caramel.render({
+    nav : nav,
     aspect : elements.aspect,
     appname: elements.webapp,
     error: [],
