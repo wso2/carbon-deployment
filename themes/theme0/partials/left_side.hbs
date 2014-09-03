@@ -7,16 +7,32 @@
 	<ul class="nav nav-pills nav-as nav-stacked nav-as-margin">
         <li class="nav-parent"><a href=""><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
           <ul class="children">
-            <li><a class="in-link" href="browser"><i class="fa  fa-dot-circle-o"></i> Browser</a></li>
-            <li><a class="in-link" href="operating-system"><i class="fa  fa-dot-circle-o"></i> Operating System</a></li>
-            <li><a class="in-link" href="device-type"><i class="fa  fa-dot-circle-o"></i> Device Type</a></li>
-            <li><a class="in-link" href="http-response-codes"><i class="fa  fa-dot-circle-o"></i> HTTP Response Codes</a></li>
-            <li><a class="in-link" href="location"><i class="fa  fa-dot-circle-o"></i> Location</a></li>
-            <li><a class="in-link" href="language"><i class="fa  fa-dot-circle-o"></i> Language</a></li>
-            <li><a class="in-link" href="context"><i class="fa  fa-dot-circle-o"></i> Context</a></li>
-            <li><a class="in-link" href="referral"><i class="fa  fa-dot-circle-o"></i> Referral</a></li>
+              <li class="{{#if nav.browser}}active{{/if}}">
+                  <a class="in-link" href="browser"><i class="fa  fa-dot-circle-o"></i> Browser</a>
+              </li>
+              <li class="{{#if nav.operating-system}}active{{/if}}">
+                  <a class="in-link" href="operating-system"><i class="fa  fa-dot-circle-o"></i> Operating System</a>
+              </li>
+              <li class="{{#if nav.device-type}}active{{/if}}">
+                  <a class="in-link" href="device-type"><i class="fa  fa-dot-circle-o"></i> Device Type</a>
+              </li>
+              <li class="{{#if nav.http-response-codes}}active{{/if}}">
+                  <a class="in-link" href="http-response-codes"><i class="fa  fa-dot-circle-o"></i> HTTP Response Codes</a>
+              </li>
+              <li class="{{#if nav.location}}active{{/if}}">
+                  <a class="in-link" href="location"><i class="fa  fa-dot-circle-o"></i> Location</a>
+              </li>
+              <li class="{{#if nav.language}}active{{/if}}">
+                  <a class="in-link" href="language"><i class="fa  fa-dot-circle-o"></i> Language</a>
+              </li>
+              <li class="{{#if nav.context}}active{{/if}}">
+                  <a class="in-link" href="context"><i class="fa  fa-dot-circle-o"></i> Context</a>
+              </li>
+              <li class="{{#if nav.referral}}active{{/if}}">
+                  <a class="in-link" href="referral"><i class="fa  fa-dot-circle-o"></i> Referral</a>
+              </li>
           </ul>
         </li>
-        
     </ul>
 </div>
+

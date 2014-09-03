@@ -48,6 +48,7 @@ var render = function (theme, data, meta, require) {
                 {
                     partial: 'app-index',
                     context:{
+                        nav: data.nav,
                         appname : data.appname,
                         user_name: 'dakshika@wso2.com ',
                         user_avatar:'dakshika',

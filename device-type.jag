@@ -1,6 +1,7 @@
 <%
 var caramel = require('caramel');
 caramel.render({
+    nav: {'device-type': true},
     error: [],
     config: require('/config/config.json')
 });

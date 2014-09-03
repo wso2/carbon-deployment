@@ -607,3 +607,8 @@ thead th {
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
     z-index: 2;
 }
+
+.left-side .active{
+    background: #4D4D4D;
+    border-radius: 4px;
+}
