@@ -37,20 +37,11 @@ function buildWhere() {
     if (endTime != null) {
         where = appendCondition(where, "time <= \"" + endTime + "\"");
     }
-    if (node != null) {
-        if(node=="All"){
-            where= "";
-        }else {
-            where = appendCondition(where, "serverName = \"" + node + "\"");
-        }
+    if (node != null && node != "All") {
+        where = appendCondition(where, "serverName = \"" + node + "\"");
     }
-    if (webapp != null) {
-        if(webapp=="null"){
-            where= "";
-        }else{
+    if (webapp != null && webapp != "") {
             where = appendCondition(where, "webappName= \"" + webapp + "\"");
-        }
-
     }
 
     return where;
