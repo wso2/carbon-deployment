@@ -8,7 +8,7 @@ var renderAll = function(){
                 dataSource: caramel.context + '/api/as-data.jag',
                 startTime: moment(state.start, 'X').format('YYYY-MM-DD HH:mm') || undefined,
                 endTime: moment(state.end, 'X').format('YYYY-MM-DD HH:mm')  || undefined,
-                node: QueryString['node'] || undefined,
+                node: state.node || undefined,
                 appStatType: $el.attr('data-type'),
                 appname: appname || ''
             } };
