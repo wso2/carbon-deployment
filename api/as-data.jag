@@ -1,4 +1,6 @@
 <%
+var now = new Date();
+
 //var db = new Database("AS_MONITORING_DATASOURCE");
 var config = require('/config/config.json');
 var db = new Database(config.database.url, config.database.username, config.database.password);
@@ -19,10 +21,20 @@ var action = request.getParameter("action");
 
 var where = buildWhere();
 
+function formatDate(date){
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth()+1)).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    var hour = ("0" + date.getHours()).slice(-2);
+    var minute = ("0" + date.getMinutes()).slice(-2);
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute;
+}
+
 // build the where clause of the sql based on start_time, end_time and node values
 function buildWhere() {
-    var startTime = request.getParameter("start_time");
-    var endTime = request.getParameter("end_time");
+    // default data range is the past 24 hours
+    var startTime = request.getParameter("start_time") || formatDate(new Date(now - 86400000));
+    var endTime = request.getParameter("end_time") || formatDate(now);
     var node = request.getParameter("node");
     var webapp = request.getParameter("appname");
 
@@ -237,10 +249,11 @@ if (action == "node-list") {
     var results = executeQuery(sql);
     print(results);
 } else if (action == "apps") {
+    var endTime = request.getParameter("end_time") || formatDate(now);
 
-    var lastMinute = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time  > (NOW() - INTERVAL 1 MINUTE) " + where + " GROUP BY webappName;");
-    var lastHour = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time > (NOW() - INTERVAL 1 HOUR) " + where + " GROUP BY webappName;");
-    var lastDay = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE WHERE time > (NOW() - INTERVAL 1 DAY) " + where + " GROUP BY webappName;");
+    var lastMinute = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " AND time  > (STR_TO_DATE('" + endTime + "', '%Y-%m-%d %H:%i') - INTERVAL 1 MINUTE) GROUP BY webappName;");
+    var lastHour = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " AND time  > (STR_TO_DATE('" + endTime + "', '%Y-%m-%d %H:%i') - INTERVAL 1 HOUR) GROUP BY webappName;");
+    var lastDay = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " AND time  > (STR_TO_DATE('" + endTime + "', '%Y-%m-%d %H:%i') - INTERVAL 1 DAY) GROUP BY webappName;");
 
     var apps = executeQuery("select webappName, webappType, sum(averageRequestCount) as total_requests, sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error from REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY webappName ORDER BY webappName;")
 
@@ -274,7 +287,7 @@ if (action == "node-list") {
 
         for (var j = 0; j < lastDay.length; j++) {
             if (lastDay[j]["webappName"] == webappName) {
-                app["lastDay"] = last_day[j]["averageRequestCount"];
+                app["lastDay"] = lastDay[j]["averageRequestCount"];
                 break;
             }
         }
