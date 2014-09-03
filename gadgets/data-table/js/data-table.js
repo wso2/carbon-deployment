@@ -1,4 +1,7 @@
 var pref = new gadgets.Prefs();
+var node = pref.getString("node") || undefined;
+var start = pref.getString("startTime") || undefined;
+var end = pref.getString("endTime") || undefined;
 
 var url = pref.getString("dataSource");
 
@@ -70,7 +73,8 @@ function onDataReceived(data) {
 
     $("#table").html(headings);
 
-    var table = $('#table').dataTable({
+    var $table = $('#table');
+    var table = $table.dataTable({
         "data": tableData,
         "order": [orderColumn]
     });
@@ -80,11 +84,24 @@ function onDataReceived(data) {
             if($(this).hasClass('selected')){
                 $(this).removeClass('selected');
             } else{
+                var param = '';
+                if (node) {
+                    param = 'node=' + node;
+                }
+                if (start  && end ) {
+                    param = param + (param == '' ? '' : '&')  +
+                        "start-time=" + start + "&end-time=" + end;
+                }
+
                 var webapp = table.fnGetData(this)[0];
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
                 var webappUrl = parent.window.location.origin + parent.window.location.pathname + 'webapps/' + webapp + '/';
+                if (param != '?') {
+                    webappUrl = webappUrl + '?' + param;
+                }
                 parent.window.location.href = webappUrl;
+
             }
         });
     }
@@ -100,6 +117,14 @@ gadgets.HubSettings.onConnect = function () {
     gadgets.Hub.subscribe('wso2.gadgets.charts.timeRangeChange',
         function (topic, data, subscriberData) {
             fetchData(data.start.format('YYYY-MM-DD HH:mm'), data.end.format('YYYY-MM-DD HH:mm'))
+            start = data.start.format('X');
+            end = data.end.format('X');
+        }
+    );
+
+    gadgets.Hub.subscribe('wso2.gadgets.charts.ipChange',
+        function (topic, data, subscriberData) {
+            node = data;
         }
     );
 };
