@@ -53,6 +53,7 @@ var render = function (theme, data, meta, require) {
                 {
                     partial: 'left_side',
                     context: {
+                        nav: data.nav,
                         user_name: 'dakshika@wso2.com ',
                         user_avatar:'dakshika',
                         breadcrumb:'Service Cluster System Statistics'

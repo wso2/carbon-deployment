@@ -1,6 +1,7 @@
 <%
 var caramel = require('caramel');
 caramel.render({
+    nav: {'http-response-codes': true},
     error: [],
     config: require('/config/config.json')
 });
