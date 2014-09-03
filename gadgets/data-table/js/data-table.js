@@ -9,8 +9,9 @@ function fetchData(startTime, endTime) {
     var url = pref.getString("dataSource");
 
     var data = {
-        start_time: startTime,
-        end_time: endTime,
+        start_time: start,
+        end_time: end,
+        node: node,
         action: pref.getString("appStatType")
     };
     var appname = pref.getString("appname");
@@ -116,15 +117,16 @@ gadgets.HubSettings.onConnect = function () {
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.timeRangeChange',
         function (topic, data, subscriberData) {
-            fetchData(data.start.format('YYYY-MM-DD HH:mm'), data.end.format('YYYY-MM-DD HH:mm'))
-            start = data.start.format('X');
-            end = data.end.format('X');
+            start = data.start.format('YYYY-MM-DD HH:mm');
+            end = data.end.format('YYYY-MM-DD HH:mm');
+            fetchData();
         }
     );
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.ipChange',
         function (topic, data, subscriberData) {
             node = data;
+            fetchData();
         }
     );
 };

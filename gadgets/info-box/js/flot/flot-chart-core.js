@@ -198,14 +198,14 @@ gadgets.HubSettings.onConnect = function () {
         function (topic, data, subscriberData) {
             start = data.start.format('YYYY-MM-DD HH:mm');
             end = data.end.format('YYYY-MM-DD HH:mm');
-            fetchData()
+            fetchData();
         }
     );
 
     gadgets.Hub.subscribe('wso2.gadgets.charts.ipChange',
         function (topic, data, subscriberData) {
             node = data;
-            fetchData()
+            fetchData();
         }
     );
 
