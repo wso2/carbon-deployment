@@ -582,3 +582,12 @@ thead th {
     display: inline;
     margin-left: 9px;
 }
+
+/* pie chart box classes */
+.pie-chart-inside{
+    height:30em;
+}
+
+.data-table-inside{
+    height: 41.429em;
+}
