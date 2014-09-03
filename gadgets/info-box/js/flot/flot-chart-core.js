@@ -79,19 +79,26 @@ var drawChart = function (data, options) {
 
 function fetchData() {
     var url = pref.getString("dataSource");
-
     var statType = pref.getString("appStatType");
     $('.panel-heading').addClass(statType);
+
+    var data = {
+        start_time: start,
+        end_time: end,
+        node: node,
+        action: statType
+    };
+
+    var appname = pref.getString("appname");
+    if(appname!=""){
+        data.appname = appname;
+    }
+
     $.ajax({
         url: url,
         type: "GET",
         dataType: "json",
-        data:{
-            start_time: start,
-            end_time: end,
-            node: node,
-            action: statType
-        },
+        data: data,
         success: onDataReceived
     });
     var pauseBtn = $("button.pause");

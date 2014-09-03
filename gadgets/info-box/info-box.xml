@@ -40,6 +40,10 @@
               display_name="App Stat Type"
               default_value="request">
     </UserPref>
+    <UserPref name="appname"
+              display_name="Web App Name"
+              default_value="">
+    </UserPref>
     <Content type="html">
     <![CDATA[
  <html>
