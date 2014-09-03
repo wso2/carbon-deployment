@@ -5,3 +5,11 @@ body, td, div, span, p{font-family: 'Open Sans', sans-serif; color: #777}
 thead th {
     font-weight: 600 !important;
 }
+
+.dataTables_wrapper{
+    margin: 20px;
+}
+
+.form-control{
+    display: inline-block;
+}
