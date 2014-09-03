@@ -32,14 +32,15 @@ $(document).ready(function () {
         UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',ip);
         state.node = ip;
 
+        var param = '?node=' + ip ;
+        if (state.start) {
+            param = param + "&start-time=" + state.start + "&end-time=" + state.end;
+        }
         $('.in-link').attr('href', function (index, href) {
-            var param = '?node=' + ip ;
-            if (state.start) {
-                param = param + "&start-time=" + state.start + "&end-time=" + state.end;
-            }
             var i = href.indexOf('?');
             return href.substr(0, i < 0 ? href.length : i) + param;
         });
+        history.pushState(state, '', param);
 
         return true;
     });

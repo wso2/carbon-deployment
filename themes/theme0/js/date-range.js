@@ -9,16 +9,18 @@
         var endStr = end.format('MMMM D, YYYY');
         timeLabel.html(startStr + ' - ' + endStr);
         UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange', {start: start, end: end});
+        var param = "?start-time=" + start.unix() + "&end-time=" + end.unix();
+        if (state.node) {
+            param = param + '&node=' + state.node;
+        }
         $('.in-link').attr('href', function (index, href) {
-            var param = "?start-time=" + start.unix() + "&end-time=" + end.unix();
-            if (state.node) {
-                param = param + '&node=' + state.node;
-            }
             var i = href.indexOf('?');
             return href.substr(0, i < 0 ? href.length : i) + param;
         });
         state.start = start.unix();
         state.end = end.unix();
+
+        history.pushState(state, '', param);
     };
 
     var start = moment().subtract('days', 29);
