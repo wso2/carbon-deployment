@@ -46,6 +46,17 @@ var drawChart = function (data, options) {
 
     plot = $.plot("#placeholder", data, options);
 
+
+    if (data.length == 0 ){
+        var canvas = plot.getCanvas();
+        var ctx = canvas.getContext("2d");  //canvas context
+        var x = canvas.width / 2;
+        var y = canvas.height / 2;
+        ctx.font = "14pt 'Open Sans', sans-serif";
+        ctx.textAlign = 'center';
+        ctx.fillText('No data available for selected options..!', x, y);
+    }
+
     var previousPoint = null;
     $("#placeholder").bind("plothover", function (event, pos, item) {
 
