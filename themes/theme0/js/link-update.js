@@ -49,8 +49,9 @@ var updateLinks = function () {
             }
         });
         if (!buttonSelected) {
-            $('#reportrange').addClass('active');
-
+            $('#reportrange').addClass('active_datepicker');
+        }else{
+            $('#reportrange').removeClass('active_datepicker');
         }
     }
     if (param != '?') {
@@ -68,6 +69,9 @@ window.onpopstate = function (event) {
         state = event.state;
         updateLinks();
         console.log('pop' + event.state);
+        state.node && UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',state.node);
+        state.start &&  UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange',
+            {start: state.start, end: state.end});
     }
 //    alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
 };

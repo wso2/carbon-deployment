@@ -15,7 +15,6 @@ $(document).ready(function () {
                 var item = document.createElement('li');
 
                 link.role = "menuitem";
-                link.href = "#";
                 link.innerHTML = data[i];
                 item.role = "presentation";
                 item.appendChild(link);
