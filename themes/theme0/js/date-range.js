@@ -33,7 +33,7 @@
             endDate: end
         },
         function (start, end) {
-            dateRangeCustom.addClass('active');
+            dateRangeCustom.addClass('active_datepicker');
             $rangeOpt.removeClass('active');
             changeRange(start, end);
         });
@@ -42,7 +42,7 @@
     $rangeOpt.on('click', function () {
         var $this = $(this);
 
-        dateRangeCustom.removeClass('active');
+        dateRangeCustom.removeClass('active_datepicker');
         $rangeOpt.removeClass('active');
         $this.addClass('active');
         var end = moment();
