@@ -40,7 +40,7 @@ function buildWhere() {
     if (node != null && node != "All") {
         where = appendCondition(where, "serverName = \"" + node + "\"");
     }
-    if (webapp != null && webapp != "") {
+    if (webapp != null && webapp != "null") {
             where = appendCondition(where, "webappName= \"" + webapp + "\"");
     }
 
