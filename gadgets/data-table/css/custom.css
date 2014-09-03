@@ -13,3 +13,7 @@ thead th {
 .form-control{
     display: inline-block;
 }
+
+table {
+    width: 100% !important;
+}
