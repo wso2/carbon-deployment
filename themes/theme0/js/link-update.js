@@ -16,28 +16,21 @@ var QueryString = function () {
     return query_string;
 }();
 
-
-$(function () {
+var updateLinks = function () {
     var param = '?';
-    var node = QueryString.node;
-    if (node) {
+    if (state.node) {
         var dropdown = $('#dropdownMenu1');
-        dropdown.text(node);
-        param = param + 'node=' + node;
-        state.node = node;
+        dropdown.text(state.node);
+        param = param + 'node=' + state.node;
     }
-    var startParam = QueryString['start-time'];
-    var endParam = QueryString['end-time'];
-    if (startParam && endParam) {
-        state.start = startParam;
-        state.end = endParam;
+    if (state.start && state.end) {
         param = param + (param == '?' ? '' : '&') +
-            "start-time=" + startParam + "&end-time=" + endParam;
+            "start-time=" + state.start + "&end-time=" + state.end;
         var buttonSelected = false;
         $('.date-rage-opt').each(function (i, elm) {
             var $elm = $(elm);
-            var end = moment(endParam, 'X');
-            var start = moment(startParam, 'X');
+            var end = moment(state.end, 'X');
+            var start = moment(state.start, 'X');
             if (end.diff(start, $elm.attr('data-unit')) == $elm.attr('data-offset')) {
                 $elm.addClass('active');
                 buttonSelected = true;
@@ -49,12 +42,33 @@ $(function () {
             $('#reportrange').addClass('active');
         }
     }
-    if(param!='?'){
+    if (param != '?') {
         $('.in-link').attr('href', function (index, href) {
             var i = href.indexOf('?');
             return href.substr(0, i < 0 ? href.length : i) + param;
         });
+        window.history.replaceState(state,'',param);
     }
-    console.log(param);
+
+};
+
+window.onpopstate = function (event) {
+    state = event.state;
+    updateLinks();
+    console.log('pop' + event.state);
+//    alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
+};
+
+$(function () {
+    if (QueryString.node) {
+        state.node = QueryString.node
+    }
+    if (QueryString['start-time']) {
+        state.start = QueryString['start-time']
+    }
+    if (QueryString['end-time']) {
+        state.end = QueryString['end-time']
+    }
+    updateLinks();
 });
 
