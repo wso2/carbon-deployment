@@ -6,8 +6,8 @@ var renderAll = function(){
             gadgetUrl = config.gadgetsUrlBase + '/' + $el.attr('data-gadget') + '/' + $el.attr('data-gadget') + '.xml';
             opt = {prefs: {
                 dataSource: caramel.context + '/api/as-data.jag',
-                startTime: QueryString['start-time'] || undefined,
-                endTime: QueryString['end-time'] || undefined,
+                startTime: moment(state.start, 'X').format('YYYY-MM-DD HH:mm') || undefined,
+                endTime: moment(state.end, 'X').format('YYYY-MM-DD HH:mm')  || undefined,
                 node: QueryString['node'] || undefined,
                 appStatType: $el.attr('data-type'),
                 appname: appname || ''
