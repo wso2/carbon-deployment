@@ -1,21 +1,26 @@
 <div class="subheader">
 
-    <h2 class="pull-left col-md-4">
-    <a class="in-link" href="{{url ""}}/" id="home" >
-  	<span class="fa-stack fa-lg">
-  		<i class="fa fa-home fa-stack-1x" ></i>
-  		 <i class="fa fa-circle-thin fa-stack-2x"></i>
-  	</span>
-        Home</a>
-        {{#if appname}}
-        <span>/</span>
-        <a class="in-link" href="{{url ""}}/webapps/{{appname}}/">
-            <span>{{appname}}</span>
+    <h2 class="pull-left col-md-4 col-sm-5">
+        <a class="in-link" href="{{url ""}}/" id="home" >
+            <span class="fa-stack fa-lg bred-home-ico">
+                <i class="fa fa-home fa-stack-1x" ></i>
+                 <i class="fa fa-circle-thin fa-stack-2x"></i>
+            </span>
+            <span id="bred-home">Home</span>
         </a>
+        {{#if appname}}
+        <span id="bred-level2">
+            <span>/</span>
+            <a class="in-link" href="{{url ""}}/webapps/{{appname}}/">
+                <span>{{appname}}</span>
+            </a>
+        </span>
         {{/if}}
         {{#if aspect}}
-        <span>/</span>
-        <span>{{aspect}}</span>
+        <span id="bred-level3">
+            <span>/</span>
+            <span>{{aspect}}</span>
+        </span>
         {{/if}}
     </h2>
 

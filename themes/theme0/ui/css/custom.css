@@ -612,3 +612,41 @@ thead th {
     background: #4D4D4D;
     border-radius: 4px;
 }
+
+.bred-home-ico{
+    float: left;
+}
+#bred-home, #bred-level2, #bred-level3{
+    float: left;
+    margin: 13px 0px;
+}
+
+@media(max-width:768px){
+    /* For general iPad layouts */
+    #bred-home{
+        width: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        float: left;
+        margin: 13px 0px;
+    }
+
+    #bred-level2{
+        width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        float: left;
+        margin: 13px 0px;
+    }
+
+    #bred-level3{
+        width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        float: left;
+        margin: 13px 0px;
+    }
+}
