@@ -23,7 +23,7 @@
         history.pushState(state, '', param);
     };
 
-    var start = state.start ?  moment(state.start,'X') : moment().subtract('days', 29);
+    var start = state.start ?  moment(state.start,'X') : moment().subtract('days', 1);
     var end  = state.end ?  moment(state.end,'X') : moment();
 
     timeLabel.text(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
