@@ -30,6 +30,18 @@
               display_name="App Stat Type"
               default_value="request">
     </UserPref>
+    <UserPref name="startTime"
+              display_name="Start time"
+              default_value="">
+    </UserPref>
+    <UserPref name="endTime"
+              display_name="End time"
+              default_value="">
+    </UserPref>
+    <UserPref name="node"
+              display_name="Node IP"
+              default_value="">
+    </UserPref>
     <Content type="html">
         <![CDATA[
  <html>
