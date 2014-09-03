@@ -16,6 +16,16 @@ var QueryString = function () {
     return query_string;
 }();
 
+if (QueryString.node) {
+    state.node = QueryString.node
+}
+if (QueryString['start-time']) {
+    state.start = QueryString['start-time']
+}
+if (QueryString['end-time']) {
+    state.end = QueryString['end-time']
+}
+
 var updateLinks = function () {
     var param = '?';
     if (state.node) {
@@ -40,6 +50,7 @@ var updateLinks = function () {
         });
         if (!buttonSelected) {
             $('#reportrange').addClass('active');
+
         }
     }
     if (param != '?') {
@@ -62,15 +73,6 @@ window.onpopstate = function (event) {
 };
 
 $(function () {
-    if (QueryString.node) {
-        state.node = QueryString.node
-    }
-    if (QueryString['start-time']) {
-        state.start = QueryString['start-time']
-    }
-    if (QueryString['end-time']) {
-        state.end = QueryString['end-time']
-    }
     updateLinks();
 });
 
