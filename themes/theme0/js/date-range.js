@@ -1,7 +1,6 @@
 (function () {
     var $rangeOpt = $('.date-rage-opt');
     var dateRangeCustom = jQuery('#reportrange');
-    var dateRangeCustomButton = jQuery('#reportrangebutton');
     var timeLabel = dateRangeCustom.find('span');
     var picker;
 
@@ -34,7 +33,7 @@
             endDate: end
         },
         function (start, end) {
-            dateRangeCustomButton.addClass('active');
+            dateRangeCustom.addClass('active');
             $rangeOpt.removeClass('active');
             changeRange(start, end);
         });
@@ -43,7 +42,7 @@
     $rangeOpt.on('click', function () {
         var $this = $(this);
 
-        dateRangeCustomButton.removeClass('active');
+        dateRangeCustom.removeClass('active');
         $rangeOpt.removeClass('active');
         $this.addClass('active');
         var end = moment();
