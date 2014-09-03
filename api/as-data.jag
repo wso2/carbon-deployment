@@ -358,10 +358,11 @@ if (action == "node-list") {
     var dataArray = [];
     var ticks = [];
     var results = getLanguage();
+    var languageCodeLookup = require('/languages.json');
     for (var i = 0; (i < results.length) && (i < 5); i++) {
         var row = results[i];
         dataArray.push([i,row['request_count']]);
-        ticks.push([i, row['name']]);
+        ticks.push([i, languageCodeLookup[row['language']] || languageCode]);
     }
     var opt = require('/gadgets/bar-chart/config/chart-options.json');
     opt.xaxis.ticks = ticks;
