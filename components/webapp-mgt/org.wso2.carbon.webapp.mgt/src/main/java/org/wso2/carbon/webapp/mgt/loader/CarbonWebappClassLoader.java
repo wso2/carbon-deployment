@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -245,5 +247,27 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         }
 
     }
+
+    public Enumeration<URL> getResources(String name) throws IOException {
+        Enumeration[] tmp = new Enumeration[2];
+        /*
+        The logic to access BootstrapClassPath is JDK vendor dependent hence
+        we can't call it from here. Ensure 'parentCL != null', to find resources
+        from BootstrapClassPath.
+
+         */
+        if (parent != null) {
+            boolean delegatedRes = webappCC.isDelegatedResource(name);
+            boolean excludedRes = webappCC.isExcludedResources(name);
+            if (delegatedRes && !excludedRes) {
+                tmp[0] = parent.getResources(name);
+            }
+
+        }
+        tmp[1] = findResources(name);
+
+        return new CompoundEnumeration(tmp);
+    }
+
 
 }
