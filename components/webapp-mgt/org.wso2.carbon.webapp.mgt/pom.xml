@@ -48,6 +48,14 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.url.mapper</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.aries</groupId>
+            <artifactId>org.apache.aries.util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.aries.spifly</groupId>
+            <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

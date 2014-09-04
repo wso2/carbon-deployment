@@ -802,7 +802,16 @@
                 <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.aries</groupId>
+                <artifactId>org.apache.aries.util</artifactId>
+                <version>${aries.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries.spifly</groupId>
+                <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+                <version>${aries.spifly.version}</version>
+            </dependency>
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
@@ -1146,6 +1155,10 @@
         <version.json.wso2>2.0.0.wso2v1</version.json.wso2>
 
         <javax.ws.rs-api.version>2.0-m10</javax.ws.rs-api.version>
+
+        <aries.version>1.1.0</aries.version>
+        <aries.spifly.version>1.0.0</aries.spifly.version>
+
     </properties>
 
     <repositories>

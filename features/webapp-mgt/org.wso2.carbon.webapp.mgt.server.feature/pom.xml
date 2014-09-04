@@ -44,6 +44,14 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.aries</groupId>
+            <artifactId>org.apache.aries.util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.aries.spifly</groupId>
+            <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -99,6 +107,8 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt:${project.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.deployer</bundleDef>
+                                <bundleDef>org.apache.aries:org.apache.aries.util</bundleDef>
+                                <bundleDef>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}
