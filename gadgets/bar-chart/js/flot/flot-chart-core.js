@@ -43,6 +43,11 @@ function togglePause(btnElm) {
 
 var drawChart = function (data, options) {
 
+    if(data.length == 0){
+        $('#placeholder').html("<div class='no-data'>No data available for selected options..!</div>");
+        return;
+    }
+
     plot = $.plot("#placeholder", data, options);
 
     var previousPoint = null;
@@ -132,10 +137,11 @@ function onDataReceived(series) {
     var chartOptions = options;
     var _chartData = [];
     addSeriesCheckboxes(chartData);
-    $.each(chartData, function (key, val) {
-        _chartData.push(chartData[key]);
-    });
-    //console.info(chartData);
+    if (chartData["series1"]["data"].length != 0) {
+        $.each(chartData, function (key, val) {
+            _chartData.push(chartData[key]);
+        });
+    }
     drawChart(_chartData, chartOptions);
     var seriesContainer = $("#optionsRight");
     seriesContainer.find(":checkbox").click(function () {

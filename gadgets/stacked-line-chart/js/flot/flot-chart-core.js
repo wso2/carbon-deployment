@@ -44,6 +44,11 @@ function togglePause(btnElm) {
 
 var drawChart = function (data, options) {
 
+    if(data[0]["data"].length == 0){
+        $('#placeholder').html("<div class='no-data'>No data available for selected options..!</div>");
+        return;
+    }
+
     plot = $.plot("#placeholder", data, options);
 
     var previousPoint = null;
