@@ -30,6 +30,31 @@ function fetchData() {
 
 function onDataReceived(data) {
     values = data;
+
+    if($.isEmptyObject(data)){
+        $('#world-map').html("<div class='no-data'>No data available for selected options..!</div>");
+        return;
+    }
+
+    $('#world-map').vectorMap({
+        map: 'world_mill_en',
+        series: {
+            regions: [{
+                values: null,
+                scale: ['#C8EEFF', '#0071A4'],
+                normalizeFunction: 'polynomial'
+            }]
+        },
+        onRegionLabelShow: function(e, el, code){
+            var request_count_tooltip = 0;;
+
+            if(values[code]){
+                request_count_tooltip = values[code];
+            }
+            el.html('Country: ' + el.html()+ ' (total request count: ' + request_count_tooltip + ')');
+        }
+    });
+
     var map = $('#world-map').vectorMap('get', 'mapObject');
     map.series.regions[0].setValues(values);
 

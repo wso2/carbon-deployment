@@ -1,1 +1,11 @@
 body{background: #FCFCFC; font-family: 'Open Sans', sans-serif; color: #777}
+
+.no-data {
+    position: relative;
+    top: 40%;
+    text-align: center;
+    vertical-align: middle;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 18px;
+    color: #000000;
+}
