@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.core.util.Utils;
+import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.utils.XMLUtils;
 
 import java.io.File;
@@ -47,7 +48,7 @@ public class ClassloadingContextBuilder {
     public synchronized static ClassloadingConfiguration buildSystemConfig() throws Exception {
         ClassloadingConfiguration classloadingConfig = new ClassloadingConfiguration();
 
-        String carbonHome = System.getProperty("carbon.home");
+        String carbonHome = System.getProperty(WebappsConstants.CARBON_HOME);
 
         String envConfigPath = carbonHome + File.separator + "repository" + File.separator + "conf" +
                 File.separator + "tomcat" + File.separator + LoaderConstants.ENV_CONFIG_FILE;
@@ -84,25 +85,43 @@ public class ClassloadingContextBuilder {
             webappClassloadingContext.setParentFirst(classloadingConfig.isParentFirst());
             if(classloadingConfig.getEnvironments().length > 0){
                 List<String> delegatedPackageList = new ArrayList<String>();
+                List<String> delegatedResourceList = new ArrayList<String>();
+                // Collect pkgs from all defined environments.
                 for(String env : classloadingConfig.getEnvironments()){
-                    String[] packs = classloadingConfig.getDelegatedEnvironment(env);
+                    String[] packs = classloadingConfig.getDelegatedEnvironment(env).getDelegatedPackageArray();
                     if(packs != null && packs.length > 0){
                         for(String pkg : packs){
                             delegatedPackageList.add(pkg);
                         }
                     }
                 }
+                // Collect resources from all defined environments.
+                for(String env : classloadingConfig.getEnvironments()){
+                    String[] res = classloadingConfig.getDelegatedEnvironment(env).getDelegatedResourcesArray();
+                    if(res != null && res.length > 0){
+                        for(String resource : res){
+                            delegatedResourceList.add(resource);
+                        }
+                    }
+                }
 
                 webappClassloadingContext.setDelegatedPackages(delegatedPackageList.toArray(new String[delegatedPackageList.size()]));
+                webappClassloadingContext.setDelegatedResources(delegatedResourceList.toArray(new String[delegatedResourceList.size()]));
                 if(delegatedPackageList.size() == 0){
                     webappClassloadingContext.setDelegatedPackages(
-                            classloadingConfig.getDelegatedEnvironment(LoaderConstants.SYSTEM_ENV));
+                            classloadingConfig.getDelegatedEnvironment(LoaderConstants.SYSTEM_ENV).getDelegatedPackageArray());
+                }
+                if(delegatedResourceList.size() == 0){
+                    webappClassloadingContext.setDelegatedResources(
+                            classloadingConfig.getDelegatedEnvironment(LoaderConstants.SYSTEM_ENV).getDelegatedResourcesArray());
                 }
 
 
             } else {
                 webappClassloadingContext.setDelegatedPackages(
-                        classloadingConfig.getDelegatedEnvironment(LoaderConstants.SYSTEM_ENV));
+                        classloadingConfig.getDelegatedEnvironment(LoaderConstants.SYSTEM_ENV).getDelegatedPackageArray());
+                webappClassloadingContext.setDelegatedResources(
+                        classloadingConfig.getDelegatedEnvironment(LoaderConstants.SYSTEM_ENV).getDelegatedResourcesArray());
             }
 
             webappClassloadingContext.setProvidedRepositories(new String[0]);
@@ -113,7 +132,7 @@ public class ClassloadingContextBuilder {
         Document doc = XMLUtils.buildDocumentFromInputStream(appCLConfigFileURL.openStream());
 
         //Processing ParentFirst element.
-        Node parentFirstNode = doc.getElementsByTagName("ParentFirst").item(0);
+        Node parentFirstNode = doc.getElementsByTagName(WebappsConstants.ELE_PARENT_FIRST).item(0);
         if (parentFirstNode != null) {
             boolean parentFirst = Boolean.parseBoolean(parentFirstNode.getTextContent());
             webappClassloadingContext.setParentFirst(parentFirst);
@@ -124,27 +143,28 @@ public class ClassloadingContextBuilder {
 
         //Processing Environment element.
         String[] environments;
-        Node envNode = doc.getElementsByTagName("Environments").item(0);
+        Node envNode = doc.getElementsByTagName(WebappsConstants.ELE_ENVIRONMENTS).item(0);
         if (envNode != null) {
             String envList = envNode.getTextContent();
-            environments = splitStrings(envList, ",");
+            environments = splitStrings(envList, WebappsConstants.ENVIRONMENTS_SPILIT_CHAR);
             environments = addSystemEnvironment(environments);
         } else {
             //Environments are not specified, hence using the default values.
             environments = classloadingConfig.getEnvironments();
         }
-        webappClassloadingContext.setEnvironments(environments);
 
         //Populate WebappClassloadingContext data structures using the specified environments.
         List<String> delegatedPkgList = new ArrayList<String>();
+        List<String> delegatedResourceList = new ArrayList<String>();
         List<String> providedResources = new ArrayList<String>();
 
         for (String env : environments) {
             if (classloadingConfig.getDelegatedEnvironment(env) != null) {
-                Collections.addAll(delegatedPkgList, classloadingConfig.getDelegatedEnvironment(env));
+                Collections.addAll(delegatedPkgList, classloadingConfig.getDelegatedEnvironment(env).getDelegatedPackageArray());
+                Collections.addAll(delegatedResourceList, classloadingConfig.getDelegatedEnvironment(env).getDelegatedResourcesArray());
 
             } else if (classloadingConfig.getExclusiveEnvironment(env) != null) {
-                Collections.addAll(providedResources, classloadingConfig.getExclusiveEnvironment(env));
+                Collections.addAll(providedResources, classloadingConfig.getExclusiveEnvironment(env).getDelegatedPackageArray());
 
             } else {
                 throw new Exception("Undefined environment.");
@@ -157,6 +177,8 @@ public class ClassloadingContextBuilder {
 
         webappClassloadingContext.setDelegatedPackages(
                 delegatedPkgList.toArray(new String[delegatedPkgList.size()]));
+        webappClassloadingContext.setDelegatedResources(
+                delegatedResourceList.toArray(new String[delegatedResourceList.size()]));
         webappClassloadingContext.setProvidedRepositories(
                 providedResources.toArray(new String[providedResources.size()]));
 
@@ -178,29 +200,37 @@ public class ClassloadingContextBuilder {
     }
 
     private static void populateDelegatedEnvironments(ClassloadingConfiguration classloadingConfig, Document doc) {
-        NodeList envNodeList = doc.getElementsByTagName("DelegatedEnvironment");
+        NodeList envNodeList = doc.getElementsByTagName(WebappsConstants.ELE_DELEGATED_ENVIRONMENTS);
         for (int i = 0; i < envNodeList.getLength(); i++) {
             Node envNode = envNodeList.item(i);
             if (envNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element envElement = (Element) envNode;
-                String name = envElement.getElementsByTagName("Name").item(0).getTextContent();
-                String delegatedPkgs = envElement.getElementsByTagName("DelegatedPackages").item(0).getTextContent();
-                String[] delegatedPkgArray = splitStrings(delegatedPkgs, ",");
-                classloadingConfig.addDelegatedEnvironment(name, delegatedPkgArray);
+                String name = envElement.getElementsByTagName(WebappsConstants.ELE_NAME).item(0).getTextContent();
+
+                String delegatedPkgs = envElement.getElementsByTagName(WebappsConstants.ELE_DELEGATED_PACKAGES).item(0).getTextContent();
+                String delegatedResources = envElement.getElementsByTagName(WebappsConstants.ELE_DELEGATED_RESOURCES).item(0).getTextContent();
+
+                String[] delegatedPkgArray = splitStrings(delegatedPkgs, WebappsConstants.ENVIRONMENTS_SPILIT_CHAR);
+                String[] delegatedResArray = splitStrings(delegatedResources, WebappsConstants.ENVIRONMENTS_SPILIT_CHAR);
+
+                CLEnvironment environment = new CLEnvironment(delegatedPkgArray, delegatedResArray);
+                classloadingConfig.addDelegatedEnvironment(name, environment);
+
             }
         }
     }
 
     private static void populateExclusiveEnvironments(ClassloadingConfiguration classloadingConfig, Document doc) {
-        NodeList envNodeList = doc.getElementsByTagName("ExclusiveEnvironment");
+        NodeList envNodeList = doc.getElementsByTagName(WebappsConstants.ELE_EXCLUSIVE_ENVIRONMENTS);
         for (int i = 0; i < envNodeList.getLength(); i++) {
             Node envNode = envNodeList.item(i);
             if (envNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element envElement = (Element) envNode;
-                String name = envElement.getElementsByTagName("Name").item(0).getTextContent();
-                String classpathStr = envElement.getElementsByTagName("Classpath").item(0).getTextContent();
+                String name = envElement.getElementsByTagName(WebappsConstants.ELE_NAME).item(0).getTextContent();
+                String classpathStr = envElement.getElementsByTagName(WebappsConstants.ELE_CLASSPATH).item(0).getTextContent();
                 String[] classpath = generateClasspath(classpathStr);
-                classloadingConfig.addExclusiveEnvironment(name, classpath);
+                CLEnvironment environment = new CLEnvironment(classpath, null);
+                classloadingConfig.addExclusiveEnvironment(name, environment);
             }
         }
     }
@@ -212,12 +242,12 @@ public class ClassloadingContextBuilder {
         try {
             doc = XMLUtils.buildDocumentFromFile(clConfigFile);
 
-            String parentFirstStr = doc.getElementsByTagName("ParentFirst").item(0).getTextContent();
+            String parentFirstStr = doc.getElementsByTagName(WebappsConstants.ELE_PARENT_FIRST).item(0).getTextContent();
             boolean parentFirst = Boolean.parseBoolean(parentFirstStr);
             classloadingConfig.setParentFirstBehaviour(parentFirst);
 
-            String envStr = doc.getElementsByTagName("Environments").item(0).getTextContent();
-            String[] environments = splitStrings(envStr, ",");
+            String envStr = doc.getElementsByTagName(WebappsConstants.ELE_ENVIRONMENTS).item(0).getTextContent();
+            String[] environments = splitStrings(envStr, WebappsConstants.ENVIRONMENTS_SPILIT_CHAR);
             classloadingConfig.setEnvironments(environments);
 
         } catch (Exception e) {
@@ -341,7 +371,7 @@ public class ClassloadingContextBuilder {
          */
         boolean found = false;
         for (String env : envList) {
-            if (LoaderConstants.TOMCAT_ENV.equals(env)  || LoaderConstants.SYSTEM_ENV.equals(env)) {
+            if (LoaderConstants.TOMCAT_ENV.equals(env)  || LoaderConstants.SYSTEM_ENV.equals(env) || LoaderConstants.JAVAEE_ENV.equals(env)) {
                 found = true;
                 break;
             }

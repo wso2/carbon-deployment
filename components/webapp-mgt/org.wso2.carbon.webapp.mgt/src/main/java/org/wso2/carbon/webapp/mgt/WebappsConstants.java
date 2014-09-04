@@ -66,6 +66,22 @@ public final class WebappsConstants {
     //Meta data handling strategies
     public  static  final  int KEEP_DEFAULT_VERSION_META_DATA_STRATEGY = 1;
 
+    // ClassLoader improvement related constants.
+    public static final java.lang.String CARBON_HOME = "carbon.home";
+    public static final java.lang.String ELE_PARENT_FIRST = "ParentFirst";
+    public static final java.lang.String ELE_ENVIRONMENTS = "Environments";
+    public static final java.lang.String ATT_EXCLUDES = "excludes";
+    public static final java.lang.String ELE_NAME = "Name";
+    public static final java.lang.String ELE_DELEGATED_PACKAGES = "DelegatedPackages";
+    public static final java.lang.String ELE_DELEGATED_RESOURCES = "DelegatedResources";
+    public static final java.lang.String ELE_DELEGATED_ENVIRONMENTS = "DelegatedEnvironment";
+    public static final java.lang.String ELE_EXCLUSIVE_ENVIRONMENTS = "ExclusiveEnvironment";
+    public static final java.lang.String ELE_CLASSPATH= "Classpath";
+    public static final java.lang.String EXCLUDES_MERGE_POLICY_UNION = "union";
+    public static final java.lang.String EXCLUDES_MERGE_POLICY_INTERSECT = "intersect";
+    public static final java.lang.String ENVIRONMENTS_SPILIT_CHAR = ",";
+
+
     public static final class WebappState {
         public static final String STARTED = "started";
         public static final String STOPPED = "stopped";
