@@ -8,7 +8,7 @@
         var startStr = start.format('MMM D, YYYY');
         var endStr = end.format('MMM D, YYYY');
         timeLabel.text(startStr + ' - ' + endStr);
-        UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange', {start: start, end: end});
+        publishTimeRange(start, end);
         var param = "?start-time=" + start.unix() + "&end-time=" + end.unix();
         if (state.node) {
             param = param + '&node=' + state.node;

@@ -29,7 +29,7 @@ $(document).ready(function () {
         var $target = $(event.currentTarget);
         var ip = $target.text();
         $('#dropdownMenu1').text(ip);
-        UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',ip);
+        publishIpSelection(ip);
         state.node = ip;
 
         var param = '?node=' + ip ;
