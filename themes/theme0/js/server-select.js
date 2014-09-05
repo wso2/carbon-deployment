@@ -10,15 +10,16 @@ $(document).ready(function () {
         },
         success: function(data){
             var serverList = document.getElementById('server-list');
-            for(var i = 0; i < data.length; i++){
-                var link = document.createElement('a');
-                var item = document.createElement('li');
-
-                link.role = "menuitem";
-                link.innerHTML = data[i];
-                item.role = "presentation";
-                item.appendChild(link);
-                serverList.appendChild(item);
+            for (var i = 0; i < data.length; i++) {
+                if (data[i] instanceof Object) {
+                    appendElementsToServerList(serverList, data[i]["groupName"], true);
+                    var elements = data[i]["elements"];
+                    for(var j = 0; j < elements.length; j++){
+                        appendElementsToServerList(serverList, elements[j], false);
+                    }
+                    continue;
+                }
+                appendElementsToServerList(serverList, data[i], false);
             }
         }
     });
@@ -46,3 +47,23 @@ $(document).ready(function () {
 
     $('#home').attr('href', home);
 });
+
+function appendElementsToServerList(serverList, element, header) {
+    var item = document.createElement('li');
+    item.role = "presentation";
+    if (header) {
+        item.classList.add('dropdown-header');
+        item.innerHTML = element;
+        var divider = document.createElement('li');
+        divider.role = "presentation";
+        divider.classList.add('divider');
+        serverList.appendChild(divider);
+    }
+    else{
+        var link = document.createElement('a');
+        link.innerHTML = element;
+        link.role = "menuitem";
+        item.appendChild(link);
+    }
+    serverList.appendChild(item);
+}

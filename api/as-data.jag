@@ -235,7 +235,8 @@ if (action == "node-list") {
     for(var i = 0; i < results.length; i++){
         dataArray.push(results[i]["node"]);
     }
-    print(dataArray);
+    print (["All", {"groupName" : "Group 1", "elements" : ["10.100.5.118", "10.100.5.119", "10.100.5.120"]}, {"groupName" : "Group 2", "elements" : ["10.100.5.121", "10.100.5.122", "10.100.5.123", "10.100.5.124", "10.100.5.125"]}, {"groupName" : "Group 3", "elements" : ["10.100.5.126", "10.100.5.127"]}]);
+    //print(dataArray);
 } else if (action == "webapp-list") {
 
     var sql = "SELECT sum(averageRequestCount) as total_requests\
