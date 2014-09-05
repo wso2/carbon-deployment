@@ -115,6 +115,9 @@ function getDataForRequestCountBarChart() {
          sql = "SELECT SUM(averageRequestCount) as requestCount, DATE_FORMAT(time, '%H:00') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY HOUR(time);";
     }
 
+    if(sql == ""){
+        return;
+    }
     var results = executeQuery(sql);
     var arrList = new Array();
 
@@ -156,6 +159,9 @@ function getDataForResponseTimeBarChart() {
          sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%H:00') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY HOUR(time);";
     }
 
+    if(sql == ""){
+        return;
+    }
     var results = executeQuery(sql);
     var arrList = new Array();
 
