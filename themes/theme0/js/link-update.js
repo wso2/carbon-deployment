@@ -69,9 +69,8 @@ window.onpopstate = function (event) {
         state = event.state;
         updateLinks();
         console.log('pop' + event.state);
-        state.node && UESContainer.inlineClient.publish('wso2.gadgets.charts.ipChange',state.node);
-        state.start &&  UESContainer.inlineClient.publish('wso2.gadgets.charts.timeRangeChange',
-            {start: moment(state.start,'X'), end:  moment(state.end,'X')});
+        state.node && publishIpSelection(state.node);
+        state.start &&  publishTimeRange(moment(state.start, 'X'), moment(state.end, 'X'));
     }
 //    alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
 };
