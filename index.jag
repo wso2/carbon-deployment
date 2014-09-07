@@ -1,0 +1,10 @@
+<%
+var log = new Log("asmonitor.index");
+var error=[];
+var caramel = require('caramel');
+
+caramel.render({
+    error: error,
+    config: require('/config/config.json')
+});
+%>
