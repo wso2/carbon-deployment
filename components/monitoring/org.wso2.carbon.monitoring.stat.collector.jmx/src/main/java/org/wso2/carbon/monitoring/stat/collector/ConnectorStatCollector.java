@@ -1,17 +1,19 @@
 /*
- * Copyright 2004,2014 The Apache Software Foundation.
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.carbon.monitoring.stat.collector;
@@ -20,7 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.monitoring.core.publisher.api.ConnectorMonitoringEvent;
 import org.wso2.carbon.monitoring.core.publisher.api.MonitoringPublisher;
-import org.wso2.carbon.monitoring.stat.jmx.*;
+import org.wso2.carbon.monitoring.stat.jmx.ConnectorMBeanClient;
+import org.wso2.carbon.monitoring.stat.jmx.GlobalRequestProcessorMBeanClient;
+import org.wso2.carbon.monitoring.stat.jmx.MBeanClient;
+import org.wso2.carbon.monitoring.stat.jmx.Result;
+import org.wso2.carbon.monitoring.stat.jmx.ThreadPoolMBeanClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,64 +36,66 @@ import java.util.List;
  */
 public class ConnectorStatCollector extends PeriodicStatCollector {
 
-	private MonitoringPublisher monitoringPublisher;
+    private static final Log LOG = LogFactory.getLog(ConnectorStatCollector.class);
+    private static CollectorUtil collectorUtil = new CollectorUtil();
+    private final List<MonitoringPublisher> monitoringPublishers;
 
-	private static Log log = LogFactory.getLog(ConnectorStatCollector.class);
-	private static CollectorUtil collectorUtil = new CollectorUtil(log);
+    public ConnectorStatCollector(List<MonitoringPublisher> monitoringPublisher) {
+        super();
+        this.monitoringPublishers = monitoringPublisher;
+    }
 
-	public ConnectorStatCollector(MonitoringPublisher monitoringPublisher) {
-		super();
-		this.monitoringPublisher = monitoringPublisher;
-	}
+    /**
+     * This method runs periodically
+     */
+    @Override
+    public void run() {
+        try {
+            MBeanClient connectorClient = new ConnectorMBeanClient();
+            List<Result> connectors = connectorClient.readPossibleAttributeValues();
 
-	public void setMonitoringPublisher(MonitoringPublisher monitoringPublisher) {
-		this.monitoringPublisher = monitoringPublisher;
-	}
+            MBeanClient threadPoolClient = new ThreadPoolMBeanClient();
+            List<Result> threadPools = threadPoolClient.readPossibleAttributeValues();
 
-	/**
-	 * This method runs periodically
-	 */
-	@Override
-	public void run() {
-		try {
-			MBeanClient connectorClient = new ConnectorMBeanClient();
-			List<Result> connectors = connectorClient.readAttributeValues();
+            MBeanClient grpClient = new GlobalRequestProcessorMBeanClient();
+            List<Result> globalRequestProcessors = grpClient.readPossibleAttributeValues();
 
-			MBeanClient threadPoolClient = new ThreadPoolMBeanClient();
-			List<Result> threadPools = threadPoolClient.readAttributeValues();
+            List<ConnectorMonitoringEvent> connectorMonitoringEvents = createConnectorMonitoringEvents(connectors, globalRequestProcessors, threadPools);
 
-			MBeanClient grpClient = new GlobalRequestProcessorMBeanClient();
-			List<Result> globalRequestProcessors = grpClient.readAttributeValues();
+            // publishing the event to all the publishers
+            for (ConnectorMonitoringEvent event : connectorMonitoringEvents) {
+                for (MonitoringPublisher publisher : monitoringPublishers) {
+                    publisher.publish(event);
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Exception occurred while publishing connector stats: ", e);
+        }
+    }
 
-			List<ConnectorMonitoringEvent> connectorMonitoringEvents = createConnectorMonitoringEvents(connectors, globalRequestProcessors, threadPools);
-			for (ConnectorMonitoringEvent event : connectorMonitoringEvents) {
-				monitoringPublisher.publish(event);
-			}
-		} catch (Exception e) {
-			log.error("Exception occurred while publishing connector stats", e);
-		}
-	}
+    private List<ConnectorMonitoringEvent> createConnectorMonitoringEvents(List<Result> connectors,
+                                                                           List<Result> globalRequestProcessors,
+                                                                           List<Result> threadPools)
+            throws AttributeMapperException {
+        List<ConnectorMonitoringEvent> events = new ArrayList<ConnectorMonitoringEvent>();
 
-	private List<ConnectorMonitoringEvent> createConnectorMonitoringEvents(List<Result> connectors, List<Result> globalRequestProcessors, List<Result> threadPools) {
-		List<ConnectorMonitoringEvent> events = new ArrayList<ConnectorMonitoringEvent>();
+        for (Result connector : connectors) {
+            ConnectorMonitoringEvent event = new ConnectorMonitoringEvent();
 
-		for (Result connector : connectors) {
-			ConnectorMonitoringEvent event = new ConnectorMonitoringEvent();
+            collectorUtil.mapResultAttributesToPoJo(connector, event);
+            String correlator = connector.getCorrelator();
 
-			collectorUtil.mapResultAttributesToPoJo(connector, event);
-			String correlator = connector.getCorrelator();
+            Result globalRequestProcessor = collectorUtil.getResultByCorrelator(globalRequestProcessors, correlator);
+            collectorUtil.mapResultAttributesToPoJo(globalRequestProcessor, event);
 
-			Result globalRequestProcessor = collectorUtil.getResultByCorrelator(globalRequestProcessors, correlator);
-			collectorUtil.mapResultAttributesToPoJo(globalRequestProcessor, event);
+            Result threadPool = collectorUtil.getResultByCorrelator(threadPools, correlator);
+            collectorUtil.mapResultAttributesToPoJo(threadPool, event);
 
-			Result threadPool = collectorUtil.getResultByCorrelator(threadPools, correlator);
-			collectorUtil.mapResultAttributesToPoJo(threadPool, event);
+            event.setTimestamp(System.currentTimeMillis());
+            collectorUtil.mapMetaData(event);
+            events.add(event);
+        }
 
-			event.setTimestamp(System.currentTimeMillis());
-			collectorUtil.mapMetaData(event);
-			events.add(event);
-		}
-
-		return events;
-	}
+        return events;
+    }
 }

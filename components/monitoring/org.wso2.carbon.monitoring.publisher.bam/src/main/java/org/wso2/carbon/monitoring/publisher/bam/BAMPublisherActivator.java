@@ -1,56 +1,53 @@
 /*
- * Copyright 2004,2014 The Apache Software Foundation.
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.carbon.monitoring.publisher.bam;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.monitoring.core.publisher.api.MonitoringPublisher;
-import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.monitoring.publisher.bam.config.BAMPublisherConfigurationException;
 
 /**
- * This service component activates when carbon ConfigurationContextService is created.
- * @scr.component name="org.wso2.carbon.monitoring.publisher.bam.BAMPublisherActivator"
- * immediate="true"
- * @scr.reference name="org.wso2.carbon.configCtx"
- * interface="org.wso2.carbon.utils.ConfigurationContextService"
- * cardinality="1..1" policy="dynamic"
- * bind="setConfigurationContext"
- * unbind="unsetConfigurationContext"
+ * BundleActivator of the BAM publisher.
  */
-public class BAMPublisherActivator {
-	private ServiceRegistration<?> registration;
+public class BAMPublisherActivator implements BundleActivator {
 
-	private ConfigurationContextService configCtx;
+    private static final Log LOG = LogFactory.getLog(BAMPublisherActivator.class);
 
-	protected void setConfigurationContext(ConfigurationContextService config) {
-		this.configCtx = config;
-	}
+    private ServiceRegistration<?> registration;
 
-	protected void unsetConfigurationContext(ConfigurationContextService config) {
-		this.configCtx = null;
-	}
 
-	protected void activate(ComponentContext component) {
-		BundleContext bundleContext = component.getBundleContext();
-		registration = bundleContext.registerService(MonitoringPublisher.class.getName(), new BAMMonitoringPublisher(), null);
-	}
+    @Override
+    public void start(BundleContext bundleContext) throws Exception {
+        try {
+            registration = bundleContext.registerService(MonitoringPublisher.class.getName(), new BAMMonitoringPublisher(), null);
+        } catch (BAMPublisherConfigurationException e) {
+            LOG.error("Error in BAM monitoring publisher configuration. Please configure the monitoring configurations properly");
+            throw e;
+        }
+    }
 
-	protected void deactivate(BundleContext bundleContext) {
-		registration.unregister();
-	}
+    @Override
+    public void stop(BundleContext bundleContext) throws Exception {
+        registration.unregister();
+    }
 }
