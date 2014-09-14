@@ -33,8 +33,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.monitoring.publisher.bam.feature</module>
-        <module>org.wso2.carbon.monitoring.stat.collector.feature</module>
-        <module>org.wso2.carbon.monitoring.core.feature</module>
+        <module>org.wso2.carbon.as.monitoring.feature</module>
     </modules>
 </project>
