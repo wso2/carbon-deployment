@@ -74,11 +74,17 @@ function onDataReceived(data) {
 
     $("#table").html(headings);
 
+    var dataTableOptions = new Object();
+
+    dataTableOptions["data"] = tableData;
+    dataTableOptions["order"] = [orderColumn];
+
+    if(!applist){
+        dataTableOptions["aoColumns"] = [{ "sWidth": "60%" }, { "sWidth": "20%" }, { "sWidth": "20%" }];
+    }
+
     var $table = $('#table');
-    var table = $table.dataTable({
-        "data": tableData,
-        "order": [orderColumn]
-    });
+    var table = $table.dataTable(dataTableOptions);
 
     if(applist){
         $('#table tbody').on('click', 'tr', function(){
