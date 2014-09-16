@@ -17,9 +17,9 @@ public class VirtualHostDeployerProvider implements Axis2DeployerProvider {
 
     public VirtualHostDeployerProvider() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-        Container[] virtualhosts = carbonTomcatService.getTomcat().getEngine().findChildren();
-        for (org.apache.catalina.Container vhost : virtualhosts) {
-            Host childHost = (Host) vhost;
+        Container[] virtualHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
+        for (org.apache.catalina.Container vHost : virtualHosts) {
+            Host childHost = (Host) vHost;
             String directory = getDirectoryName(childHost.getAppBase());
 
             deployerConfigs.add(getDeployerConfig(directory, ".war"));
@@ -42,13 +42,13 @@ public class VirtualHostDeployerProvider implements Axis2DeployerProvider {
     }
 
     public String getDirectoryName(String appBase) {
-        String basedir;
+        String baseDir;
         if (appBase.endsWith(File.separator)) {
-            basedir = appBase.substring(0, appBase.lastIndexOf(File.separator));
+            baseDir = appBase.substring(0, appBase.lastIndexOf(File.separator));
         } else {
-            basedir = appBase;
+            baseDir = appBase;
         }
 
-        return basedir.substring(basedir.lastIndexOf(File.separator) + 1, basedir.length());
+        return baseDir.substring(baseDir.lastIndexOf(File.separator) + 1, baseDir.length());
     }
 }

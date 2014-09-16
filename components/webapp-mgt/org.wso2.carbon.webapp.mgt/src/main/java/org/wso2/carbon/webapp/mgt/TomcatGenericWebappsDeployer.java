@@ -36,6 +36,7 @@ import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFacto
 import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
 import java.lang.management.ManagementPermission;
@@ -57,7 +58,7 @@ public class TomcatGenericWebappsDeployer {
     protected int tenantId;
     protected String tenantDomain;
     protected ConfigurationContext configurationContext;
-    protected WebApplicationsHolder webappsHolder;
+    protected Map<String,WebApplicationsHolder> webApplicationsHolderMap;
     protected Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
             new ConcurrentHashMap<String, CarbonTomcatClusterableSessionManager>();
 
@@ -67,12 +68,12 @@ public class TomcatGenericWebappsDeployer {
      * @param webContextPrefix The Web context prefix
      * @param tenantId         The tenant ID of the tenant to whom this deployer belongs to
      * @param tenantDomain     The tenant domain of the tenant to whom this deployer belongs to
-     * @param webappsHolder    WebApplicationsHolder
+     * @param webApplicationsHolderMap    WebApplicationsHolder
      */
     public TomcatGenericWebappsDeployer(String webContextPrefix,
                                         int tenantId,
                                         String tenantDomain,
-                                        WebApplicationsHolder webappsHolder,
+                                        Map<String,WebApplicationsHolder> webApplicationsHolderMap,
                                         ConfigurationContext configurationContext) {
         SecurityManager secMan = System.getSecurityManager();
         if (secMan != null) {
@@ -81,7 +82,7 @@ public class TomcatGenericWebappsDeployer {
         this.tenantId = tenantId;
         this.tenantDomain = tenantDomain;
         this.webContextPrefix = webContextPrefix;
-        this.webappsHolder = webappsHolder;
+        this.webApplicationsHolderMap = webApplicationsHolderMap;
         this.configurationContext = configurationContext;
     }
 
@@ -107,26 +108,27 @@ public class TomcatGenericWebappsDeployer {
             privilegedCarbonContext.setApplicationName(webappName.substring(0, webappName.indexOf(".war")));
         }
         long lastModifiedTime = webappFile.lastModified();
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         WebApplication deployedWebapp =
-                webappsHolder.getStartedWebapps().get(webappFile.getName());
+                webApplicationsHolder.getStartedWebapps().get(webappFile.getName());
 
         WebApplication deployedUnpackedWebapp = null;
         if(deployedWebapp == null && (webappName.contains(".war") || webappName.contains(".zip"))){
             String unpackDirName = webappName.endsWith(".war") ? webappName.replace(".war", "") : webappName;
             unpackDirName = webappName.endsWith(".zip") ? unpackDirName.replace(".zip", "") : unpackDirName;
-            deployedUnpackedWebapp = webappsHolder.getStartedWebapps().get(unpackDirName);
+            deployedUnpackedWebapp = webApplicationsHolder.getStartedWebapps().get(unpackDirName);
         }
 
         WebApplication undeployedWebapp =
-                webappsHolder.getStoppedWebapps().get(webappFile.getName());
+                webApplicationsHolder.getStoppedWebapps().get(webappFile.getName());
         WebApplication faultyWebapp =
-                webappsHolder.getFaultyWebapps().get(webappFile.getName());
+                webApplicationsHolder.getFaultyWebapps().get(webappFile.getName());
 
         WebApplication faultyUnpackedWebapp = null;
         if (deployedWebapp == null && (webappName.contains(".war") || webappName.contains(".zip"))) {
             String unpackDirName = webappName.endsWith(".war") ? webappName.replace(".war", "") : webappName;
             unpackDirName = webappName.endsWith(".zip") ? unpackDirName.replace(".zip", "") : unpackDirName;
-            faultyUnpackedWebapp = webappsHolder.getFaultyWebapps().get(unpackDirName);
+            faultyUnpackedWebapp = webApplicationsHolder.getFaultyWebapps().get(unpackDirName);
         }
 
         if (deployedWebapp == null && faultyWebapp == null && undeployedWebapp == null
@@ -145,7 +147,7 @@ public class TomcatGenericWebappsDeployer {
             handleWarWebappDeployment(webappFile, webContextParams, applicationEventListeners);
         } else if (faultyUnpackedWebapp != null &&
                 faultyUnpackedWebapp.getLastModifiedTime() != lastModifiedTime) {
-            clearFaultyWebapp(faultyUnpackedWebapp.getWebappFile().getName());
+            clearFaultyWebapp(faultyUnpackedWebapp.getWebappFile().getAbsolutePath());
             handleWarWebappDeployment(webappFile, webContextParams, applicationEventListeners);
 
         }
@@ -300,7 +302,7 @@ public class TomcatGenericWebappsDeployer {
             WebApplication webapp = new WebApplication(this, context, webappFile);
             webapp.setServletContextParameters(webContextParams);
 
-            String bamEnable =   recievePersistedWebappMetaData(webappFile.getName(), WebappsConstants.ENABLE_BAM_STATISTICS);
+            String bamEnable =   recievePersistedWebappMetaData(webappFile, WebappsConstants.ENABLE_BAM_STATISTICS);
             if(bamEnable == null || "".equals(bamEnable))  {
                 bamEnable = context.findParameter(WebappsConstants.ENABLE_BAM_STATISTICS);
                 if(bamEnable == null || "".equals(bamEnable))  {
@@ -310,8 +312,11 @@ public class TomcatGenericWebappsDeployer {
             webapp.addParameter(WebappsConstants.ENABLE_BAM_STATISTICS, bamEnable);
 
             webapp.setState("Started");
-            webappsHolder.getStartedWebapps().put(filename, webapp);
-            webappsHolder.getFaultyWebapps().remove(filename);
+
+            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
+
+            webApplicationsHolder.getStartedWebapps().put(filename, webapp);
+            webApplicationsHolder.getFaultyWebapps().remove(filename);
             registerApplicationEventListeners(applicationEventListeners, context);
             /*ErrorPage page = new ErrorPage();
             page.setErrorCode(503);
@@ -327,8 +332,11 @@ public class TomcatGenericWebappsDeployer {
             String msg = "Error while deploying webapp: " + webapp;
             log.error(msg, e);
             webapp.setFaultReason(new Exception(msg, e));
-            webappsHolder.getFaultyWebapps().put(filename, webapp);
-            webappsHolder.getStartedWebapps().remove(filename);
+
+            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
+
+            webApplicationsHolder.getFaultyWebapps().put(filename, webapp);
+            webApplicationsHolder.getStartedWebapps().remove(filename);
             throw new CarbonException(msg, e);
         }  finally {
             privilegedCarbonContext.setApplicationName(null);
@@ -386,12 +394,14 @@ public class TomcatGenericWebappsDeployer {
      * @throws CarbonException If an error occurs while undeploying webapp
      */
     public void undeploy(File webappFile) throws CarbonException {
-        Map<String, WebApplication> deployedWebapps = webappsHolder.getStartedWebapps();
-        Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
-        Map<String, WebApplication> faultyWebapps = webappsHolder.getFaultyWebapps();
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+
+        Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
+        Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
+        Map<String, WebApplication> faultyWebapps = webApplicationsHolder.getFaultyWebapps();
         String fileName = webappFile.getName();
 
-        removeMetadata(fileName);
+        removeMetadata(webappFile.getAbsolutePath());
 
         if (deployedWebapps.containsKey(fileName)) {
             undeploy(deployedWebapps.get(fileName));
@@ -412,7 +422,7 @@ public class TomcatGenericWebappsDeployer {
             undeploy(faultyWebapps.get(fileName));
         }
 
-        clearFaultyWebapp(fileName);
+        clearFaultyWebapp(webappFile.getAbsolutePath());
 
     }
 
@@ -423,9 +433,11 @@ public class TomcatGenericWebappsDeployer {
      * @throws CarbonException If an error occurs while lazy unloading
      */
     public void lazyUnload(File webappFile) throws CarbonException {
+
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        Map<String, WebApplication> deployedWebapps = webappsHolder.getStartedWebapps();
+        Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
         String fileName = webappFile.getName();
         if (deployedWebapps.containsKey(fileName)) {
             WebApplication deployWebapp = deployedWebapps.get(fileName);
@@ -435,13 +447,15 @@ public class TomcatGenericWebappsDeployer {
             deployWebapp.lazyUnload();
         }
 
-        clearFaultyWebapp(fileName);
+        clearFaultyWebapp(webappFile.getAbsolutePath());
     }
 
-    private void clearFaultyWebapp(String fileName) {
+    private void clearFaultyWebapp(String filePath) {
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(filePath));
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        Map<String, WebApplication> faultyWebapps = webappsHolder.getFaultyWebapps();
+        Map<String, WebApplication> faultyWebapps = webApplicationsHolder.getFaultyWebapps();
+        String fileName = WebAppUtils.getWebappName(filePath);
         if (faultyWebapps.containsKey(fileName)) {
             WebApplication faultyWebapp = faultyWebapps.get(fileName);
             Context context = faultyWebapp.getContext();
@@ -454,45 +468,49 @@ public class TomcatGenericWebappsDeployer {
 
     /**
      * This method reads from webapp meta files to check weather bam statistics are enabled.
-     * @param artifactName
+     * @param webappFile
      * @param propertyName
      * @return  bam enable or disable
      * @throws AxisFault
      * @throws ArtifactMetadataException
      */
-    protected String recievePersistedWebappMetaData(String artifactName, String propertyName) throws AxisFault, ArtifactMetadataException {
+    protected String recievePersistedWebappMetaData(File webappFile, String propertyName) throws AxisFault, ArtifactMetadataException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_DIR);
+        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR+
+                File.separator+ WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
-        return manager.loadParameter(artifactName ,type,propertyName);
+        return manager.loadParameter(webappFile.getName() ,type,propertyName);
     }
 
     /**
      * This method stores the value in the webapp metadata file.
-     * @param artifactName
+     * @param webappFile
      * @param propertyName
      * @param value
      * @throws AxisFault
      * @throws ArtifactMetadataException
      */
-    protected void setPersistedWebappMetaData(String artifactName, String propertyName, String value) throws AxisFault, ArtifactMetadataException {
+    protected void setPersistedWebappMetaData(File webappFile, String propertyName, String value) throws AxisFault, ArtifactMetadataException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_DIR);
+        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR+
+                                                                    File.separator+WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
 
-        manager.setParameter(artifactName, type,
+        manager.setParameter(webappFile.getName(), type,
                 propertyName, value, true);
 
     }
 
-    private void removeMetadata(String artifactFileName) throws CarbonException {
+    private void removeMetadata(String artifactFilePath) throws CarbonException {
         try {
-            Map<String, WebApplication> deployedWebapps = webappsHolder.getStartedWebapps();
-            Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
+            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(artifactFilePath));
+            Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
+            Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
 
             String keepMetadataHistory = null;
+            String artifactFileName = WebAppUtils.getWebappName(artifactFilePath);
             if (deployedWebapps.containsKey(artifactFileName)) {
                 keepMetadataHistory = deployedWebapps.get(artifactFileName).
                                 findParameter(WebappsConstants.KEEP_WEBAPP_METADATA_HISTORY_PARAM);
@@ -508,10 +526,10 @@ public class TomcatGenericWebappsDeployer {
             }
 
             AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-            ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_DIR);
+            ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR+
+                    File.separator+WebAppUtils.getWebappDir(artifactFilePath));
             ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                     getMetadataManager();
-
             manager.deleteMetafile(artifactFileName, type);
         } catch (AxisFault e) {
             log.error(e.getMessage(), e);
@@ -527,12 +545,13 @@ public class TomcatGenericWebappsDeployer {
      * @throws CarbonException If an error occurs while undeploying
      */
     private void undeploy(WebApplication webapp) throws CarbonException {
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         Context context = webapp.getContext();
         privilegedCarbonContext.setApplicationName(
                 TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
-        webappsHolder.undeployWebapp(webapp);
+        webApplicationsHolder.undeployWebapp(webapp);
         log.info("Undeployed webapp: " + webapp);
     }
 

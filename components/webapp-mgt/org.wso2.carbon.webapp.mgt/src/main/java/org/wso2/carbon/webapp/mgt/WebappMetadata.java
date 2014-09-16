@@ -34,6 +34,8 @@ public class WebappMetadata {
     private String serviceListPath;
     private String appVersion;
     private String contextPath;
+    private String hostName;
+    private String webappKey;
 
     public String getContext() {
         return context;
@@ -153,5 +155,21 @@ public class WebappMetadata {
 
     public String getContextPath() {
         return contextPath;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public String getWebappKey() {
+        return webappKey;
+    }
+
+    public void setWebappKey(String webappKey) {
+        this.webappKey = webappKey;
     }
 }

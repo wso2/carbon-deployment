@@ -23,7 +23,7 @@
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+    String[] webappkeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
     String deleteAllWebapps = request.getParameter("deleteAllWebapps");
     String webappState = request.getParameter("webappState");
@@ -78,16 +78,16 @@
             }
         } else {
             if(webappState.equalsIgnoreCase("all")) {
-                client.deleteAllWebapps(webappFileNames);
+                client.deleteAllWebapps(webappkeySet);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
                                                     CarbonUIMessage.INFO, request);
             }
             else if (webappState.equalsIgnoreCase("started")) {
-                client.deleteStartedWebapps(webappFileNames);
+                client.deleteStartedWebapps(webappkeySet);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
                                                     CarbonUIMessage.INFO, request);
             } else if (webappState.equalsIgnoreCase("stopped")) {
-                client.deleteStoppedWebapps(webappFileNames);
+                client.deleteStoppedWebapps(webappkeySet);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
                                                     CarbonUIMessage.INFO, request);
             } else {
