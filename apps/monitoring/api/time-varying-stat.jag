@@ -1,0 +1,42 @@
+<%
+include('db.jag');
+var helper = require('as-data-helper.js');
+var sqlStatements = require('sql-statements.json');
+
+// type: select statement
+var parameterMapping = {
+    'request': 'avg(averageRequestCount)',
+    'response': 'avg(averageResponseTime)',
+    'error': 'sum(httpErrorCount)'
+};
+
+function getTimeVaryingStatData(whereClause, type) {
+    var selectStatement = parameterMapping[type];
+    var sql = helper.formatSql(sqlStatements.timeVarying, [selectStatement, whereClause]);
+    return executeQuery(sql);
+}
+
+function getTimeVaryingStat(whereClause, type, color) {
+    var dataArray = [];
+    var i, len;
+    var row;
+    var opt;
+    var results = getTimeVaryingStatData(whereClause, type);
+
+    for (i = 0, len = results.length; i < len; i++) {
+        row = results[i];
+        dataArray.push([row['time'], row['value']]);
+    }
+    opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
+
+    if (color != null) {
+        opt.colors = [color];
+    }
+
+    print([
+        {'series1': {'label': 's', 'data': dataArray}},
+        opt
+    ]);
+}
+
+%>

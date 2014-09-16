@@ -1,0 +1,36 @@
+<%
+include('db.jag');
+var helper = require('as-data-helper.js');
+var sqlStatements = require('sql-statements.json');
+
+// type: [table-name, field-name]
+var dbMapping = {
+    'context': ['WEBAPP_CONTEXT', 'webappcontext'],
+    'referral': ['REFERRER', 'referrer']
+};
+
+function getTrafficStatData(whereClause, type) {
+    var dbEntry = dbMapping[type];
+    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry[0], dbEntry[1], whereClause]);
+    return executeQuery(sql);
+}
+
+function getTrafficStat(whereClause, type, tableHeadings, sortColumn) {
+    var dataArray = [];
+    var i, len;
+    var row;
+    var results = getTrafficStatData(whereClause, type);
+
+    for (i = 0, len = results.length; i < len; i++) {
+        row = results[i];
+        dataArray.push([row['name'], row['request_count'],
+            row['percentage_request_count']]);
+    }
+    print({
+        'data': dataArray,
+        'headings': tableHeadings,
+        'orderColumn': [sortColumn, 'desc']
+    });
+}
+
+%>

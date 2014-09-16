@@ -1,0 +1,128 @@
+<%
+
+include('db.jag');
+var helper = require('as-data-helper.js');
+var sqlStatements = require('sql-statements.json');
+
+function getDataForInfoBoxBarChart(type, whereClause) {
+    var startTime = helper.parseDate(request.getParameter('start_time'));
+    var endTime = helper.parseDate(request.getParameter('end_time'));
+    var timeDiff = 0;
+    var i, len;
+    var sql;
+    var results;
+    var arrList = [];
+
+    if (request.getParameter('start_time') != null && request.getParameter('end_time') != null) {
+        timeDiff = Math.abs((endTime.getTime() - startTime.getTime()) / 86400000);
+    } else {
+        timeDiff = 1;
+    }
+
+    var selectStatement = 'SUM';
+    if (type == 'averageResponseTime') {
+        selectStatement = 'AVG';
+    }
+
+    if (timeDiff > 1200) {
+        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan1200Days, [selectStatement,
+            type, whereClause]);
+    } else if (timeDiff > 90) {
+        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan90Days, [selectStatement,
+            type, whereClause]);
+    } else if (timeDiff > 30) {
+        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan30Days, [selectStatement,
+            type, whereClause]);
+    } else if (timeDiff > 1) {
+        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan1Day, [selectStatement,
+            type, whereClause]);
+    } else if (timeDiff <= 1) {
+        sql = helper.formatSql(sqlStatements.infoBoxLessThan1Day, [selectStatement,
+            type, whereClause]);;
+    }
+
+    results = executeQuery(sql);
+
+    for (i = 0, len = results.length; i < len; i++) {
+        var tempData = [];
+        tempData[0] = i;
+        tempData[1] = results[i]['value'];
+        tempData[2] = results[i]['time'] + ' : ' + results[i]['value'];
+        arrList.push(tempData);
+    }
+    return arrList;
+}
+
+function getInfoBoxRequestStat(whereClause) {
+    var output = {};
+    var sql = helper.formatSql(sqlStatements.infoBoxRequest, [whereClause]);
+    var results = executeQuery(sql)[0];
+
+    output['title'] = 'Total Requests';
+    output['measure_label'] = 'Per min';
+
+    if (results['totalRequest'] != null) {
+        output['total'] = results['totalRequest'];
+        output['max'] = results['maxRequest'];
+        output['avg'] = Math.round(results['avgRequest']);
+        output['min'] = results['minRequest']
+    } else {
+        output['total'] = output['max'] = output['avg'] = output['min'] = 'N/A';
+    }
+    output['graph'] = getDataForInfoBoxBarChart('averageRequestCount', whereClause);
+    print(output);
+}
+
+function getInfoBoxResponseStat(whereClause) {
+    var output = {};
+
+    var sql = helper.formatSql(sqlStatements.infoBoxResponse, [whereClause]);
+    var results = executeQuery(sql)[0];
+    output['title'] = 'Response Time';
+    output['measure_label'] = 'ms';
+
+    if (results['maxResponse'] != null) {
+        output['max'] = results['maxResponse'];
+        output['avg'] = Math.round(results['avgResponse']);
+        output['min'] = results['minResponse'];
+    } else {
+        output['max'] = output['avg'] = output['min'] = 'N/A';
+    }
+    output['graph'] = getDataForInfoBoxBarChart('averageResponseTime', whereClause);
+    print(output);
+}
+
+
+function getInfoBoxSessionStat(whereClause) {
+    var output = {};
+
+    var sql = helper.formatSql(sqlStatements.infoBoxSession, [whereClause]);
+    var results = executeQuery(sql)[0];
+    output['title'] = 'Session';
+
+    if (results['totalSession'] != null) {
+        output['total'] = results['totalSession'];
+        output['avg'] = Math.round(results['avgSession']);
+    } else {
+        output['total'] = output['avg'] = 'N/A';
+    }
+    print(output);
+}
+
+function getInfoBoxErrorStat(whereClause) {
+    var output = {};
+
+    var sql = helper.formatSql(sqlStatements.infoBoxError, [whereClause]);
+    var results = executeQuery(sql)[0];
+    output['title'] = 'Errors';
+
+    if (results['totalError'] != null) {
+        output['total'] = results['totalError'];
+        output['percentage'] = results['percentageError'].toFixed(2) + '\x25';
+    } else {
+        output['total'] = output['percentage'] = 'N/A';
+    }
+    print(output);
+}
+
+%>

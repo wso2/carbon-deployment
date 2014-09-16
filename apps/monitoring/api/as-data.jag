@@ -1,527 +1,193 @@
 <%
+include('db.jag');
+var helper = require('as-data-helper.js');
+var action = request.getParameter('action');
+var where = getWhereClause();
 var now = new Date();
-
-//var db = new Database("AS_MONITORING_DATASOURCE");
-var config = require('/config/config.json');
-var db = new Database(config.database.url, config.database.username, config.database.password);
-
-
-// execute a given SQL
-function executeQuery(sql) {
-    return db.query(sql);
-}
-
-// get list of nodes reporting stats to the monitoring system
-function getAllNodes() {
-    var nodes = executeQuery("SELECT DISTINCT serverName AS node FROM REQUESTS_SUMMARY_PER_MINUTE;");
-    return nodes;
-}
-
-var action = request.getParameter("action");
-
-var where = buildWhere();
-
-function formatDate(date){
-    var year = date.getFullYear();
-    var month = ("0" + (date.getMonth()+1)).slice(-2);
-    var day = ("0" + date.getDate()).slice(-2);
-    var hour = ("0" + date.getHours()).slice(-2);
-    var minute = ("0" + date.getMinutes()).slice(-2);
-    return year + "-" + month + "-" + day + " " + hour + ":" + minute;
-}
+var end_time = request.getParameter('end_time');
 
 // build the where clause of the sql based on start_time, end_time and node values
-function buildWhere() {
+function getWhereClause() {
     // default data range is the past 24 hours
-    var startTime = request.getParameter("start_time") || formatDate(new Date(now - 86400000));
-    var endTime = request.getParameter("end_time") || formatDate(now);
-    var node = request.getParameter("node");
-    var webapp = request.getParameter("appname");
+    var startTime = request.getParameter('start_time') || helper.formatDate(new Date(now -
+            86400000));
+    var endTime = request.getParameter('end_time') || helper.formatDate(now);
+    var node = request.getParameter('node');
+    var webapp = request.getParameter('appname');
+    var where = '';
 
     if (startTime == null && endTime == null && node == null && webapp == null) {
-        return "";
+        return '';
     }
 
-    var where = ""
     if (startTime != null) {
-        where = appendCondition(where, "time >= \"" + startTime + "\"");
+        where = appendCondition(where, "time >= '" + startTime + "'");
     }
     if (endTime != null) {
-        where = appendCondition(where, "time <= \"" + endTime + "\"");
+        where = appendCondition(where, "time <= '" + endTime + "'");
     }
     if (node != null && node != "All") {
-        where = appendCondition(where, "serverName = \"" + node + "\"");
+        where = appendCondition(where, "serverName = '" + node + "'");
     }
     if (webapp != null && webapp != "null") {
-            where = appendCondition(where, "webappName= \"" + webapp + "\"");
+        where = appendCondition(where, "webappName= '" + webapp + "'");
     }
-
     return where;
 }
 
 function appendCondition(where, condition) {
-    if (where == "") {
-        where = " WHERE ";
+    if (where == '') {
+        where = ' WHERE ';
     } else {
-        where = where + " AND ";
+        where = where + ' AND ';
     }
-
     return where + condition;
 }
 
-function shrinkResultset(resultset, visibleNumber, groupName) {
-    var shrinkedResultset = [];
-    var total = 0;
-    var percentage = 0;
-
-    if (visibleNumber >= resultset.length) {
-        return resultset;
-    }
-
-    shrinkedResultset = resultset.slice(0, visibleNumber);
-
-    for (var i = visibleNumber; i < resultset.length; i++) {
-        total = total + resultset[i]['request_count'];
-        percentage = percentage + resultset[i]['percentage_request_count'];
-    }
-
-    shrinkedResultset.push({"request_count": total, "percentage_request_count": percentage.toFixed(2), "name": groupName});
-
-    return shrinkedResultset;
+function getNodeList() {
+    var nodeList = require('node-list.jag');
+    nodeList.getNodeList();
 }
 
-function getDataForRequestCountBarChart() {
-
-    var startTime = new Date(request.getParameter("start_time"));
-    var endTime = new Date(request.getParameter("end_time"));
-    var timeDiff = 0;
-
-    if(request.getParameter("start_time") !=null && request.getParameter("end_time") !=null)    {
-         timeDiff = Math.abs((parseDate(request.getParameter("end_time")).getTime() - parseDate(request.getParameter("start_time")).getTime()) / 86400000);
-     }else {
-        timeDiff = 1;
-    }
-
-    var sql = "";
-    if (timeDiff > 1200) {
-        sql = "SELECT SUM(averageRequestCount) as requestCount, YEAR(time) as toolTip FROM  REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY YEAR(time);";
-    } else if (timeDiff > 90) {
-         sql = "SELECT SUM(averageRequestCount) as requestCount, DATE_FORMAT(time, '%b %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY MONTH(time);";
-     } else if (timeDiff > 30) {
-         sql = "SELECT  SUM(averageRequestCount) as requestCount, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), ' - ', DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
-    } else if (timeDiff > 1) {
-          sql = "SELECT SUM(averageRequestCount) as requestCount, DATE_FORMAT(time, '%b %d %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY DATE(time);";
-     } else if (timeDiff <= 1) {
-         sql = "SELECT SUM(averageRequestCount) as requestCount, DATE_FORMAT(time, '%H:00') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY HOUR(time);";
-    }
-
-    if(sql == ""){
-        return;
-    }
-    var results = executeQuery(sql);
-    var arrList = new Array();
-
-     for (var i = 0; i < results.length; i++) {
-
-        var tempData = new Array();
-        tempData[0] = i;
-        tempData[1] = results[i]["requestCount"];
-        tempData[2] = results[i]["toolTip"] + " : " + results[i]["requestCount"];
-        arrList.push(tempData);
-     }
-
-     return arrList;
+function getAppsStat() {
+    var appList = require('app-list.jag');
+    appList.getAppsStat(where, end_time || helper.formatDate(now));
 }
 
-
-function getDataForResponseTimeBarChart() {
-
-    var startTime = new Date(request.getParameter("start_time"));
-    var endTime = new Date(request.getParameter("end_time"));
-    var timeDiff = 0;
-
-    if(request.getParameter("start_time") !=null && request.getParameter("end_time") !=null)    {
-         timeDiff = Math.abs((parseDate(request.getParameter("end_time")).getTime() - parseDate(request.getParameter("start_time")).getTime()) / 86400000);
-     }else {
-        timeDiff = 1;
-    }
-
-    var sql = "";
-    if (timeDiff > 1200) {
-        sql = "SELECT  AVG(averageResponseTime) as responseTime, YEAR(time) as toolTip FROM  REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY YEAR(time);";
-    } else if (timeDiff > 90) {
-         sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%b %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY MONTH(time);";
-     } else if (timeDiff > 30) {
-         sql = "SELECT   AVG(averageResponseTime) as responseTime, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), ' - ', DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY WEEK(time);";
-    } else if (timeDiff > 1) {
-          sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%b %d %Y') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY DATE(time);";
-     } else if (timeDiff <= 1) {
-         sql = "SELECT  AVG(averageResponseTime) as responseTime, DATE_FORMAT(time, '%H:00') as toolTip FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY HOUR(time);";
-    }
-
-    if(sql == ""){
-        return;
-    }
-    var results = executeQuery(sql);
-    var arrList = new Array();
-
-     for (var i = 0; i < results.length; i++) {
-
-        var tempData = new Array();
-        tempData[0] = i;
-        tempData[1] = results[i]["responseTime"];
-        tempData[2] = results[i]["toolTip"] + " : " + results[i]["responseTime"];
-        arrList.push(tempData);
-     }
-
-     return arrList;
+function getBrowserStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getTechnologyStat(where, 'browser', 4, 'Other Browsers');
 }
 
-function parseDate(input) {
-
-    var p = input.split(" ");
-    input = p[0];
-    var parts = input.split('-');
-
-    // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-    return new Date(parts[0], parts[1] - 1, parts[2]); // Note: months are 0-based
+function getBrowserTabularStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getTechnologyTubularStat(where, 'browser',
+            ['Browser', 'Request Count', 'Percentage'], '2');
 }
 
-function getTabularData(dataSet, columns, sortColumn){
-    if (dataSet == null){
-        return;
-    }
-
-    var dataArray = [];
-    for(var i = 0; i < dataSet.length; i++){
-        var row = []
-        for(var key in dataSet[i]){
-            row.push(dataSet[i][key]);
-        }
-        dataArray.push(row);
-    }
-    return {"data" : dataArray, "headings": columns, "orderColumn" : [sortColumn, "desc"]};
+function getOperatingSystemStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getTechnologyStat(where, 'os', 5, 'Other Operating Systems');
 }
 
-function getBrowser(){
-    var sql = "SELECT userAgentFamily as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from USER_AGENT_FAMILY " + where + ")),2) as percentage_request_count FROM USER_AGENT_FAMILY " + where + " GROUP BY userAgentFamily ORDER BY percentage_request_count DESC;";
-    return executeQuery(sql);
+function getOperatingSystemTabularStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getTechnologyTubularStat(where, 'os',
+            ['Operating System', 'Request Count', 'Percentage'], '2');
 }
 
-function getOperatingSystem(){
-    var sql = "SELECT operatingSystem as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from OPERATING_SYSTEM " + where + ")),2) as percentage_request_count FROM OPERATING_SYSTEM " + where + " GROUP BY operatingSystem ORDER BY percentage_request_count DESC;";
-    return executeQuery(sql);
+function getDeviceTypeStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getTechnologyStat(where, 'device-type', 5, 'Other devices');
 }
 
-function getDeviceType(){
-    var sql = "SELECT deviceCategory as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from DEVICE_TYPE " + where + ")),2) as percentage_request_count FROM DEVICE_TYPE " + where + " GROUP BY deviceCategory ORDER BY percentage_request_count DESC;";
-    return executeQuery(sql);
+function getDeviceTypeTabularStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getTechnologyTubularStat(where, 'device-type',
+            ['Device type', 'Request Count', 'Percentage'], '2');
 }
 
-function getTopHttpStatus(){
-    var sql = "SELECT responseHttpStatusCode as name, sum(averageRequestCount) as request_count FROM HTTP_STATUS " + where + " GROUP BY responseHttpStatusCode ORDER BY sum(averageRequestCount) DESC;";
-    return executeQuery(sql);
+function getHttpStatusStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getHttpStatusStat(where);
 }
 
-function getCountry(){
-    var sql = "SELECT country, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from COUNTRY " + where + ")),2) as percentage_request_count from COUNTRY " + where + " GROUP BY country;";
-    return executeQuery(sql);
+function getHttpStatusTabularStat() {
+    var technologyStat = require('technology-stat.jag');
+    technologyStat.getHttpStatusTabularStat(where, ['HTTP Response Code', 'Request Count',
+        'Percentage'], '1');
 }
 
-function getLanguage(){
-    var sql = "SELECT language, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from LANGUAGE " + where + ")),2) as percentage_request_count  FROM LANGUAGE " + where + " GROUP BY language ORDER BY percentage_request_count DESC;";
-    return executeQuery(sql);
+function getLanguageStat() {
+    var geoStat = require('geo-stat.jag');
+    geoStat.getLanguageStat(where);
 }
 
-//send the requested data based on the action and the conditions provided
-if (action == "node-list") {
-    var dataArray = [];
-    var results = getAllNodes();
-    dataArray.push("All");
-    for(var i = 0; i < results.length; i++){
-        dataArray.push(results[i]["node"]);
-    }
-    print (["All", {"groupName" : "Group 1", "elements" : ["10.100.5.118", "10.100.5.119", "10.100.5.120"]}, {"groupName" : "Group 2", "elements" : ["10.100.5.121", "10.100.5.122", "10.100.5.123", "10.100.5.124", "10.100.5.125"]}, {"groupName" : "Group 3", "elements" : ["10.100.5.126", "10.100.5.127"]}]);
-    //print(dataArray);
-} else if (action == "webapp-list") {
-
-    var sql = "SELECT sum(averageRequestCount) as total_requests\
-		, max(averageRequestCount) as max_request, min(averageRequestCount) as min_request\
-		, avg(averageRequestCount) as avg_request, max(averageResponseTime) as max_response\
-		, min(averageResponseTime) as min_response, avg(averageResponseTime) as avg_response\
-		, sum(sessionCount) as total_session, avg(sessionCount) as avg_session\
-		, sum(httpSuccessCount) as total_success, sum(httpErrorCount) as total_error \
-		 FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
-
-    var results = executeQuery(sql);
-    print(results);
-} else if (action == "apps") {
-    var endTime = request.getParameter("end_time") || formatDate(now);
-
-    var lastMinute = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " AND time  > (STR_TO_DATE('" + endTime + "', '%Y-%m-%d %H:%i') - INTERVAL 1 MINUTE) GROUP BY webappName;");
-    var lastHour = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " AND time  > (STR_TO_DATE('" + endTime + "', '%Y-%m-%d %H:%i') - INTERVAL 1 HOUR) GROUP BY webappName;");
-    var lastDay = executeQuery("SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " AND time  > (STR_TO_DATE('" + endTime + "', '%Y-%m-%d %H:%i') - INTERVAL 1 DAY) GROUP BY webappName;");
-
-    var apps = executeQuery("select webappName, webappType, sum(averageRequestCount) as total_requests, sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error from REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY webappName ORDER BY webappName;")
-
-    var appList = new Array();
-
-    for (var i = 0; i < apps.length; i++) {
-        var app = new Object();
-        var webappName = apps[i]["webappName"];
-
-        app["webappName"] = webappName;
-        app["webappType"] = apps[i]["webappType"];
-        app["totalRequests"] = apps[i]["total_requests"];
-        app["percentageError"] = (apps[i]["total_http_error"] / (apps[i]["total_http_error"] + apps[i]["total_http_success"])).toFixed(2);
-        app["lastMinute"] = "-";
-        app["lastHour"] = "-";
-        app["lastDay"] = "-";
-
-        for (var j = 0; j < lastMinute.length; j++) {
-            if (lastMinute[j]["webappName"] == webappName) {
-                app["lastMinute"] = lastMinute[j]["averageRequestCount"];
-                break;
-            }
-        }
-
-        for (var j = 0; j < lastHour.length; j++) {
-            if (lastHour[j]["webappName"] == webappName) {
-                app["lastHour"] = lastHour[j]["averageRequestCount"];
-                break;
-            }
-        }
-
-        for (var j = 0; j < lastDay.length; j++) {
-            if (lastDay[j]["webappName"] == webappName) {
-                app["lastDay"] = lastDay[j]["averageRequestCount"];
-                break;
-            }
-        }
-
-        appList.push([app["webappName"], app["webappType"], app["lastMinute"], app["lastHour"], app["lastDay"], app["totalRequests"], app["percentageError"]]);
-    }
-
-    var headings = ["Application / Service", "Type", {"parent": "Average request count", "sub": ["Last minute", "Last hour", "Last day"]}, "Total number of requests", "Percentage error"];
-    print({ "data" : appList, "headings" : headings, "orderColumn" : ["1"], "applist" : "true"});
-    
-} else if(action == "top-http-status"){
-    var dataArray = [];
-    var ticks = [];
-    var results = getTopHttpStatus();
-    for (var i = 0; (i < results.length) && (i < 5); i++) {
-        var row = results[i];
-        dataArray.push([i,row['request_count']]);
-        ticks.push([i, row['name']]);
-    }
-    var opt = require('/gadgets/bar-chart/config/chart-options.json');
-    opt.xaxis.ticks = ticks;
-    opt.xaxis.axisLabel = "Top 5 HTTP Response codes";
-    opt.yaxis.axisLabel = "Number of requests";
-    print([
-        {"series1": {"label": "s", "data": dataArray}}, opt
-    ]);
-} else if (action == "top-http-status-tabular") {
-    print(getTabularData(getTopHttpStatus(), ["HTTP Response Code", "Request Count"], "1"));
-}else if (action == "browser") {
-    var dataObject = {};
-    var shrinkedResults = shrinkResultset(getBrowser(), 4, "Other browsers");
-    for(var i = 0; i < shrinkedResults.length; i++){
-        var row = shrinkedResults[i];
-        var series = "series" + i;
-        var data = {"label" : row['name'], "data" : row['request_count']};
-        dataObject[series] = data;
-    }
-    print([
-        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
-    ]);
-} else if (action == "browser-tabular") {
-    print(getTabularData(getBrowser(), ["Browser", "Request Count", "Percentage"], "2"));
-} else if (action == "operating-system") {
-    var dataObject = {};
-    var shrinkedResults = shrinkResultset(getOperatingSystem(), 5, "Other operating systems");
-    for(var i = 0; i < shrinkedResults.length; i++){
-        var row = shrinkedResults[i];
-        var series = "series" + i;
-        var data = {"label" : row['name'], "data" : row['request_count']};
-        dataObject[series] = data;
-    }
-    print([
-        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
-    ]);
-} else if (action == "operating-system-tabular") {
-    print(getTabularData(getOperatingSystem(), ["Operating System", "Request Count", "Percentage"], "2"));
-} else if (action == "device-type") {
-    var dataObject = {};
-    var shrinkedResults = shrinkResultset(getDeviceType(), 5, "Other devices");
-    for(var i = 0; i < shrinkedResults.length; i++){
-        var row = shrinkedResults[i];
-        var series = "series" + i;
-        var data = {"label" : row['name'], "data" : row['request_count']};
-        dataObject[series] = data;
-    }
-    print([
-        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
-    ]);
-} else if (action == "device-type-tabular") {
-    print(getTabularData(getDeviceType(), ["Device Type", "Request Count", "Percentage"], "2"));
-} else if (action == "language") {
-    var dataArray = [];
-    var ticks = [];
-    var results = getLanguage();
-    var languageCodeLookup = require('/languages.json');
-    for (var i = 0; (i < results.length) && (i < 5); i++) {
-        var row = results[i];
-        dataArray.push([i,row['request_count']]);
-        ticks.push([i, languageCodeLookup[row['language']] || languageCode]);
-    }
-    var opt = require('/gadgets/bar-chart/config/chart-options.json');
-    opt.xaxis.ticks = ticks;
-    opt.xaxis.axisLabel = "Top 5 Languages";
-    opt.yaxis.axisLabel = "Number of requests";
-    print([
-        {"series1": {"label": "s", "data": dataArray}}, opt
-    ]);
-} else if (action == "language-tabular") {
-    var results = getLanguage();
-    var languageCodeLookup = require('/languages.json');
-    for(var i = 0; i < results.length; i++){
-        var languageCode = results[i]['language'];
-        results[i]['language'] = languageCodeLookup[languageCode] || languageCode;
-    }
-    print(getTabularData(results, ["Language", "Request Count", "Percentage"], "2"));
-} else if (action == "country") {
-    var dataObject = {};
-    var results = getCountry();
-    for(var i = 0; i < results.length; i++){
-        var row = results[i];
-        dataObject[row['country']] = row['request_count'];
-    }
-    print(dataObject);
-} else if (action == "country-tabular") {
-    var results = getCountry();
-    var countryCodeLookup = require('/countries.json');
-    for(var i = 0; i < results.length; i++){
-        var countryCode = results[i]['country'];
-        results[i]['country'] = countryCodeLookup[countryCode] || countryCode;
-    }
-    print(getTabularData(results, ["Country", "Request Count", "Percentage"], "2"));
-} else if (action == "context") {
-    var dataArray = [];
-    var sql = "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from WEBAPP_CONTEXT " + where + ")),2) as percentage_request_count, webappcontext FROM WEBAPP_CONTEXT " + where + "GROUP BY webappcontext;";
-    var results = executeQuery(sql);
-    for(var i = 0; i < results.length; i++){
-        var row = results[i];
-        dataArray.push([row['webappcontext'], row['request_count'], row['percentage_request_count']]);
-    }
-    print({"data" : dataArray, "headings": ["Context", "Request count", "Percentage"], "orderColumn" : [2, "desc"]});
-} else if (action == "referral") {
-    var dataArray = [];
-    var sql = "SELECT sum(averageRequestCount) as request_count,  round((sum(averageRequestCount)*100/(select sum(averageRequestCount) from REFERRER " + where + ")),2) as percentage_request_count, referrer FROM REFERRER " + where + " GROUP BY referrer;";
-    var results = executeQuery(sql);
-    for(var i = 0; i < results.length; i++){
-        var row = results[i];
-        dataArray.push([row['referrer'], row['request_count'], row['percentage_request_count']]);
-    }
-    print({"data" : dataArray, "headings": ["Referee", "Request count", "Percentage"], "orderColumn" : [2, "desc"]});
-} else if (action == "request") {
-    var dataArray = [];
-    var sql= "SELECT avg(averageRequestCount) as request_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
-    var results = executeQuery(String(sql));
-    for (var i = 0; i < results.length; i++) {
-        var row = results[i];
-        dataArray.push([row['time'],row['request_per_minute']]);
-    }
-    print([
-        {"series1": {"label": "s", "data": dataArray}}, require('/gadgets/stacked-line-chart/config/chart-options.json')
-    ]);
-} else if (action == "response") {
-    var dataArray = [];
-    var sql1= "SELECT avg(averageResponseTime) as response_time_per_minute, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
-    var results = executeQuery(String(sql1));
-    for (var i = 0; i < results.length; i++) {
-        var row = results[i];
-        dataArray.push([row['time'],row['response_time_per_minute']]);
-    }
-    var opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
-    opt.colors = ["#bacf0b"];
-    print([
-        {"series1": {"label": "s", "data": dataArray}}, opt
-    ]);
-} else if (action == "error") {
-    var dataArray = [];
-    var sql1= "SELECT sum(httpErrorCount) as error_count, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), \'%Y-%m-%d %H:\')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE " + where + " GROUP BY substring(time,1,13);";
-    var results = executeQuery(String(sql1));
-    for (var i = 0; i < results.length; i++) {
-        var row = results[i];
-        dataArray.push([row['time'],row['error_count']]);
-    }
-    var opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
-    opt.colors = ["#e7912a"];
-    print([
-        {"series1": {"label": "s", "data": dataArray}}, opt
-    ]);
-} else if (action == "request-count"){
-    var sql = "SELECT sum(averageRequestCount) as totalRequest, max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, min(averageRequestCount) as minRequest, max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse, sum(sessionCount) as totalSession, avg(sessionCount) as avgSession, sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
-    var results = executeQuery(sql)[0];
-    var output = {};
-    output["title"] = "Total Requests";
-    output["measure_label"] = "Per min";
-
-    if(results["totalRequest"] != null){
-        output["total"] = results["totalRequest"];
-        output["max"] = results["maxRequest"];
-        output["avg"] = Math.round(results["avgRequest"]);
-        output["min"] = results["minRequest"]
-    } else{
-        output["total"] = output["max"] = output["avg"] = output["min"] = "N/A";
-    }
-    output["graph"] = getDataForRequestCountBarChart();
-
-    print(output);
-} else if (action == "response-count"){
-    var sql = "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
-    var results = executeQuery(sql)[0];
-    var output = {};
-    output["title"] = "Response Time";
-    output["measure_label"] = "ms";
-
-    if(results["maxResponse"] != null){
-        output["max"] = results["maxResponse"];
-        output["avg"] = Math.round(results["avgResponse"]);
-        output["min"] = results["minResponse"];
-    } else{
-        output["max"] = output["avg"] = output["min"] = "N/A";
-    }
-    output["graph"] = getDataForResponseTimeBarChart();
-
-    print(output);
-} else if (action == "session-count"){
-    var sql = "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
-    var results = executeQuery(sql)[0];
-    var output = {};
-    output["title"] = "Session";
-
-    if(results["totalSession"] != null){
-        output["total"] = results["totalSession"];
-        output["avg"] = Math.round(results["avgSession"]);
-    } else{
-        output["total"] = output["avg"] = "N/A";
-    }
-    print(output);
-} else if (action == "error-count"){
-    var sql = "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE " + where + ";";
-    var results = executeQuery(sql)[0];
-    var output = {};
-    output["title"] = "Errors";
-
-    if(results["totalError"] != null){
-        output["total"] = results["totalError"];
-        output["percentage"] = results["percentageError"].toFixed(2) + "%";
-    } else{
-        output["total"] = output["percentage"] = "N/A";
-    }
-    print(output);
+function getLanguageTabularStat() {
+    var geoStat = require('geo-stat.jag');
+    geoStat.getLanguageTabularStat(where);
 }
+
+function getCountryStat() {
+    var geoStat = require('geo-stat.jag');
+    geoStat.getCountryStat(where);
+}
+
+function getCountryTabularStat() {
+    var geoStat = require('geo-stat.jag');
+    geoStat.getCountryTabularStat(where);
+}
+
+function getContextStat() {
+    var trafficStat = require('traffic-stat.jag');
+    trafficStat.getTrafficStat(where, 'context', ['Context', 'Request Count', 'Percentage'], '2')
+}
+function getReferralStat() {
+    var trafficStat = require('traffic-stat.jag');
+    trafficStat.getTrafficStat(where, 'referral', ['Referrer', 'Request Count', 'Percentage'], '2')
+}
+
+function getRequestStat() {
+    var timeVaryingStat = require('time-varying-stat.jag');
+    timeVaryingStat.getTimeVaryingStat(where, 'request');
+}
+
+function getResponseStat() {
+    var timeVaryingStat = require('time-varying-stat.jag');
+    timeVaryingStat.getTimeVaryingStat(where, 'response', '#bacf0b');
+}
+
+function getErrorStat() {
+    var timeVaryingStat = require('time-varying-stat.jag');
+    timeVaryingStat.getTimeVaryingStat(where, 'error', '#e7912a');
+}
+
+function getInfoBoxRequestStat() {
+    var infoBoxStat = require('info-box-stat.jag');
+    return infoBoxStat.getInfoBoxRequestStat(where);
+}
+
+function getInfoBoxResponseStat() {
+    var infoBoxStat = require('info-box-stat.jag');
+    return infoBoxStat.getInfoBoxResponseStat(where);
+}
+
+function getInfoBoxSessionStat() {
+    var infoBoxStat = require('info-box-stat.jag');
+    return infoBoxStat.getInfoBoxSessionStat(where);
+}
+
+function getInfoBoxErrorStat() {
+    var infoBoxStat = require('info-box-stat.jag');
+    return infoBoxStat.getInfoBoxErrorStat(where);
+}
+
+var actionMapping = {
+    'node-list': getNodeList,
+    'apps': getAppsStat,
+    'browser': getBrowserStat,
+    'browser-tabular': getBrowserTabularStat,
+    'operating-system': getOperatingSystemStat,
+    'operating-system-tabular': getOperatingSystemTabularStat,
+    'device-type': getDeviceTypeStat,
+    'device-type-tabular': getDeviceTypeTabularStat,
+    'top-http-status': getHttpStatusStat,
+    'top-http-status-tabular': getHttpStatusTabularStat,
+    'language': getLanguageStat,
+    'language-tabular': getLanguageTabularStat,
+    'country': getCountryStat,
+    'country-tabular': getCountryTabularStat,
+    'context': getContextStat,
+    'referral': getReferralStat,
+    'request': getRequestStat,
+    'response': getResponseStat,
+    'error': getErrorStat,
+    'request-count': getInfoBoxRequestStat,
+    'response-count': getInfoBoxResponseStat,
+    'session-count': getInfoBoxSessionStat,
+    'error-count': getInfoBoxErrorStat
+};
+
+actionMapping[action]();
 
 %>

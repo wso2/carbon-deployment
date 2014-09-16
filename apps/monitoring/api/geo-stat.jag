@@ -1,0 +1,86 @@
+<%
+include('db.jag');
+var helper = require('as-data-helper.js');
+var sqlStatements = require('sql-statements.json');
+
+// type: [table-name, field-name]
+var dbMapping = {
+    'country': ['COUNTRY', 'country'],
+    'language': ['LANGUAGE', 'language']
+};
+
+function getGeoStatData(whereClause, type){
+    var dbEntry = dbMapping[type];
+    var sql = helper.formatSql(sqlStatements.geo, [dbEntry[1], dbEntry[0],whereClause]);
+    return executeQuery(sql);
+}
+
+function getLanguageStat(whereClause) {
+    var dataArray = [];
+    var ticks = [];
+    var i,len;
+    var row;
+    var languageCode;
+    var opt;
+    var results = getGeoStatData(whereClause, 'language');
+    var languageCodeLookup = require('/languages.json');
+
+    for (i = 0, len = results.length; (i < len) && (i < 5); i++) {
+        row = results[i];
+        languageCode = results[i]['name'];
+        dataArray.push([i, row['request_count']]);
+        ticks.push([i, languageCodeLookup[row['name']] || languageCode]);
+    }
+
+    opt = require('/gadgets/bar-chart/config/chart-options.json');
+    opt.xaxis.ticks = ticks;
+    opt.xaxis.axisLabel = 'Top 5 Languages';
+    opt.yaxis.axisLabel = 'Number of requests';
+    print([
+        {'series1': {'label': 's', 'data': dataArray}},
+        opt
+    ]);
+}
+
+function getLanguageTabularStat(whereClause) {
+    var i, len;
+    var results = getGeoStatData(whereClause, 'language');
+    var languageCode;
+    var languageCodeLookup = require('/languages.json');
+
+    for (i = 0, len = results.length; i < len; i++) {
+        languageCode = results[i]['name'];
+        results[i]['name'] = languageCodeLookup[languageCode] || languageCode;
+    }
+    print(helper.getTabularData(results, ['Language', 'Request Count', 'Percentage'], '2'));
+}
+
+function getCountryStat(whereClause) {
+    var dataObject = {};
+    var i, len;
+    var row;
+    var results = getGeoStatData(whereClause, 'country');
+
+    for (i = 0, len = results.length; i < len; i++) {
+        row = results[i];
+        dataObject[row['name']] = row['request_count'];
+    }
+    print(dataObject);
+
+}
+
+function getCountryTabularStat(whereClause) {
+    var i;
+    var countryCode;
+    var results = getGeoStatData(whereClause, 'country');
+    var countryCodeLookup = require('/countries.json');
+
+    for (i = 0, len = results.length; i < len; i++) {
+        countryCode = results[i]['name'];
+        results[i]['name'] = countryCodeLookup[countryCode] || countryCode;
+    }
+    print(helper.getTabularData(results, ['Country', 'Request Count', 'Percentage'], '2'));
+
+}
+
+%>

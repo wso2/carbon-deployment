@@ -1,0 +1,73 @@
+<%
+include('db.jag');
+var helper = require('as-data-helper.js');
+var sqlStatements = require('sql-statements.json');
+
+function getPastStat(whereClause, endTime, timeUnit) {
+    var sql = helper.formatSql(sqlStatements.pastStat, [whereClause, endTime, timeUnit]);
+    return executeQuery(sql);
+}
+
+function matchPastStatWithApp(webappName, pastDataArray) {
+    var i, len;
+    for (i = 0, len = pastDataArray.length; i < len; i++) {
+        if (pastDataArray[i]['webappName'] == webappName) {
+            return pastDataArray[i]['averageRequestCount'];
+        }
+    }
+    return '-';
+}
+
+function getTableHeadings() {
+    return [
+        'Application / Service',
+        'Type',
+        {'parent': 'Average request count',
+            'sub': ['Last minute', 'Last hour', 'Last day']
+        },
+        'Total number of requests',
+        'Percentage error'
+    ];
+}
+
+function getAppsStat(whereClause, endTime) {
+    var appList = [];
+    var tempArray = [];
+    var i, len;
+    var lastMinute, lastHour, lastDay, apps;
+    var app = {};
+    var webappName;
+    var key;
+    var sql;
+
+    sql = helper.formatSql(sqlStatements.apps, [whereClause]);
+
+    lastMinute = getPastStat(whereClause, endTime, 'MINUTE');
+    lastHour = getPastStat(whereClause, endTime, 'HOUR');
+    lastDay = getPastStat(whereClause, endTime, 'DAY');
+
+    apps = executeQuery(sql);
+
+    for (i = 0, len = apps.length; i < len; i++) {
+        webappName = apps[i]['webappName'];
+
+        app['webappName'] = webappName;
+        app['webappType'] = apps[i]['webappType'];
+        app['lastMinute'] = matchPastStatWithApp(webappName, lastMinute);
+        app['lastHour'] = matchPastStatWithApp(webappName, lastHour);
+        app['lastDay'] = matchPastStatWithApp(webappName, lastDay);
+        app['totalRequests'] = apps[i]['total_requests'];
+        app['percentageError'] = (apps[i]['total_http_error'] / apps[i]['total_requests']).toFixed(2);
+
+        tempArray = [];
+        for (key in app) {
+            tempArray.push(app[key])
+        }
+        appList.push(tempArray);
+    }
+
+    print({ 'data': appList, 'headings': getTableHeadings(), 'orderColumn': ['1'], 'applist': 'true'});
+
+}
+
+%>

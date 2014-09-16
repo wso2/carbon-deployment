@@ -1,0 +1,77 @@
+<%
+include('db.jag');
+var helper = require('as-data-helper.js');
+var sqlStatements = require('sql-statements.json');
+
+// type: [table-name, field-name]
+var dbMapping = {
+    'browser': ['USER_AGENT_FAMILY', 'userAgentFamily'],
+    'os': ['OPERATING_SYSTEM', 'operatingSystem'],
+    'device-type': ['DEVICE_TYPE', 'deviceCategory']
+};
+
+function getTechnologyStatData(whereClause, type) {
+    var dbEntries = dbMapping[type];
+    var sql = helper.formatSql(sqlStatements.technology, [dbEntries[1], dbEntries[0], whereClause]);
+    return executeQuery(sql);
+}
+
+function getTechnologyStat(whereClause, type, visibleNumbers, groupName) {
+    var dataObject = {};
+    var i, len;
+    var row;
+    var series;
+    var data;
+
+    var results = getTechnologyStatData(whereClause, type);
+
+    var shrinkedResults = helper.getShrinkedResultset(results, visibleNumbers, groupName);
+
+    for (i = 0, len = shrinkedResults.length; i < len; i++) {
+        row = shrinkedResults[i];
+        series = 'series' + i;
+        data = {'label': row['name'], 'data': row['request_count']};
+        dataObject[series] = data;
+    }
+    print([
+        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
+    ]);
+}
+
+function getTechnologyTubularStat(whereClause, type, tableHeadings, sortColumn) {
+    print(helper.getTabularData(getTechnologyStatData(whereClause, type), tableHeadings, sortColumn));
+}
+
+function getHttpStatusStatData(whereClause) {
+    var sql = helper.formatSql(sqlStatements.httpStatus,[whereClause]);
+    return executeQuery(sql);
+}
+
+function getHttpStatusStat(whereClause) {
+    var dataArray = [];
+    var ticks = [];
+    var i, len;
+    var row;
+    var opt;
+    var results = getHttpStatusStatData(whereClause);
+
+    for (i = 0, len = results.length; (i < len) && (i < 5); i++) {
+        row = results[i];
+        dataArray.push([i, row['request_count']]);
+        ticks.push([i, row['name']]);
+    }
+
+    opt = require('/gadgets/bar-chart/config/chart-options.json');
+    opt.xaxis.ticks = ticks;
+    opt.xaxis.axisLabel = 'Top 5 HTTP Response codes';
+    opt.yaxis.axisLabel = 'Number of requests';
+    print([
+        {'series1': {'label': 's', 'data': dataArray}},
+        opt
+    ]);
+}
+
+function getHttpStatusTabularStat(whereClause, tableHeadings, sortColumn) {
+    print(helper.getTabularData(getHttpStatusStatData(whereClause), tableHeadings, sortColumn));
+}
+%>

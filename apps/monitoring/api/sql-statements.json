@@ -1,0 +1,19 @@
+{
+    "nodeList": "SELECT DISTINCT serverName AS node FROM REQUESTS_SUMMARY_PER_MINUTE;",
+    "apps": "SELECT webappName, webappType, sum(averageRequestCount) as total_requests, sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error FROM REQUESTS_SUMMARY_PER_MINUTE {1} GROUP BY webappName ORDER BY webappName;",
+    "pastStat": "SELECT webappName, round(avg(averageRequestCount)) as averageRequestCount FROM REQUESTS_SUMMARY_PER_MINUTE {1} AND time  > (STR_TO_DATE('{2}', '%Y-%m-%d %H:%i') - INTERVAL 1 {3}) GROUP BY webappName;",
+    "geo": "SELECT {1} as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) FROM {2} {3} )),2) as percentage_request_count FROM {2} {3} GROUP BY {1} ORDER BY percentage_request_count DESC;",
+    "technology": "SELECT {1} as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) FROM {2} {3} )),2) as percentage_request_count FROM {2} {3} GROUP BY {1} ORDER BY percentage_request_count DESC;",
+    "httpStatus": "SELECT responseHttpStatusCode as name, sum(averageRequestCount) as request_count, round((sum(averageRequestCount)*100/(select sum(averageRequestCount) FROM HTTP_STATUS {1} )),2) as percentage_request_count FROM HTTP_STATUS {1} GROUP BY responseHttpStatusCode ORDER BY percentage_request_count DESC;",
+    "timeVarying": "SELECT {1} as value, UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), '%Y-%m-%d %H:')) * 1000 as time FROM REQUESTS_SUMMARY_PER_MINUTE {2} GROUP BY substring(time,1,13);",
+    "traffic": "SELECT sum(averageRequestCount) as request_count, round((sum(averageRequestCount) *100/(select sum(averageRequestCount) FROM {1} {3} )),2) as percentage_request_count, {2} as name FROM {1} {3} GROUP BY {2};",
+    "infoBoxRequest": "SELECT sum(averageRequestCount) as totalRequest, max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, min(averageRequestCount) as minRequest FROM REQUESTS_SUMMARY_PER_MINUTE {1};",
+    "infoBoxResponse": "SELECT max(averageResponseTime) as maxResponse, avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse FROM REQUESTS_SUMMARY_PER_MINUTE {1};",
+    "infoBoxSession": "SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession FROM REQUESTS_SUMMARY_PER_MINUTE {1};",
+    "infoBoxError": "SELECT sum(httpErrorCount) as totalError, (sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError FROM REQUESTS_SUMMARY_PER_MINUTE {1};",
+    "infoBoxGreaterThan1200Days": "SELECT {1}({2}) as value, YEAR(time) as time FROM REQUESTS_SUMMARY_PER_MINUTE {3} GROUP BY YEAR(time);",
+    "infoBoxGreaterThan90Days": "SELECT {1}({2}) as value, DATE_FORMAT(time, '%b %Y') as time FROM REQUESTS_SUMMARY_PER_MINUTE {3} GROUP BY MONTH(time);",
+    "infoBoxGreaterThan30Days": "SELECT {1}({2}) as value, CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),'%b %d %Y'), ' - ', DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),'%b %d %Y')) as time FROM REQUESTS_SUMMARY_PER_MINUTE {3} GROUP BY WEEK(time);",
+    "infoBoxGreaterThan1Day": "SELECT {1}({2}) as value, DATE_FORMAT(time, '%b %d %Y') as time FROM REQUESTS_SUMMARY_PER_MINUTE {3} GROUP BY DATE(time);",
+    "infoBoxLessThan1Day": "SELECT {1}({2}) as value, DATE_FORMAT(time, '%H:00') as time FROM REQUESTS_SUMMARY_PER_MINUTE {3} GROUP BY HOUR(time);"
+}

@@ -1,0 +1,9 @@
+<%
+var config = require('/config/config.json');
+var db = new Database(config.database.url, config.database.username, config.database.password);
+
+function executeQuery(sql) {
+    return db.query(sql);
+}
+
+%>
