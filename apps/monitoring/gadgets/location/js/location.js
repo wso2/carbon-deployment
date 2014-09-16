@@ -1,28 +1,28 @@
 var pref = new gadgets.Prefs();
 var values = null;
-var node = pref.getString("node") || undefined;
-var start = pref.getString("startTime") || undefined;
-var end = pref.getString("endTime") || undefined;
+var node = pref.getString('node') || undefined;
+var start = pref.getString('startTime') || undefined;
+var end = pref.getString('endTime') || undefined;
 
-var url = pref.getString("dataSource");
+var url = pref.getString('dataSource');
 
 function fetchData() {
-    var url = pref.getString("dataSource");
+    var url = pref.getString('dataSource');
 
     var data = {
         start_time: start,
         end_time: end,
         node: node,
-        action: pref.getString("appStatType")
+        action: pref.getString('appStatType')
     };
-    var appname = pref.getString("appname");
-    if (appname != "") {
+    var appname = pref.getString('appname');
+    if (appname != '') {
         data.appname = appname;
     }
     $.ajax({
         url: url,
-        type: "GET",
-        dataType: "json",
+        type: 'GET',
+        dataType: 'json',
         data: data,
         success: onDataReceived
     });

@@ -25,8 +25,6 @@
               display_name="Web App Name"
               default_value="">
     </UserPref>
-    <!--UserPref name="options" display_name="Chart Options" default_value="/portal/gadgets/line-chart/js/options-line.js">
-        </UserPref> -->
     <UserPref name="updateGraph" display_name="Update Interval (s)"
               default_value="No">
     </UserPref>
@@ -57,19 +55,16 @@
 	<link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 	<link href="css/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/custom.css" type="text/css" >
-
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery.dataTables.js"></script>
 	<script language="javascript" type="text/javascript" src="js/moment.js"></script>
 	<script language="javascript" type="text/javascript" src="js/data-table.js"></script>
 
-
-
 </head>
 
 <body>
-			<div id="placeholder" class="demo-placeholder"></div>
+	<div id="placeholder" class="demo-placeholder"></div>
 </body>
 <script language="javascript" type="text/javascript" src="js/dataTables.bootstrap.js"></script>
 </html>
