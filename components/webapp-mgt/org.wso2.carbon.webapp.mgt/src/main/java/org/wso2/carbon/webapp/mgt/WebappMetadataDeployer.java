@@ -23,10 +23,10 @@ import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -70,8 +70,7 @@ public class WebappMetadataDeployer extends AbstractDeployer {
 
         try {
             
-            WebApplicationsHolder webappsHolder = (WebApplicationsHolder)
-                    configContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+            WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(deploymentFileData.getAbsolutePath(),configContext);
             //TODO support for versioned webapps
             Map<String, WebApplication> startedWebapps = webappsHolder.getStartedWebapps();
             WebApplication webapp = startedWebapps.get(artifactName);
