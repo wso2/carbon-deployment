@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.as.monitoring.config.BAMPublisherConfigurationException;
 import org.wso2.carbon.as.monitoring.publisher.http.HttpStatPublisher;
 import org.wso2.carbon.as.monitoring.publisher.http.WebappMonitoringEvent;
-import org.wso2.carbon.context.internal.CarbonContextDataHolder;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import ua_parser.CachingParser;
 import ua_parser.Client;
@@ -55,15 +55,21 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
     private Parser uaParser = null;
     private Pattern pattern;
 
-    public WebAppMonitoringPublisherValve() throws BAMPublisherConfigurationException {
+    public WebAppMonitoringPublisherValve() {
 
         super(true);
         try {
             uaParser = new CachingParser();
         } catch (IOException e) {
+            // We should continue though we have a loss here.
             LOG.error("Internal error in the User-Agent header parser. Some of the fields may not be included in the BAM Data Stream", e);
         }
 
+        try {
+            publisher = new HttpStatPublisher();
+        } catch (BAMPublisherConfigurationException e) {
+            LOG.error("HTTP call monitoring will be disabled. due to the error occurred.", e);
+        }
         LOG.debug("The WebAppMonitoringPublisherValve initialized.");
     }
 
@@ -82,11 +88,13 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
         // This start time is to capture the request initiated time to measure the response time.
         long responseTime = System.currentTimeMillis() - startTime;
 
-
-        loadPublisher();
-
         // No point of gathering data if publisher is not in a publishable state
-        if (publisher == null || !publisher.isPublishable()) {
+        if (publisher == null) {
+            LOG.debug("HTTP call monitoring event is not processed due to bad publisher configuration.");
+            return;
+        }
+
+        if (!publisher.isPublishable()) {
             return;
         }
 
@@ -110,6 +118,8 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
 
             publisher.publish(webappMonitoringEvent);
         } catch (Exception e) {
+            // A monitoring exception is not a blocker to the main call. We only loose the monitoring
+            // event here. So log it and that's it.
             LOG.error("Failed to publish web app stat events to BAM : " + e.getMessage(), e);
         }
 
@@ -134,26 +144,6 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
         // No exclusions so.
         return true;
     }
-
-    // Introducing Lazy loading to publisher.
-    // this method is called at the first time invocation of this valve
-    private void loadPublisher() {
-
-        if (publisher == null) {
-            synchronized (this) {
-                if (publisher == null) {
-                    try {
-                        publisher = new HttpStatPublisher();
-                    } catch (BAMPublisherConfigurationException e) {
-                        // No need to throw it out. Because this throw will block the entire server
-                        // The server is able to continue its functions without monitoring in this case.
-                        LOG.error("Bad configuration detected.", e);
-                    }
-                }
-            }
-        }
-    }
-
 
     /*
      * This method set the statics data to webappMonitoringEvent.
@@ -198,9 +188,8 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
             String consumerName = extractUsername(request);
             webappMonitoringEvent.setUserId(consumerName);
 
-
-            int tenantID = CarbonContextDataHolder.getThreadLocalCarbonContextHolder().getTenantId();
-            String consumerTenantDomain = CarbonContextDataHolder.getThreadLocalCarbonContextHolder().getTenantDomain();
+            int tenantID = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+            String consumerTenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
 
             webappMonitoringEvent.setUserTenant(consumerTenantDomain);
             webappMonitoringEvent.setResourcePath(request.getPathInfo());
@@ -226,6 +215,8 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
             webappMonitoringEvent.setServerAddress(request.getServerName());
             webappMonitoringEvent.setServerName(request.getLocalName());
             webappMonitoringEvent.setTenantId(tenantID);
+            webappMonitoringEvent.setRequestSizeBytes(request.getContentLength());
+            webappMonitoringEvent.setResponseSizeBytes(response.getContentLength());
             parserUserAgent(request, webappMonitoringEvent);
 
         }

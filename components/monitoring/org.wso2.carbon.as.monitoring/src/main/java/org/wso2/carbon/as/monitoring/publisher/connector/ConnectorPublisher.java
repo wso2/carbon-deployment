@@ -18,10 +18,10 @@
 
 package org.wso2.carbon.as.monitoring.publisher.connector;
 
-import org.wso2.carbon.as.monitoring.publisher.PublisherBase;
-import org.wso2.carbon.as.monitoring.publisher.MonitoringPublisherException;
 import org.wso2.carbon.as.monitoring.config.BAMPublisherConfigurationException;
 import org.wso2.carbon.as.monitoring.config.StreamConfigurationReader;
+import org.wso2.carbon.as.monitoring.publisher.MonitoringPublisherException;
+import org.wso2.carbon.as.monitoring.publisher.PublisherBase;
 import org.wso2.carbon.databridge.commons.AttributeType;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
@@ -79,25 +79,25 @@ public class ConnectorPublisher extends PublisherBase {
      */
     public void publish(ConnectorMonitoringEvent e) throws MonitoringPublisherException {
         List<Object> metaData = new ArrayList<Object>(4);
-        metaData.add(e.getServerAddress());
-        metaData.add(e.getServerName());
-        metaData.add(e.getClusterDomain());
-        metaData.add(e.getClusterSubDomain());
+        metaData.add(mapNull(e.getServerAddress()));
+        metaData.add(mapNull(e.getServerName()));
+        metaData.add(mapNull(e.getClusterDomain()));
+        metaData.add(mapNull(e.getClusterSubDomain()));
 
         List<Object> payloadData = new ArrayList<Object>(13);
-        payloadData.add(e.getTimestamp());
-        payloadData.add(e.getConnectorName());
-        payloadData.add(e.getPort());
-        payloadData.add(e.getScheme());
-        payloadData.add(e.getBytesSent());
-        payloadData.add(e.getBytesReceived());
-        payloadData.add(e.getErrorCount());
-        payloadData.add(e.getProcessingTime());
-        payloadData.add(e.getRequestCount());
-        payloadData.add(e.getConnectionCount());
-        payloadData.add(e.getCurrentThreadCount());
-        payloadData.add(e.getCurrentThreadsBusy());
-        payloadData.add(e.getKeepAliveCount());
+        payloadData.add(mapNull(e.getTimestamp()));
+        payloadData.add(mapNull(e.getConnectorName()));
+        payloadData.add(mapNull(e.getPort()));
+        payloadData.add(mapNull(e.getScheme()));
+        payloadData.add(mapNull(e.getBytesSent()));
+        payloadData.add(mapNull(e.getBytesReceived()));
+        payloadData.add(mapNull(e.getErrorCount()));
+        payloadData.add(mapNull(e.getProcessingTime()));
+        payloadData.add(mapNull(e.getRequestCount()));
+        payloadData.add(mapNull(e.getConnectionCount()));
+        payloadData.add(mapNull(e.getCurrentThreadCount()));
+        payloadData.add(mapNull(e.getCurrentThreadsBusy()));
+        payloadData.add(mapNull(e.getKeepAliveCount()));
 
         Event event = new Event();
 
