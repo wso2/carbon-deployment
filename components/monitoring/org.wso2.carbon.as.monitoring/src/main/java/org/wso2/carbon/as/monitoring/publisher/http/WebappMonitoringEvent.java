@@ -110,14 +110,6 @@ public class WebappMonitoringEvent extends MonitoringEvent {
         this.resourcePath = resourcePath;
     }
 
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
     public String getUserAgentVersion() {
         return userAgentVersion;
     }
@@ -326,28 +318,28 @@ public class WebappMonitoringEvent extends MonitoringEvent {
         this.responsePayload = responsePayload;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getLanguage() {
         return language;
     }
 
-    public void setDeviceCategory(String deviceCategory) {
-        this.deviceCategory = deviceCategory;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getDeviceCategory() {
         return deviceCategory;
     }
 
-    public void setAgentType(String agentType) {
-        this.agentType = agentType;
+    public void setDeviceCategory(String deviceCategory) {
+        this.deviceCategory = deviceCategory;
     }
 
     public String getAgentType() {
         return agentType;
+    }
+
+    public void setAgentType(String agentType) {
+        this.agentType = agentType;
     }
 
     @Override

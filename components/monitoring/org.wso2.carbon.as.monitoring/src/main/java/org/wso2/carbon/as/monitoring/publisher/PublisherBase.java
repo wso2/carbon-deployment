@@ -38,14 +38,12 @@ public abstract class PublisherBase {
     private static final Log LOG = LogFactory.getLog(PublisherBase.class);
 
     protected StreamConfigContext configContext;
-    protected AsyncDataPublisher publisher;
+
+    protected volatile AsyncDataPublisher publisher;
 
     public PublisherBase() throws BAMPublisherConfigurationException {
         final String streamName = getDataStreamName();
         configContext = StreamConfigurationReader.getInstance().getStreamConfiguration(streamName);
-        if (configContext.isEnabled()) {
-            publisher = createPublisher();
-        }
     }
 
     /**
@@ -54,7 +52,7 @@ public abstract class PublisherBase {
      * @return whether this publisher is in a publishable state.
      */
     public boolean isPublishable() {
-        return configContext.isEnabled() && publisher != null;
+        return configContext.isEnabled();
     }
 
     /**
@@ -100,16 +98,20 @@ public abstract class PublisherBase {
     /**
      * Publish the given event to the data stream.
      *
-     * @param event the event
+     * @param event the event to be published.
      */
     protected void publish(Event event) throws MonitoringPublisherException {
         if (!configContext.isEnabled()) {
             return;
         }
+
         try {
+            loadPublisher();
             publisher.publish(configContext.getStreamName(), configContext.getStreamVersion(), event);
         } catch (AgentException exception) {
             throw new MonitoringPublisherException("Exception occurred while publishing Connector Monitoring Event to BAM", exception);
+        } catch (BAMPublisherConfigurationException e) {
+            throw new MonitoringPublisherException("Exception occurred while connecting to BAM.", e);
         }
     }
 
@@ -126,8 +128,8 @@ public abstract class PublisherBase {
     /**
      * Maps null Long values to zero
      *
-     * @param value
-     * @return
+     * @param value @param value The value that should be mapped.
+     * @return the value if not null, otherwise 0
      */
     protected Long mapNull(Long value) {
         return (value == null) ? 0L : value;
@@ -136,11 +138,23 @@ public abstract class PublisherBase {
     /**
      * Map null String to -
      *
-     * @param value
-     * @return
+     * @param value The value that should be mapped.
+     * @return the value if not null, otherwise "-"
      */
     protected String mapNull(String value) {
         return (value == null) ? "-" : value;
+    }
+
+
+    // lazily load the publisher
+    private void loadPublisher() throws BAMPublisherConfigurationException {
+        if (publisher == null) {
+            synchronized (this) {
+                if (publisher == null) {
+                    publisher = createPublisher();
+                }
+            }
+        }
     }
 
     private AsyncDataPublisher createPublisher() throws BAMPublisherConfigurationException {

@@ -43,18 +43,21 @@ public class WebappResourceStatCollector extends PeriodicStatCollector {
 
     private WebappResourcePublisher publisher;
 
-    public WebappResourceStatCollector() throws BAMPublisherConfigurationException {
+    public WebappResourceStatCollector() {
         super();
+        try {
+            publisher = new WebappResourcePublisher();
+        } catch (BAMPublisherConfigurationException e) {
+            LOG.error("WebappResource monitoring will be disabled due to bad configuration.", e);
+            this.stop();
+        }
     }
 
     @Override
     public void run() {
         try {
-
-            loadPublisher();
             if (publisher == null || !publisher.isPublishable()) {
-                //stop this collector
-                this.stop();
+                return;
             }
 
             MBeanClient webModuleMBeanClient = new WebModuleMBeanClient();
@@ -77,25 +80,6 @@ public class WebappResourceStatCollector extends PeriodicStatCollector {
             }
         } catch (Exception e) {
             LOG.error("Exception occurred while publishing webapp resource stats.", e);
-        }
-    }
-
-    // lazy loading for the publisher.
-    // This stat collector will stop, if publisher cannot be loaded
-    private void loadPublisher() {
-        if (publisher == null) {
-            synchronized (this) {
-                if (publisher == null) {
-                    try {
-                        publisher = new WebappResourcePublisher();
-                    } catch (BAMPublisherConfigurationException e) {
-                        // Server continues without monitoring
-                        // Log the exception & Stop this collector
-                        LOG.error("Configuration error detected.", e);
-                        this.stop();
-                    }
-                }
-            }
         }
     }
 

@@ -41,8 +41,19 @@ public class ConnectorStatCollector extends PeriodicStatCollector {
     private static CollectorUtil collectorUtil = new CollectorUtil();
     private ConnectorPublisher publisher;
 
-    public ConnectorStatCollector() throws BAMPublisherConfigurationException {
+    public ConnectorStatCollector() {
         super();
+        try {
+            publisher = new ConnectorPublisher();
+
+            // No point of running this thread, if the publisher is disabled.
+            if (!publisher.isPublishable()) {
+                this.stop();
+            }
+        } catch (BAMPublisherConfigurationException e) {
+            LOG.error("Connector monitoring will be disabled due to bad configuration.", e);
+            this.stop();
+        }
 
     }
 
@@ -53,7 +64,6 @@ public class ConnectorStatCollector extends PeriodicStatCollector {
     public void run() {
         try {
 
-            loadPublisher();
             if (publisher == null || !publisher.isPublishable()) {
                 return;
             }
@@ -79,25 +89,6 @@ public class ConnectorStatCollector extends PeriodicStatCollector {
         }
     }
 
-
-    // lazy loading for the publisher.
-    // This stat collector will stop, if publisher cannot be loaded
-    private void loadPublisher() {
-        if (publisher == null) {
-            synchronized (this) {
-                if (publisher == null) {
-                    try {
-                        publisher = new ConnectorPublisher();
-                    } catch (BAMPublisherConfigurationException e) {
-                        // Server continues without monitoring
-                        // Log the exception & Stop this collector
-                        LOG.error("Configuration error detected.", e);
-                        this.stop();
-                    }
-                }
-            }
-        }
-    }
 
     private List<ConnectorMonitoringEvent> createConnectorMonitoringEvents(List<Result> connectors,
                                                                            List<Result> globalRequestProcessors,
