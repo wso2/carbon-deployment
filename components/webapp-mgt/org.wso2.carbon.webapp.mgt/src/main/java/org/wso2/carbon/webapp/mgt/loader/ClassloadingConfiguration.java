@@ -29,32 +29,36 @@ public class ClassloadingConfiguration {
     private boolean parentFirst = false;
     private String[] environments;
 
-    private Map<String, String[]> delegatedEnvironments;
-    private Map<String, String[]> exclusiveEnvironments;
+    private Map<String, CLEnvironment> delegatedEnvironments;
+    private Map<String, CLEnvironment> exclusiveEnvironments;
 
     public ClassloadingConfiguration(){
-        delegatedEnvironments = new HashMap<String, String[]>();
-        exclusiveEnvironments = new HashMap<String, String[]>();
+        delegatedEnvironments = new HashMap<String, CLEnvironment>();
+        exclusiveEnvironments = new HashMap<String, CLEnvironment>();
     }
 
-    public void addDelegatedEnvironment(String name, String[] delegatedPackages){
-        delegatedEnvironments.put(name, delegatedPackages);
+    public void addDelegatedEnvironment(String name, CLEnvironment environment){
+        delegatedEnvironments.put(name, environment);
     }
 
-    public String[] getDelegatedEnvironment(String name){
+    public CLEnvironment getDelegatedEnvironment(String name){
         return delegatedEnvironments.get(name);
     }
 
-    public void addExclusiveEnvironment(String name, String[] resources) {
-        exclusiveEnvironments.put(name, resources);
+    public void addExclusiveEnvironment(String name, CLEnvironment environment) {
+        exclusiveEnvironments.put(name, environment);
     }
 
-    public String[] getExclusiveEnvironment(String name){
+    public CLEnvironment getExclusiveEnvironment(String name){
         return exclusiveEnvironments.get(name);
     }
 
     public String[] getEnvironments(){
         return environments;
+    }
+
+    public int getEnvironmentsCount(){
+        return environments.length;
     }
 
     public boolean isParentFirst(){
