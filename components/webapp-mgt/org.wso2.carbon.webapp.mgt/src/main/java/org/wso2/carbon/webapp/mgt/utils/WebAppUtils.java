@@ -50,17 +50,16 @@ public class WebAppUtils {
      * will return "/deployment/server/webapps"
      *
      * @param webappFilePath path to webapp
-     * @return
+     * @return  absolute path to base dir
      */
     public static String getWebappDirPath(String webappFilePath) {
-        String baseDir = webappFilePath.substring(0, webappFilePath.lastIndexOf(File.separator));
-        return baseDir;
+        return webappFilePath.substring(0, webappFilePath.lastIndexOf(File.separator));
     }
 
     /**
      *
-     * @param filePath
-     * @return
+     * @param filePath web aoo base dir path
+     * @return  virtual host name for web app dir
      */
     public static String getMatchingHostName(String filePath) {
         Container[] childHosts = findHostChildren();
@@ -81,7 +80,7 @@ public class WebAppUtils {
      * This will return a key with pair hostname:webappFileName
      *
      * @param webappFile
-     * @return
+     * @return <hostname>:<webapp-name>
      */
     public static String getWebappKey(File webappFile) {
         String baseDir = getWebappDirPath(webappFile.getAbsolutePath());
@@ -119,6 +118,7 @@ public class WebAppUtils {
     }
 
     /**
+     * This util method will return the web application holder of the given web app file
      *
      * @param webappFilePath
      * @param configurationContext
@@ -127,11 +127,8 @@ public class WebAppUtils {
     public static WebApplicationsHolder getwebappHolder(String webappFilePath, ConfigurationContext configurationContext) {
         String baseDir = getWebappDir(webappFilePath);
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                (Map<String, WebApplicationsHolder>) configurationContext.getProperty("carbon.webapps.holderlist");
+                (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
         WebApplicationsHolder webApplicationsHolder = webApplicationsHolderList.get(baseDir);
-        if (webApplicationsHolder == null) {
-            webApplicationsHolder = (WebApplicationsHolder) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
-        }
         return webApplicationsHolder;
     }
 
@@ -163,9 +160,8 @@ public class WebAppUtils {
      * @return list of web application holders
      */
     public static Map<String, WebApplicationsHolder> getWebapplicationHolders(ConfigurationContext configurationContext) {
-        return (Map<String, WebApplicationsHolder>) configurationContext.getProperty("carbon.webapps.holderlist");
+        return (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
     }
-
     public static String getDefaultHost() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         return carbonTomcatService.getTomcat().getEngine().getDefaultHost();

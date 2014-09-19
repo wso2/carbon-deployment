@@ -40,6 +40,7 @@ import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
 import java.lang.management.ManagementPermission;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,7 +86,6 @@ public class TomcatGenericWebappsDeployer {
         this.webApplicationsHolderMap = webApplicationsHolderMap;
         this.configurationContext = configurationContext;
     }
-
     /**
      * Deploy webapps
      *

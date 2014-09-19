@@ -44,9 +44,11 @@ import org.wso2.carbon.webapp.mgt.WebContextParameter;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
@@ -134,8 +136,8 @@ public class WebappManagementServiceComponent {
 
     private void setServerURLParam(ConfigurationContext configurationContext) {
         // Adding server url as a parameter to webapps servlet context init parameter
-        WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
-                configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+        Map<String, WebApplicationsHolder> webApplicationsHolderList =
+                WebAppUtils.getWebapplicationHolders(configurationContext);
 
         WebContextParameter serverUrlParam =
                 new WebContextParameter("webServiceServerURL", CarbonUtils.
@@ -150,13 +152,16 @@ public class WebappManagementServiceComponent {
             servletContextParameters.add(serverUrlParam);
         }
 
-        if (webApplicationsHolder != null) {
-            for (WebApplication application :
-                    webApplicationsHolder.getStartedWebapps().values()) {
-                application.getContext().getServletContext().
-                        setInitParameter(serverUrlParam.getName(),
-                                         serverUrlParam.getValue());
+        for(WebApplicationsHolder webApplicationsHolder: webApplicationsHolderList.values()){
+            if (webApplicationsHolder != null) {
+                for (WebApplication application :
+                        webApplicationsHolder.getStartedWebapps().values()) {
+                    application.getContext().getServletContext().
+                            setInitParameter(serverUrlParam.getName(),
+                                    serverUrlParam.getValue());
+                }
             }
+
         }
 
     }
