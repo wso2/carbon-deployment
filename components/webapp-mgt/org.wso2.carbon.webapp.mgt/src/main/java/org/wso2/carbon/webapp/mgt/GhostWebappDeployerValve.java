@@ -35,8 +35,10 @@ import org.wso2.carbon.utils.deployment.GhostDeployer;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * Handles management of webapps when ghost deployer is enabled. This includes deployment of
@@ -83,7 +85,8 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
 
 
         WebApplication deployedWebapp;
-        if ((deployedWebapp = getDeployedWebappFromThisURI(request.getContext().getPath(), currentCtx)) == null) {
+        if ((deployedWebapp = getDeployedWebappFromThisURI(request.getContext().getPath(), request.getLocalName(),
+                currentCtx)) == null) {
             String ctxName = request.getContext().getPath();
             if (log.isDebugEnabled()) {
                 log.debug("Looking for webapp in transit map with CtxName: " + ctxName);
@@ -106,7 +109,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
                                                         currentCtx);
                     // now the webapp is unloaded and in ghost form so we can safely
                     // continue with invocation
-                    handleWebapp(transitWebapp.getWebappFile().getName(), currentCtx);
+                    handleWebapp(transitWebapp.getWebappFile().getName(), request.getLocalName(), currentCtx);
                 } else {
                     // wait until webapp is deployed
                     if (log.isDebugEnabled()) {
@@ -125,7 +128,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
             }
         } else {
             if (GhostWebappDeployerUtils.isGhostWebApp(deployedWebapp)) {
-                handleWebapp(deployedWebapp.getWebappFile().getName(), currentCtx);
+                handleWebapp(deployedWebapp.getWebappFile().getName(), request.getLocalName(), currentCtx);
                 try {
                     TomcatUtil.remapRequest(request);
                 } catch (Exception e) {
@@ -143,44 +146,47 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
         }
 
         String webappFileName = request.getParameter("webappFileName");
-        handleWebapp(webappFileName, currentCtx);
+        handleWebapp(webappFileName, request.getLocalName(), currentCtx);
         getNext().invoke(request, response, compositeValve);
     }
 
-    private WebApplication getDeployedWebappFromThisURI(String requestURI,
+    private WebApplication getDeployedWebappFromThisURI(String requestURI, String hostName,
                                                         ConfigurationContext cfgCtx) {
         WebApplication deployedWebapp = null;
-        WebApplicationsHolder webApplicationsHolder = getWebApplicationHolder(cfgCtx);
-        for (WebApplication webApplication : webApplicationsHolder.getStartedWebapps().values()) {
-            if (requestURI.equals(webApplication.getContextName())) {
-                deployedWebapp = webApplication;
+        Map<String, WebApplicationsHolder> webApplicationsHolderList = getWebApplicationHolders(cfgCtx);
+        for(WebApplicationsHolder webApplicationsHolder:webApplicationsHolderList.values()){
+            for (WebApplication webApplication : webApplicationsHolder.getStartedWebapps().values()) {
+                if (requestURI.equals(webApplication.getContextName()) &&
+                        (hostName.equals(webApplication.getHostName()))) {
+                    deployedWebapp = webApplication;
+                    break;
+                }
             }
         }
+
         return deployedWebapp;
     }
 
-    private WebApplicationsHolder getWebApplicationHolder(ConfigurationContext cfgCtx) {
-        WebApplicationsHolder webApplicationsHolder;
-        webApplicationsHolder = (WebApplicationsHolder)
-                cfgCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
-
-        return webApplicationsHolder;
+    private Map<String, WebApplicationsHolder> getWebApplicationHolders(ConfigurationContext cfgCtx) {
+        return WebAppUtils.getWebapplicationHolders(cfgCtx);
     }
 
-    private void handleWebapp(String webappFileName, ConfigurationContext cfgCtx) {
+    private void handleWebapp(String webappFileName, String hostName, ConfigurationContext cfgCtx) {
         if (webappFileName != null) {
             WebApplication ghostWebapp;
-            WebApplicationsHolder webApplicationsHolder = getWebApplicationHolder(cfgCtx);
-
-            if (webApplicationsHolder != null) {
-                ghostWebapp = webApplicationsHolder.getStartedWebapps().get(webappFileName);
-                if (ghostWebapp != null) {
-                    //TODO Handle the dep-synch update of webapps in workerNode
-                    if (CarbonUtils.isWorkerNode() && GhostDeployerUtils.isPartialUpdateEnabled()) {
-                        handleDepSynchUpdate(cfgCtx, ghostWebapp, webApplicationsHolder);
+            Map<String, WebApplicationsHolder> webApplicationsHolderList = getWebApplicationHolders(cfgCtx);
+            for(WebApplicationsHolder webApplicationsHolder:webApplicationsHolderList.values()){
+                if (webApplicationsHolder != null) {
+                    ghostWebapp = webApplicationsHolder.getStartedWebapps().get(webappFileName);
+                    if (ghostWebapp != null && ghostWebapp.getHostName().equals(hostName)) {
+                        //TODO Handle the dep-synch update of webapps in workerNode
+                        if (CarbonUtils.isWorkerNode() && GhostDeployerUtils.isPartialUpdateEnabled()) {
+                            handleDepSynchUpdate(cfgCtx, ghostWebapp, webApplicationsHolder);
+                        }
+                        GhostWebappDeployerUtils.
+                                deployActualWebApp(ghostWebapp, cfgCtx);
+                        break;
                     }
-                    GhostWebappDeployerUtils.
-                            deployActualWebApp(ghostWebapp, cfgCtx);
                 }
             }
         }

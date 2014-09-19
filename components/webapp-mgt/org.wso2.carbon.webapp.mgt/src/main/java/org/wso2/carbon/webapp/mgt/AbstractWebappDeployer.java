@@ -60,10 +60,11 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                 "";
 
         // try to get the webapps holder list from config ctx. if null, create one..
-        webApplicationsHolderList = (Map<String, WebApplicationsHolder>) configCtx.getProperty("carbon.webapps.holderlist");
+        webApplicationsHolderList = (Map<String, WebApplicationsHolder>)
+                configCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
         if (webApplicationsHolderList == null) {
             webApplicationsHolderList = new HashMap<String, WebApplicationsHolder>();
-            configCtx.setProperty("carbon.webapps.holderlist", webApplicationsHolderList);
+            configCtx.setProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST, webApplicationsHolderList);
         }
         if (!webApplicationsHolderList.containsKey(webappsDir)) {
             WebApplicationsHolder webApplicationsHolder = new WebApplicationsHolder(new File(webappsDir));
@@ -117,11 +118,13 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                             configContext);
                     String ghostWebappFileName = deploymentFileData.getFile().getName();
 
-                    WebApplicationsHolder webApplicationsHolder = WebAppUtils.getwebappHolder(ghostFile.getAbsolutePath(), configContext);
+                    WebApplicationsHolder webApplicationsHolder = WebAppUtils.getwebappHolder(
+                            ghostWebApplication.getWebappFile().getAbsolutePath(), configContext);
                     if (!webApplicationsHolder.getStartedWebapps().containsKey(ghostWebappFileName)) {
 //                        ghostWebApplication.setServletContextParameters(servletContextParameters);
 
-                        WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(ghostFile.getAbsolutePath(), configContext);
+                        WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(
+                                ghostWebApplication.getWebappFile().getAbsolutePath(), configContext);
 
                         log.info("Deploying Ghost webapp : " + ghostWebappFileName);
                         webappsHolder.getStartedWebapps().put(ghostWebappFileName,
@@ -171,7 +174,8 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             // removing faulty artifacts deployed by CApps
             if (deploymentFileData.getAbsolutePath().contains("carbonapps")) {
                 String failedArtifact = deploymentFileData.getFile().getName();
-                WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(deploymentFileData.getAbsolutePath(), configContext);
+                WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(
+                        deploymentFileData.getAbsolutePath(), configContext);
                 webappsHolder.getFaultyWebapps().remove(failedArtifact);
             }
             log.error(msg, e);
@@ -272,7 +276,8 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             }
         }
 
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = (Map<String, WebApplicationsHolder>) configContext.getProperty("carbon.webapps.holderlist");
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap =
+                (Map<String, WebApplicationsHolder>) configContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
 
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             if (isGhostOn && webApplicationsHolder != null) {
