@@ -24,6 +24,7 @@ import org.apache.catalina.valves.ValveBase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.as.monitoring.config.BAMPublisherConfigurationException;
+import org.wso2.carbon.as.monitoring.publisher.MonitoringPublisherException;
 import org.wso2.carbon.as.monitoring.publisher.http.HttpStatPublisher;
 import org.wso2.carbon.as.monitoring.publisher.http.WebappMonitoringEvent;
 import org.wso2.carbon.context.CarbonContext;
@@ -117,7 +118,7 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
             }
 
             publisher.publish(webappMonitoringEvent);
-        } catch (Exception e) {
+        } catch (MonitoringPublisherException e) {
             // A monitoring exception is not a blocker to the main call. We only loose the monitoring
             // event here. So log it and that's it.
             LOG.error("Failed to publish web app stat events to BAM : " + e.getMessage(), e);
