@@ -11,10 +11,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class reads virtual hosts and their appbase values from CarbonTomcatService and builds deployer configs
+ */
+
 public class VirtualHostDeployerProvider implements Axis2DeployerProvider {
 
     private List<DeployerConfig> deployerConfigs = new ArrayList<DeployerConfig>();
 
+    /**
+     * builds deloyerconfigs from host entries of tomcat engine element
+     */
     public VirtualHostDeployerProvider() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         Container[] virtualHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
@@ -41,7 +48,7 @@ public class VirtualHostDeployerProvider implements Axis2DeployerProvider {
         return deployerConfig;
     }
 
-    public String getDirectoryName(String appBase) {
+    private String getDirectoryName(String appBase) {
         String baseDir;
         if (appBase.endsWith(File.separator)) {
             baseDir = appBase.substring(0, appBase.lastIndexOf(File.separator));

@@ -59,22 +59,22 @@ public class TomcatGenericWebappsDeployer {
     protected int tenantId;
     protected String tenantDomain;
     protected ConfigurationContext configurationContext;
-    protected Map<String,WebApplicationsHolder> webApplicationsHolderMap;
+    protected Map<String, WebApplicationsHolder> webApplicationsHolderMap;
     protected Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
             new ConcurrentHashMap<String, CarbonTomcatClusterableSessionManager>();
 
     /**
      * Constructor
      *
-     * @param webContextPrefix The Web context prefix
-     * @param tenantId         The tenant ID of the tenant to whom this deployer belongs to
-     * @param tenantDomain     The tenant domain of the tenant to whom this deployer belongs to
-     * @param webApplicationsHolderMap    WebApplicationsHolder
+     * @param webContextPrefix         The Web context prefix
+     * @param tenantId                 The tenant ID of the tenant to whom this deployer belongs to
+     * @param tenantDomain             The tenant domain of the tenant to whom this deployer belongs to
+     * @param webApplicationsHolderMap WebApplicationsHolder
      */
     public TomcatGenericWebappsDeployer(String webContextPrefix,
                                         int tenantId,
                                         String tenantDomain,
-                                        Map<String,WebApplicationsHolder> webApplicationsHolderMap,
+                                        Map<String, WebApplicationsHolder> webApplicationsHolderMap,
                                         ConfigurationContext configurationContext) {
         SecurityManager secMan = System.getSecurityManager();
         if (secMan != null) {
@@ -86,6 +86,7 @@ public class TomcatGenericWebappsDeployer {
         this.webApplicationsHolderMap = webApplicationsHolderMap;
         this.configurationContext = configurationContext;
     }
+
     /**
      * Deploy webapps
      *
@@ -113,7 +114,7 @@ public class TomcatGenericWebappsDeployer {
                 webApplicationsHolder.getStartedWebapps().get(webappFile.getName());
 
         WebApplication deployedUnpackedWebapp = null;
-        if(deployedWebapp == null && (webappName.contains(".war") || webappName.contains(".zip"))){
+        if (deployedWebapp == null && (webappName.contains(".war") || webappName.contains(".zip"))) {
             String unpackDirName = webappName.endsWith(".war") ? webappName.replace(".war", "") : webappName;
             unpackDirName = webappName.endsWith(".zip") ? unpackDirName.replace(".zip", "") : unpackDirName;
             deployedUnpackedWebapp = webApplicationsHolder.getStartedWebapps().get(unpackDirName);
@@ -135,10 +136,10 @@ public class TomcatGenericWebappsDeployer {
                 && deployedUnpackedWebapp == null && faultyUnpackedWebapp == null) {
             handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
         } else if (deployedWebapp != null &&
-                   deployedWebapp.getLastModifiedTime() != lastModifiedTime) {
+                deployedWebapp.getLastModifiedTime() != lastModifiedTime) {
             handleHotUpdate(deployedWebapp, webContextParams, applicationEventListeners);
         } else if (faultyWebapp != null &&
-                   faultyWebapp.getLastModifiedTime() != lastModifiedTime) {
+                faultyWebapp.getLastModifiedTime() != lastModifiedTime) {
             handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
         } else if (deployedUnpackedWebapp != null &&
                 deployedUnpackedWebapp.getLastModifiedTime() != lastModifiedTime) {
@@ -302,11 +303,11 @@ public class TomcatGenericWebappsDeployer {
             WebApplication webapp = new WebApplication(this, context, webappFile);
             webapp.setServletContextParameters(webContextParams);
 
-            String bamEnable =   recievePersistedWebappMetaData(webappFile, WebappsConstants.ENABLE_BAM_STATISTICS);
-            if(bamEnable == null || "".equals(bamEnable))  {
+            String bamEnable = recievePersistedWebappMetaData(webappFile, WebappsConstants.ENABLE_BAM_STATISTICS);
+            if (bamEnable == null || "".equals(bamEnable)) {
                 bamEnable = context.findParameter(WebappsConstants.ENABLE_BAM_STATISTICS);
-                if(bamEnable == null || "".equals(bamEnable))  {
-                    bamEnable="false";
+                if (bamEnable == null || "".equals(bamEnable)) {
+                    bamEnable = "false";
                 }
             }
             webapp.addParameter(WebappsConstants.ENABLE_BAM_STATISTICS, bamEnable);
@@ -338,7 +339,7 @@ public class TomcatGenericWebappsDeployer {
             webApplicationsHolder.getFaultyWebapps().put(filename, webapp);
             webApplicationsHolder.getStartedWebapps().remove(filename);
             throw new CarbonException(msg, e);
-        }  finally {
+        } finally {
             privilegedCarbonContext.setApplicationName(null);
         }
     }
@@ -407,18 +408,16 @@ public class TomcatGenericWebappsDeployer {
             undeploy(deployedWebapps.get(fileName));
         }
         // app = app.war and make sure check using both patterns.
-        if(!fileName.endsWith(".war")){
-            String warFileName =  fileName.concat(".war");
-            if(deployedWebapps.containsKey(warFileName)){
+        if (!fileName.endsWith(".war")) {
+            String warFileName = fileName.concat(".war");
+            if (deployedWebapps.containsKey(warFileName)) {
                 undeploy(deployedWebapps.get(warFileName));
             }
         }
         //also checking the stopped webapps.
         else if (stoppedWebapps.containsKey(fileName)) {
             undeploy(stoppedWebapps.get(fileName));
-        }
-
-        else if (faultyWebapps.containsKey(fileName)) {
+        } else if (faultyWebapps.containsKey(fileName)) {
             undeploy(faultyWebapps.get(fileName));
         }
 
@@ -468,23 +467,25 @@ public class TomcatGenericWebappsDeployer {
 
     /**
      * This method reads from webapp meta files to check weather bam statistics are enabled.
+     *
      * @param webappFile
      * @param propertyName
-     * @return  bam enable or disable
+     * @return bam enable or disable
      * @throws AxisFault
      * @throws ArtifactMetadataException
      */
     protected String recievePersistedWebappMetaData(File webappFile, String propertyName) throws AxisFault, ArtifactMetadataException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR+
-                File.separator+ WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR +
+                File.separator + WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
-        return manager.loadParameter(webappFile.getName() ,type,propertyName);
+        return manager.loadParameter(webappFile.getName(), type, propertyName);
     }
 
     /**
      * This method stores the value in the webapp metadata file.
+     *
      * @param webappFile
      * @param propertyName
      * @param value
@@ -493,8 +494,8 @@ public class TomcatGenericWebappsDeployer {
      */
     protected void setPersistedWebappMetaData(File webappFile, String propertyName, String value) throws AxisFault, ArtifactMetadataException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR+
-                                                                    File.separator+WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR +
+                File.separator + WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
 
@@ -513,7 +514,7 @@ public class TomcatGenericWebappsDeployer {
             String artifactFileName = WebAppUtils.getWebappName(artifactFilePath);
             if (deployedWebapps.containsKey(artifactFileName)) {
                 keepMetadataHistory = deployedWebapps.get(artifactFileName).
-                                findParameter(WebappsConstants.KEEP_WEBAPP_METADATA_HISTORY_PARAM);
+                        findParameter(WebappsConstants.KEEP_WEBAPP_METADATA_HISTORY_PARAM);
             }
 
             if (keepMetadataHistory == null && stoppedWebapps.containsKey(artifactFileName)) {
@@ -526,8 +527,8 @@ public class TomcatGenericWebappsDeployer {
             }
 
             AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-            ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR+
-                    File.separator+WebAppUtils.getWebappDir(artifactFilePath));
+            ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR +
+                    File.separator + WebAppUtils.getWebappDir(artifactFilePath));
             ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                     getMetadataManager();
             manager.deleteMetafile(artifactFileName, type);
@@ -582,9 +583,9 @@ public class TomcatGenericWebappsDeployer {
         return path;
     }
 
-    private boolean isUnpackedDirExists(String warPath){
-        File dir = new File(warPath.replace(".war",""));
-        if(dir.exists() && dir.isDirectory()){
+    private boolean isUnpackedDirExists(String warPath) {
+        File dir = new File(warPath.replace(".war", ""));
+        if (dir.exists() && dir.isDirectory()) {
             return true;
         }
         return false;
