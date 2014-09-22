@@ -23,6 +23,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.transports.http.HttpTransportListener;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
 
 import java.io.File;
@@ -121,7 +122,7 @@ public final class Utils {
                 tryitPrefix = configurationContext.getServiceContextPath() + "/";
             }
         }
-        return tryitPrefix + serviceName + "?tryit";
+        return CarbonUtils.getProxyContextPath(false) + tryitPrefix + serviceName + "?tryit";
     }
 
     /**
