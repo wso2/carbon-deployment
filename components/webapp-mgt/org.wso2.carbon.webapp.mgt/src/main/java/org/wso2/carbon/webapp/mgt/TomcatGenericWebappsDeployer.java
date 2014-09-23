@@ -314,7 +314,8 @@ public class TomcatGenericWebappsDeployer {
 
             webapp.setState("Started");
 
-            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
+            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(
+                    WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
 
             webApplicationsHolder.getStartedWebapps().put(filename, webapp);
             webApplicationsHolder.getFaultyWebapps().remove(filename);
@@ -334,7 +335,8 @@ public class TomcatGenericWebappsDeployer {
             log.error(msg, e);
             webapp.setFaultReason(new Exception(msg, e));
 
-            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
+            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(
+                    WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
 
             webApplicationsHolder.getFaultyWebapps().put(filename, webapp);
             webApplicationsHolder.getStartedWebapps().remove(filename);
@@ -395,7 +397,8 @@ public class TomcatGenericWebappsDeployer {
      * @throws CarbonException If an error occurs while undeploying webapp
      */
     public void undeploy(File webappFile) throws CarbonException {
-        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(
+                WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
 
         Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
         Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
@@ -433,7 +436,8 @@ public class TomcatGenericWebappsDeployer {
      */
     public void lazyUnload(File webappFile) throws CarbonException {
 
-        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(
+                WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
@@ -506,7 +510,8 @@ public class TomcatGenericWebappsDeployer {
 
     private void removeMetadata(String artifactFilePath) throws CarbonException {
         try {
-            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(artifactFilePath));
+            WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(
+                    WebAppUtils.getWebappDir(artifactFilePath));
             Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
             Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
 
@@ -527,7 +532,8 @@ public class TomcatGenericWebappsDeployer {
             }
 
             AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-            ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR +
+            ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP,
+                    WebappsConstants.WEBAPP_METADATA_BASE_DIR +
                     File.separator + WebAppUtils.getWebappDir(artifactFilePath));
             ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                     getMetadataManager();
@@ -546,7 +552,8 @@ public class TomcatGenericWebappsDeployer {
      * @throws CarbonException If an error occurs while undeploying
      */
     private void undeploy(WebApplication webapp) throws CarbonException {
-        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderMap.get(
+                WebAppUtils.getWebappDir(webapp.getWebappFile().getAbsolutePath()));
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         Context context = webapp.getContext();

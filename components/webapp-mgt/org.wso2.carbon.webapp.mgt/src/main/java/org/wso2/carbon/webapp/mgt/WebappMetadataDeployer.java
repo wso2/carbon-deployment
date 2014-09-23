@@ -70,7 +70,7 @@ public class WebappMetadataDeployer extends AbstractDeployer {
 
         try {
             
-            WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(deploymentFileData.getAbsolutePath(),configContext);
+            WebApplicationsHolder webappsHolder = WebAppUtils.getWebappHolder(deploymentFileData.getAbsolutePath(), configContext);
             //TODO support for versioned webapps
             Map<String, WebApplication> startedWebapps = webappsHolder.getStartedWebapps();
             WebApplication webapp = startedWebapps.get(artifactName);

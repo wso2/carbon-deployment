@@ -168,7 +168,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
     }
 
     private Map<String, WebApplicationsHolder> getWebApplicationHolders(ConfigurationContext cfgCtx) {
-        return WebAppUtils.getWebapplicationHolders(cfgCtx);
+        return WebAppUtils.getWebApplicationHolders(cfgCtx);
     }
 
     private void handleWebapp(String webappFileName, String hostName, ConfigurationContext cfgCtx) {
