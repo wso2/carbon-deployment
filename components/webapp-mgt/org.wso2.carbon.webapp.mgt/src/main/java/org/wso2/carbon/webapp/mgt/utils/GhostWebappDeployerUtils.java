@@ -99,7 +99,8 @@ public class GhostWebappDeployerUtils {
             // there can be situations in which the actual webapp is already deployed and
             // available in the webapps holder
 
-            WebApplicationsHolder webApplicationsHolder = WebAppUtils.getwebappHolder(ghostWebapp.getWebappFile().getAbsolutePath(),configurationContext);
+            WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(
+                    ghostWebapp.getWebappFile().getAbsolutePath(), configurationContext);
 
             if (webApplicationsHolder != null) {
                 WebApplication deployedWebapp = webApplicationsHolder.getStartedWebapps().
@@ -599,7 +600,7 @@ public class GhostWebappDeployerUtils {
                                                     String webappFilePath) {
 
         try {
-            WebApplicationsHolder webApplicationsHolder = WebAppUtils.getwebappHolder(webappFilePath,configurationContext);
+            WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath, configurationContext);
 
             if (webApplicationsHolder != null) {
                 return webApplicationsHolder.getStartedWebapps().get(WebAppUtils.getWebappName(webappFilePath));
@@ -713,7 +714,7 @@ public class GhostWebappDeployerUtils {
                 try {
                     WebApplication ghostWebApplication = GhostWebappDeployerUtils.createGhostWebApp(
                             ghostFile, ghostFile, null, configContext);
-                    WebApplicationsHolder webappsHolder = WebAppUtils.getwebappHolder(ghostFile.getAbsolutePath(),configContext);
+                    WebApplicationsHolder webappsHolder = WebAppUtils.getWebappHolder(ghostFile.getAbsolutePath(), configContext);
 
                     String ghostWebappFileName = ghostWebApplication.getWebappFile().getName();
                     String webappFileProperty = (String) ghostWebApplication.

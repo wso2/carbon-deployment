@@ -53,7 +53,7 @@ public class WebappDeployer extends AbstractWebappDeployer {
     @Override
     protected TomcatGenericWebappsDeployer createTomcatGenericWebappDeployer(
             String webContextPrefix, int tenantId, String tenantDomain) {
-        return new TomcatGenericWebappsDeployer(webContextPrefix, tenantId, tenantDomain, webApplicationsHolderList, configContext);
+        return new TomcatGenericWebappsDeployer(webContextPrefix, tenantId, tenantDomain, webApplicationsHolderMap, configContext);
     }
 
     @Override

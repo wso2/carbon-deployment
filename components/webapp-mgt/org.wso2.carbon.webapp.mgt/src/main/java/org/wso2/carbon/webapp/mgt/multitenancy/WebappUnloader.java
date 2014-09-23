@@ -28,7 +28,6 @@ import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.deployment.GhostDeployer;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -70,7 +69,7 @@ public class WebappUnloader implements ArtifactUnloader {
     private void unloadInactiveWebapps(ConfigurationContext configCtx,
                                        String tenantDomain) {
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                WebAppUtils.getWebapplicationHolders(configCtx);
+                WebAppUtils.getWebApplicationHolders(configCtx);
 
         try {
             PrivilegedCarbonContext.startTenantFlow();
