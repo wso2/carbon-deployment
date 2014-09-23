@@ -1018,7 +1018,7 @@ public class WebappAdmin extends AbstractAdmin {
                 appBase = appBase.substring(0, appBase.length() - 1);
             }
             webappDeploymentDir = appBase.substring(appBase.lastIndexOf(File.separator), appBase.length());
-            return getAxisConfig().getRepository().getPath() + File.separator + webappDeploymentDir;
+            return getAxisConfig().getRepository().getPath() + webappDeploymentDir;
         }
 
     }
