@@ -19,9 +19,12 @@ import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.util.ServerInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.openejb.loader.IO;
 import org.apache.openejb.loader.ProvisioningUtil;
 import org.apache.openejb.loader.SystemInstance;
+import org.apache.openejb.util.JuliLogStreamFactory;
 import org.apache.openejb.util.OpenEjbVersion;
 import org.apache.tomee.catalina.ServerListener;
 import org.apache.tomee.loader.TomcatHelper;
@@ -30,12 +33,20 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+/**
+ * AS baked ServerListener. Borrowed large parts of the code from TomEE
+ * where TomEE doesn't provide extension points.
+ *
+ * Changes can be found between the comments
+ * "WSO2 START PATCH" and "WSO2 END PATCH"
+ *
+ * In addition, java util logging has been changed to commons logging
+ *
+ */
 public class ASTomEEServerListener extends ServerListener {
 
-    private static final Logger LOGGER = Logger.getLogger(ASTomEEServerListener.class.getName());
+    private static final Log log = LogFactory.getLog(ASTomEEServerListener.class.getName());
 
     static private boolean listenerInstalled;
 
@@ -121,6 +132,7 @@ public class ASTomEEServerListener extends ServerListener {
 
             // ###### WSO2 START PATCH ###### //
             setServiceManager(properties);
+            setOpenJPALogFactory();
             readSystemPropertiesConf();
             ASTomcatLoader loader = new ASTomcatLoader();
             loader.init(properties);
@@ -128,8 +140,24 @@ public class ASTomEEServerListener extends ServerListener {
 
             listenerInstalled = true;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "TomEE Listener can't start OpenEJB", e);
+            log.error("TomEE Listener can't start OpenEJB", e);
             // e.printStackTrace(System.err);
+        }
+    }
+
+    /**
+     * Set AS specific OpenJPA logger since OpenJPA logging is broken with default implementation.
+     * Borrowed the segment from a static block in JuliLogStreamFactory.
+     *
+     */
+    protected void setOpenJPALogFactory() {
+        try {
+            JuliLogStreamFactory.class.getClassLoader().loadClass("org.wso2.carbon.javaee.tomee.openjpa.JULOpenJPALogFactory");
+            //System.setProperty("openjpa.Log", "org.apache.openejb.openjpa.JULOpenJPALogFactory"); //the default
+            System.setProperty("openjpa.Log", "org.wso2.carbon.javaee.tomee.openjpa.JULOpenJPALogFactory");
+        } catch (Exception ignored) {
+            log.debug(ignored.getMessage(), ignored);
+            // no-op: openjpa is not at the classpath so don't trigger it loading with our logger
         }
     }
 
