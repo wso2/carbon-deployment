@@ -46,6 +46,26 @@
 	<build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-patch-jar</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>patch</finalName>
+                            <archive>
+                                <index>true</index>
+                            </archive>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
@@ -53,25 +73,20 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+
                         <Export-Package>
-                            org.apache.coyote.*,
-                            org.apache.catalina.startup.*,
-			                org.apache.tomcat.util.http.mapper.*,
-                            org.apache.juli.logging.*
                         </Export-Package>
+
                         <Import-Package>
-                            !org.apache.coyote.*,
-                            !org.apache.catalina.startup.*,
-                            !org.apache.tomcat.util.http.mapper.*,
-                            !org.apache.juli.logging.*,
-                            org.wso2.carbon.tomcat.version.*,
                             *;resolution:=optional
                         </Import-Package>
+
                         <Private-Package>
-                            javax.annotation.*,
-                            javax.ejb.*,
-                            javax.persistence.*,
                         </Private-Package>
+
+                        <Include-Resource>target/patch.jar</Include-Resource>
+                        <Bundle-Classpath>patch.jar,.</Bundle-Classpath>
+                        <Fragment-Host>tomcat</Fragment-Host>
                         <DynamicImport-Package>*</DynamicImport-Package> 
                     </instructions>
                 </configuration>
