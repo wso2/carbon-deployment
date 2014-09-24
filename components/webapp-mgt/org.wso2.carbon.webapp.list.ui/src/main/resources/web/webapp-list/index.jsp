@@ -22,6 +22,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
@@ -32,7 +33,6 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="java.util.TreeMap" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VersionedWebappMetadata" %>
-<%@ page import="org.wso2.carbon.base.ServerConfiguration" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
 
 <%
@@ -513,28 +513,9 @@
                 version = "default";
             }*/
 
-
-            String proxyContextPath = ServerConfiguration.getInstance().getFirstProperty("MgtProxyContextPath");
-            String workerProxyContextPath = ServerConfiguration.getInstance().getFirstProperty("ProxyContextPath");
+            String proxyContextPath = CarbonUtils.getProxyContextPath(false);
+            String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
             String resolveProxyPath = "";// resolved proxy  path for worker / manager
-
-            if (proxyContextPath == null || proxyContextPath.length() == 0 | "/".equals(proxyContextPath)) {
-                proxyContextPath = "";
-            } else {
-                proxyContextPath = proxyContextPath.trim();
-                if (!proxyContextPath.startsWith("/")) {
-                    proxyContextPath = "/" + proxyContextPath;
-                }
-            }
-
-            if (workerProxyContextPath == null || workerProxyContextPath.length() == 0 | "/".equals(workerProxyContextPath)) {
-                workerProxyContextPath = "";
-            } else {
-                workerProxyContextPath = workerProxyContextPath.trim();
-                if (!workerProxyContextPath.startsWith("/")) {
-                    workerProxyContextPath = "/" + workerProxyContextPath;
-                }
-            }
 
             if ("".equals(workerProxyContextPath)) {
                 resolveProxyPath = proxyContextPath;
