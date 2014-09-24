@@ -89,8 +89,8 @@
                         <small class="measure-label">Per min</small>
 
                         <div class="col-xs-4 panel-bottom-box left-radius box-one-color">
-                            <h4 id="max-count">N/A</h4>
-                            <small class="stat-label">Max</small>
+                            <h4 id="min-count">N/A</h4>
+                            <small class="stat-label">Min</small>
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box box-one-color">
@@ -99,8 +99,8 @@
                         </div>
 
                         <div class="col-xs-4 line-seperator panel-bottom-box right-radius box-one-color">
-                            <h4 id="min-count">N/A</h4>
-                            <small class="stat-label">Min</small>
+                            <h4 id="max-count">N/A</h4>
+                            <small class="stat-label">Max</small>
                         </div>
                     </div><!-- row -->
                 </div><!-- statistics box one and two-->
