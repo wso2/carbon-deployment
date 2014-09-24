@@ -105,13 +105,13 @@ function fetchData() {
     togglePause(pauseBtn);
 }
 function onDataReceived(data) {
-    $('.total-count').text(data.total);
+    $('.total-count').text(data.total != undefined ? data.total.toLocaleString() : '');
     $('.measure-label').text(data.measure_label);
-    $('#max-count').text(data.max);
-    $('.avg-count').text(data.avg);
-    $('#min-count').text(data.min);
+    $('#max-count').text(data.max != undefined ? data.max.toLocaleString() : '');
+    $('.avg-count').text(data.avg != undefined ? data.avg.toLocaleString() : '');
+    $('#min-count').text(data.min != undefined ? data.min.toLocaleString() : '');
     $('.statistics-main').text(data.title);
-    $('.error-percentage').text(data.percentage);
+    $('.error-percentage').text(data.percentage != undefined ? data.percentage.toLocaleString() : '');
     if( data.graph){
         chartData = {"label" : "count", "data" : data.graph};
         options =
