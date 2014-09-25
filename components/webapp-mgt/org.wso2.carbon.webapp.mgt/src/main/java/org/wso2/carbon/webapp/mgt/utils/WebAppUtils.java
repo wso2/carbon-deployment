@@ -76,23 +76,49 @@ public class WebAppUtils {
 
     /**
      *
-     * @param filePath web aoo base dir path
+     * @param filePath web app base dir path
      * @return  virtual host name for web app dir
      */
     public static String getMatchingHostName(String filePath) {
-        Container[] childHosts = findHostChildren();
-        for (Container host : childHosts) {
-            Host vHost = (Host) host;
-            String appBase = vHost.getAppBase();
-            if (appBase.endsWith(File.separator)) {
-                appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
-            }
-            if (appBase.equals(filePath)) {
-                return vHost.getName();
-            }
+        String virtualHost = "";
+        Container[] virtualHosts = findHostChildren();
+        for (Container vHost : virtualHosts) {
+            Host childHost = (Host) vHost;
 
+            if (childHost.getAppBase().endsWith(File.separator)) {
+                //append a file separator to make webAppFilePath equal to appBase
+                if (isEqualTo(filePath + File.separator, childHost.getAppBase())) {
+                    virtualHost = childHost.getName();
+                    break;
+                }
+            } else {
+                if (isEqualTo(filePath + File.separator, childHost.getAppBase() + File.separator)) {
+                    virtualHost = childHost.getName();
+                    break;
+                }
+            }
         }
-        return getDefaultHost();
+        return virtualHost;
+    }
+
+    /**
+     *
+     * @param webAppFilePath web application path
+     * @param baseName appBase value
+     * @return true if values are equal, false otherwise
+     */
+    private static boolean isEqualTo(String webAppFilePath, String baseName) {
+        if (webAppFilePath.equals(baseName)) {
+            return true;
+        } else {
+            //if the webapp is uploaded to tenant-space (eg: <CARBON_HOME>/repository/tenants/1/webapps),
+            //webAppFilePath will not be equal to any of appBase value in catalina-server.xml
+            //Hence check for values "repository" and $baseDir
+            String baseDir = baseName.substring(0,baseName.lastIndexOf(File.separator));
+            baseDir = baseDir.substring(baseDir.lastIndexOf(File.separator) + 1, baseDir.length());
+            return webAppFilePath.contains(File.separator + "repository" + File.separator) &&
+                    webAppFilePath.contains(File.separator + baseDir + File.separator);
+        }
     }
 
     /**
