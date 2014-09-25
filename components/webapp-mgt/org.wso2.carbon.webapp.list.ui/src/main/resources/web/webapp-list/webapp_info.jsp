@@ -22,6 +22,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappStatistics" %>
@@ -56,7 +57,17 @@
 
     String servletContext = "/";
 
-    String urlPrefix = "http://" + hostName + ":" + httpPort;
+    String proxyContextPath = CarbonUtils.getProxyContextPath(false);
+    String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
+    String resolveProxyPath = "";// resolved proxy  path for worker / manager
+
+    if ("".equals(workerProxyContextPath)) {
+        resolveProxyPath = proxyContextPath;
+    } else{
+        resolveProxyPath = workerProxyContextPath;
+    }
+
+    String urlPrefix = "http://" + hostName + ":" + httpPort + resolveProxyPath;
 
     if (webappState == null) {
         webappState = "started";

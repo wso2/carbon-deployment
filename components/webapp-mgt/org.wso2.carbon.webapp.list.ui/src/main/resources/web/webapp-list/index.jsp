@@ -22,6 +22,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
@@ -512,7 +513,18 @@
                 version = "default";
             }*/
 
-            String webappURL = urlPrefix + vWebapp.getContext();
+            String proxyContextPath = CarbonUtils.getProxyContextPath(false);
+            String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
+            String resolveProxyPath = "";// resolved proxy  path for worker / manager
+
+            if ("".equals(workerProxyContextPath)) {
+                resolveProxyPath = proxyContextPath;
+            } else{
+                resolveProxyPath = workerProxyContextPath;
+            }
+
+            String webappURL = urlPrefix + resolveProxyPath + vWebapp.getContext();
+
             if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
                 webappURL += vWebapp.getServletContext() + vWebapp.getServiceListPath();
             } else {
