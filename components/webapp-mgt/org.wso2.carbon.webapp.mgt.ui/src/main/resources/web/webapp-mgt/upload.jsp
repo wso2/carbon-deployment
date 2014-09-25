@@ -42,6 +42,7 @@
 
        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+       int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
 
        WebappAdminClient client;
        VhostHolder vhostHolder = null;
@@ -189,6 +190,7 @@
             //add a row to the rows collection and get a reference to the newly added row
             var newRow = document.getElementById("webappTbl").insertRow(-1);
             newRow.id = 'file' + rows;
+            var tenantid = <%=tenantId%>;
 
             var oCell = newRow.insertCell(-1);
             oCell.innerHTML = '<label><fmt:message key="webapp.archive"/> (.war)<font color="red">*</font></label>';
@@ -203,13 +205,23 @@
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
-            oCell.innerHTML = "<input type='text' name='version' value=''><select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %>"+
-                              "<% if(vhostHolder.getDefaultHostName().equals(vhostName)) {%><option selected='selected'><%=vhostName%></option>"+
-                              "<%       }else {               %><option><%=vhostName%></option>"+"<%      }                     %>" +
-                                 "<%}%></select>"+
-                                 "<select name='hostName'>"+
-                                 "<input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
+            oCell.innerHTML = "<input type='text' name='version' value=''>"
             oCell.className = "formRow";
+
+            if(tenantid == -1234){
+              oCell = newRow.insertCell(-1);
+              oCell.innerHTML = ""+
+                                                " <select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %>"+
+                                                "<% if(vhostHolder.getDefaultHostName().equals(vhostName)) {%><option selected='selected'><%=vhostName%></option>"+
+                                                "<%       }else {               %><option><%=vhostName%></option>"+"<%      }                     %>" +
+                                                "<%}%></select>"
+              oCell.className = "formRow";
+            }
+
+            oCell = newRow.insertCell(-1);
+            oCell.innerHTML = "<input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
+            oCell.className = "formRow";
+
 
             alternateTableRows('webappTbl', 'tableEvenRow', 'tableOddRow');
         }
@@ -248,6 +260,7 @@
                         <td class="formRow">
                             <input type="text" name="version" value="">
                         </td>
+                        <%if(tenantId == -1234) { %>
                         <td class="formRow">
                             <select name="hostName">
                                <%    for(String vhostName:vhostHolder.getVhosts()){  %>
@@ -259,6 +272,7 @@
                                <%      }                     %>
                             </select>
                         </td>
+                        <%   }  %>
                         <td class="formRow">
                             <input type="button"  width='20px' class="button" onclick="addRow();" value=" + "/>
                         </td>
