@@ -134,7 +134,7 @@ function fetchData() {
 }
 function onDataReceived(series) {
     chartData = series[0];
-    options = series[1];
+    options = $.extend(true, {}, chartConfigs(), series[1]);
     var chartOptions = options;
     var _chartData = [];
     addSeriesCheckboxes(chartData);
