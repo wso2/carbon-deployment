@@ -22,6 +22,7 @@ function getTechnologyStat(whereClause, type, visibleNumbers, groupName) {
     var row;
     var series;
     var data;
+    var chartOptions = {};
 
     var results = getTechnologyStatData(whereClause, type);
 
@@ -33,9 +34,8 @@ function getTechnologyStat(whereClause, type, visibleNumbers, groupName) {
         data = {'label': row['name'], 'data': row['request_count']};
         dataObject[series] = data;
     }
-    print([
-        dataObject, require('/gadgets/pie-chart/config/chart-options.json')
-    ]);
+
+    print([dataObject, chartOptions]);
 }
 
 function getTechnologyTubularStat(whereClause, type, tableHeadings, sortColumn) {

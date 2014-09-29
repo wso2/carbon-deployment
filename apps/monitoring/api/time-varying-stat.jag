@@ -22,20 +22,21 @@ function getTimeVaryingStat(whereClause, type, color) {
     var row;
     var opt;
     var results = getTimeVaryingStatData(whereClause, type);
+    var chartOptions = {};
 
     for (i = 0, len = results.length; i < len; i++) {
         row = results[i];
         dataArray.push([row['time'], row['value']]);
     }
-    opt = require('/gadgets/stacked-line-chart/config/chart-options.json');
 
     if (color != null) {
-        opt.colors = [color];
+        chartOptions = {
+            'colors': [color]
+        }
     }
 
     print([
-        {'series1': {'label': 's', 'data': dataArray}},
-        opt
+        {'series1': {'label': 's', 'data': dataArray}}, chartOptions
     ]);
 }
 
