@@ -55,7 +55,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
         }
         String requestURI = request.getRequestURI();
 
-        if ((requestURI.contains("/carbon/") && !requestURI.
+        if ((requestURI.startsWith(getWebContextRoot()+"carbon") && !requestURI.
                 contains(WebappsConstants.WEBAPP_INFO_JSP_PAGE)) ||
             requestURI.contains("favicon.ico") || requestURI.contains("/fileupload/") ||
             requestURI.startsWith("/services")) {
@@ -128,7 +128,6 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
                 handleWebapp(deployedWebapp.getWebappFile().getName(), currentCtx);
                 try {
                     TomcatUtil.remapRequest(request);
-                    return;
                 } catch (Exception e) {
                     log.error("Error when redirecting response to " + requestURI, e);
                 }
@@ -284,5 +283,13 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
             }
         }
         return ctxName;
+    }
+
+    private static String getWebContextRoot() {
+        String context = CarbonUtils.getServerConfiguration().getFirstProperty("WebContextRoot");
+        if(!context.endsWith("/")) {
+            return new StringBuilder(context).append("/").toString();
+        }
+        return context;
     }
 }
