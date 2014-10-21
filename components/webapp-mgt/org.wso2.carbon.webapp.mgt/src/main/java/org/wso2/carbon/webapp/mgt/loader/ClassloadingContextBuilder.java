@@ -152,6 +152,7 @@ public class ClassloadingContextBuilder {
             //Environments are not specified, hence using the default values.
             environments = classloadingConfig.getEnvironments();
         }
+        webappClassloadingContext.setEnvironments(environments);
 
         //Populate WebappClassloadingContext data structures using the specified environments.
         List<String> delegatedPkgList = new ArrayList<String>();

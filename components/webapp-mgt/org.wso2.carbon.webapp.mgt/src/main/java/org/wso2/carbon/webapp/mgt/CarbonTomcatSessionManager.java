@@ -20,6 +20,7 @@ package org.wso2.carbon.webapp.mgt;
 import org.apache.catalina.Session;
 import org.apache.catalina.session.StandardManager;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.IOException;
@@ -46,6 +47,14 @@ public class CarbonTomcatSessionManager extends StandardManager {
     private int ownerTenantId;
 
     public CarbonTomcatSessionManager(int ownerTenantId) {
+        this.ownerTenantId = ownerTenantId;
+    }
+
+    public CarbonTomcatSessionManager() {
+    }
+
+    public void setOwnerTenantId(int ownerTenantId) {
+        CarbonUtils.checkSecurity();
         this.ownerTenantId = ownerTenantId;
     }
 

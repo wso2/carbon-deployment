@@ -22,6 +22,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.JavaUtils;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
+import org.apache.catalina.Manager;
 import org.apache.catalina.core.StandardContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -262,25 +263,37 @@ public class TomcatGenericWebappsDeployer {
                     log.info("Deployed webapp on host: " + contextForHost);
                 }
             }
-            if (context.getDistributable() &&
-                    (DataHolder.getCarbonTomcatService().getTomcat().
-                            getService().getContainer().getCluster()) != null) {
+
+            Manager manager = context.getManager();
+            if (context.getDistributable() && (DataHolder.getCarbonTomcatService().getTomcat().
+                    getService().getContainer().getCluster()) != null) {
+
                 // Using clusterable manager
-                CarbonTomcatClusterableSessionManager sessionManager =
-                        new CarbonTomcatClusterableSessionManager(tenantId);
-                context.setManager(sessionManager);
-                
+                CarbonTomcatClusterableSessionManager sessionManager;
+
+                if (manager instanceof CarbonTomcatClusterableSessionManager) {
+                    sessionManager = (CarbonTomcatClusterableSessionManager) manager;
+                    sessionManager.setOwnerTenantId(tenantId);
+                } else {
+                    sessionManager = new CarbonTomcatClusterableSessionManager(tenantId);
+                    context.setManager(sessionManager);
+                }
+
                 Object alreadyinsertedSMMap = configurationContext.getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
                 if(alreadyinsertedSMMap != null){
-                	((Map<String, CarbonTomcatClusterableSessionManager>) alreadyinsertedSMMap).put(context.getName(), sessionManager);
+                    ((Map<String, CarbonTomcatClusterableSessionManager>) alreadyinsertedSMMap).put(context.getName(), sessionManager);
                 }else{
-                	sessionManagerMap.put(context.getName(), sessionManager);
-                	configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,
+                    sessionManagerMap.put(context.getName(), sessionManager);
+                    configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,
                             sessionManagerMap);
                 }
-                
+
             } else {
-                context.setManager(new CarbonTomcatSessionManager(tenantId));
+                if (manager instanceof CarbonTomcatSessionManager) {
+                    ((CarbonTomcatSessionManager) manager).setOwnerTenantId(tenantId);
+                } else {
+                    context.setManager(new CarbonTomcatSessionManager(tenantId));
+                }
             }
 
             context.setReloadable(false);
