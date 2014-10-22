@@ -18,203 +18,264 @@
 
 package org.wso2.carbon.webapp.mgt.sso;
 
+import org.apache.catalina.SessionEvent;
+import org.apache.catalina.authenticator.SingleSignOn;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.realm.GenericPrincipal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.sso.agent.bean.SSOAgentSessionBean;
-import org.wso2.carbon.identity.sso.agent.oauth2.SAML2GrantAccessTokenRequestor;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.SSOAgentRequestResolver;
+import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
+import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
-import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs;
-import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
-import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
-import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
-import org.wso2.carbon.webapp.mgt.DataHolder;
+import org.wso2.carbon.identity.sso.agent.saml.SSOAgentCarbonX509Credential;
+import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
-public class SAMLSSOValve extends CarbonTomcatValve {
+
+public class SAMLSSOValve extends SingleSignOn {
 
     private static Log log = LogFactory.getLog(SAMLSSOValve.class);
+    private Properties ssoSPConfigProperties = new Properties();
 
-    private Map<String, SAML2SSOManager> samlManagerMap = new HashMap<String, SAML2SSOManager>();
+    public SAMLSSOValve() throws IOException {
+        log.info("Initializing SAMLSSOValve..");
 
-    public SAMLSSOValve() {
+        //Read generic SSO ServiceProvider details
+        if (SSOUtils.isSSOSPConfigExists()) {
+            ssoSPConfigProperties.load(new FileInputStream(WebappSSOConstants.SSO_SP_CONFIG_PATH));
+            log.info("Successfully loaded SSO SP Config.");
+        } else {
+            throw new FileNotFoundException("Unable to find SSO SP config properties file in" +
+                    WebappSSOConstants.SSO_SP_CONFIG_PATH);
+        }
     }
 
     @Override
-    public void invoke(Request request, Response response, CompositeValve compositeValve) {
+    public void invoke(Request request, Response response) throws IOException, ServletException {
 
+        if(log.isDebugEnabled()){
+            log.debug("Invoking SAMLSSOValve. Request URI : " + request.getRequestURI());
+        }
         //Is enable SSO Valve defined in context param?
         if (!Boolean.parseBoolean(request.getContext().findParameter(WebappSSOConstants.ENABLE_SAML2_SSO))) {
-            getNext().invoke(request, response, compositeValve);
+            if(log.isDebugEnabled()) {
+                log.debug("Saml2 SSO not enabled in webapp " + request.getContext().getName());
+            }
+            getNext().invoke(request, response);
             return;
         }
 
-        SAML2SSOManager samlSSOManager = null;
-        SSOAgentConfigs ssoAgentConfigs = null;
+        SSOAgentConfig ssoAgentConfig =
+                (SSOAgentConfig) request.getSession().getAttribute(WebappSSOConstants.SSO_AGENT_CONFIG);
 
-        if (samlManagerMap.containsKey(request.getContextPath())) {
-            samlSSOManager = samlManagerMap.get(request.getContextPath());
-            ssoAgentConfigs = samlSSOManager.getConfigs();
-        } else {
+        if (ssoAgentConfig == null) {
             try {
-                /*//create a new SAML2SSOManager using the configs defined in the properties file,
-				//refered to by the "saml2.config.file.path" defined in the web.xml
-				Properties properties = new Properties();
-	        	properties.load(new FileInputStream(request.getContext().findParameter("saml2.config.file.path")));
-	        	ssoConfigs = new SSOAgentConfigs(properties);*/
+                //Create SSOAgentConfig
+                ssoAgentConfig = new SSOAgentConfig();
+                ssoAgentConfig.initConfig(ssoSPConfigProperties);
 
-                Properties ssoSPConfigs = DataHolder.getSsoSPConfig();
-                ssoAgentConfigs = new SSOAgentConfigs();
-                ssoAgentConfigs.initConfig(ssoSPConfigs);
-                ssoAgentConfigs.setIssuerId(SSOUtils.generateIssuerID(request.getContextPath()));
-                ssoAgentConfigs.setConsumerUrl(SSOUtils.generateConsumerUrl(request.getContextPath()));
-                ssoAgentConfigs.initCheck();
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfigs);
-                samlManagerMap.put(request.getContextPath(), samlSSOManager);
+                String tenantDomain = MultitenantUtils.getTenantDomain(request);
+                int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+
+                SSOAgentX509Credential ssoAgentX509Credential =
+                        new SSOAgentCarbonX509Credential(tenantId, tenantDomain);
+                ssoAgentConfig.getSAML2().setSSOAgentX509Credential(ssoAgentX509Credential);
+                ssoAgentConfig.getSAML2().setSPEntityId(SSOUtils.generateIssuerID(request.getContextPath()));
+                ssoAgentConfig.getSAML2().setACSURL(SSOUtils.generateConsumerUrl(request.getContextPath(),
+                        ssoSPConfigProperties));
+
+                ssoAgentConfig.verifyConfig();
+                request.getSession().setAttribute(WebappSSOConstants.SSO_AGENT_CONFIG, ssoAgentConfig);
+
             } catch (Exception e) {
                 log.error("Error on initializing SAML2SSOManager", e);
                 return;
             }
         }
 
-        // This should be SLO SAML Request from IdP
-        String samlRequest = request.getParameter(SSOAgentConstants.HTTP_POST_PARAM_SAML2_AUTH_REQ);
-
-        // This could be either SAML Response for a SSO SAML Request by the client application or
-        // a SAML Response for a SLO SAML Request from a SP
-        String samlResponse = request.getParameter(SSOAgentConstants.HTTP_POST_PARAM_SAML2_RESP);
-
-        String openid_mode = request.getParameter(SSOAgentConstants.OPENID_MODE);
-
-        String claimed_id = request.getParameter(ssoAgentConfigs.getClaimedIdParameterName());
-
         try {
-            if (ssoAgentConfigs.isSAMLSSOLoginEnabled() && samlRequest != null) {
+            /*if (ssoAgentConfig == null) {
+                throw new SSOAgentException("Cannot find " + SSOAgentConstants.CONFIG_BEAN_NAME +
+                        " set a request attribute. Unable to proceed further");
+            }*/
+
+            SSOAgentRequestResolver resolver =
+                    new SSOAgentRequestResolver(request, response, ssoAgentConfig);
+
+            if (resolver.isURLToSkip()) {
+                if(log.isDebugEnabled()){
+                    log.debug("Request matched a skip URL. Skipping..");
+                }
+                getNext().invoke(request, response);
+                return;
+            }
+
+            SAML2SSOManager samlSSOManager = null;
+            if (resolver.isSLORequest()) {
+
+                if(log.isDebugEnabled()){
+                    log.debug("Processing Single Log Out Request");
+                }
+                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 samlSSOManager.doSLO(request);
-            } else if (ssoAgentConfigs.isSAMLSSOLoginEnabled() && samlResponse != null) {
+
+            } else if (resolver.isSAML2SSOResponse()) {
+
+                if(log.isDebugEnabled()){
+                    log.debug("Processing SSO Response.");
+                }
+
+                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 try {
-                    samlSSOManager.processResponse(request);
-
-                    if (((SSOAgentSessionBean) request.getSession().getAttribute(
-                            ssoAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean().getSubjectId() != null) {
-
-                        String relayState = URLDecoder.decode(request.getParameter("RelayState"), "UTF-8");
-                        if (relayState != null) {
-                            response.sendRedirect(relayState);
-                        } else {
-                            response.sendRedirect(request.getContext().getPath());
+                    samlSSOManager.processResponse(request, response);
+                    //redirect according to relay state attribute
+                    String relayState = ssoAgentConfig.getSAML2().getRelayState();
+                    if (relayState != null && request.getSession(Boolean.FALSE) != null) {
+                        String requestedURI = (String) request.getSession(Boolean.FALSE).getAttribute(relayState);
+                        if (requestedURI != null) {
+                            request.getSession(Boolean.FALSE).removeAttribute(relayState);
+                            response.sendRedirect(requestedURI);
+                            return;
                         }
+                    }
+                    //Handling redirect from acs page after SLO response. This will be done if
+                    else if (request.getRequestURI().endsWith(
+                            ssoSPConfigProperties.getProperty(WebappSSOConstants.CONSUMER_URL_POSTFIX)) &&
+                            Boolean.parseBoolean(ssoSPConfigProperties.getProperty(
+                                    WebappSSOConstants.HANDLE_CONSUMER_URL_AFTER_SLO))) {
+                        response.sendRedirect(request.getContext().getPath());
                         return;
                     }
-
                 } catch (SSOAgentException e) {
-                    if (request.getSession(false) != null) {
-                        request.getSession(false).removeAttribute(ssoAgentConfigs.getSessionBeanName());
-                    }
-                    throw e;
+                    handleException(request, e);
                 }
-            } else if (ssoAgentConfigs.isSAMLSSOLoginEnabled() && ssoAgentConfigs.isSLOEnabled() &&
-                    request.getRequestURI().endsWith(ssoAgentConfigs.getLogoutUrl())) {
-                if (request.getSession(false) != null) {
-                    response.sendRedirect(samlSSOManager.buildRequest(request, true, false));
-                    return;
+
+            } else if (resolver.isSLOURL()) {
+
+                if(log.isDebugEnabled()){
+                    log.debug("Processing Single Log Out URL");
                 }
-            } else if (ssoAgentConfigs.isSAMLSSOLoginEnabled() &&
-                    request.getRequestURI().endsWith(ssoAgentConfigs.getSAMLSSOUrl())) {
-                response.sendRedirect(samlSSOManager.buildRequest(request, false, false));
-                return;
-            } else if ((ssoAgentConfigs.isSAMLSSOLoginEnabled() || ssoAgentConfigs.isOpenIDLoginEnabled()) &&
-                    !request.getRequestURI().endsWith(ssoAgentConfigs.getLoginUrl()) &&
-                    (request.getSession(false) == null ||
-                            request.getSession(false).getAttribute(ssoAgentConfigs.getSessionBeanName()) == null)) {
-//                response.sendRedirect(SSOUtils.getSAMLSSOURLforApp(request.getRequestURI()));
-                response.sendRedirect(samlSSOManager.buildRequest(request, false, false));
-                return;
-            } else if (ssoAgentConfigs.isSAMLSSOLoginEnabled() && ssoAgentConfigs.isSAML2GrantEnabled() &&
-                    request.getRequestURI().endsWith(ssoAgentConfigs.getSAML2GrantUrl()) &&
-                    request.getSession(false) != null &&
-                    request.getSession(false).getAttribute(ssoAgentConfigs.getSessionBeanName()) != null &&
-                    ((SSOAgentSessionBean) request.getSession().getAttribute(
-                            ssoAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean() != null &&
-                    ((SSOAgentSessionBean) request.getSession(false).getAttribute(
-                            ssoAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean().getSAMLAssertion() != null) {
-                SAML2GrantAccessTokenRequestor.getAccessToken(request, ssoAgentConfigs);
-            }
-        } catch (IOException e) {
-            log.error("Error while redirecting the response path", e);
-        } catch (SSOAgentException e) {
-            log.error(e.getMessage(), e);
-        }
-       /* // This should be SLO SAML Request from IdP
-        String samlRequest = request.getParameter(SSOAgentConstants.HTTP_POST_PARAM_SAML2_AUTH_REQ);
+                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                if (resolver.isHttpPostBinding()) {
 
-        // This could be either SAML Response for a SSO SAML Request by the client application or
-        // a SAML Response for a SLO SAML Request from a SP
-        String samlResponse = request.getParameter(SSOAgentConstants.HTTP_POST_PARAM_SAML2_RESP);
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
 
-        try {
-            if (samlRequest != null) {
-                samlSSOManager.doSLO(request);
-            } else if (samlResponse != null) {
-                samlSSOManager.processResponse(request);
-
-                if (((SSOAgentSessionBean)request.getSession().getAttribute(ssoConfigs.getSessionBeanName())).getSAMLSSOSessionBean().getSubjectId()) {
-
-
-                    String relayState = URLDecoder.decode(request.getParameter("RelayState"), "UTF-8");
-
-                    if (relayState != null && !relayState.equals(request.getContextPath() + "/" + ssoConfigs.getLoginAction())) {
-                        response.sendRedirect(relayState);
-                    } else {
-                        response.sendRedirect(request.getContextPath() + "/" + ssoConfigs.getHomePage());
-                    }
-                    return;
                 } else {
-                    //send to logout page
-                    response.sendRedirect(request.getContextPath() + "/" + ssoConfigs.getLogoutPage());
-                    return;
+                    //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, true));
                 }
-            } else if (request.getRequestURI().endsWith(ssoConfigs.getLogoutAction())) {
-                if (request.getSession(false) != null) {
-                    response.sendRedirect(samlSSOManager.buildRequest(request, true, false));
-                    return;
-                }
-            } else if (request.getSession().getAttribute(ssoConfigs.getSubjectIdSessionAttributeName()) == null
-                    && !request.getRequestURI().endsWith(ssoConfigs.getLogoutPage())) {
-                response.sendRedirect(samlSSOManager.buildRequest(request, false, false));
                 return;
+
+            } else if (resolver.isSAML2SSOURL() ||
+                    (ssoAgentConfig.isSAML2SSOLoginEnabled() && (request.getSession(false) == null ||
+                            request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null))) {
+                //handling the unauthenticated requests for all contexts.
+                if(log.isDebugEnabled()){
+                    log.debug("Processing SSO URL");
+                }
+                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                String relayStateId = SSOAgentUtils.createID();
+                ssoAgentConfig.getSAML2().setRelayState(relayStateId);
+                request.getSession(Boolean.FALSE).setAttribute(relayStateId, request.getRequestURI());
+
+                if (resolver.isHttpPostBinding()) {
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                    String htmlPayload = samlSSOManager.buildPostRequest(request,response,false);
+                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                    return;
+
+                } else {
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
+                }
+                return;
+
+            } /*else if (ssoAgentConfig.isSAML2SSOLoginEnabled() &&
+                    (request.getSession(false) == null ||
+                            request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null)) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Sending  request.");
+                }
+                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                ssoAgentConfig.getSAML2().setPassiveAuthn(true);
+                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
+                return;
+
             }
+*/
+            if (request.getSession(false) != null) {
+                LoggedInSessionBean loggedInSessionBean = (LoggedInSessionBean)
+                        request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
 
-            String principalName = (String) request.getSession().getAttribute(ssoConfigs.getSubjectIdSessionAttributeName());
+                if (loggedInSessionBean != null) {
 
-            if (principalName != null) {
+                    LoggedInSessionBean.SAML2SSO sessionBean = loggedInSessionBean.getSAML2SSO();
+                    String principalName = sessionBean.getSubjectId();
 
-                List<String> rolesList = null;
-                Map<String, String> attrMap = (HashMap) request.getSession(false).getAttribute(ssoConfigs.getSamlSSOAttributesMapName());
+                    //Setting user name and roles in to UserPrincipal
+                    if (principalName != null) {
+                        List<String> rolesList = null;
+                        Map<String, String> attrMap = sessionBean.getSubjectAttributes();
 
-                if (attrMap != null && !attrMap.isEmpty()) {
-                    String roles = attrMap.get("http://wso2.org/claims/role");
+                        if (attrMap != null && !attrMap.isEmpty()) {
+                            String roles = attrMap.get("http://wso2.org/claims/role");
 
-                    if (roles != null && !roles.isEmpty()) {
-                        String[] rolesArr = roles.split(",");
-                        rolesList = Arrays.asList(rolesArr);
+                            if (roles != null && !roles.isEmpty()) {
+                                String[] rolesArr = roles.split(",");
+                                rolesList = Arrays.asList(rolesArr);
+                            }
+                        }
+                        request.setUserPrincipal(new GenericPrincipal(principalName, null, rolesList));
                     }
                 }
-
-                request.setUserPrincipal(new GenericPrincipal(principalName, null, rolesList));
             }
-        } catch (SSOAgentException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }*/
 
-        getNext().invoke(request, response, compositeValve);
+        } catch (SSOAgentException e) {
+            log.error("An error has occurred", e);
+            throw e;
+        }
+
+        if(log.isDebugEnabled()){
+            log.debug("End of SAMLSSOValve invoke.");
+        }
+
+        getNext().invoke(request, response);
+    }
+
+    public void sessionEvent(SessionEvent event) {
+        //let default tomcat logic to continue
+        super.sessionEvent(event);
+    }
+
+    public void backgroundProcess() {
+        super.backgroundProcess();
+    }
+
+    protected void handleException(HttpServletRequest request, SSOAgentException e)
+            throws SSOAgentException {
+        if (request.getSession(false) != null) {
+            request.getSession(false).removeAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
+        }
+        throw e;
     }
 }

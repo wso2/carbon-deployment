@@ -25,7 +25,6 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
-import org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
@@ -45,14 +44,9 @@ import org.wso2.carbon.webapp.mgt.WebContextParameter;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
-import org.wso2.carbon.webapp.mgt.sso.SAMLSSOValve;
-import org.wso2.carbon.webapp.mgt.sso.SSOUtils;
-import org.wso2.carbon.webapp.mgt.sso.WebappSSOConstants;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
@@ -89,19 +83,6 @@ public class WebappManagementServiceComponent {
             } else {
                 setServerURLParam(DataHolder.getServerConfigContext());
             }
-
-            //Read generic SSO ServiceProvider details
-            if(SSOUtils.isSSOSPConfigExists()) {
-                Properties ssoSPConfigProperties = new Properties();
-                ssoSPConfigProperties.load(new FileInputStream(WebappSSOConstants.SSO_SP_CONFIG_PATH));
-                DataHolder.setSSOSPConfig(ssoSPConfigProperties);
-
-                //add SSO Valve
-                valves.add(new SAMLSSOValve());
-            } else {
-                log.warn("Unable to find SSO SP config properties file in " + WebappSSOConstants.SSO_SP_CONFIG_PATH);
-            }
-
             //adding TenantLazyLoaderValve first in the TomcatContainer if Url mapping available
             if (DataHolder.getHotUpdateService() != null
 //                && TomcatValveContainer.isValveExists(new UrlMapperValve //TODO: Fix this once URLMapper component becomes available

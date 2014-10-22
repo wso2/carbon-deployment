@@ -28,6 +28,8 @@ public class WebappSSOConstants {
 
     public static final String SSO_CONFIG_FILE_NAME = "sso-sp-config.properties";
     public static final String SAMLSSOURL = "SAMLSSOUrl";
+    public static final String SSO_AGENT_CONFIG = "SSOAgentConfig";
+    public static final String HANDLE_CONSUMER_URL_AFTER_SLO = "handleConsumerURLAfterSLO";
     public static String SSO_SP_CONFIG_PATH = CarbonUtils.getCarbonSecurityConfigDirPath() + File.separator + SSO_CONFIG_FILE_NAME;
 
 
@@ -35,43 +37,4 @@ public class WebappSSOConstants {
     public static String APP_SERVER_URL = "ApplicationServerURL";
 
     public static String CONSUMER_URL_POSTFIX = "SAML.ConsumerUrlPostFix";
-
-/*    public static String IDP_URL = "IdPUrl";
-
-//    public static String IDENTITY_SERVER_URL = "IdentityServerURL";
-
-//    public static String USERNAME = "username";
-//    public static String PASSWORD = "password";
-
-    public static String ENABLE_SSO = "EnableSLO";
-
-    public static String ENABLE_RESPONSE_SIGNING = "EnableResponseSigning";
-
-    public static String ENABLE_ASSERTION_SIGNING = "EnableAssertionSigning";
-
-    public static String ENABLE_REQUEST_SIGNING = "EnableRequestSigning";
-
-    public static String SSO_AGENT_CREDENTIALS_IMPL_CLASS = "SSOAgentCredentialImplClass";
-
-    public static String KEYSTORE = "KeyStore";
-
-    public static String KEYSTORE_PASSORD = "KeyStorePassword";
-
-    public static String IDP_CERT_ALIAS = "IdPCertAlias";
-
-    public static String PRIVATE_KEY_ALIAS = "PrivateKeyAlias";
-
-    public static String PRIVATE_KEY_PASSWORD = "PrivateKeyPassword";
-
-    public static String SUBJECT_ID_ASSERTION_ATTRIBUTE_NAME = "SubjectIDSessionAttributeName";
-
-    public static String ATTRIBUTES_MAP_NAME = "AttributesMapName";
-
-    public static String LOGIN_ACTION = "LoginAction";
-
-    public static String LOGOUT_ACTION = "LogoutAction";
-
-    public static String HOME_PAGE = "HomePage";
-
-    public static String LOGOUT_PAGE = "LogoutPage";*/
 }

@@ -20,7 +20,6 @@ package org.wso2.carbon.webapp.mgt.sso;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.webapp.mgt.DataHolder;
 
 import java.io.File;
 import java.util.Properties;
@@ -42,17 +41,13 @@ public class SSOUtils {
         return issuerId;
     }
 
-    public static String generateConsumerUrl(String contextPath) {
-        return getSsoSPConfig().getProperty(WebappSSOConstants.APP_SERVER_URL) + contextPath +
-                getSsoSPConfig().getProperty(WebappSSOConstants.CONSUMER_URL_POSTFIX);
+    public static String generateConsumerUrl(String contextPath, Properties ssoSPConfigProperties) {
+        return ssoSPConfigProperties.getProperty(WebappSSOConstants.APP_SERVER_URL) + contextPath +
+                ssoSPConfigProperties.getProperty(WebappSSOConstants.CONSUMER_URL_POSTFIX);
     }
 
-    private static Properties getSsoSPConfig() {
-        return DataHolder.getSsoSPConfig();
-    }
-
-    public static String getSAMLSSOURLforApp(String requestURI) {
-        return getSsoSPConfig().getProperty(WebappSSOConstants.APP_SERVER_URL) + requestURI +
-                getSsoSPConfig().getProperty(WebappSSOConstants.SAMLSSOURL);
+    public static String getSAMLSSOURLforApp(String requestURI, Properties ssoSPConfigProperties) {
+        return ssoSPConfigProperties.getProperty(WebappSSOConstants.APP_SERVER_URL) + requestURI +
+                ssoSPConfigProperties.getProperty(WebappSSOConstants.SAMLSSOURL);
     }
 }
