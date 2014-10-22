@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,12 +17,23 @@
  * under the License.
  */
 
-<%
 var config = require('/config/config.json');
 var db = new Database(config.database.url, config.database.username, config.database.password);
 
-function executeQuery(sql) {
-    return db.query(sql);
+function executeQuery(sql, params) {
+    if (params == null) {
+        return db.query(sql);
+    }
+
+    // double the parameters in the case of percentage calculation
+    if(sql.split('?').length -1 > params.length){
+        params = params.concat(params);
+    }
+
+    // add sql statement of the array and double the parameter list
+    params = [sql].concat(params);
+
+    return db.query.apply(db, params);
 }
 
 %>

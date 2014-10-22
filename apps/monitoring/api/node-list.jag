@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,7 +17,6 @@
  * under the License.
  */
 
-<%
 include('db.jag');
 var helper = require('as-data-helper.js');
 var sqlStatements = require('sql-statements.json');
@@ -48,8 +48,6 @@ function getNodeList() {
             'elements': ['10.100.5.126', '10.100.5.127']
         }
     ]);
-
-    <!--print(dataArray);-->
 }
 
 %>

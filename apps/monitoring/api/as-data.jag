@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,50 +17,44 @@
  * under the License.
  */
 
-<%
 include('db.jag');
 var helper = require('as-data-helper.js');
 var action = request.getParameter('action');
-var where = getWhereClause();
+var where = buildConditions();
 var now = new Date();
 var end_time = request.getParameter('end_time');
 
-// build the where clause of the sql based on start_time, end_time and node values
-function getWhereClause() {
+/*
+ build the ammendment to the prepared statement along with the parameter values based on
+ start_time, end_time, node and webapp
+*/
+function buildConditions() {
     // default data range is the past 24 hours
     var startTime = request.getParameter('start_time') || helper.formatDate(new Date(now -
             86400000));
     var endTime = request.getParameter('end_time') || helper.formatDate(now);
     var node = request.getParameter('node');
     var webapp = request.getParameter('appname');
-    var where = '';
+    var where = [];
+    var params = [];
 
-    if (startTime == null && endTime == null && node == null && webapp == null) {
-        return '';
+    if(startTime != null) {
+        where.push('time >= ?');
+        params.push(startTime);
     }
-
-    if (startTime != null) {
-        where = appendCondition(where, "time >= '" + startTime + "'");
+    if(endTime != null) {
+        where.push('time <= ?');
+        params.push(endTime);
     }
-    if (endTime != null) {
-        where = appendCondition(where, "time <= '" + endTime + "'");
-    }
-    if (node != null && node != "All") {
-        where = appendCondition(where, "serverName = '" + node + "'");
+    if (node != null && node != 'All') {
+        where.push('serverName = ?');
+        params.push(String(node));
     }
     if (webapp != null && webapp != "null") {
-        where = appendCondition(where, "webappName= '" + webapp + "'");
+        where.push('webappName= ?');
+        params.push(String(webapp));
     }
-    return where;
-}
-
-function appendCondition(where, condition) {
-    if (where == '') {
-        where = ' WHERE ';
-    } else {
-        where = where + ' AND ';
-    }
-    return where + condition;
+    return [' WHERE ' + where.join(' AND '), params];
 }
 
 function getNodeList() {
