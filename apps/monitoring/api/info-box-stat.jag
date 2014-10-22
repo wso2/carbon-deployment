@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,13 +17,11 @@
  * under the License.
  */
 
-<%
-
 include('db.jag');
 var helper = require('as-data-helper.js');
 var sqlStatements = require('sql-statements.json');
 
-function getDataForInfoBoxBarChart(type, whereClause) {
+function getDataForInfoBoxBarChart(type, conditions) {
     var startTime = helper.parseDate(request.getParameter('start_time'));
     var endTime = helper.parseDate(request.getParameter('end_time'));
     var timeDiff = 0;
@@ -44,22 +43,22 @@ function getDataForInfoBoxBarChart(type, whereClause) {
 
     if (timeDiff > 1200) {
         sql = helper.formatSql(sqlStatements.infoBoxGreaterThan1200Days, [selectStatement,
-            type, whereClause]);
+            type, conditions[0]]);
     } else if (timeDiff > 90) {
         sql = helper.formatSql(sqlStatements.infoBoxGreaterThan90Days, [selectStatement,
-            type, whereClause]);
+            type, conditions[0]]);
     } else if (timeDiff > 30) {
         sql = helper.formatSql(sqlStatements.infoBoxGreaterThan30Days, [selectStatement,
-            type, whereClause]);
+            type, conditions[0]]);
     } else if (timeDiff > 1) {
         sql = helper.formatSql(sqlStatements.infoBoxGreaterThan1Day, [selectStatement,
-            type, whereClause]);
+            type, conditions[0]]);
     } else if (timeDiff <= 1) {
         sql = helper.formatSql(sqlStatements.infoBoxLessThan1Day, [selectStatement,
-            type, whereClause]);;
+            type, conditions[0]]);;
     }
 
-    results = executeQuery(sql);
+    results = executeQuery(sql, conditions[1]);
 
     for (i = 0, len = results.length; i < len; i++) {
         var tempData = [];
@@ -71,10 +70,10 @@ function getDataForInfoBoxBarChart(type, whereClause) {
     return arrList;
 }
 
-function getInfoBoxRequestStat(whereClause) {
+function getInfoBoxRequestStat(conditions) {
     var output = {};
-    var sql = helper.formatSql(sqlStatements.infoBoxRequest, [whereClause]);
-    var results = executeQuery(sql)[0];
+    var sql = helper.formatSql(sqlStatements.infoBoxRequest, [conditions[0]]);
+    var results = executeQuery(sql, conditions[1])[0];
 
     output['title'] = 'Total Requests';
     output['measure_label'] = 'Per min';
@@ -87,15 +86,15 @@ function getInfoBoxRequestStat(whereClause) {
     } else {
         output['total'] = output['max'] = output['avg'] = output['min'] = 'N/A';
     }
-    output['graph'] = getDataForInfoBoxBarChart('averageRequestCount', whereClause);
+    output['graph'] = getDataForInfoBoxBarChart('averageRequestCount', conditions);
     print(output);
 }
 
-function getInfoBoxResponseStat(whereClause) {
+function getInfoBoxResponseStat(conditions) {
     var output = {};
 
-    var sql = helper.formatSql(sqlStatements.infoBoxResponse, [whereClause]);
-    var results = executeQuery(sql)[0];
+    var sql = helper.formatSql(sqlStatements.infoBoxResponse, [conditions[0]]);
+    var results = executeQuery(sql, conditions[1])[0];
     output['title'] = 'Response Time';
     output['measure_label'] = 'ms';
 
@@ -106,16 +105,16 @@ function getInfoBoxResponseStat(whereClause) {
     } else {
         output['max'] = output['avg'] = output['min'] = 'N/A';
     }
-    output['graph'] = getDataForInfoBoxBarChart('averageResponseTime', whereClause);
+    output['graph'] = getDataForInfoBoxBarChart('averageResponseTime', conditions);
     print(output);
 }
 
 
-function getInfoBoxSessionStat(whereClause) {
+function getInfoBoxSessionStat(conditions) {
     var output = {};
 
-    var sql = helper.formatSql(sqlStatements.infoBoxSession, [whereClause]);
-    var results = executeQuery(sql)[0];
+    var sql = helper.formatSql(sqlStatements.infoBoxSession, [conditions[0]]);
+    var results = executeQuery(sql, conditions[1])[0];
     output['title'] = 'Session';
 
     if (results['totalSession'] != null) {
@@ -127,11 +126,11 @@ function getInfoBoxSessionStat(whereClause) {
     print(output);
 }
 
-function getInfoBoxErrorStat(whereClause) {
+function getInfoBoxErrorStat(conditions) {
     var output = {};
 
-    var sql = helper.formatSql(sqlStatements.infoBoxError, [whereClause]);
-    var results = executeQuery(sql)[0];
+    var sql = helper.formatSql(sqlStatements.infoBoxError, [conditions[0]]);
+    var results = executeQuery(sql, conditions[1])[0];
     output['title'] = 'Errors';
 
     if (results['totalError'] != null) {

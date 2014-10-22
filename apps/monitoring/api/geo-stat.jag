@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,7 +17,6 @@
  * under the License.
  */
 
-<%
 include('db.jag');
 var helper = require('as-data-helper.js');
 var sqlStatements = require('sql-statements.json');
@@ -27,20 +27,20 @@ var dbMapping = {
     'language': ['LANGUAGE', 'language']
 };
 
-function getGeoStatData(whereClause, type){
+function getGeoStatData(conditions, type){
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.geo, [dbEntry[1], dbEntry[0],whereClause]);
-    return executeQuery(sql);
+    var sql = helper.formatSql(sqlStatements.geo, [dbEntry[1], dbEntry[0], conditions[0]]);
+    return executeQuery(sql, conditions[1]);
 }
 
-function getLanguageStat(whereClause) {
+function getLanguageStat(conditions) {
     var dataArray = [];
     var ticks = [];
     var i,len;
     var row;
     var languageCode;
     var opt;
-    var results = getGeoStatData(whereClause, 'language');
+    var results = getGeoStatData(conditions, 'language');
     var languageCodeLookup = require('/languages.json');
     var chartOptions;
 
@@ -66,9 +66,9 @@ function getLanguageStat(whereClause) {
     ]);
 }
 
-function getLanguageTabularStat(whereClause) {
+function getLanguageTabularStat(conditions) {
     var i, len;
-    var results = getGeoStatData(whereClause, 'language');
+    var results = getGeoStatData(conditions, 'language');
     var languageCode;
     var languageCodeLookup = require('/languages.json');
 
@@ -79,11 +79,11 @@ function getLanguageTabularStat(whereClause) {
     print(helper.getTabularData(results, ['Language', 'Request Count', 'Percentage'], '2'));
 }
 
-function getCountryStat(whereClause) {
+function getCountryStat(conditions) {
     var dataObject = {};
     var i, len;
     var row;
-    var results = getGeoStatData(whereClause, 'country');
+    var results = getGeoStatData(conditions, 'country');
 
     for (i = 0, len = results.length; i < len; i++) {
         row = results[i];
@@ -93,10 +93,10 @@ function getCountryStat(whereClause) {
 
 }
 
-function getCountryTabularStat(whereClause) {
+function getCountryTabularStat(conditions) {
     var i;
     var countryCode;
-    var results = getGeoStatData(whereClause, 'country');
+    var results = getGeoStatData(conditions, 'country');
     var countryCodeLookup = require('/countries.json');
 
     for (i = 0, len = results.length; i < len; i++) {

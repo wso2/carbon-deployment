@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,14 +17,13 @@
  * under the License.
  */
 
-<%
 include('db.jag');
 var helper = require('as-data-helper.js');
 var sqlStatements = require('sql-statements.json');
 
-function getPastStat(whereClause, endTime, timeUnit) {
-    var sql = helper.formatSql(sqlStatements.pastStat, [whereClause, endTime, timeUnit]);
-    return executeQuery(sql);
+function getPastStat(conditions, endTime, timeUnit) {
+    var sql = helper.formatSql(sqlStatements.pastStat, [conditions[0], endTime, timeUnit]);
+    return executeQuery(sql, conditions[1]);
 }
 
 function matchPastStatWithApp(webappName, pastDataArray) {
@@ -48,7 +48,7 @@ function getTableHeadings() {
     ];
 }
 
-function getAppsStat(whereClause, endTime) {
+function getAppsStat(conditions, endTime) {
     var appList = [];
     var tempArray = [];
     var i, len;
@@ -58,13 +58,13 @@ function getAppsStat(whereClause, endTime) {
     var key;
     var sql;
 
-    sql = helper.formatSql(sqlStatements.apps, [whereClause]);
+    sql = helper.formatSql(sqlStatements.apps, [conditions[0]]);
 
-    lastMinute = getPastStat(whereClause, endTime, 'MINUTE');
-    lastHour = getPastStat(whereClause, endTime, 'HOUR');
-    lastDay = getPastStat(whereClause, endTime, 'DAY');
+    lastMinute = getPastStat(conditions, endTime, 'MINUTE');
+    lastHour = getPastStat(conditions, endTime, 'HOUR');
+    lastDay = getPastStat(conditions, endTime, 'DAY');
 
-    apps = executeQuery(sql);
+    apps = executeQuery(sql, conditions[1]);
 
     for (i = 0, len = apps.length; i < len; i++) {
         webappName = apps[i]['webappName'];

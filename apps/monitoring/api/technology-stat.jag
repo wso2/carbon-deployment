@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,7 +17,6 @@
  * under the License.
  */
 
-<%
 include('db.jag');
 var helper = require('as-data-helper.js');
 var sqlStatements = require('sql-statements.json');
@@ -28,13 +28,14 @@ var dbMapping = {
     'device-type': ['DEVICE_TYPE', 'deviceCategory']
 };
 
-function getTechnologyStatData(whereClause, type) {
+function getTechnologyStatData(conditions, type) {
     var dbEntries = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.technology, [dbEntries[1], dbEntries[0], whereClause]);
-    return executeQuery(sql);
+    var sql = helper.formatSql(sqlStatements.technology, [dbEntries[1], dbEntries[0],
+        conditions[0]]);
+    return executeQuery(sql, conditions[1]);
 }
 
-function getTechnologyStat(whereClause, type, visibleNumbers, groupName) {
+function getTechnologyStat(conditions, type, visibleNumbers, groupName) {
     var dataObject = {};
     var i, len;
     var row;
@@ -42,7 +43,7 @@ function getTechnologyStat(whereClause, type, visibleNumbers, groupName) {
     var data;
     var chartOptions = {};
 
-    var results = getTechnologyStatData(whereClause, type);
+    var results = getTechnologyStatData(conditions, type);
 
     var shrinkedResults = helper.getShrinkedResultset(results, visibleNumbers, groupName);
 
@@ -56,22 +57,22 @@ function getTechnologyStat(whereClause, type, visibleNumbers, groupName) {
     print([dataObject, chartOptions]);
 }
 
-function getTechnologyTubularStat(whereClause, type, tableHeadings, sortColumn) {
-    print(helper.getTabularData(getTechnologyStatData(whereClause, type), tableHeadings, sortColumn));
+function getTechnologyTubularStat(conditions, type, tableHeadings, sortColumn) {
+    print(helper.getTabularData(getTechnologyStatData(conditions, type), tableHeadings, sortColumn));
 }
 
-function getHttpStatusStatData(whereClause) {
-    var sql = helper.formatSql(sqlStatements.httpStatus,[whereClause]);
-    return executeQuery(sql);
+function getHttpStatusStatData(conditions) {
+    var sql = helper.formatSql(sqlStatements.httpStatus,[conditions[0]]);
+    return executeQuery(sql, conditions[1]);
 }
 
-function getHttpStatusStat(whereClause) {
+function getHttpStatusStat(conditions) {
     var dataArray = [];
     var ticks = [];
     var i, len;
     var row;
     var opt;
-    var results = getHttpStatusStatData(whereClause);
+    var results = getHttpStatusStatData(conditions);
 
     for (i = 0, len = results.length; (i < len) && (i < 5); i++) {
         row = results[i];
@@ -89,7 +90,7 @@ function getHttpStatusStat(whereClause) {
     ]);
 }
 
-function getHttpStatusTabularStat(whereClause, tableHeadings, sortColumn) {
-    print(helper.getTabularData(getHttpStatusStatData(whereClause), tableHeadings, sortColumn));
+function getHttpStatusTabularStat(conditions, tableHeadings, sortColumn) {
+    print(helper.getTabularData(getHttpStatusStatData(conditions), tableHeadings, sortColumn));
 }
 %>

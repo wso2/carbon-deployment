@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -16,7 +17,6 @@
  * under the License.
  */
 
-<%
 include('db.jag');
 var helper = require('as-data-helper.js');
 var sqlStatements = require('sql-statements.json');
@@ -27,17 +27,17 @@ var dbMapping = {
     'referral': ['REFERRER', 'referrer']
 };
 
-function getTrafficStatData(whereClause, type) {
+function getTrafficStatData(conditions, type) {
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry[0], dbEntry[1], whereClause]);
-    return executeQuery(sql);
+    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry[0], dbEntry[1], conditions[0]]);
+    return executeQuery(sql, conditions[1]);
 }
 
-function getTrafficStat(whereClause, type, tableHeadings, sortColumn) {
+function getTrafficStat(conditions, type, tableHeadings, sortColumn) {
     var dataArray = [];
     var i, len;
     var row;
-    var results = getTrafficStatData(whereClause, type);
+    var results = getTrafficStatData(conditions, type);
 
     for (i = 0, len = results.length; i < len; i++) {
         row = results[i];
