@@ -19,7 +19,7 @@
 
 var util = require('as-data-util.js');
 var action = request.getParameter('action');
-var where = buildConditions();
+var conditions = buildConditions();
 
 /*
  build the ammendment to the prepared statement along with the parameter values based on
@@ -61,115 +61,115 @@ function getNodeList() {
 
 function getAppsStat() {
     var appList = require('app-list.jag');
-    appList.getAppsStat(where, request.getParameter('end_time') || util.formatDate(new Date()));
+    appList.getAppsStat(conditions, request.getParameter('end_time') || util.formatDate(new Date()));
 }
 
 function getBrowserStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getTechnologyStat(where, 'browser', 4, 'Other Browsers');
+    technologyStat.getTechnologyStat(conditions, 'browser', 4, 'Other Browsers');
 }
 
 function getBrowserTabularStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getTechnologyTubularStat(where, 'browser',
+    technologyStat.getTechnologyTubularStat(conditions, 'browser',
             ['Browser', 'Request Count', 'Percentage'], '2');
 }
 
 function getOperatingSystemStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getTechnologyStat(where, 'os', 5, 'Other Operating Systems');
+    technologyStat.getTechnologyStat(conditions, 'os', 5, 'Other Operating Systems');
 }
 
 function getOperatingSystemTabularStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getTechnologyTubularStat(where, 'os',
+    technologyStat.getTechnologyTubularStat(conditions, 'os',
             ['Operating System', 'Request Count', 'Percentage'], '2');
 }
 
 function getDeviceTypeStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getTechnologyStat(where, 'device-type', 5, 'Other devices');
+    technologyStat.getTechnologyStat(conditions, 'device-type', 5, 'Other devices');
 }
 
 function getDeviceTypeTabularStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getTechnologyTubularStat(where, 'device-type',
+    technologyStat.getTechnologyTubularStat(conditions, 'device-type',
             ['Device type', 'Request Count', 'Percentage'], '2');
 }
 
 function getHttpStatusStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getHttpStatusStat(where);
+    technologyStat.getHttpStatusStat(conditions);
 }
 
 function getHttpStatusTabularStat() {
     var technologyStat = require('technology-stat.jag');
-    technologyStat.getHttpStatusTabularStat(where, ['HTTP Response Code', 'Request Count',
+    technologyStat.getHttpStatusTabularStat(conditions, ['HTTP Response Code', 'Request Count',
         'Percentage'], '1');
 }
 
 function getLanguageStat() {
     var geoStat = require('geo-stat.jag');
-    geoStat.getLanguageStat(where);
+    geoStat.getLanguageStat(conditions);
 }
 
 function getLanguageTabularStat() {
     var geoStat = require('geo-stat.jag');
-    geoStat.getLanguageTabularStat(where);
+    geoStat.getLanguageTabularStat(conditions);
 }
 
 function getCountryStat() {
     var geoStat = require('geo-stat.jag');
-    geoStat.getCountryStat(where);
+    geoStat.getCountryStat(conditions);
 }
 
 function getCountryTabularStat() {
     var geoStat = require('geo-stat.jag');
-    geoStat.getCountryTabularStat(where);
+    geoStat.getCountryTabularStat(conditions);
 }
 
 function getContextStat() {
     var trafficStat = require('traffic-stat.jag');
-    trafficStat.getTrafficStat(where, 'context', ['Context', 'Request Count', 'Percentage'], '2')
+    trafficStat.getTrafficStat(conditions, 'context', ['Context', 'Request Count', 'Percentage'], '2')
 }
 function getReferralStat() {
     var trafficStat = require('traffic-stat.jag');
-    trafficStat.getTrafficStat(where, 'referral', ['Referrer', 'Request Count', 'Percentage'], '2')
+    trafficStat.getTrafficStat(conditions, 'referral', ['Referrer', 'Request Count', 'Percentage'], '2')
 }
 
 function getRequestStat() {
     var timeVaryingStat = require('time-varying-stat.jag');
-    timeVaryingStat.getTimeVaryingStat(where, 'request');
+    timeVaryingStat.getTimeVaryingStat(conditions, 'request');
 }
 
 function getResponseStat() {
     var timeVaryingStat = require('time-varying-stat.jag');
-    timeVaryingStat.getTimeVaryingStat(where, 'response', '#bacf0b');
+    timeVaryingStat.getTimeVaryingStat(conditions, 'response', '#bacf0b');
 }
 
 function getErrorStat() {
     var timeVaryingStat = require('time-varying-stat.jag');
-    timeVaryingStat.getTimeVaryingStat(where, 'error', '#e7912a');
+    timeVaryingStat.getTimeVaryingStat(conditions, 'error', '#e7912a');
 }
 
 function getInfoBoxRequestStat() {
     var infoBoxStat = require('info-box-stat.jag');
-    return infoBoxStat.getInfoBoxRequestStat(where);
+    return infoBoxStat.getInfoBoxRequestStat(conditions);
 }
 
 function getInfoBoxResponseStat() {
     var infoBoxStat = require('info-box-stat.jag');
-    return infoBoxStat.getInfoBoxResponseStat(where);
+    return infoBoxStat.getInfoBoxResponseStat(conditions);
 }
 
 function getInfoBoxSessionStat() {
     var infoBoxStat = require('info-box-stat.jag');
-    return infoBoxStat.getInfoBoxSessionStat(where);
+    return infoBoxStat.getInfoBoxSessionStat(conditions);
 }
 
 function getInfoBoxErrorStat() {
     var infoBoxStat = require('info-box-stat.jag');
-    return infoBoxStat.getInfoBoxErrorStat(where);
+    return infoBoxStat.getInfoBoxErrorStat(conditions);
 }
 
 var actionMapping = {
