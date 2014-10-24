@@ -17,12 +17,9 @@
  * under the License.
  */
 
-include('db.jag');
-var helper = require('as-data-helper.js');
+var util = require('as-data-util.js');
 var action = request.getParameter('action');
 var where = buildConditions();
-var now = new Date();
-var end_time = request.getParameter('end_time');
 
 /*
  build the ammendment to the prepared statement along with the parameter values based on
@@ -30,9 +27,9 @@ var end_time = request.getParameter('end_time');
 */
 function buildConditions() {
     // default data range is the past 24 hours
-    var startTime = request.getParameter('start_time') || helper.formatDate(new Date(now -
-            86400000));
-    var endTime = request.getParameter('end_time') || helper.formatDate(now);
+    var startTime = request.getParameter('start_time') || util.formatDate(new Date(new Date() -
+    86400000));
+    var endTime = request.getParameter('end_time') || util.formatDate(new Date());
     var node = request.getParameter('node');
     var webapp = request.getParameter('appname');
     var where = [];
@@ -64,7 +61,7 @@ function getNodeList() {
 
 function getAppsStat() {
     var appList = require('app-list.jag');
-    appList.getAppsStat(where, end_time || helper.formatDate(now));
+    appList.getAppsStat(where, request.getParameter('end_time') || util.formatDate(new Date()));
 }
 
 function getBrowserStat() {
