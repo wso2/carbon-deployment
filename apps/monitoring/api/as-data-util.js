@@ -79,10 +79,10 @@ function parseDate(input) {
  */
 function formatSql(sql, arguments){
     var i, len;
-    var formatted = sql;
+    var formattedSql = sql;
 
     for (i = 0, len = arguments.length; i < len; i++) {
-        formatted = formatted.replace(RegExp('\\{' + (i+1) + '\\}','g'), arguments[i]);
+        formattedSql = formattedSql.replace(RegExp('\\{' + (i+1) + '\\}','g'), arguments[i]);
     }
-    return formatted;
+    return formattedSql;
 }
