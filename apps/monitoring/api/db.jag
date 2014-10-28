@@ -20,18 +20,24 @@
 var config = require('/config/config.json');
 var db = new Database(config.database.url, config.database.username, config.database.password);
 
+var log = new Log();
+
 function executeQuery(sql, params) {
     if (params == null) {
         return db.query(sql);
     }
 
-    // double the parameters in the case of percentage calculation
+    // duplicate the parameters in the case of percentage calculation
     if(sql.split('?').length -1 > params.length){
         params = params.concat(params);
     }
 
-    // add sql statement of the array and double the parameter list
+    // add sql statement as the first parameter
     params = [sql].concat(params);
+
+    if(log.isDebugEnabled()){
+        log.debug('Query parameters: \n' + params);
+    }
 
     return db.query.apply(db, params);
 }

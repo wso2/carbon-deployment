@@ -21,6 +21,8 @@ var util = require('as-data-util.js');
 var action = request.getParameter('action');
 var conditions = buildConditions();
 
+var log = new Log();
+
 /*
  build the ammendment to the prepared statement along with the parameter values based on
  start_time, end_time, node and webapp
@@ -47,7 +49,7 @@ function buildConditions() {
         where.push('serverName = ?');
         params.push(String(node));
     }
-    if (webapp != null && webapp != "null") {
+    if (webapp != null && webapp != 'null') {
         where.push('webappName= ?');
         params.push(String(webapp));
     }
@@ -56,120 +58,149 @@ function buildConditions() {
 
 function getNodeList() {
     var nodeList = require('node-list.jag');
+    logDebugMessage('Retrieving node list');
     nodeList.getNodeList();
 }
 
 function getAppsStat() {
     var appList = require('app-list.jag');
+    logDebugMessage('Retrieving applicaiton list');
     appList.getAppsStat(conditions, request.getParameter('end_time') || util.formatDate(new Date()));
 }
 
 function getBrowserStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving browser stats');
     technologyStat.getTechnologyStat(conditions, 'browser', 4, 'Other Browsers');
 }
 
 function getBrowserTabularStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving browser stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'browser',
             ['Browser', 'Request Count', 'Percentage'], '2');
 }
 
 function getOperatingSystemStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving operating system stat');
     technologyStat.getTechnologyStat(conditions, 'os', 5, 'Other Operating Systems');
 }
 
 function getOperatingSystemTabularStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving operating system stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'os',
             ['Operating System', 'Request Count', 'Percentage'], '2');
 }
 
 function getDeviceTypeStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving device type stat');
     technologyStat.getTechnologyStat(conditions, 'device-type', 5, 'Other devices');
 }
 
 function getDeviceTypeTabularStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving device type stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'device-type',
             ['Device type', 'Request Count', 'Percentage'], '2');
 }
 
 function getHttpStatusStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving HTTP response code stat');
     technologyStat.getHttpStatusStat(conditions);
 }
 
 function getHttpStatusTabularStat() {
     var technologyStat = require('technology-stat.jag');
+    logDebugMessage('Retrieving HTTP response code stat - tabular');
     technologyStat.getHttpStatusTabularStat(conditions, ['HTTP Response Code', 'Request Count',
         'Percentage'], '1');
 }
 
 function getLanguageStat() {
     var geoStat = require('geo-stat.jag');
+    logDebugMessage('Retrieving language stat');
     geoStat.getLanguageStat(conditions);
 }
 
 function getLanguageTabularStat() {
     var geoStat = require('geo-stat.jag');
+    logDebugMessage('Retrieving language stat - tabular');
     geoStat.getLanguageTabularStat(conditions);
 }
 
 function getCountryStat() {
     var geoStat = require('geo-stat.jag');
+    logDebugMessage('Retrieving country stat');
     geoStat.getCountryStat(conditions);
 }
 
 function getCountryTabularStat() {
     var geoStat = require('geo-stat.jag');
+    logDebugMessage('Retrieving country stat - tabular');
     geoStat.getCountryTabularStat(conditions);
 }
 
 function getContextStat() {
     var trafficStat = require('traffic-stat.jag');
+    logDebugMessage('Retrieving context stat');
     trafficStat.getTrafficStat(conditions, 'context', ['Context', 'Request Count', 'Percentage'], '2')
 }
 function getReferralStat() {
     var trafficStat = require('traffic-stat.jag');
+    logDebugMessage('Retrieving referral stat');
     trafficStat.getTrafficStat(conditions, 'referral', ['Referrer', 'Request Count', 'Percentage'], '2')
 }
 
 function getRequestStat() {
     var timeVaryingStat = require('time-varying-stat.jag');
+    logDebugMessage('Retrieving request count stat');
     timeVaryingStat.getTimeVaryingStat(conditions, 'request');
 }
 
 function getResponseStat() {
     var timeVaryingStat = require('time-varying-stat.jag');
+    logDebugMessage('Retrieving response time stat');
     timeVaryingStat.getTimeVaryingStat(conditions, 'response', '#bacf0b');
 }
 
 function getErrorStat() {
     var timeVaryingStat = require('time-varying-stat.jag');
+    logDebugMessage('Retrieving error count stat');
     timeVaryingStat.getTimeVaryingStat(conditions, 'error', '#e7912a');
 }
 
 function getInfoBoxRequestStat() {
     var infoBoxStat = require('info-box-stat.jag');
+    logDebugMessage('Retrieving infobox stat - request count');
     return infoBoxStat.getInfoBoxRequestStat(conditions);
 }
 
 function getInfoBoxResponseStat() {
     var infoBoxStat = require('info-box-stat.jag');
+    logDebugMessage('Retrieving infobox stat - response time');
     return infoBoxStat.getInfoBoxResponseStat(conditions);
 }
 
 function getInfoBoxSessionStat() {
     var infoBoxStat = require('info-box-stat.jag');
+    logDebugMessage('Retrieving infobox stat - session count');
     return infoBoxStat.getInfoBoxSessionStat(conditions);
 }
 
 function getInfoBoxErrorStat() {
     var infoBoxStat = require('info-box-stat.jag');
+    logDebugMessage('Retrieving infobox stat - error count');
     return infoBoxStat.getInfoBoxErrorStat(conditions);
+}
+
+function logDebugMessage(msg){
+    if(log.isDebugEnabled()){
+        log.debug(msg);
+    }
 }
 
 var actionMapping = {
