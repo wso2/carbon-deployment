@@ -55,7 +55,7 @@ function getDataForInfoBoxBarChart(type, conditions) {
             type, conditions[0]]);
     } else if (timeDiff <= 1) {
         sql = helper.formatSql(sqlStatements.infoBoxLessThan1Day, [selectStatement,
-            type, conditions[0]]);;
+            type, conditions[0]]);
     }
 
     results = executeQuery(sql, conditions[1]);
