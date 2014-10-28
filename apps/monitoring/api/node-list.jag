@@ -32,6 +32,8 @@ function getNodeList() {
         dataArray.push(results[i]['node']);
     }
 
+    // print(dataArray);
+
     print([
         'All',
         {
