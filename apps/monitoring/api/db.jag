@@ -36,7 +36,7 @@ function executeQuery(sql, params) {
     params = [sql].concat(params);
 
     if(log.isDebugEnabled()){
-        log.debug('Query parameters: \n' + params);
+        log.debug('Query parameters: ' + params);
     }
 
     return db.query.apply(db, params);

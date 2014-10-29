@@ -57,150 +57,144 @@ function buildConditions() {
 }
 
 function getNodeList() {
-    var nodeList = require('node-list.jag');
-    logDebugMessage('Retrieving node list');
+    var nodeList = require('modules/node-list.js');
+    log.debug('Retrieving node list');
     nodeList.getNodeList();
 }
 
 function getAppsStat() {
-    var appList = require('app-list.jag');
-    logDebugMessage('Retrieving applicaiton list');
+    var appList = require('modules/app-list.js');
+    log.debug('Retrieving applicaiton list');
     appList.getAppsStat(conditions, request.getParameter('end_time') || util.formatDate(new Date()));
 }
 
 function getBrowserStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving browser stats');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving browser stats');
     technologyStat.getTechnologyStat(conditions, 'browser', 4, 'Other Browsers');
 }
 
 function getBrowserTabularStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving browser stat - tabular');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving browser stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'browser',
             ['Browser', 'Request Count', 'Percentage'], '2');
 }
 
 function getOperatingSystemStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving operating system stat');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving operating system stat');
     technologyStat.getTechnologyStat(conditions, 'os', 5, 'Other Operating Systems');
 }
 
 function getOperatingSystemTabularStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving operating system stat - tabular');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving operating system stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'os',
             ['Operating System', 'Request Count', 'Percentage'], '2');
 }
 
 function getDeviceTypeStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving device type stat');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving device type stat');
     technologyStat.getTechnologyStat(conditions, 'device-type', 5, 'Other devices');
 }
 
 function getDeviceTypeTabularStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving device type stat - tabular');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving device type stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'device-type',
             ['Device type', 'Request Count', 'Percentage'], '2');
 }
 
 function getHttpStatusStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving HTTP response code stat');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving HTTP response code stat');
     technologyStat.getHttpStatusStat(conditions);
 }
 
 function getHttpStatusTabularStat() {
-    var technologyStat = require('technology-stat.jag');
-    logDebugMessage('Retrieving HTTP response code stat - tabular');
+    var technologyStat = require('modules/technology-stat.js');
+    log.debug('Retrieving HTTP response code stat - tabular');
     technologyStat.getHttpStatusTabularStat(conditions, ['HTTP Response Code', 'Request Count',
         'Percentage'], '1');
 }
 
 function getLanguageStat() {
-    var geoStat = require('geo-stat.jag');
-    logDebugMessage('Retrieving language stat');
+    var geoStat = require('modules/geo-stat.js');
+    log.debug('Retrieving language stat');
     geoStat.getLanguageStat(conditions);
 }
 
 function getLanguageTabularStat() {
-    var geoStat = require('geo-stat.jag');
-    logDebugMessage('Retrieving language stat - tabular');
+    var geoStat = require('modules/geo-stat.js');
+    log.debug('Retrieving language stat - tabular');
     geoStat.getLanguageTabularStat(conditions);
 }
 
 function getCountryStat() {
-    var geoStat = require('geo-stat.jag');
-    logDebugMessage('Retrieving country stat');
+    var geoStat = require('modules/geo-stat.js');
+    log.debug('Retrieving country stat');
     geoStat.getCountryStat(conditions);
 }
 
 function getCountryTabularStat() {
-    var geoStat = require('geo-stat.jag');
-    logDebugMessage('Retrieving country stat - tabular');
+    var geoStat = require('modules/geo-stat.js');
+    log.debug('Retrieving country stat - tabular');
     geoStat.getCountryTabularStat(conditions);
 }
 
 function getContextStat() {
-    var trafficStat = require('traffic-stat.jag');
-    logDebugMessage('Retrieving context stat');
+    var trafficStat = require('modules/traffic-stat.js');
+    log.debug('Retrieving context stat');
     trafficStat.getTrafficStat(conditions, 'context', ['Context', 'Request Count', 'Percentage'], '2')
 }
 function getReferralStat() {
-    var trafficStat = require('traffic-stat.jag');
-    logDebugMessage('Retrieving referral stat');
+    var trafficStat = require('modules/traffic-stat.js');
+    log.debug('Retrieving referral stat');
     trafficStat.getTrafficStat(conditions, 'referral', ['Referrer', 'Request Count', 'Percentage'], '2')
 }
 
 function getRequestStat() {
-    var timeVaryingStat = require('time-varying-stat.jag');
-    logDebugMessage('Retrieving request count stat');
+    var timeVaryingStat = require('modules/time-varying-stat.js');
+    log.debug('Retrieving request count stat');
     timeVaryingStat.getTimeVaryingStat(conditions, 'request');
 }
 
 function getResponseStat() {
-    var timeVaryingStat = require('time-varying-stat.jag');
-    logDebugMessage('Retrieving response time stat');
+    var timeVaryingStat = require('modules/time-varying-stat.js');
+    log.debug('Retrieving response time stat');
     timeVaryingStat.getTimeVaryingStat(conditions, 'response', '#bacf0b');
 }
 
 function getErrorStat() {
-    var timeVaryingStat = require('time-varying-stat.jag');
-    logDebugMessage('Retrieving error count stat');
+    var timeVaryingStat = require('modules/time-varying-stat.js');
+    log.debug('Retrieving error count stat');
     timeVaryingStat.getTimeVaryingStat(conditions, 'error', '#e7912a');
 }
 
 function getInfoBoxRequestStat() {
-    var infoBoxStat = require('info-box-stat.jag');
-    logDebugMessage('Retrieving infobox stat - request count');
+    var infoBoxStat = require('modules/info-box-stat.js');
+    log.debug('Retrieving infobox stat - request count');
     return infoBoxStat.getInfoBoxRequestStat(conditions);
 }
 
 function getInfoBoxResponseStat() {
-    var infoBoxStat = require('info-box-stat.jag');
-    logDebugMessage('Retrieving infobox stat - response time');
+    var infoBoxStat = require('modules/info-box-stat.js');
+    log.debug('Retrieving infobox stat - response time');
     return infoBoxStat.getInfoBoxResponseStat(conditions);
 }
 
 function getInfoBoxSessionStat() {
-    var infoBoxStat = require('info-box-stat.jag');
-    logDebugMessage('Retrieving infobox stat - session count');
+    var infoBoxStat = require('modules/info-box-stat.js');
+    log.debug('Retrieving infobox stat - session count');
     return infoBoxStat.getInfoBoxSessionStat(conditions);
 }
 
 function getInfoBoxErrorStat() {
-    var infoBoxStat = require('info-box-stat.jag');
-    logDebugMessage('Retrieving infobox stat - error count');
+    var infoBoxStat = require('modules/info-box-stat.js');
+    log.debug('Retrieving infobox stat - error count');
     return infoBoxStat.getInfoBoxErrorStat(conditions);
-}
-
-function logDebugMessage(msg){
-    if(log.isDebugEnabled()){
-        log.debug(msg);
-    }
 }
 
 var actionMapping = {
