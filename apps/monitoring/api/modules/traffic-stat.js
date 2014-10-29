@@ -1,4 +1,3 @@
-<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,45 +16,36 @@
  * under the License.
  */
 
-include('db.jag');
+include('../db.jag');
 var helper = require('as-data-util.js');
 var sqlStatements = require('sql-statements.json');
 
-// type: select statement
-var parameterMapping = {
-    'request': 'avg(averageRequestCount)',
-    'response': 'avg(averageResponseTime)',
-    'error': 'sum(httpErrorCount)'
+// type: [table-name, field-name]
+var dbMapping = {
+    'context': ['WEBAPP_CONTEXT', 'webappcontext'],
+    'referral': ['REFERRER', 'referrer']
 };
 
-function getTimeVaryingStatData(conditions, type) {
-    var selectStatement = parameterMapping[type];
-    var sql = helper.formatSql(sqlStatements.timeVarying, [selectStatement, conditions[0]]);
+function getTrafficStatData(conditions, type) {
+    var dbEntry = dbMapping[type];
+    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry[0], dbEntry[1], conditions[0]]);
     return executeQuery(sql, conditions[1]);
 }
 
-function getTimeVaryingStat(conditions, type, color) {
+function getTrafficStat(conditions, type, tableHeadings, sortColumn) {
     var dataArray = [];
     var i, len;
     var row;
-    var opt;
-    var results = getTimeVaryingStatData(conditions, type);
-    var chartOptions = {};
+    var results = getTrafficStatData(conditions, type);
 
     for (i = 0, len = results.length; i < len; i++) {
         row = results[i];
-        dataArray.push([row['time'], row['value']]);
+        dataArray.push([row['name'], row['request_count'],
+            row['percentage_request_count']]);
     }
-
-    if (color != null) {
-        chartOptions = {
-            'colors': [color]
-        }
-    }
-
-    print([
-        {'series1': {'label': 's', 'data': dataArray}}, chartOptions
-    ]);
+    print({
+        'data': dataArray,
+        'headings': tableHeadings,
+        'orderColumn': [sortColumn, 'desc']
+    });
 }
-
-%>

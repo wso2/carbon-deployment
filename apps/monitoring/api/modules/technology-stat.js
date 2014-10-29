@@ -1,4 +1,3 @@
-<%
 /*
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,7 +16,7 @@
  * under the License.
  */
 
-include('db.jag');
+include('../db.jag');
 var helper = require('as-data-util.js');
 var sqlStatements = require('sql-statements.json');
 
@@ -93,4 +92,3 @@ function getHttpStatusStat(conditions) {
 function getHttpStatusTabularStat(conditions, tableHeadings, sortColumn) {
     print(helper.getTabularData(getHttpStatusStatData(conditions), tableHeadings, sortColumn));
 }
-%>
