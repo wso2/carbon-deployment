@@ -53,6 +53,7 @@
                 <artifactId>org.wso2.carbon.jaxwsservices.stub</artifactId>
             </dependency>
         </dependencies>
+    </dependencyManagement>
 
 </project>
 
