@@ -76,32 +76,35 @@ function onDataReceived(data) {
 
     $('#placeholder').html(table + headings + '</table>');
 
-    var dataTableOptions = new Object();
+    var dataTableOptions = {};
 
     dataTableOptions['data'] = tableData;
     dataTableOptions['order'] = [orderColumn];
 
-    if(!applist){
-        dataTableOptions['aoColumns'] = [{ 'sWidth': '60%' }, { 'sWidth': '20%' }, { 'sWidth': '20%' }];
+    if (!applist) {
+        dataTableOptions['aoColumns'] = [
+            { 'sWidth': '60%' },
+            { 'sWidth': '20%' },
+            { 'sWidth': '20%' }
+        ];
     }
 
-    var $table = $('#table');
-    var table = $table.dataTable(dataTableOptions);
+    table = $table.dataTable(dataTableOptions);
 
-    if(applist){
-        $('#table tbody').on('click', 'tr', function(){
-            if($(this).hasClass('selected')){
+    if (applist) {
+        $('#table').find('tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
-            } else{
+            } else {
                 var param = '';
                 if (node) {
                     param = 'node=' + node;
                 }
-                if (start  && end ) {
+                if (start && end) {
 
-                    param = param + (param == '' ? '' : '&')  +
-                        'start-time=' + moment(start,'YYYY-MM-DD HH:mm').format('X') +
-                        '&end-time=' + moment(end,'YYYY-MM-DD HH:mm').format('X');
+                    param = param + (param == '' ? '' : '&') +
+                        'start-time=' + moment(start, 'YYYY-MM-DD HH:mm').format('X') +
+                        '&end-time=' + moment(end, 'YYYY-MM-DD HH:mm').format('X');
                 }
 
                 var webapp = table.fnGetData(this)[0];
@@ -113,12 +116,14 @@ function onDataReceived(data) {
                 }
                 parent.window.location.href = webappUrl;
 
+                // check window.location.replace. need pub sub.
+
             }
         });
     }
 }
 
-$(document).ready(function () {
+$(function () {
     fetchData();
 });
 
