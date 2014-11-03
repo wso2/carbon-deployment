@@ -4,14 +4,16 @@ var renderAll = function(){
         var $el = $(el);
         if($el.is(':visible') && !Boolean($el.attr('data-rendered'))){
             gadgetUrl = config.gadgetsUrlBase + '/' + $el.attr('data-gadget') + '/' + $el.attr('data-gadget') + '.xml';
-            opt = {prefs: {
-                dataSource: caramel.context + '/api/as-data.jag',
-                startTime: (state.start) ? moment(state.start, 'X').format('YYYY-MM-DD HH:mm') : undefined,
-                endTime: (state.end) ? moment(state.end, 'X').format('YYYY-MM-DD HH:mm') : undefined,
-                node: state.node || undefined,
-                appStatType: $el.attr('data-type'),
-                appname: appname || ''
-            } };
+            opt = {
+                prefs: {
+                    dataSource: caramel.context + '/api/as-data.jag',
+                    startTime: (state.start) ? moment(state.start, 'X').format('YYYY-MM-DD HH:mm') : undefined,
+                    endTime: (state.end) ? moment(state.end, 'X').format('YYYY-MM-DD HH:mm') : undefined,
+                    node: state.node || undefined,
+                    appStatType: $el.attr('data-type'),
+                    appname: appname || ''
+                }
+            };
             UESContainer.renderGadget($el.attr('id'), gadgetUrl, opt);
             $el.attr('data-rendered',true);
         }
