@@ -20,15 +20,20 @@ include('../db.jag');
 var helper = require('as-data-util.js');
 var sqlStatements = require('sql-statements.json');
 
-// type: [table-name, field-name]
 var dbMapping = {
-    'country': ['COUNTRY', 'country'],
-    'language': ['LANGUAGE', 'language']
+    'country': {
+        'table': 'COUNTRY',
+        'field': 'country'
+    },
+    'language': {
+        'table': 'LANGUAGE',
+        'field': 'language'
+    }
 };
 
 function getGeoStatData(conditions, type){
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.geo, [dbEntry[1], dbEntry[0], conditions[0]]);
+    var sql = helper.formatSql(sqlStatements.geo, [dbEntry.field, dbEntry.table, conditions[0]]);
     return executeQuery(sql, conditions[1]);
 }
 

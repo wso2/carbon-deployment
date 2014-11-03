@@ -20,10 +20,15 @@ include('../db.jag');
 var helper = require('as-data-util.js');
 var sqlStatements = require('sql-statements.json');
 
-// type: [table-name, field-name]
 var dbMapping = {
-    'context': ['WEBAPP_CONTEXT', 'webappcontext'],
-    'referral': ['REFERRER', 'referrer']
+    'context': {
+        'table': 'WEBAPP_CONTEXT',
+        'field': 'webappcontext'
+    },
+    'referral': {
+        'table': 'REFERRER',
+        'field': 'referrer'
+    }
 };
 
 function getTrafficStatData(conditions, type) {
