@@ -18,7 +18,7 @@
  */
 
 var config = require('/config/config.json');
-var db = new Database(config.database.url, config.database.username, config.database.password);
+var db = new Database(config.database);
 
 var log = new Log();
 
