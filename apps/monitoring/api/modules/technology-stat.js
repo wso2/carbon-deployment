@@ -20,16 +20,24 @@ include('../db.jag');
 var helper = require('as-data-util.js');
 var sqlStatements = require('sql-statements.json');
 
-// type: [table-name, field-name]
 var dbMapping = {
-    'browser': ['USER_AGENT_FAMILY', 'userAgentFamily'],
-    'os': ['OPERATING_SYSTEM', 'operatingSystem'],
-    'device-type': ['DEVICE_TYPE', 'deviceCategory']
+    'browser': {
+        'table': 'USER_AGENT_FAMILY',
+        'field': 'userAgentFamily'
+    },
+    'os': {
+        'table': 'OPERATING_SYSTEM',
+        'field': 'operatingSystem'
+    },
+    'device-type': {
+        'table': 'DEVICE_TYPE',
+        'field': 'deviceCategory'
+    }
 };
 
 function getTechnologyStatData(conditions, type) {
     var dbEntries = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.technology, [dbEntries[1], dbEntries[0],
+    var sql = helper.formatSql(sqlStatements.technology, [dbEntries.field, dbEntries.table,
         conditions[0]]);
     return executeQuery(sql, conditions[1]);
 }

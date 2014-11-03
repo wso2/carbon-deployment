@@ -20,15 +20,20 @@ include('../db.jag');
 var helper = require('as-data-util.js');
 var sqlStatements = require('sql-statements.json');
 
-// type: [table-name, field-name]
 var dbMapping = {
-    'context': ['WEBAPP_CONTEXT', 'webappcontext'],
-    'referral': ['REFERRER', 'referrer']
+    'context': {
+        'table': 'WEBAPP_CONTEXT',
+        'field': 'webappcontext'
+    },
+    'referral': {
+        'table': 'REFERRER',
+        'field': 'referrer'
+    }
 };
 
 function getTrafficStatData(conditions, type) {
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry[0], dbEntry[1], conditions[0]]);
+    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry.table, dbEntry.field, conditions[0]]);
     return executeQuery(sql, conditions[1]);
 }
 
