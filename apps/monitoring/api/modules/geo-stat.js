@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -38,7 +38,6 @@ function getLanguageStat(conditions) {
     var i,len;
     var row;
     var languageCode;
-    var opt;
     var results = getGeoStatData(conditions, 'language');
     var languageCodeLookup = require('/languages.json');
     var chartOptions;
@@ -93,7 +92,7 @@ function getCountryStat(conditions) {
 }
 
 function getCountryTabularStat(conditions) {
-    var i;
+    var i, len;
     var countryCode;
     var results = getGeoStatData(conditions, 'country');
     var countryCodeLookup = require('/countries.json');

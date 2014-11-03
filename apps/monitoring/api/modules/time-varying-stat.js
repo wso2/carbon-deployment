@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -37,7 +37,6 @@ function getTimeVaryingStat(conditions, type, color) {
     var dataArray = [];
     var i, len;
     var row;
-    var opt;
     var results = getTimeVaryingStatData(conditions, type);
     var chartOptions = {};
 
