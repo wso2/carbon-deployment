@@ -78,7 +78,9 @@ function getAppsStat(conditions, endTime) {
 
         tempArray = [];
         for (key in app) {
-            tempArray.push(app[key])
+            if(app.hasOwnProperty(key)) {
+                tempArray.push(app[key]);
+            }
         }
         appList.push(tempArray);
     }
