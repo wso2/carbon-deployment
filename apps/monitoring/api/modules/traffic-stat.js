@@ -33,7 +33,7 @@ var dbMapping = {
 
 function getTrafficStatData(conditions, type) {
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry[0], dbEntry[1], conditions[0]]);
+    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry.table, dbEntry.field, conditions[0]]);
     return executeQuery(sql, conditions[1]);
 }
 
