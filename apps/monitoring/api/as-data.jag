@@ -17,7 +17,20 @@
  * under the License.
  */
 
-var util = require('as-data-util.js');
+// define significant number of records to be displayed in charts
+var BROWSER_SIGNIFICANT = 4;
+var OS_SIGNIFICANT = 5;
+var DEVICE_TYPE_SIGNIFICANT = 3;
+
+// define sorting column id in tabular visualization
+var BROWSER_SORT = 2;
+var OS_SORT = 2;
+var DEVICE_TYPE_SORT = 2;
+var HTTP_RESPONSE_SORT = 2;
+var CONTEXT_SORT = 2;
+var REFERRAL_SORT = 2;
+
+var util = require('modules/as-data-util.js');
 var action = request.getParameter('action');
 var conditions = buildConditions();
 
@@ -71,40 +84,41 @@ function getAppsStat() {
 function getBrowserStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving browser stats');
-    technologyStat.getTechnologyStat(conditions, 'browser', 4, 'Other Browsers');
+    technologyStat.getTechnologyStat(conditions, 'browser', BROWSER_SIGNIFICANT, 'Other Browsers');
 }
 
 function getBrowserTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving browser stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'browser',
-            ['Browser', 'Request Count', 'Percentage'], '2');
+            ['Browser', 'Request Count', 'Percentage'], BROWSER_SORT);
 }
 
 function getOperatingSystemStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving operating system stat');
-    technologyStat.getTechnologyStat(conditions, 'os', 5, 'Other Operating Systems');
+    technologyStat.getTechnologyStat(conditions, 'os', OS_SIGNIFICANT, 'Other Operating Systems');
 }
 
 function getOperatingSystemTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving operating system stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'os',
-            ['Operating System', 'Request Count', 'Percentage'], '2');
+            ['Operating System', 'Request Count', 'Percentage'], OS_SORT);
 }
 
 function getDeviceTypeStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving device type stat');
-    technologyStat.getTechnologyStat(conditions, 'device-type', 5, 'Other devices');
+    technologyStat.getTechnologyStat(conditions, 'device-type', DEVICE_TYPE_SIGNIFICANT,
+            'Other devices');
 }
 
 function getDeviceTypeTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving device type stat - tabular');
     technologyStat.getTechnologyTubularStat(conditions, 'device-type',
-            ['Device type', 'Request Count', 'Percentage'], '2');
+            ['Device type', 'Request Count', 'Percentage'], DEVICE_TYPE_SORT);
 }
 
 function getHttpStatusStat() {
@@ -117,7 +131,7 @@ function getHttpStatusTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
     log.debug('Retrieving HTTP response code stat - tabular');
     technologyStat.getHttpStatusTabularStat(conditions, ['HTTP Response Code', 'Request Count',
-        'Percentage'], '1');
+        'Percentage'], HTTP_RESPONSE_SORT);
 }
 
 function getLanguageStat() {
@@ -147,12 +161,14 @@ function getCountryTabularStat() {
 function getContextStat() {
     var trafficStat = require('modules/traffic-stat.js');
     log.debug('Retrieving context stat');
-    trafficStat.getTrafficStat(conditions, 'context', ['Context', 'Request Count', 'Percentage'], '2')
+    trafficStat.getTrafficStat(conditions, 'context', ['Context', 'Request Count', 'Percentage'],
+            CONTEXT_SORT)
 }
 function getReferralStat() {
     var trafficStat = require('modules/traffic-stat.js');
     log.debug('Retrieving referral stat');
-    trafficStat.getTrafficStat(conditions, 'referral', ['Referrer', 'Request Count', 'Percentage'], '2')
+    trafficStat.getTrafficStat(conditions, 'referral', ['Referrer', 'Request Count',
+        'Percentage'], REFERRAL_SORT)
 }
 
 function getRequestStat() {
