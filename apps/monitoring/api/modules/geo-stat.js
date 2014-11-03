@@ -69,7 +69,7 @@ function getLanguageStat(conditions) {
     ]);
 }
 
-function getLanguageTabularStat(conditions) {
+function getLanguageTabularStat(conditions, tableHeadings, sortColumn) {
     var i, len;
     var results = getGeoStatData(conditions, 'language');
     var languageCode;
@@ -79,7 +79,7 @@ function getLanguageTabularStat(conditions) {
         languageCode = results[i]['name'];
         results[i]['name'] = languageCodeLookup[languageCode] || languageCode;
     }
-    print(helper.getTabularData(results, ['Language', 'Request Count', 'Percentage'], '2'));
+    print(helper.getTabularData(results, tableHeadings, sortColumn));
 }
 
 function getCountryStat(conditions) {
@@ -96,7 +96,7 @@ function getCountryStat(conditions) {
 
 }
 
-function getCountryTabularStat(conditions) {
+function getCountryTabularStat(conditions, tableHeadings, sortColumn) {
     var i, len;
     var countryCode;
     var results = getGeoStatData(conditions, 'country');
@@ -106,6 +106,6 @@ function getCountryTabularStat(conditions) {
         countryCode = results[i]['name'];
         results[i]['name'] = countryCodeLookup[countryCode] || countryCode;
     }
-    print(helper.getTabularData(results, ['Country', 'Request Count', 'Percentage'], '2'));
+    print(helper.getTabularData(results, tableHeadings, sortColumn));
 
 }

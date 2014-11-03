@@ -27,6 +27,8 @@ var BROWSER_SORT = 2;
 var OS_SORT = 2;
 var DEVICE_TYPE_SORT = 2;
 var HTTP_RESPONSE_SORT = 2;
+var LANGUAGE_SORT = 2;
+var COUNTRY_SORT = 2;
 var CONTEXT_SORT = 2;
 var REFERRAL_SORT = 2;
 
@@ -143,7 +145,8 @@ function getLanguageStat() {
 function getLanguageTabularStat() {
     var geoStat = require('modules/geo-stat.js');
     log.debug('Retrieving language stat - tabular');
-    geoStat.getLanguageTabularStat(conditions);
+    geoStat.getLanguageTabularStat(conditions, ['Language', 'Request Count', 'Percentage'],
+            LANGUAGE_SORT);
 }
 
 function getCountryStat() {
@@ -155,7 +158,8 @@ function getCountryStat() {
 function getCountryTabularStat() {
     var geoStat = require('modules/geo-stat.js');
     log.debug('Retrieving country stat - tabular');
-    geoStat.getCountryTabularStat(conditions);
+    geoStat.getCountryTabularStat(conditions, ['Country', 'Request Count', 'Percentage'],
+            COUNTRY_SORT);
 }
 
 function getContextStat() {
