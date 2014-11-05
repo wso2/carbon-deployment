@@ -535,6 +535,7 @@
              }else{
                 url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
                 hostName = webappsWrapper.getHostName();
+             }
 
             String webappURL = url + resolveProxyPath + vWebapp.getContext();
              if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
@@ -542,10 +543,6 @@
              } else {
                 webappURL = webappURL + "/";
              }
-
-            }
-
-
 %>
 
 <tr bgcolor="<%= bgColor%>">
