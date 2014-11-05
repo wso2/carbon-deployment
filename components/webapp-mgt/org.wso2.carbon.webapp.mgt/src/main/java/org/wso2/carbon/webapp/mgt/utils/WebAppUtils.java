@@ -89,16 +89,16 @@ public class WebAppUtils {
                 //append a file separator to make webAppFilePath equal to appBase
                 if (isEqualTo(filePath + File.separator, childHost.getAppBase())) {
                     virtualHost = childHost.getName();
-                    break;
+                    return virtualHost;
                 }
             } else {
                 if (isEqualTo(filePath + File.separator, childHost.getAppBase() + File.separator)) {
                     virtualHost = childHost.getName();
-                    break;
+                    return virtualHost;
                 }
             }
         }
-        return virtualHost;
+        return getDefaultHost();
     }
 
     /**
