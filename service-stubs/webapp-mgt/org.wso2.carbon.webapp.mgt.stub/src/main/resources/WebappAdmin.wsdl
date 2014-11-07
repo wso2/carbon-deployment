@@ -21,7 +21,7 @@
             <xs:element name="stopWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKeys" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -33,7 +33,7 @@
             <xs:element name="startWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKeys" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -54,7 +54,7 @@
             <xs:element name="reloadWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -203,7 +203,7 @@
             <xs:element name="expireSessionsInWebapp">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="maxSessionLifetimeMillis" type="xs:long"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
@@ -225,7 +225,7 @@
             <xs:element name="expireAllSessions">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -255,28 +255,28 @@
             <xs:element name="deleteStoppedWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="deleteStartedWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="deleteFaultyWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="deleteAllWebApps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
