@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -24,7 +24,6 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
-import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
@@ -44,7 +43,9 @@ import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.deployment.GhostDeployer;
+import org.wso2.carbon.utils.deployment.DeploymentFileDataWrapper;
+import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+import org.wso2.carbon.utils.deployment.GhostArtifactRegistry;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -69,8 +70,6 @@ import java.util.Map;
 public class GhostWebappDeployerUtils {
 
     private static final Log log = LogFactory.getLog(GhostWebappDeployerUtils.class);
-
-    private static final String ENABLE_GHOST_DEPLOYER = "EnableGhostDeployer";
 
     // Map of ghost services which are currently being converted into actual services
     private static final String TRANSIT_GHOST_WEBAPP_MAP = "TransitGhostWebappMap";
@@ -111,20 +110,23 @@ public class GhostWebappDeployerUtils {
                     // if the webapp from webappsholder is not a ghost, return it
                     newWebApp = deployedWebapp;
                 } else {
-                    GhostDeployer ghostDeployer = getGhostDeployer(configurationContext.
-                            getAxisConfiguration());
-                    if (ghostDeployer == null) {
-                        return null;
-                    }
-                    DeploymentFileData dfd = ghostDeployer.getFileData(deployedWebapp.
-                            getWebappFile().getPath());
-                    Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
+                    try {
 
-                    if (dfd != null) {
-                        // remove the existing webapp
-                        log.info("Removing Ghost webapp and loading actual webapp : " +
-                                deployedWebapp.getWebappFile().getName());
-                        try {
+                        GhostArtifactRegistry ghostRegistry =
+                                GhostDeployerUtils.getGhostArtifactRegistry(configurationContext.getAxisConfiguration());
+
+                        if (ghostRegistry == null) {
+                            return null;
+                        }
+                        DeploymentFileDataWrapper dfdWrapper = ghostRegistry.getDeploymentFileData(deployedWebapp
+                                .getWebappFile().getPath());
+                        Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
+
+                        if (dfdWrapper != null) {
+                            // remove the existing webapp
+                            log.info("Removing Ghost webapp and loading actual webapp : " +
+                                    deployedWebapp.getWebappFile().getName());
+                            DeploymentFileData dfd = dfdWrapper.getDeploymentFileData();
                             Map<String, WebApplication> transitGhostList =
                                     getTransitGhostWebAppsMap(configurationContext);
                             transitGhostList.put(deployedWebapp.getContextName(), deployedWebapp);
@@ -164,12 +166,17 @@ public class GhostWebappDeployerUtils {
 
                             newWebApp.setIsGhostWebapp(false);
 
+                            //change the state from ghost to actual
+                            ghostRegistry.addDeploymentFileData(dfd, Boolean.FALSE);
+
                             transitGhostList.remove(newWebApp.getContextName());
-                        } catch (CarbonException e) {
-                            log.error("Error while loading actual webapp : " +
-                                    deployedWebapp.getWebappFile().getName(), e);
                         }
+
+                    } catch (CarbonException e) {
+                        log.error("Error while loading actual webapp : " +
+                                deployedWebapp.getWebappFile().getName(), e);
                     }
+
                 }
                 updateLastUsedTime(newWebApp);
             }
@@ -195,21 +202,6 @@ public class GhostWebappDeployerUtils {
             log.error("Error while updating " + CarbonConstants.WEB_APP_LAST_USED_TIME +
                     " parameter in webapp : " + webApplication.getContextName(), e);
         }
-    }
-
-    /**
-     * Get GhostDeployer which is stored as a parameter in the AxisConfiguration
-     *
-     * @param axisConfig - AxisConfiguration instance
-     * @return - GhostDeployer instance if found
-     */
-    public static GhostDeployer getGhostDeployer(AxisConfiguration axisConfig) {
-        GhostDeployer ghostDeployer = null;
-        Parameter param = axisConfig.getParameter(CarbonConstants.GHOST_DEPLOYER);
-        if (param != null) {
-            return (GhostDeployer) param.getValue();
-        }
-        return ghostDeployer;
     }
 
     /**
@@ -304,9 +296,9 @@ public class GhostWebappDeployerUtils {
      * @param configContext   - configContext to get tenant details and webapp deployer instance
      * @return - WebApplication which is created
      */
-    public static WebApplication createGhostWebApp(File ghostFile, File originalFile,
-                                                   TomcatGenericWebappsDeployer applicationDeployer,
-                                                   ConfigurationContext configContext) {
+    public static WebApplication addGhostWebApp(File ghostFile, File originalFile,
+                                                TomcatGenericWebappsDeployer applicationDeployer,
+                                                ConfigurationContext configContext) {
         WebApplication ghostWebApp = null;
 
         OMElement webAppElm;
@@ -560,15 +552,32 @@ public class GhostWebappDeployerUtils {
      */
     public static String calculateGhostFileName(String fileName, String repoPath) {
         String pathPrefix = "";
-        if (fileName != null && fileName.indexOf("\\") != -1) {
+        String javaTmpDir = System.getProperty("java.io.tmpdir");
+        String cappUnzipPath  = javaTmpDir.endsWith(File.separator) ?
+                javaTmpDir + "carbonapps" :
+                javaTmpDir + File.separator + "carbonapps";
+        if (fileName != null && fileName.contains("\\")) {
             pathPrefix = "/";
         }
         fileName = separatorsToUnix(fileName);
+        cappUnzipPath = separatorsToUnix(cappUnzipPath);
         String ghostFileName = null;
         fileName = pathPrefix + fileName;
-        if (fileName != null && fileName.startsWith(repoPath)) {
+
+        if (fileName.startsWith(repoPath)) {
             // first drop the repo path
             ghostFileName = fileName.substring(repoPath.length());
+
+            //Check whether artifact is from a CApp
+        } else if (fileName.startsWith(cappUnzipPath)) {
+            ghostFileName = fileName.substring(cappUnzipPath.length());
+
+            // now the ghostFileName looks like following string. We need remove the temp car file name as well.
+            //  /14144224998641144capp_1.0.0.car/datasource-test_1.0.0/datasource-test-1.0.0.aar
+            ghostFileName = ghostFileName.substring(ghostFileName.indexOf(".car/") + 5);
+        }
+
+        if (ghostFileName != null) {
             // then remove the extension
             if (!(new File(fileName).isDirectory()) && (ghostFileName.lastIndexOf('.') != -1)) {
                 ghostFileName = ghostFileName.substring(0, ghostFileName.lastIndexOf('.'));
@@ -582,6 +591,7 @@ public class GhostWebappDeployerUtils {
             // ghost file is always an XML
             ghostFileName += ".xml";
         }
+
         return ghostFileName;
     }
 
@@ -655,7 +665,7 @@ public class GhostWebappDeployerUtils {
      */
     public static File getDummyContextFile(String fileName, AxisConfiguration axisConfig) {
         File dummyContextFile = null;
-        String dummyContextName = null;
+        String dummyContextName;
         String repoPath = axisConfig.getRepository().getPath();
         if (fileName != null && fileName.startsWith(repoPath)) {
             // first drop the repo path
@@ -710,7 +720,7 @@ public class GhostWebappDeployerUtils {
         for (File ghostFile : ghostMetaArtifacts) {
             if (!ghostFile.getPath().endsWith(".svn")) {
                 try {
-                    WebApplication ghostWebApplication = GhostWebappDeployerUtils.createGhostWebApp(
+                    WebApplication ghostWebApplication = GhostWebappDeployerUtils.addGhostWebApp(
                             ghostFile, ghostFile, null, configContext);
                     WebApplicationsHolder webappsHolder = (WebApplicationsHolder) configContext.
                             getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
@@ -733,7 +743,7 @@ public class GhostWebappDeployerUtils {
     }
 
     public static String  separatorsToUnix(String path) {
-        if (path == null || path.indexOf("\\") == -1) {
+        if (path == null || !path.contains("\\")) {
             return path;
         }
         return path.replace("\\", "/");

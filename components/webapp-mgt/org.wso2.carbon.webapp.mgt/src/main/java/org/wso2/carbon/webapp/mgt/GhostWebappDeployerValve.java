@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -31,7 +31,7 @@ import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.deployment.GhostDeployer;
+import org.wso2.carbon.utils.deployment.GhostArtifactRegistry;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
@@ -51,6 +51,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
     public void invoke(Request request,
                        Response response, CompositeValve compositeValve) {
         if (!isGhostOn) {
+            getNext().invoke(request, response, compositeValve);
             return;
         }
         String requestURI = request.getRequestURI();
@@ -83,6 +84,8 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
 
 
         WebApplication deployedWebapp;
+        //TODO: If webapp deployment takes time, then the immediate subsequent requests will fail after the after request
+        //Since getDeployedWebappFromThisURI returns null just after the first request
         if ((deployedWebapp = getDeployedWebappFromThisURI(request.getContext().getPath(), currentCtx)) == null) {
             String ctxName = request.getContext().getPath();
             if (log.isDebugEnabled()) {
@@ -192,6 +195,11 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
     }
 
 
+    /**
+     * Not needed anymore since we deprecate the partial depsync support
+     *
+     */
+    @Deprecated
     private synchronized void handleDepSynchUpdate(ConfigurationContext configurationContext,
                                                    WebApplication webApplication,
                                                    WebApplicationsHolder webappsHolder) {
@@ -223,11 +231,11 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
 
                             if (fileToUpdate.exists()) {
                                 DeploymentFileData dfd = new DeploymentFileData(fileToUpdate);
-                                GhostDeployer ghostDeployer = GhostDeployerUtils.
-                                        getGhostDeployer(configurationContext.
+                                GhostArtifactRegistry ghostRegistry = GhostDeployerUtils.
+                                        getGhostArtifactRegistry(configurationContext.
                                                 getAxisConfiguration());
-                                if (ghostDeployer != null &&
-                                    ghostDeployer.getFileData(filePath) == null) {
+                                if (ghostRegistry != null &&
+                                    ghostRegistry.getDeploymentFileData(filePath) == null) {
                                     File deployedWebappFile = new File(webApplication.
                                             getWebappFile().getName());
                                     if (webappsHolder.getStartedWebapps().
@@ -239,7 +247,6 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
                                     webApplication.setWebappFile(dfd.getFile());
                                     webappsHolder.getStartedWebapps().
                                             put(dfd.getFile().getName(), webApplication);
-                                    ghostDeployer.addFileData(dfd);
                                 }
                             }
                         } catch (Throwable t) {
@@ -288,7 +295,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
     private static String getWebContextRoot() {
         String context = CarbonUtils.getServerConfiguration().getFirstProperty("WebContextRoot");
         if(!context.endsWith("/")) {
-            return new StringBuilder(context).append("/").toString();
+            return context + "/";
         }
         return context;
     }
