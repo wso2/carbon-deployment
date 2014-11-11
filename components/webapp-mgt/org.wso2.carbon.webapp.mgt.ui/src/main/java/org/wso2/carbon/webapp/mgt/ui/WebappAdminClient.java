@@ -23,16 +23,9 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.webapp.mgt.stub.WebappAdminStub;
-import org.wso2.carbon.webapp.mgt.stub.types.carbon.SessionsWrapper;
-import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata;
+import org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
-import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper;
 
-import javax.activation.DataHandler;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -68,6 +61,10 @@ public class WebappAdminClient {
         } catch (RemoteException e) {
             handleException("cannot.upload.webapps", e);
         }
+    }
+
+    public VhostHolder getVhostHolder() throws RemoteException {
+        return stub.getVhostHolder();
     }
 
     private void handleException(String msgKey, Exception e) throws AxisFault {

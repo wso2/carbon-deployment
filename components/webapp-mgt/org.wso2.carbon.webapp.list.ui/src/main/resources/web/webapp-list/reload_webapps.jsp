@@ -25,7 +25,7 @@
 <%@ page import="java.net.URLEncoder" %>
 
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+    String[] webappKeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
     String reloadAll = request.getParameter("reloadAll");
     String hostName = request.getParameter("hostName");
@@ -43,8 +43,14 @@
     if(redirectPage.startsWith("index.jsp")) {
         redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt;
     } else {
-        redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
-                      URLEncoder.encode(webappFileNames[0], "UTF-8");
+        if(webappKeySet[0].split(":").length>1){
+           redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
+                                 URLEncoder.encode(webappKeySet[0].split(":")[1], "UTF-8");
+        }else{
+           redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
+                                 URLEncoder.encode(webappKeySet[0], "UTF-8");
+        }
+
         if (hostName != null && httpPort != null) {
             redirectUrl += "&hostName=" + hostName + "&httpPort=" + httpPort;
         }
@@ -79,7 +85,7 @@
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.all.webapps"),
                                                 CarbonUIMessage.INFO, request);
         } else {
-            client.reloadWebapps(webappFileNames);
+            client.reloadWebapps(webappKeySet);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.selected.webapps"),
                                                 CarbonUIMessage.INFO, request);
         }
