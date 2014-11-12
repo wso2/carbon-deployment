@@ -31,13 +31,69 @@ function onDataReceived(data) {
     var tableData = data.data;
     var tableHeadings = data.headings;
     var orderColumn = data.orderColumn;
-    var headings = '<thead><tr>';
-    var rowSpan = 1;
     var applist = data.applist || undefined;
     var table;
-    var i, j, len, len2;
+    var headings;
 
     table = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="table" style="width: 100%">';
+
+    headings = getTableHeader(tableHeadings);
+
+    $('#placeholder').html(table + headings + '</table>');
+
+    var dataTableOptions = {};
+
+    dataTableOptions['data'] = tableData;
+    dataTableOptions['order'] = [orderColumn];
+
+    if (!applist) {
+        dataTableOptions['aoColumns'] = [
+            { 'sWidth': '60%' },
+            { 'sWidth': '20%' },
+            { 'sWidth': '20%' }
+        ];
+    }
+
+    table = $('#table').dataTable(dataTableOptions);
+
+    if (applist) {
+        registerWebappSelect(table);
+    }
+}
+
+function registerWebappSelect(table) {
+    table.find('tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            var param = '';
+            if (node) {
+                param = 'node=' + node;
+            }
+            if (start && end) {
+
+                param = param + (param == '' ? '' : '&') +
+                    'start-time=' + moment(start, 'YYYY-MM-DD HH:mm').format('X') +
+                    '&end-time=' + moment(end, 'YYYY-MM-DD HH:mm').format('X');
+            }
+
+            var webapp = table.fnGetData(this)[0];
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            var webappUrl = webapp;
+            if (param != '?') {
+                webappUrl = webappUrl + '?' + param;
+            }
+
+            publishRedirectUrl(webappUrl);
+        }
+    });
+}
+
+function getTableHeader(tableHeadings) {
+    var headings = '<thead><tr>';
+    var rowSpan = 1;
+    var i, len;
 
     for (i = 0, len = tableHeadings.length; i < len; i++) {
         if (tableHeadings[i] instanceof Object) {
@@ -74,52 +130,7 @@ function onDataReceived(data) {
 
     headings += '</thead>';
 
-    $('#placeholder').html(table + headings + '</table>');
-
-    var dataTableOptions = {};
-
-    dataTableOptions['data'] = tableData;
-    dataTableOptions['order'] = [orderColumn];
-
-    if (!applist) {
-        dataTableOptions['aoColumns'] = [
-            { 'sWidth': '60%' },
-            { 'sWidth': '20%' },
-            { 'sWidth': '20%' }
-        ];
-    }
-
-    table = $('#table').dataTable(dataTableOptions);
-
-    if (applist) {
-        $('#table').find('tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            } else {
-                var param = '';
-                if (node) {
-                    param = 'node=' + node;
-                }
-                if (start && end) {
-
-                    param = param + (param == '' ? '' : '&') +
-                        'start-time=' + moment(start, 'YYYY-MM-DD HH:mm').format('X') +
-                        '&end-time=' + moment(end, 'YYYY-MM-DD HH:mm').format('X');
-                }
-
-                var webapp = table.fnGetData(this)[0];
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-                var webappUrl = webapp;
-                if (param != '?') {
-                    webappUrl = webappUrl + '?' + param;
-                }
-
-                publishRedirectUrl(webappUrl);
-
-            }
-        });
-    }
+    return headings;
 }
 
 function publishRedirectUrl(url){
