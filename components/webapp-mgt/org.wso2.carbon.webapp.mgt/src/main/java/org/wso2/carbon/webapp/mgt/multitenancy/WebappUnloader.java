@@ -28,7 +28,7 @@ import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.deployment.DeploymentFileDataWrapper;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
-import org.wso2.carbon.utils.deployment.GhostArtifactRegistry;
+import org.wso2.carbon.utils.deployment.GhostArtifactRepository;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
@@ -90,8 +90,8 @@ public class WebappUnloader implements ArtifactUnloader {
                             Long lastUsageTime = Long.parseLong((String) webApplication.
                                     getProperty(CarbonConstants.WEB_APP_LAST_USED_TIME));
                             if (lastUsageTime != null && isInactive(lastUsageTime)) {
-                            GhostArtifactRegistry ghostArtifactRegistry = GhostDeployerUtils.
-                                    getGhostArtifactRegistry(configCtx.getAxisConfiguration());
+                                GhostArtifactRepository ghostArtifactRegistry = GhostDeployerUtils.
+                                    getGhostArtifactRepository(configCtx.getAxisConfiguration());
 
                             DeploymentFileDataWrapper webappFileDataWrapper = ghostArtifactRegistry.
                                     getDeploymentFileData(webApplication.getWebappFile().getPath());
