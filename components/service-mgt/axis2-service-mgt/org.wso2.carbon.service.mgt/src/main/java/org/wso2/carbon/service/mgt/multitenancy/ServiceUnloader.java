@@ -33,7 +33,7 @@ import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.service.mgt.internal.DataHolder;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.deployment.DeploymentFileDataWrapper;
-import org.wso2.carbon.utils.deployment.GhostArtifactRegistry;
+import org.wso2.carbon.utils.deployment.GhostArtifactRepository;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
@@ -131,8 +131,8 @@ public class ServiceUnloader implements ArtifactUnloader {
                                 axisConfig.addServiceGroup(ghostServiceGroup);
 
                                 //change the DeploymentFileData state to ghost
-                                GhostArtifactRegistry ghostArtifactRegistry =
-                                        GhostDeployerUtils.getGhostArtifactRegistry(axisConfig);
+                                GhostArtifactRepository ghostArtifactRegistry =
+                                        GhostDeployerUtils.getGhostArtifactRepository(axisConfig);
                                 DeploymentFileDataWrapper ghostingDfdWrapper =
                                 ghostArtifactRegistry.getDeploymentFileData(service.getFileName().getPath());
                                 ghostArtifactRegistry.addDeploymentFileData(
