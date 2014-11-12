@@ -17,12 +17,17 @@
  * under the License.
  */
 
-var config = require('/config/config.json');
-var db = new Database(config.database);
-
 var log = new Log();
 
 function executeQuery(sql, params) {
+    var results;
+    var db = getDbConnection();
+
+    if(db == null){
+        createDbConnection();
+        db = getDbConnection();
+    }
+
     if (params == null) {
         return db.query(sql);
     }
@@ -42,4 +47,13 @@ function executeQuery(sql, params) {
     return db.query.apply(db, params);
 }
 
+function createDbConnection(){
+    var config = require('/config/config.json');
+    var db = new Database(config.database);
+    session.put('db', db);
+}
+
+function getDbConnection(){
+    return session.get('db');
+}
 %>
