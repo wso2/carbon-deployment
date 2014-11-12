@@ -166,6 +166,16 @@ public class WebAppUtils {
     }
 
     /**
+     *
+     * @param configurationContext ConfigurationContext instance
+     * @return list of web application holders
+     */
+    public static Map<String, WebApplicationsHolder> getAllWebappHolders(ConfigurationContext configurationContext) {
+        return (Map<String, WebApplicationsHolder>) configurationContext.
+                getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
+    }
+
+    /**
      * This util method will return the web application holder of the given web app file
      *
      * @param webappFilePath  AbsolutePath of webapp
@@ -175,7 +185,8 @@ public class WebAppUtils {
     public static WebApplicationsHolder getWebappHolder(String webappFilePath, ConfigurationContext configurationContext) {
         String baseDir = getWebappDir(webappFilePath);
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
+                (Map<String, WebApplicationsHolder>) configurationContext.
+                        getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
         return webApplicationsHolderList.get(baseDir);
     }
 
@@ -198,15 +209,6 @@ public class WebAppUtils {
      */
     public static String getWebappName(String webappFilePath) {
         return webappFilePath.substring(webappFilePath.lastIndexOf(File.separator) + 1, webappFilePath.length());
-    }
-
-    /**
-     *
-     * @param configurationContext ConfigurationContext instance
-     * @return list of web application holders
-     */
-    public static Map<String, WebApplicationsHolder> getWebApplicationHolders(ConfigurationContext configurationContext) {
-        return (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
     }
 
     /**

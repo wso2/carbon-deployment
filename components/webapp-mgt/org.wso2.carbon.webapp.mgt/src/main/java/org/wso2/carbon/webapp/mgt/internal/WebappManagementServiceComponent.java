@@ -134,7 +134,7 @@ public class WebappManagementServiceComponent {
     private void setServerURLParam(ConfigurationContext configurationContext) {
         // Adding server url as a parameter to webapps servlet context init parameter
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                WebAppUtils.getWebApplicationHolders(configurationContext);
+                WebAppUtils.getAllWebappHolders(configurationContext);
 
         WebContextParameter serverUrlParam =
                 new WebContextParameter("webServiceServerURL", CarbonUtils.
