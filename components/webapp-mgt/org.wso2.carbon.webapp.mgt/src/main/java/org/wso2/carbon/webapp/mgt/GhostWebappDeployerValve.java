@@ -88,8 +88,8 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
         WebApplication deployedWebapp;
         //TODO: If webapp deployment takes time, then the immediate subsequent requests will fail after the after request
         //Since getDeployedWebappFromThisURI returns null just after the first request
-        if ((deployedWebapp = getDeployedWebappFromThisURI(requestURI,
-                                                           request.getContext().getPath(), currentCtx)) == null) {
+        if ((deployedWebapp = getDeployedWebappFromThisURI(request.getContext().getPath(),
+                                                           request.getLocalName(), currentCtx)) == null) {
             String ctxName = request.getContext().getPath();
             if (log.isDebugEnabled()) {
                 log.debug("Looking for webapp in transit map with CtxName: " + ctxName);
