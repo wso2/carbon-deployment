@@ -73,7 +73,7 @@ public class ApplicationSynchronizeRequest extends ClusteringMessage {
                 } else {
                     tenantConfigurationContext = TenantAxisUtils.getTenantConfigurationContexts(configContext).get(tenantDomain);
                 }
-                Map<String,WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(configContext);
+                Map<String,WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(configContext);
                 switch (operation) {
                     case STOP:
                         stopApplications(webApplicationsHolderMap);

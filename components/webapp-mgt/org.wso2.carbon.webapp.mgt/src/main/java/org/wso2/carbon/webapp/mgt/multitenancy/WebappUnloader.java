@@ -71,7 +71,7 @@ public class WebappUnloader implements ArtifactUnloader {
     private void unloadInactiveWebapps(ConfigurationContext configCtx,
                                        String tenantDomain) {
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                WebAppUtils.getWebApplicationHolders(configCtx);
+                WebAppUtils.getAllWebappHolders(configCtx);
 
         try {
             PrivilegedCarbonContext.startTenantFlow();

@@ -26,8 +26,6 @@ import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
@@ -146,15 +144,19 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                         if (ghostWebappFileName.endsWith(".war") || ghostWebappFileName.endsWith(".zip")) {
                             String unpackedWebappName = ghostWebappFileName
                                     .substring(0, ghostWebappFileName.lastIndexOf('.')); //remove the extension
-                            WebApplication deployedUnpackedWebapp =
-                                    webappsHolder.getStartedWebapps().get(unpackedWebappName);
-                            if (deployedUnpackedWebapp != null) {
-                                File unpackedWebappFile = deployedUnpackedWebapp.getWebappFile();
-                                tomcatWebappDeployer.undeploy(
-                                        unpackedWebappFile);
-                                //we only remove the dfd of the unpacked webapp.
-                                GhostDeployerUtils.getGhostArtifactRegistry(axisConfig)
-                                        .removeDeploymentFileData(unpackedWebappFile.getAbsolutePath());
+                            Map<String, WebApplicationsHolder> webappHolders =
+                                    WebAppUtils.getAllWebappHolders(configContext);
+                            for (WebApplicationsHolder webappHolder : webappHolders.values()) {
+                                WebApplication deployedUnpackedWebapp =
+                                        webappHolder.getStartedWebapps().get(unpackedWebappName);
+                                if (deployedUnpackedWebapp != null) {
+                                    File unpackedWebappFile = deployedUnpackedWebapp.getWebappFile();
+                                    tomcatWebappDeployer.undeploy(
+                                            unpackedWebappFile);
+                                    //we only remove the dfd of the unpacked webapp.
+                                    GhostDeployerUtils.getGhostArtifactRegistry(axisConfig)
+                                            .removeDeploymentFileData(unpackedWebappFile.getAbsolutePath());
+                                }
                             }
                         }
 
@@ -336,7 +338,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             }
         }
 
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(configContext);
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(configContext);
 
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             if (isGhostOn && webApplicationsHolder != null) {

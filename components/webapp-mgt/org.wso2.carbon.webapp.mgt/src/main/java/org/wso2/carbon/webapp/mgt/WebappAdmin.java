@@ -125,7 +125,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @return meta data for webapp
      */
     public WebappMetadata getStartedWebapp(String webappFileName, String hostName) {
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         WebappMetadata webappMetadata = null;
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             WebApplication webApplication = webApplicationsHolder.getStartedWebapps().get(webappFileName);
@@ -146,7 +146,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @return meta data for webapp
      */
     public WebappMetadata getStoppedWebapp(String webappFileName, String hostName) {
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         WebappMetadata webappMetadata = null;
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             WebApplication webApplication = webApplicationsHolder.getStoppedWebapps().get(webappFileName);
@@ -213,7 +213,7 @@ public class WebappAdmin extends AbstractAdmin {
 
     private WebappsWrapper getPagedWebapps(int pageNumber, Map<String, VersionedWebappMetadata> webapps, String webappType) {
         List<VersionedWebappMetadata> webappsList = new ArrayList<VersionedWebappMetadata>(webapps.values());
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         WebappsWrapper webappsWrapper = getWebappsWrapper(webApplicationsHolderMap, webappsList, webappType);
         try {
             webappsWrapper.setHostName(NetworkUtils.getLocalHostname());
@@ -262,7 +262,7 @@ public class WebappAdmin extends AbstractAdmin {
     }
 
     private Map<String, VersionedWebappMetadata> getStartedWebapps(String webappType, String webappSearchString) {
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         Collection<WebApplication> allwebapps = new ArrayList<WebApplication>();
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             allwebapps.addAll(webApplicationsHolder.getStartedWebapps().values());
@@ -271,7 +271,7 @@ public class WebappAdmin extends AbstractAdmin {
     }
 
     private Map<String, VersionedWebappMetadata> getStoppedWebapps(String webappType, String webappSearchString) {
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         Collection<WebApplication> allStoppedWebapps = new ArrayList<WebApplication>();
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             allStoppedWebapps.addAll(webApplicationsHolder.getStoppedWebapps().values());
@@ -313,7 +313,7 @@ public class WebappAdmin extends AbstractAdmin {
     }
 
     private Map<String, VersionedWebappMetadata> getFaultyWebapps(String webappsSearchString) {
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         if (webApplicationsHolderMap == null) {
             return null;
         }
@@ -450,7 +450,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while deleting a webapp
      */
     public void deleteStartedWebapps(String[] webappKey) throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteWebapps(webappKey, webApplicationsHolder.getStartedWebapps());
         }
@@ -463,7 +463,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while deleting a webapp
      */
     public void deleteStoppedWebapps(String[] webappKey) throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteWebapps(webappKey, webApplicationsHolder.getStoppedWebapps());
         }
@@ -476,7 +476,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while deleting a webapp
      */
     public void deleteFaultyWebapps(String[] webappKey) throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteWebapps(webappKey, webApplicationsHolder.getFaultyWebapps());
         }
@@ -489,7 +489,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault AxisFault If an error occurs while deleting a webapp
      */
     public void deleteAllWebApps(String[] webappKey) throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteWebapps(webappKey, webApplicationsHolder.getStartedWebapps());
             deleteWebapps(webappKey, webApplicationsHolder.getStoppedWebapps());
@@ -551,7 +551,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while deleting a webapp
      */
     public void deleteAllStartedWebapps() throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteAllWebapps(webApplicationsHolder.getStartedWebapps());
         }
@@ -563,7 +563,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while deleting a webapp
      */
     public void deleteAllStoppedWebapps() throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteAllWebapps(webApplicationsHolder.getStoppedWebapps());
         }
@@ -575,7 +575,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while deleting a webapp
      */
     public void deleteAllFaultyWebapps() throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             deleteAllWebapps(webApplicationsHolder.getFaultyWebapps());
         }
@@ -596,7 +596,7 @@ public class WebappAdmin extends AbstractAdmin {
      * Reload all webapps
      */
     public void reloadAllWebapps() {
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<WebapplicationHelper> webapplicationHelperList = new ArrayList<WebapplicationHelper>();
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             Map<String, WebApplication> startedWebapps = webApplicationsHolder.getStartedWebapps();
@@ -614,7 +614,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @param webappKey The file_name:hostname pairs of the webapps to be reloaded
      */
     public void reloadWebapps(String[] webappKey) {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<WebapplicationHelper> webapplicationHelperList = new ArrayList<WebapplicationHelper>();
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             for (String key : webappKey) {
@@ -643,7 +643,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @param value
      */
     public void setBamConfiguration(String webappFileName, String value, String hostName) {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             WebApplication webApplication = webApplicationsHolder.getStartedWebapps().get(webappFileName);
             if (webApplication != null && webApplication.getHostName().equals(hostName)) {
@@ -663,7 +663,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @return
      */
     public String getBamConfiguration(String webappFileName, String hostName) {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         String metadata = null;
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             try {
@@ -687,7 +687,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while undeploying
      */
     public void stopAllWebapps() throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<WebapplicationHelper> webapplicationHelperList = new ArrayList<WebapplicationHelper>();
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             Map<String, WebApplication> startedWebapps = webApplicationsHolder.getStartedWebapps();
@@ -712,7 +712,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws AxisFault If an error occurs while undeploying
      */
     public void stopWebapps(String[] webappKeys) throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<WebapplicationHelper> webapplicationHelperList = new ArrayList<WebapplicationHelper>();
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             Map<String, WebApplication> startedWebapps = webApplicationsHolder.getStartedWebapps();
@@ -743,7 +743,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If an error occurs while restarting webapps
      */
     public void startAllWebapps() throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<WebapplicationHelper> webapplicationHelperList = new ArrayList<WebapplicationHelper>();
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
@@ -766,7 +766,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If a deployment error occurs
      */
     public void startWebapps(String[] webappKeys) throws AxisFault {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<WebapplicationHelper> webapplicationHelperList = new ArrayList<WebapplicationHelper>();
         for (WebApplicationsHolder webApplicationsHolder : webappsHolders.values()) {
             Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
@@ -815,7 +815,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @return The session array
      */
     public SessionsWrapper getActiveSessions(String webappFileName, int pageNumber, String hostName) {
-        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webappsHolders = WebAppUtils.getAllWebappHolders(getConfigContext());
         List<SessionMetadata> sessionMetadataList = new ArrayList<SessionMetadata>();
         int numOfActiveSessions = 0;
         ;
@@ -852,7 +852,7 @@ public class WebappAdmin extends AbstractAdmin {
      * Expire all sessions in all webapps
      */
     public void expireSessionsInAllWebapps() {
-        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getWebApplicationHolders(getConfigContext()).values()) {
+        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getAllWebappHolders(getConfigContext()).values()) {
             Map<String, WebApplication> webapps = webApplicationsHolder.getStartedWebapps();
             for (WebApplication webapp : webapps.values()) {
                 webapp.expireAllSessions();
@@ -867,7 +867,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @param webappKeySet The file names of the webapps whose sessions should be expired
      */
     public void expireSessionsInWebapps(String[] webappKeySet) {
-        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getWebApplicationHolders(getConfigContext()).values()) {
+        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getAllWebappHolders(getConfigContext()).values()) {
             Map<String, WebApplication> webapps = webApplicationsHolder.getStartedWebapps();
             for (String key : webappKeySet) {
                 WebApplication webapp;
@@ -892,7 +892,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @param maxSessionLifetimeMillis The max allowed lifetime for the sessions
      */
     public void expireSessionsInWebapp(String webappKey, long maxSessionLifetimeMillis) {
-        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getWebApplicationHolders(getConfigContext()).values()) {
+        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getAllWebappHolders(getConfigContext()).values()) {
             Map<String, WebApplication> webapps = webApplicationsHolder.getStartedWebapps();
             WebApplication webapp;
             if (webappKey.contains(":")) {
@@ -916,7 +916,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @throws org.apache.axis2.AxisFault If an error occurs while retrieving sessions
      */
     public void expireSessions(String webappFileName, String[] sessionIDs, String hostName) throws AxisFault {
-        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getWebApplicationHolders(getConfigContext()).values()) {
+        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getAllWebappHolders(getConfigContext()).values()) {
             Map<String, WebApplication> webapps = webApplicationsHolder.getStartedWebapps();
             WebApplication webapp = webapps.get(webappFileName);
             if (webapp != null && webapp.getHostName().equals(hostName)) {
@@ -936,7 +936,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @param webappKey The hostname:file_name pairs of the webapp whose sessions should be expired
      */
     public void expireAllSessions(String webappKey) {
-        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getWebApplicationHolders(getConfigContext()).values()) {
+        for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getAllWebappHolders(getConfigContext()).values()) {
             Map<String, WebApplication> webapps = webApplicationsHolder.getStartedWebapps();
             WebApplication webapp;
             if (webappKey.contains(":")) {
@@ -1044,7 +1044,7 @@ public class WebappAdmin extends AbstractAdmin {
     protected String getWebappDeploymentFile(String fileName, String hostName, String webappType) {
         String webappDeploymentDir;
         String webappFilepath = null;
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
             WebApplication webApplication = webApplicationsHolder.getStartedWebapps().get(fileName);
             if (webApplication != null && webApplication.getHostName().equals(hostName)) {
@@ -1220,7 +1220,7 @@ public class WebappAdmin extends AbstractAdmin {
     private void handleWebappMetaDetaFile(String originalFileName, String newFileName, int handlingStrategy, String hostName) {
         switch (handlingStrategy) {
             case WebappsConstants.KEEP_DEFAULT_VERSION_META_DATA_STRATEGY:
-                for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getWebApplicationHolders(getConfigContext()).values()) {
+                for (WebApplicationsHolder webApplicationsHolder : WebAppUtils.getAllWebappHolders(getConfigContext()).values()) {
                     WebApplication webApplication = webApplicationsHolder.getStartedWebapps().get(originalFileName);
                     if (webApplication != null && webApplication.getHostName().equals(hostName)) {
                         webApplication.addParameter(WebappsConstants.KEEP_WEBAPP_METADATA_HISTORY_PARAM, Boolean.TRUE.toString());
