@@ -25,6 +25,7 @@
 <%@ page import="java.net.URLEncoder" %>
 <%
     String[] sessionIDs = request.getParameterValues("sessionId");
+    String hostName = request.getParameter("hostName");
     String webappFileName = request.getParameter("webappFileName");
     String pageNumber = request.getParameter("pageNumber");
     String expireAllSessions = request.getParameter("expireAll");
@@ -58,7 +59,7 @@
 
     try {
         if (expireAllSessions == null) {
-            client.expireSessionsInWebapp(webappFileName, sessionIDs);
+            client.expireSessionsInWebapp(webappFileName, sessionIDs, hostName);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.selected.sessions"),
                                                 CarbonUIMessage.INFO, request);
 %>
@@ -67,7 +68,7 @@
 </script>
 <%
 } else {
-    client.expireAllSessionsInWebapp(webappFileName);
+    client.expireAllSessionsInWebapp(hostName+":"+webappFileName);
     CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
                                         CarbonUIMessage.INFO, request);
 %>

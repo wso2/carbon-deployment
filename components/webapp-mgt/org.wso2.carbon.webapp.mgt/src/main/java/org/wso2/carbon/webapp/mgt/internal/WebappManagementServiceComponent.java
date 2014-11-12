@@ -16,8 +16,6 @@
 package org.wso2.carbon.webapp.mgt.internal;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -27,7 +25,6 @@ import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
-import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 //import org.wso2.carbon.url.mapper.UrlMapperValve;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -44,9 +41,11 @@ import org.wso2.carbon.webapp.mgt.WebContextParameter;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
@@ -134,8 +133,8 @@ public class WebappManagementServiceComponent {
 
     private void setServerURLParam(ConfigurationContext configurationContext) {
         // Adding server url as a parameter to webapps servlet context init parameter
-        WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
-                configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+        Map<String, WebApplicationsHolder> webApplicationsHolderList =
+                WebAppUtils.getWebApplicationHolders(configurationContext);
 
         WebContextParameter serverUrlParam =
                 new WebContextParameter("webServiceServerURL", CarbonUtils.
@@ -150,13 +149,16 @@ public class WebappManagementServiceComponent {
             servletContextParameters.add(serverUrlParam);
         }
 
-        if (webApplicationsHolder != null) {
-            for (WebApplication application :
-                    webApplicationsHolder.getStartedWebapps().values()) {
-                application.getContext().getServletContext().
-                        setInitParameter(serverUrlParam.getName(),
-                                         serverUrlParam.getValue());
+        for(WebApplicationsHolder webApplicationsHolder: webApplicationsHolderList.values()){
+            if (webApplicationsHolder != null) {
+                for (WebApplication application :
+                        webApplicationsHolder.getStartedWebapps().values()) {
+                    application.getContext().getServletContext().
+                            setInitParameter(serverUrlParam.getName(),
+                                    serverUrlParam.getValue());
+                }
             }
+
         }
 
     }

@@ -24,7 +24,7 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="java.net.URLEncoder" %>
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+    String[] webappKeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
     String undeployAll = request.getParameter("undeployAll");
     String hostName = request.getParameter("hostName");
@@ -37,6 +37,8 @@
     if (redirectPage == null) {
         redirectPage = "index.jsp";
     }
+
+    String redirectName = webappKeySet[0].split(":")[1];
 %>
 
 <%
@@ -67,13 +69,13 @@
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.stopped.all.webapps"),
                                                 CarbonUIMessage.INFO, request);
         } else {
-            client.stopWebapps(webappFileNames);
+            client.stopWebapps(webappKeySet);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.stopped.selected.webapps"),
                                                 CarbonUIMessage.INFO, request);
         }
 %>
 <script>
-    location.href = '<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8")%>&webappState=stopped'
+    location.href = '<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&webappState=stopped'
                     <% if (hostName != null && httpPort != null) { %>
                     + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
                     <% } %> ;
@@ -84,7 +86,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8") %>&webappState=stopped"
+    location.href = "<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8") %>&webappState=stopped"
                     <% if (hostName != null && httpPort != null) { %>
                     +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
                     <% } %> ;

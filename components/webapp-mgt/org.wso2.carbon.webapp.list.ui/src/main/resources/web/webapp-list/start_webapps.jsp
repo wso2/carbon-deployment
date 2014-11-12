@@ -24,7 +24,7 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="java.net.URLEncoder" %>
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+    String[] webappKeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
     String undeployAll = request.getParameter("redeployAll");
     String hostName = request.getParameter("hostName");
@@ -39,6 +39,7 @@
     if (redirectPage == null) {
         redirectPage = "index.jsp";
     }
+    String redirectName = webappKeySet[0].split(":")[1];
 %>
 
 <%
@@ -70,14 +71,14 @@
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.started.all.webapps"),
                                                 CarbonUIMessage.INFO, request);
         } else {
-            client.startWebapps(webappFileNames);
+            client.startWebapps(webappKeySet);
             Thread.sleep(2000); // wait for sometime for the webapp to deploy
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.started.selected.webapps"),
                                                 CarbonUIMessage.INFO, request);
         }
 %>
 <script>
-    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8")%>'
+    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>'
                      <% if (hostName != null && httpPort != null) { %>
             + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&webappState=all'
             <% } %> ;
@@ -88,7 +89,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappFileNames[0], "UTF-8")%>"
+    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>"
                    <% if (hostName != null && httpPort != null) { %>
                     +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
                     <% } %> ;

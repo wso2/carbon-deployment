@@ -26,6 +26,8 @@ import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
@@ -43,6 +45,7 @@ import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +58,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     protected final List<WebContextParameter> servletContextParameters = new ArrayList<WebContextParameter>();
     protected ConfigurationContext configContext;
     protected AxisConfiguration axisConfig;
-    protected WebApplicationsHolder webappsHolder;
+    protected Map<String, WebApplicationsHolder> webApplicationsHolderMap;
     private boolean isGhostOn;
     private String[] defaultWatchedResources;
 
@@ -74,14 +77,18 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         String webContextPrefix = (tenantDomain != null && !MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ?
                 "/" + MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain + "/" + this.webappsDir + "/" :
                 "";
-        // try to get the webapps holder from config ctx. if null, create one..
-        webappsHolder = (WebApplicationsHolder) configCtx
-                .getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
-        if (webappsHolder == null) {
-            webappsHolder = new WebApplicationsHolder(new File(webappsDir));
-            configCtx.setProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER, webappsHolder);
-        }
 
+        // try to get the webapps holder list from config ctx. if null, create one..
+        webApplicationsHolderMap = (Map<String, WebApplicationsHolder>)
+                configCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
+        if (webApplicationsHolderMap == null) {
+            webApplicationsHolderMap = new HashMap<String, WebApplicationsHolder>();
+            configCtx.setProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST, webApplicationsHolderMap);
+        }
+        if (!webApplicationsHolderMap.containsKey(webappsDir)) {
+            WebApplicationsHolder webApplicationsHolder = new WebApplicationsHolder(new File(webappsDir));
+            webApplicationsHolderMap.put(webappsDir, webApplicationsHolder);
+        }
         tomcatWebappDeployer = createTomcatGenericWebappDeployer(webContextPrefix, tenantId, tenantDomain);
         configCtx.setProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST, servletContextParameters);
         isGhostOn = GhostDeployerUtils.isGhostOn();
@@ -119,7 +126,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
                     // iterate all deployed webapps and find the deployed webapp and create the ghost file
                     WebApplication webApplication = GhostWebappDeployerUtils.
-                            findDeployedWebapp(configContext, webappName);
+                            findDeployedWebapp(configContext, absoluteFilePath);
 
                     if (webApplication != null) {
                         GhostWebappDeployerUtils.updateLastUsedTime(webApplication);
@@ -155,12 +162,14 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                         WebApplication ghostWebApplication = GhostWebappDeployerUtils.addGhostWebApp(
                                 ghostFile, deploymentFileData.getFile(), tomcatWebappDeployer,
                                 configContext);
+                    WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(
+                            ghostWebApplication.getWebappFile().getAbsolutePath(), configContext);
 
-                        if (!webappsHolder.getStartedWebapps().containsKey(ghostWebappFileName)) {
+                    if (!webApplicationsHolder.getStartedWebapps().containsKey(ghostWebappFileName)) {
                             //ghostWebApplication.setServletContextParameters(servletContextParameters);
 
-                            WebApplicationsHolder webappsHolder = (WebApplicationsHolder) configContext.
-                                    getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+                        WebApplicationsHolder webappsHolder = WebAppUtils.getWebappHolder(
+                                ghostWebApplication.getWebappFile().getAbsolutePath(), configContext);
 
                             log.info("Deploying Ghost webapp : " + ghostWebApplication);
                             webappsHolder.getStartedWebapps().put(ghostWebappFileName,
@@ -197,7 +206,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             super.deploy(deploymentFileData);
 
             WebApplication webApplication = GhostWebappDeployerUtils.findDeployedWebapp(
-                    configContext, deploymentFileData.getFile().getName());
+                    configContext, deploymentFileData.getFile().getAbsolutePath());
 
             if (webApplication != null) {
                 //since both Jax-WS/RS applications and web application use same deployer
@@ -209,7 +218,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                 }
                 webApplication.setProperty(WebappsConstants.WEBAPP_FILTER, webappType);
 
-                if(!CarbonUtils.isWorkerNode()) {
+                if (!CarbonUtils.isWorkerNode()) {
                     persistWebappMetadata(webApplication, axisConfig);
                 }
 
@@ -220,8 +229,8 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             // removing faulty artifacts deployed by CApps
             if (deploymentFileData.getAbsolutePath().contains("carbonapps")) {
                 String failedArtifact = deploymentFileData.getFile().getName();
-                WebApplicationsHolder webappsHolder = (WebApplicationsHolder) configContext.
-                        getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+                WebApplicationsHolder webappsHolder = WebAppUtils.getWebappHolder(
+                        deploymentFileData.getAbsolutePath(), configContext);
                 webappsHolder.getFaultyWebapps().remove(failedArtifact);
             }
             log.error(msg, e);
@@ -296,8 +305,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     }
 
     private Context getWebappContext(File file) {
-        WebApplicationsHolder webApplicationsHolder =
-                ((WebApplicationsHolder) configContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER));
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(file.getAbsolutePath(), configContext);
 
         Map<String, WebApplication> webappMap = webApplicationsHolder.getStartedWebapps();
         WebApplication webapp;
@@ -328,14 +336,18 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             }
         }
 
-        if (isGhostOn && webappsHolder != null) {
-            for (WebApplication webApplication : webappsHolder.getStartedWebapps().values()) {
-                try {
-                    tomcatWebappDeployer.lazyUnload(webApplication.getWebappFile());
-                } catch (CarbonException e) {
-                    String msg = "Error occurred during cleaning up webapps";
-                    log.error(msg, e);
-                    throw new DeploymentException(msg, e);
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getWebApplicationHolders(configContext);
+
+        for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
+            if (isGhostOn && webApplicationsHolder != null) {
+                for (WebApplication webApplication : webApplicationsHolder.getStartedWebapps().values()) {
+                    try {
+                        tomcatWebappDeployer.lazyUnload(webApplication.getWebappFile());
+                    } catch (CarbonException e) {
+                        String msg = "Error occurred during cleaning up webapps";
+                        log.error(msg, e);
+                        throw new DeploymentException(msg, e);
+                    }
                 }
             }
         }
@@ -349,7 +361,8 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             bamStatsEnabled = "false";
         }
 
-        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_DIR);
+        ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR
+                + File.separator + WebAppUtils.getWebappDir(webApplication.getWebappFile().getAbsolutePath()));
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
 
@@ -392,7 +405,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
             String webappContext = "/" + webappFile.getName();
             //Make sure we are not re-deploying faulty apps on faulty list again.
-            boolean isExistingFaultyApp = isExistingFaultyApp(webappFile.getName());
+            boolean isExistingFaultyApp = isExistingFaultyApp(webappFile.getAbsolutePath());
             if (host.findChild(webappContext) == null && webappFile.isDirectory() && !isExistingFaultyApp) {
                 isSkipped = false;
             }
@@ -434,11 +447,12 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     }
 
 
-    public boolean isExistingFaultyApp(String fileName) {
-        if (webappsHolder.getFaultyWebapps() != null) {
-            if (webappsHolder.getFaultyWebapps().get(fileName) != null) {
+    public boolean isExistingFaultyApp(String filePath) {
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(filePath, configContext);
+        if (webApplicationsHolder.getFaultyWebapps() != null) {
+            if (webApplicationsHolder.getFaultyWebapps().get(WebAppUtils.getWebappName(filePath)) != null) {
                 return true;
-            } else if (webappsHolder.getFaultyWebapps().get(fileName + ".war") != null) {
+            } else if (webApplicationsHolder.getFaultyWebapps().get(WebAppUtils.getWebappName(filePath) + ".war") != null) {
                 return true;
             }
         }
@@ -452,14 +466,14 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             String base = path.substring(0, path.lastIndexOf(File.separator));
             int index = base.lastIndexOf(File.separator) + 1;
             String baseName = base.substring(index);
-            if (base != null && !"webapps".equals(baseName)) {
-                // .WAR file is not directly under "webapps" dir hence ignore.
+            if (base != null && !webappsDir.equals(baseName)) {
+                // .WAR file is not directly under $webappsDir dir hence ignore.
                 return true;
             } else {
-                // make sure .WAR file is not under a webapp called as "webapps"
+                // make sure .WAR file is not under a webapp called as $webappsDir
                 String preBase = base.substring(0, index - 1);
                 String preBaseName = preBase.substring(preBase.lastIndexOf(File.separator) + 1);
-                if (preBaseName != null && "webapps".equals(preBaseName)) {
+                if (preBaseName != null && webappsDir.equals(preBaseName)) {
                     return true;
                 }
             }

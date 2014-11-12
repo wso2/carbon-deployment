@@ -23,9 +23,10 @@
     <Loader className="org.wso2.carbon.webapp.mgt.loader.CarbonWebappLoader" loaderClass="org.wso2.carbon.webapp.mgt.loader.CarbonWebappClassLoader"/>
 
     <!-- Uncomment this to disable session persistence across Tomcat restarts -->
-    <!--
-    <Manager pathname="" />
-    -->
+    <Manager
+            className="org.wso2.carbon.webapp.mgt.CarbonTomcatSessionManager"
+            sessionIdLength="16">
+    </Manager>
 
     <!-- Uncomment this to enable Comet connection tacking (provides events
          on session expiration as well as webapp lifecycle) -->
