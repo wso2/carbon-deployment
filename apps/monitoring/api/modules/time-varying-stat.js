@@ -18,7 +18,6 @@
 
 include('../db.jag');
 var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
 
 // type: select statement
 var parameterMapping = {
@@ -27,10 +26,17 @@ var parameterMapping = {
     'error': 'sum(httpErrorCount)'
 };
 
+function buildTimeVaryingSql(selectStatement, whereClause) {
+    return 'SELECT ' + selectStatement + ' as value, ' +
+        'UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), \'%Y-%m-%d %H:\')) * 1000 as time ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause +
+        ' GROUP BY substring(time,1,13);';
+}
+
 function getTimeVaryingStatData(conditions, type) {
     var selectStatement = parameterMapping[type];
-    var sql = helper.formatSql(sqlStatements.timeVarying, [selectStatement, conditions[0]]);
-    return executeQuery(sql, conditions[1]);
+    var sql = buildTimeVaryingSql(selectStatement, conditions.sql);
+    return executeQuery(sql, conditions.params);
 }
 
 function getTimeVaryingStat(conditions, type, color) {

@@ -17,8 +17,6 @@
  */
 
 include('../db.jag');
-var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
 
 var dbMapping = {
     'context': {
@@ -31,10 +29,19 @@ var dbMapping = {
     }
 };
 
+function buildTrafficSql(dbEntry, whereClause) {
+    return 'SELECT sum(averageRequestCount) as request_count, ' +
+        'round((sum(averageRequestCount) *100/(select sum(averageRequestCount) ' +
+        'FROM ' + dbEntry.table + ' ' + whereClause + ')),2) as percentage_request_count, ' +
+        dbEntry.field + ' as name ' +
+        'FROM ' + dbEntry.table + ' ' + whereClause +
+        ' GROUP BY ' + dbEntry.field + ';';
+}
+
 function getTrafficStatData(conditions, type) {
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.traffic, [dbEntry.table, dbEntry.field, conditions[0]]);
-    return executeQuery(sql, conditions[1]);
+    var sql = buildTrafficSql(dbEntry, conditions.sql);
+    return executeQuery(sql, conditions.params);
 }
 
 function getTrafficStat(conditions, type, tableHeadings, sortColumn) {

@@ -17,12 +17,17 @@
  */
 
 include('../db.jag');
-var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
+
+function buildPastStatSql(whereClause, endTime, timeUnit) {
+    return 'SELECT webappName, ' +
+        'round(avg(averageRequestCount)) as averageRequestCount ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' ' +
+        'AND time  > (STR_TO_DATE(\'' + endTime + '\', \'%Y-%m-%d %H:%i\') - INTERVAL 1 ' + timeUnit + ') GROUP BY webappName;';
+}
 
 function getPastStat(conditions, endTime, timeUnit) {
-    var sql = helper.formatSql(sqlStatements.pastStat, [conditions[0], endTime, timeUnit]);
-    return executeQuery(sql, conditions[1]);
+    var sql = buildPastStatSql(conditions.sql, endTime, timeUnit);
+    return executeQuery(sql, conditions.params);
 }
 
 function matchPastStatWithApp(webappName, pastDataArray) {
@@ -47,6 +52,13 @@ function getTableHeadings() {
     ];
 }
 
+function buildAppsSql(whereClause) {
+    return 'SELECT webappName, webappType, sum(averageRequestCount) as total_requests, ' +
+        'sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause +
+        ' GROUP BY webappName ORDER BY webappName;'
+}
+
 function getAppsStat(conditions, endTime) {
     var appList = [];
     var tempArray = [];
@@ -57,13 +69,13 @@ function getAppsStat(conditions, endTime) {
     var key;
     var sql;
 
-    sql = helper.formatSql(sqlStatements.apps, [conditions[0]]);
+    sql = buildAppsSql(conditions.sql);
 
     lastMinute = getPastStat(conditions, endTime, 'MINUTE');
     lastHour = getPastStat(conditions, endTime, 'HOUR');
     lastDay = getPastStat(conditions, endTime, 'DAY');
 
-    apps = executeQuery(sql, conditions[1]);
+    apps = executeQuery(sql, conditions.params);
 
     for (i = 0, len = apps.length; i < len; i++) {
         webappName = apps[i]['webappName'];

@@ -18,12 +18,15 @@
 
 include('../db.jag');
 var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
+
+function buildNodeListSql() {
+    return 'SELECT distinct(serverName) from REQUESTS_SUMMARY_PER_MINUTE;';
+}
 
 function getNodeList() {
     var dataArray = [];
     var i, len;
-    var sql = helper.formatSql(sqlStatements.nodeList, []);
+    var sql = buildNodeListSql();
     var results = executeQuery(sql);
 
     dataArray.push('All');
@@ -31,7 +34,7 @@ function getNodeList() {
         dataArray.push(results[i]['node']);
     }
 
-    // print(dataArray);
+//    print(dataArray);
 
     print([
         'All',

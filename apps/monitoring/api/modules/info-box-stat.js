@@ -18,7 +18,36 @@
 
 include('../db.jag');
 var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
+
+function buildInfoBoxGreaterThan1200DaysSql(selectStatement, type, whereClause) {
+    return 'SELECT ' + selectStatement + '(' + type + ') as value, YEAR(time) as time ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY YEAR(time);';
+}
+
+function buildInfoBoxGreaterThan90Days(selectStatement, type, whereClause) {
+    return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
+        'DATE_FORMAT(time, \'%b %Y\') as time ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY MONTH(time);';
+}
+
+function buildInfoBoxGreaterThan30Days(selectStatement, type, whereClause) {
+    return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
+        'CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),\'%b %d %Y\'), \' - \', ' +
+        'DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),\'%b %d %Y\')) as time ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY WEEK(time);';
+}
+
+function buildInfoBoxGreaterThan1Day(selectStatement, type, whereClause) {
+    return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
+        'DATE_FORMAT(time, \'%b %d %Y\') as time ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY DATE(time);';
+}
+
+function buildInfoBoxLessThan1Day(selectStatement, type, whereClause) {
+    return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
+        'DATE_FORMAT(time, \'%H:00\') as time ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY HOUR(time);';
+}
 
 function getDataForInfoBoxBarChart(type, conditions) {
     var startTime = helper.parseDate(request.getParameter('start_time'));
@@ -41,23 +70,18 @@ function getDataForInfoBoxBarChart(type, conditions) {
     }
 
     if (timeDiff > 1200) {
-        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan1200Days, [selectStatement,
-            type, conditions[0]]);
+        sql = buildInfoBoxGreaterThan1200DaysSql(selectStatement, type, conditions.sql);
     } else if (timeDiff > 90) {
-        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan90Days, [selectStatement,
-            type, conditions[0]]);
+        sql = buildInfoBoxGreaterThan90Days(selectStatement, type, conditions.sql);
     } else if (timeDiff > 30) {
-        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan30Days, [selectStatement,
-            type, conditions[0]]);
+        sql = buildInfoBoxGreaterThan30Days(selectStatement, type, conditions.sql);
     } else if (timeDiff > 1) {
-        sql = helper.formatSql(sqlStatements.infoBoxGreaterThan1Day, [selectStatement,
-            type, conditions[0]]);
+        sql = buildInfoBoxGreaterThan1Day(selectStatement, type, conditions.sql);
     } else if (timeDiff <= 1) {
-        sql = helper.formatSql(sqlStatements.infoBoxLessThan1Day, [selectStatement,
-            type, conditions[0]]);
+        sql = buildInfoBoxLessThan1Day(selectStatement, type, conditions.sql);
     }
 
-    results = executeQuery(sql, conditions[1]);
+    results = executeQuery(sql, conditions.params);
 
     for (i = 0, len = results.length; i < len; i++) {
         var tempData = [];
@@ -69,10 +93,16 @@ function getDataForInfoBoxBarChart(type, conditions) {
     return arrList;
 }
 
+function buildInfoBoxRequestSql(whereClause) {
+    return 'SELECT sum(averageRequestCount) as totalRequest, ' +
+        'max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, ' +
+        'min(averageRequestCount) as minRequest FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+}
+
 function getInfoBoxRequestStat(conditions) {
     var output = {};
-    var sql = helper.formatSql(sqlStatements.infoBoxRequest, [conditions[0]]);
-    var results = executeQuery(sql, conditions[1])[0];
+    var sql = buildInfoBoxRequestSql(conditions.sql);
+    var results = executeQuery(sql, conditions.params)[0];
 
     output['title'] = 'Total Requests';
     output['measure_label'] = 'Per min';
@@ -89,11 +119,17 @@ function getInfoBoxRequestStat(conditions) {
     print(output);
 }
 
+function buildInfoBoxResponseSql(whereClause) {
+    return 'SELECT max(averageResponseTime) as maxResponse, ' +
+        'avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+}
+
 function getInfoBoxResponseStat(conditions) {
     var output = {};
 
-    var sql = helper.formatSql(sqlStatements.infoBoxResponse, [conditions[0]]);
-    var results = executeQuery(sql, conditions[1])[0];
+    var sql = buildInfoBoxResponseSql(conditions.sql);
+    var results = executeQuery(sql, conditions.params)[0];
     output['title'] = 'Response Time';
     output['measure_label'] = 'ms';
 
@@ -108,12 +144,16 @@ function getInfoBoxResponseStat(conditions) {
     print(output);
 }
 
+function buildInfoBoxSessionSql(whereClause) {
+    return 'SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+}
 
 function getInfoBoxSessionStat(conditions) {
     var output = {};
 
-    var sql = helper.formatSql(sqlStatements.infoBoxSession, [conditions[0]]);
-    var results = executeQuery(sql, conditions[1])[0];
+    var sql = buildInfoBoxSessionSql(conditions.sql);
+    var results = executeQuery(sql, conditions.params)[0];
     output['title'] = 'Session';
 
     if (results['totalSession'] != null) {
@@ -125,11 +165,17 @@ function getInfoBoxSessionStat(conditions) {
     print(output);
 }
 
+function buildInfoBoxErrorSql(whereClause) {
+    return 'SELECT sum(httpErrorCount) as totalError, ' +
+        '(sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError ' +
+        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+}
+
 function getInfoBoxErrorStat(conditions) {
     var output = {};
 
-    var sql = helper.formatSql(sqlStatements.infoBoxError, [conditions[0]]);
-    var results = executeQuery(sql, conditions[1])[0];
+    var sql = buildInfoBoxErrorSql(conditions.sql);
+    var results = executeQuery(sql, conditions.params)[0];
     output['title'] = 'Errors';
 
     if (results['totalError'] != null) {

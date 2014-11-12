@@ -18,7 +18,6 @@
 
 include('../db.jag');
 var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
 
 var dbMapping = {
     'country': {
@@ -31,10 +30,20 @@ var dbMapping = {
     }
 };
 
-function getGeoStatData(conditions, type){
+function buildGeoSql(dbEntries, whereClause) {
+    return 'SELECT ' + dbEntries.field + ' as name, ' +
+        'sum(averageRequestCount) as request_count, ' +
+        'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
+        'FROM ' + dbEntries.table + ' ' + whereClause + ')),2) as percentage_request_count ' +
+        'FROM ' + dbEntries.table + ' ' + whereClause +
+        ' GROUP BY ' + dbEntries.field +
+        ' ORDER BY percentage_request_count DESC;';
+}
+
+function getGeoStatData(conditions, type) {
     var dbEntry = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.geo, [dbEntry.field, dbEntry.table, conditions[0]]);
-    return executeQuery(sql, conditions[1]);
+    var sql = buildGeoSql(dbEntry, conditions.sql);
+    return executeQuery(sql, conditions.params);
 }
 
 function getLanguageStat(conditions) {
