@@ -89,7 +89,7 @@ function onDataReceived(data) {
         ];
     }
 
-    table = $table.dataTable(dataTableOptions);
+    table = $('#table').dataTable(dataTableOptions);
 
     if (applist) {
         $('#table').find('tbody').on('click', 'tr', function () {
@@ -110,17 +110,20 @@ function onDataReceived(data) {
                 var webapp = table.fnGetData(this)[0];
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
-                var webappUrl = parent.window.location.origin + parent.window.location.pathname + 'webapps/' + webapp + '/';
+                var webappUrl = webapp;
                 if (param != '?') {
                     webappUrl = webappUrl + '?' + param;
                 }
-                parent.window.location.href = webappUrl;
 
-                // check window.location.replace. need pub sub.
+                publishRedirectUrl(webappUrl);
 
             }
         });
     }
+}
+
+function publishRedirectUrl(url){
+         gadgets.Hub.publish('wso2.as.http.dashboard.webapp.url', url);
 }
 
 $(function () {
