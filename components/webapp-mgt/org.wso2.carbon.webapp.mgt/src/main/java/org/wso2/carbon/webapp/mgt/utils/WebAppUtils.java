@@ -185,9 +185,13 @@ public class WebAppUtils {
     public static WebApplicationsHolder getWebappHolder(String webappFilePath, ConfigurationContext configurationContext) {
         String baseDir = getWebappDir(webappFilePath);
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                (Map<String, WebApplicationsHolder>) configurationContext.
-                        getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
-        return webApplicationsHolderList.get(baseDir);
+                (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
+        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderList.get(baseDir);
+        if(webApplicationsHolder == null){
+            //return default webapp holder if no webApplicationsHolder is found
+            webApplicationsHolder = getDefaultWebappHolder();
+        }
+        return webApplicationsHolder;
     }
 
     /**
@@ -211,6 +215,10 @@ public class WebAppUtils {
         return webappFilePath.substring(webappFilePath.lastIndexOf(File.separator) + 1, webappFilePath.length());
     }
 
+    public static WebApplicationsHolder getDefaultWebappHolder(){
+        return ((Map<String, WebApplicationsHolder>) (DataHolder.getServerConfigContext()).
+                getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST)).get("webapps");
+    }
     /**
      * @return default host of engine element
      */
