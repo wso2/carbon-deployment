@@ -92,17 +92,3 @@ function parseDate(input) {
     // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
     return new Date(parts[0], parts[1] - 1, parts[2]); // Note: months are 0-based
 }
-
-/*
- This method fill the placeholders of the sql statements with the arguments passed and return the
- completed sql statement.
- */
-function formatSql(sql, arguments){
-    var i, len;
-    var formattedSql = sql;
-
-    for (i = 0, len = arguments.length; i < len; i++) {
-        formattedSql = formattedSql.replace(RegExp('\\{' + (i+1) + '\\}','g'), arguments[i]);
-    }
-    return formattedSql;
-}

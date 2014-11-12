@@ -18,7 +18,6 @@
 
 include('../db.jag');
 var helper = require('as-data-util.js');
-var sqlStatements = require('sql-statements.json');
 
 var dbMapping = {
     'browser': {
@@ -35,11 +34,20 @@ var dbMapping = {
     }
 };
 
+function buildTechnologySql(dbEntry, whereClause) {
+    return 'SELECT ' + dbEntry.field + ' as name, ' +
+        'sum(averageRequestCount) as request_count, ' +
+        'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
+        'FROM ' + dbEntry.table + ' ' + whereClause + ')), 2) as percentage_request_count ' +
+        'FROM ' + dbEntry.table + ' ' + whereClause +
+        ' GROUP BY ' + dbEntry.field +
+        ' ORDER BY percentage_request_count DESC;';
+}
+
 function getTechnologyStatData(conditions, type) {
-    var dbEntries = dbMapping[type];
-    var sql = helper.formatSql(sqlStatements.technology, [dbEntries.field, dbEntries.table,
-        conditions[0]]);
-    return executeQuery(sql, conditions[1]);
+    var dbEntry = dbMapping[type];
+    var sql = buildTechnologySql(dbEntry, conditions.sql);
+    return executeQuery(sql, conditions.params);
 }
 
 function getTechnologyStat(conditions, type, visibleNumbers, groupName) {
@@ -68,9 +76,19 @@ function getTechnologyTubularStat(conditions, type, tableHeadings, sortColumn) {
     print(helper.getTabularData(getTechnologyStatData(conditions, type), tableHeadings, sortColumn));
 }
 
+function buildHttpStatusSql(whereClause) {
+    return 'SELECT responseHttpStatusCode as name, ' +
+        'sum(averageRequestCount) as request_count, ' +
+        'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
+        'FROM HTTP_STATUS ' + whereClause + ')),2) as percentage_request_count ' +
+        'FROM HTTP_STATUS ' + whereClause +
+        ' GROUP BY responseHttpStatusCode ' +
+        'ORDER BY percentage_request_count DESC;';
+}
+
 function getHttpStatusStatData(conditions) {
-    var sql = helper.formatSql(sqlStatements.httpStatus,[conditions[0]]);
-    return executeQuery(sql, conditions[1]);
+    var sql = buildHttpStatusSql(conditions.sql);
+    return executeQuery(sql, conditions.params);
 }
 
 function getHttpStatusStat(conditions) {
