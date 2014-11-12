@@ -45,18 +45,18 @@ var log = new Log();
 function buildConditions() {
     // default data range is the past 24 hours
     var startTime = request.getParameter('start_time') || util.formatDate(new Date(new Date() -
-    86400000));
+            86400000));
     var endTime = request.getParameter('end_time') || util.formatDate(new Date());
     var node = request.getParameter('node');
     var webapp = request.getParameter('appname');
     var where = [];
     var params = [];
 
-    if(startTime != null) {
+    if (startTime != null) {
         where.push('time >= ?');
         params.push(startTime);
     }
-    if(endTime != null) {
+    if (endTime != null) {
         where.push('time <= ?');
         params.push(endTime);
     }
@@ -68,7 +68,7 @@ function buildConditions() {
         where.push('webappName= ?');
         params.push(String(webapp));
     }
-    return [' WHERE ' + where.join(' AND '), params];
+    return {'sql': ' WHERE ' + where.join(' AND '), 'params': params};
 }
 
 function getNodeList() {
