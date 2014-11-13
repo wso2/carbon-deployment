@@ -163,16 +163,18 @@ public class WebAppUtils {
      * @return relevant appBase for the host
      */
     public static String getAppbase(String hostName) {
-        String appBase = "";
-        Container[] childHosts = findHostChildren();
-        for (Container host : childHosts) {
-            Host vHost = (Host) host;
-            if (vHost.getName().equals(hostName)) {
-                appBase = vHost.getAppBase();
-                break;
+        if(getServerConfigHostName().equals(hostName)){
+            return getAppbase(getDefaultHost());
+        } else {
+            Container[] childHosts = findHostChildren();
+            for (Container host : childHosts) {
+                Host vHost = (Host) host;
+                if (vHost.getName().equals(hostName)) {
+                    return vHost.getAppBase();
+                }
             }
         }
-        return appBase;
+        return "";
     }
 
     /**
