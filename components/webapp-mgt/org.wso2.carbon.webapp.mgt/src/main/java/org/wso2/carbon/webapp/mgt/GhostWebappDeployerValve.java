@@ -31,7 +31,7 @@ import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.deployment.GhostArtifactRegistry;
+import org.wso2.carbon.utils.deployment.GhostArtifactRepository;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
@@ -237,11 +237,11 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
 
                             if (fileToUpdate.exists()) {
                                 DeploymentFileData dfd = new DeploymentFileData(fileToUpdate);
-                                GhostArtifactRegistry ghostRegistry = GhostDeployerUtils.
-                                        getGhostArtifactRegistry(configurationContext.
+                                GhostArtifactRepository ghostArtifactRepository = GhostDeployerUtils.
+                                        getGhostArtifactRepository(configurationContext.
                                                 getAxisConfiguration());
-                                if (ghostRegistry != null &&
-                                    ghostRegistry.getDeploymentFileData(filePath) == null) {
+                                if (ghostArtifactRepository != null &&
+                                    ghostArtifactRepository.getDeploymentFileData(filePath) == null) {
                                     File deployedWebappFile = new File(webApplication.
                                             getWebappFile().getName());
                                     if (webappsHolder.getStartedWebapps().
