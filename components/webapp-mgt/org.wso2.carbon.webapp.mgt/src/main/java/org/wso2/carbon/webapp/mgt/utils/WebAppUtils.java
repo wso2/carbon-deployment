@@ -163,7 +163,8 @@ public class WebAppUtils {
      * @return relevant appBase for the host
      */
     public static String getAppbase(String hostName) {
-        if(getServerConfigHostName().equals(hostName)){
+        if(ServerConfiguration.getInstance().getFirstProperty("HostName") !=null &&
+                ServerConfiguration.getInstance().getFirstProperty("HostName").equals(hostName)){
             return getAppbase(getDefaultHost());
         } else {
             Container[] childHosts = findHostChildren();
