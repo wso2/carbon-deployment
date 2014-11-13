@@ -23,6 +23,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
+<%@ page import="org.wso2.carbon.webapp.mgt.utils.WebAppUtils"%>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
@@ -45,6 +46,7 @@
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
     String tenantContext = "/t/" + tenantDomain + "/webapps";
+    String defaultHost = WebAppUtils.getDefaultHost();
 
     WebappAdminClient client;
 
@@ -530,8 +532,12 @@
 
             String hostName = null;
             if(vWebapp.getHostName().length() !=0){
-               url =  urlPrefix + vWebapp.getHostName() + urlSuffix;
-               hostName = vWebapp.getHostName();
+               if(defaultHost.equals(vWebapp.getHostName())){
+                   hostName = WebAppUtils.getServerConfigHostName();
+               } else {
+                   hostName = vWebapp.getHostName();
+               }
+               url =  urlPrefix + hostName + urlSuffix;
              }else{
                 url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
                 hostName = webappsWrapper.getHostName();
