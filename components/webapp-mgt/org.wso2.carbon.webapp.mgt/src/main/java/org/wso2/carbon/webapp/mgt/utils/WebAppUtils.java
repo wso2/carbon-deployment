@@ -23,6 +23,7 @@ import org.apache.catalina.Container;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardWrapper;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -225,6 +226,20 @@ public class WebAppUtils {
     public static String getDefaultHost() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
+    }
+
+    /**
+     * This will read "HostName" value from carbon.xml and will return
+     * default host (from catalina-server.xml) if the value is null (or not defined)
+     *
+     * @return host name read from carbon.xml
+     */
+    public static String getServerConfigHostName() {
+        String hostName = ServerConfiguration.getInstance().getFirstProperty("HostName");
+        if (hostName == null) {
+            return getDefaultHost();
+        }
+        return hostName;
     }
 
     private static Container[] findHostChildren() {

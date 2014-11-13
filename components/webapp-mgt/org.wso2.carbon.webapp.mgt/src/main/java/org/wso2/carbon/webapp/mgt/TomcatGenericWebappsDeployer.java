@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
@@ -337,7 +338,7 @@ public class TomcatGenericWebappsDeployer {
             webapp.setFaultReason(new Exception(msg, e));
 
             WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(
-                    webapp.getWebappFile().getAbsolutePath(),this.configurationContext);
+                    webapp.getWebappFile().getAbsolutePath(), this.configurationContext);
 
             webApplicationsHolder.getFaultyWebapps().put(filename, webapp);
             webApplicationsHolder.getStartedWebapps().remove(filename);
@@ -481,8 +482,9 @@ public class TomcatGenericWebappsDeployer {
      */
     protected String recievePersistedWebappMetaData(File webappFile, String propertyName) throws AxisFault, ArtifactMetadataException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
+        String artifactDir = generateMetaFileDirName(webappFile.getAbsolutePath());
         ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR +
-                File.separator + WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+                File.separator + artifactDir);
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
         return manager.loadParameter(webappFile.getName(), type, propertyName);
@@ -499,8 +501,9 @@ public class TomcatGenericWebappsDeployer {
      */
     protected void setPersistedWebappMetaData(File webappFile, String propertyName, String value) throws AxisFault, ArtifactMetadataException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
+        String artifactDir = generateMetaFileDirName(webappFile.getAbsolutePath());
         ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR +
-                File.separator + WebAppUtils.getWebappDir(webappFile.getAbsolutePath()));
+                File.separator + artifactDir);
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
 
@@ -533,9 +536,10 @@ public class TomcatGenericWebappsDeployer {
             }
 
             AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
+            String artifactDir = generateMetaFileDirName(artifactFilePath);
             ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP,
                     WebappsConstants.WEBAPP_METADATA_BASE_DIR +
-                    File.separator + WebAppUtils.getWebappDir(artifactFilePath));
+                    File.separator + artifactDir);
             ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                     getMetadataManager();
             manager.deleteMetafile(artifactFileName, type);
@@ -597,5 +601,10 @@ public class TomcatGenericWebappsDeployer {
             return true;
         }
         return false;
+    }
+
+    private String generateMetaFileDirName(String webappFilePath){
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath,this.configurationContext);
+        return webApplicationsHolder.getWebappsDir().getName();
     }
 }

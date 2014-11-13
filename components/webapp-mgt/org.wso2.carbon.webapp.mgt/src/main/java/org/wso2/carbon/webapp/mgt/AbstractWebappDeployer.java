@@ -363,8 +363,9 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             bamStatsEnabled = "false";
         }
 
+        String artifactDir = generateMetaFileDirName(webApplication.getWebappFile().getAbsolutePath());
         ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR
-                + File.separator + WebAppUtils.getWebappDir(webApplication.getWebappFile().getAbsolutePath()));
+                + File.separator + artifactDir);
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
                 getMetadataManager();
 
@@ -484,6 +485,10 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         return false;
     }
 
+    private String generateMetaFileDirName(String webappFilePath){
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath,configContext);
+        return webApplicationsHolder.getWebappsDir().getName();
+    }
 
     protected void handleRedeployment(File file) throws DeploymentException {
         DeploymentFileData data = new DeploymentFileData(file, this);
