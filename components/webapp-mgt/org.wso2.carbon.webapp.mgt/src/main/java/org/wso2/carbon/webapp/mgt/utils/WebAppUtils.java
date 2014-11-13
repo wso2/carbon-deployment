@@ -189,7 +189,7 @@ public class WebAppUtils {
         WebApplicationsHolder webApplicationsHolder = webApplicationsHolderList.get(baseDir);
         if(webApplicationsHolder == null){
             //return default webapp holder if no webApplicationsHolder is found
-            webApplicationsHolder = getDefaultWebappHolder();
+            webApplicationsHolder = getDefaultWebappHolder(configurationContext);
         }
         return webApplicationsHolder;
     }
@@ -215,8 +215,8 @@ public class WebAppUtils {
         return webappFilePath.substring(webappFilePath.lastIndexOf(File.separator) + 1, webappFilePath.length());
     }
 
-    public static WebApplicationsHolder getDefaultWebappHolder(){
-        return ((Map<String, WebApplicationsHolder>) (DataHolder.getServerConfigContext()).
+    public static WebApplicationsHolder getDefaultWebappHolder(ConfigurationContext configurationContext){
+        return ((Map<String, WebApplicationsHolder>) configurationContext.
                 getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST)).get("webapps");
     }
     /**
