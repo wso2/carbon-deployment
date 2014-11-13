@@ -363,6 +363,10 @@ public class GhostWebappDeployerUtils {
                 if (dummyContextPath != null) {
                     String hostName = WebAppUtils.getMatchingHostName(WebAppUtils.getWebappDirPath(originalFile.getAbsolutePath()));
                     Host host = (Host)DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChild(hostName);
+                    if(host == null){
+                        host = (Host)DataHolder.getCarbonTomcatService().getTomcat().
+                                getEngine().findChild(WebAppUtils.getDefaultHost());
+                    }
                     if (host.findChild(contextName) == null) {
                         context.setDocBase(dummyContextPath);
                         ContextConfig ctxCfg = new ContextConfig();
