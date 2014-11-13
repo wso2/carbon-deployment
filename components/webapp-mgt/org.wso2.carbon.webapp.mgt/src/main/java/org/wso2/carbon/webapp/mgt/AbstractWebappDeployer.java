@@ -119,7 +119,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
                     //We need a reference to the @DeploymentFileData for @WebappUnloader to unload the actual webapp
                     //change the state from ghost to actual
-                    GhostDeployerUtils.getGhostArtifactRegistry(axisConfig)
+                    GhostDeployerUtils.getGhostArtifactRepository(axisConfig)
                             .addDeploymentFileData(deploymentFileData, Boolean.FALSE);
 
                     // iterate all deployed webapps and find the deployed webapp and create the ghost file
@@ -154,7 +154,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                                     tomcatWebappDeployer.undeploy(
                                             unpackedWebappFile);
                                     //we only remove the dfd of the unpacked webapp.
-                                    GhostDeployerUtils.getGhostArtifactRegistry(axisConfig)
+                                    GhostDeployerUtils.getGhostArtifactRepository(axisConfig)
                                             .removeDeploymentFileData(unpackedWebappFile.getAbsolutePath());
                                 }
                             }
@@ -179,7 +179,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                             webappsHolder.getFaultyWebapps().remove(ghostWebappFileName);
 
                             //We need a reference to the @DeploymentFileData since it's currently in ghost state
-                            GhostDeployerUtils.getGhostArtifactRegistry(axisConfig)
+                            GhostDeployerUtils.getGhostArtifactRepository(axisConfig)
                                     .addDeploymentFileData(deploymentFileData, Boolean.TRUE);
                         }
                         // TODO:  add webbapp to eventlistners

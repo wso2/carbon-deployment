@@ -45,7 +45,7 @@ import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.deployment.DeploymentFileDataWrapper;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
-import org.wso2.carbon.utils.deployment.GhostArtifactRegistry;
+import org.wso2.carbon.utils.deployment.GhostArtifactRepository;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -114,13 +114,13 @@ public class GhostWebappDeployerUtils {
                 } else {
                     try {
 
-                        GhostArtifactRegistry ghostRegistry =
-                                GhostDeployerUtils.getGhostArtifactRegistry(configurationContext.getAxisConfiguration());
+                        GhostArtifactRepository ghostArtifactRepository =
+                                GhostDeployerUtils.getGhostArtifactRepository(configurationContext.getAxisConfiguration());
 
-                        if (ghostRegistry == null) {
+                        if (ghostArtifactRepository == null) {
                             return null;
                         }
-                        DeploymentFileDataWrapper dfdWrapper = ghostRegistry.getDeploymentFileData(deployedWebapp
+                        DeploymentFileDataWrapper dfdWrapper = ghostArtifactRepository.getDeploymentFileData(deployedWebapp
                                 .getWebappFile().getPath());
                         Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
 
@@ -169,7 +169,7 @@ public class GhostWebappDeployerUtils {
                             newWebApp.setIsGhostWebapp(false);
 
                             //change the state from ghost to actual
-                            ghostRegistry.addDeploymentFileData(dfd, Boolean.FALSE);
+                            ghostArtifactRepository.addDeploymentFileData(dfd, Boolean.FALSE);
 
                             transitGhostList.remove(newWebApp.getContextName());
                         }
