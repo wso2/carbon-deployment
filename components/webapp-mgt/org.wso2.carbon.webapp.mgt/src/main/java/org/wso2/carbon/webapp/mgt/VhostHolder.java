@@ -36,6 +36,6 @@ public class VhostHolder {
     }
 
     public String getDefaultHostName(){
-        return WebAppUtils.getDefaultHost();
+        return WebAppUtils.getServerConfigHostName();
     }
 }

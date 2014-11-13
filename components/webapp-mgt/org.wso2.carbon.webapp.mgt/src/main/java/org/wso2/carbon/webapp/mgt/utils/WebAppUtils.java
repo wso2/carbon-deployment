@@ -89,17 +89,21 @@ public class WebAppUtils {
             if (childHost.getAppBase().endsWith(File.separator)) {
                 //append a file separator to make webAppFilePath equal to appBase
                 if (isEqualTo(filePath + File.separator, childHost.getAppBase())) {
-                    virtualHost = childHost.getName();
-                    return virtualHost;
+                    if(childHost.getName().equals(getDefaultHost())){
+                        return getServerConfigHostName();
+                    }
+                    return childHost.getName();
                 }
             } else {
                 if (isEqualTo(filePath + File.separator, childHost.getAppBase() + File.separator)) {
-                    virtualHost = childHost.getName();
-                    return virtualHost;
+                    if(childHost.getName().equals(getDefaultHost())){
+                        return getServerConfigHostName();
+                    }
+                    return childHost.getName();
                 }
             }
         }
-        return getDefaultHost();
+        return getServerConfigHostName();
     }
 
     /**
@@ -142,7 +146,12 @@ public class WebAppUtils {
         Container[] childHosts = findHostChildren();
         for (Container vHost : childHosts) {
             Host host = (Host) vHost;
-            vHosts.add(host.getName());
+            if (host.getName().equals(getDefaultHost())) {
+                //read host name from carbon.xml
+                vHosts.add(getServerConfigHostName());
+            } else {
+                vHosts.add(host.getName());
+            }
         }
         return vHosts;
     }
