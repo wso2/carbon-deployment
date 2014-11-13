@@ -23,6 +23,7 @@ import org.apache.catalina.Container;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardWrapper;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -88,17 +89,21 @@ public class WebAppUtils {
             if (childHost.getAppBase().endsWith(File.separator)) {
                 //append a file separator to make webAppFilePath equal to appBase
                 if (isEqualTo(filePath + File.separator, childHost.getAppBase())) {
-                    virtualHost = childHost.getName();
-                    return virtualHost;
+                    if(childHost.getName().equals(getDefaultHost())){
+                        return getServerConfigHostName();
+                    }
+                    return childHost.getName();
                 }
             } else {
                 if (isEqualTo(filePath + File.separator, childHost.getAppBase() + File.separator)) {
-                    virtualHost = childHost.getName();
-                    return virtualHost;
+                    if(childHost.getName().equals(getDefaultHost())){
+                        return getServerConfigHostName();
+                    }
+                    return childHost.getName();
                 }
             }
         }
-        return getDefaultHost();
+        return getServerConfigHostName();
     }
 
     /**
@@ -141,7 +146,12 @@ public class WebAppUtils {
         Container[] childHosts = findHostChildren();
         for (Container vHost : childHosts) {
             Host host = (Host) vHost;
-            vHosts.add(host.getName());
+            if (host.getName().equals(getDefaultHost())) {
+                //read host name from carbon.xml
+                vHosts.add(getServerConfigHostName());
+            } else {
+                vHosts.add(host.getName());
+            }
         }
         return vHosts;
     }
@@ -153,16 +163,19 @@ public class WebAppUtils {
      * @return relevant appBase for the host
      */
     public static String getAppbase(String hostName) {
-        String appBase = "";
-        Container[] childHosts = findHostChildren();
-        for (Container host : childHosts) {
-            Host vHost = (Host) host;
-            if (vHost.getName().equals(hostName)) {
-                appBase = vHost.getAppBase();
-                break;
+        if(ServerConfiguration.getInstance().getFirstProperty("HostName") !=null &&
+                ServerConfiguration.getInstance().getFirstProperty("HostName").equals(hostName)){
+            return getAppbase(getDefaultHost());
+        } else {
+            Container[] childHosts = findHostChildren();
+            for (Container host : childHosts) {
+                Host vHost = (Host) host;
+                if (vHost.getName().equals(hostName)) {
+                    return vHost.getAppBase();
+                }
             }
         }
-        return appBase;
+        return "";
     }
 
     /**
@@ -225,6 +238,20 @@ public class WebAppUtils {
     public static String getDefaultHost() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
+    }
+
+    /**
+     * This will read "HostName" value from carbon.xml and will return
+     * default host (from catalina-server.xml) if the value is null (or not defined)
+     *
+     * @return host name read from carbon.xml
+     */
+    public static String getServerConfigHostName() {
+        String hostName = ServerConfiguration.getInstance().getFirstProperty("HostName");
+        if (hostName == null) {
+            return getDefaultHost();
+        }
+        return hostName;
     }
 
     private static Container[] findHostChildren() {

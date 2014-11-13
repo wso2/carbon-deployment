@@ -75,7 +75,7 @@ public class WarFileUploadExecutor extends AbstractFileUploadExecutor {
                 if(hostNames == null){
                     //tenants can not select hostName when uploading a webapp
                     //Hence a null check is required
-                    tempData.setHostName(WebAppUtils.getDefaultHost());
+                    tempData.setHostName(WebAppUtils.getServerConfigHostName());
                 }else {
                     tempData.setHostName(hostNames.get(i));
                 }

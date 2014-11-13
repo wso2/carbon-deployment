@@ -510,7 +510,7 @@ public class WebappAdmin extends AbstractAdmin {
                 webApplication = webapps.get(key);
             }
             if ((webApplication != null && (getProperty("HostName", key)).equals(webApplication.getHostName())) ||
-                    (webApplication != null && WebAppUtils.getDefaultHost().equals(webApplication.getHostName()))) {
+                    (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
                 try {
                     webapps.remove(webApplication.getWebappFile().getName());
                     webApplication.delete();
@@ -625,7 +625,7 @@ public class WebappAdmin extends AbstractAdmin {
                     webApplication = webApplicationsHolder.getStartedWebapps().get(key);
                 }
                 if ((webApplication != null && (getProperty("HostName", key)).equals(webApplication.getHostName())) ||
-                        (webApplication != null && WebAppUtils.getDefaultHost().equals(webApplication.getHostName()))) {
+                        (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
                     webApplication.reload();
                     webapplicationHelperList.add(new WebapplicationHelper(webApplication.getHostName(), webApplication.getWebappFile().getName()));
                 }
@@ -725,7 +725,7 @@ public class WebappAdmin extends AbstractAdmin {
                 }
                 try {
                     if ((webApplication != null && getProperty("HostName", key).equals(webApplication.getHostName())) ||
-                            (webApplication != null && WebAppUtils.getDefaultHost().equals(webApplication.getHostName()))) {
+                            (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
                         webApplicationsHolder.stopWebapp(webApplication);
                         webapplicationHelperList.add(new WebapplicationHelper(webApplication.getHostName(), webApplication.getWebappFile().getName()));
                     }
@@ -781,7 +781,7 @@ public class WebappAdmin extends AbstractAdmin {
                     webApplication = stoppedWebapps.get(key);
                 }
                 if (webApplication != null && getProperty("HostName", key).equals(webApplication.getHostName()) ||
-                        (webApplication != null && WebAppUtils.getDefaultHost().equals(webApplication.getHostName()))) {
+                        (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
                     startWebapp(stoppedWebapps, webApplication, webApplicationsHolder);
                     webapplicationHelperList.add(new WebapplicationHelper(webApplication.getHostName(), webApplication.getWebappFile().getName()));
                 }
@@ -877,7 +877,7 @@ public class WebappAdmin extends AbstractAdmin {
                     webapp = webapps.get(key);
                 }
                 if ((webapp != null && getProperty("HostName", key).equals(webapp.getHostName())) ||
-                        (webapp != null && WebAppUtils.getDefaultHost().equals(webapp.getHostName()))) {
+                        (webapp != null && WebAppUtils.getServerConfigHostName().equals(webapp.getHostName()))) {
                     webapp.expireAllSessions();
                 }
             }
@@ -901,7 +901,7 @@ public class WebappAdmin extends AbstractAdmin {
                 webapp = webapps.get(webappKey);
             }
             if ((webapp != null && getProperty("HostName", webappKey).equals(webapp.getHostName())) ||
-                    (webapp != null && WebAppUtils.getDefaultHost().equals(webapp.getHostName()))) {
+                    (webapp != null && WebAppUtils.getServerConfigHostName().equals(webapp.getHostName()))) {
                 webapp.expireSessions(maxSessionLifetimeMillis);
                 break;
             }
@@ -945,7 +945,7 @@ public class WebappAdmin extends AbstractAdmin {
                 webapp = webapps.get(webappKey);
             }
             if ((webapp != null && getProperty("HostName", webappKey).equals(webapp.getHostName())) ||
-                    (webapp != null && WebAppUtils.getDefaultHost().equals(webapp.getHostName()))) {
+                    (webapp != null && WebAppUtils.getServerConfigHostName().equals(webapp.getHostName()))) {
                 webapp.expireAllSessions();
                 break;
             }
@@ -964,7 +964,7 @@ public class WebappAdmin extends AbstractAdmin {
         for (WebappUploadData uploadData : webappUploadDataList) {
             String hostname = uploadData.getHostName();
             if (uploadData.getHostName() == null) {
-                hostname = WebAppUtils.getDefaultHost();
+                hostname = WebAppUtils.getServerConfigHostName();
             }
             File webappsDir = new File(getWebappDeploymentDirPath(WebappsConstants.WEBAPP_FILTER_PROP, hostname));
             if (!webappsDir.exists() && !webappsDir.mkdirs()) {
