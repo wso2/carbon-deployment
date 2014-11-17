@@ -38,6 +38,8 @@ import java.util.regex.Pattern;
 
 public class WebAppUtils {
 
+    public static List<String> vhostNames = getVhostNames();
+    public static List<String> appBases = getAppBases();
     /**
      * This util method is used to check if the given application is a Jax-RS/WS app
      *
@@ -141,7 +143,7 @@ public class WebAppUtils {
     /**
      * @return List of virtual hosts
      */
-    public static List<String> getVhostNames() {
+    private static List<String> getVhostNames() {
         List<String> vHosts = new ArrayList<String>();
         Container[] childHosts = findHostChildren();
         for (Container vHost : childHosts) {
@@ -196,15 +198,14 @@ public class WebAppUtils {
      * @return relevant webapplication holder
      */
     public static WebApplicationsHolder getWebappHolder(String webappFilePath, ConfigurationContext configurationContext) {
+        WebApplicationsHolder webApplicationsHolder;
         String baseDir = getWebappDir(webappFilePath);
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
                 (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
-        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderList.get(baseDir);
-        if(webApplicationsHolder == null){
-            //return default webapp holder if no webApplicationsHolder is found
-            webApplicationsHolder = getDefaultWebappHolder(configurationContext);
+        if (!appBases.contains(baseDir)) {
+            return getDefaultWebappHolder(configurationContext);
         }
-        return webApplicationsHolder;
+        return webApplicationsHolderList.get(baseDir);
     }
 
     /**
@@ -258,4 +259,21 @@ public class WebAppUtils {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         return carbonTomcatService.getTomcat().getEngine().findChildren();
     }
+
+    private static List<String> getAppBases() {
+        List<String> baseDirs = new ArrayList<String>();
+        Container[] childHosts = findHostChildren();
+        for (Container host : childHosts) {
+            Host vHost = (Host) host;
+            String appBase = vHost.getAppBase();
+            if (appBase.endsWith(File.separator)) {
+                String dir = appBase.substring(0,appBase.lastIndexOf(File.separator));
+                baseDirs.add(dir.substring(dir.lastIndexOf(File.separator) + 1, dir.length()));
+            } else {
+                baseDirs.add(appBase.substring(appBase.lastIndexOf(File.separator) + 1, appBase.length()));
+            }
+        }
+        return baseDirs;
+    }
+
 }
