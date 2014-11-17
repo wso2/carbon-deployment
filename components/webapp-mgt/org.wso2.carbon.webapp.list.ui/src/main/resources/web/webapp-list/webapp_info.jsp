@@ -32,6 +32,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebAppDataExtractor" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
 
 <fmt:bundle basename="org.wso2.carbon.webapp.list.ui.i18n.Resources">
 <carbon:breadcrumb
@@ -55,6 +56,7 @@
     List wsdlURLS=null;
     List wadlURLS=null;
     String serviceListPath = null;
+    VhostHolder vhostHolder = null;
 
     String servletContext = "/";
 
@@ -84,6 +86,10 @@
         WebappMetadata webapp;
         try {
             client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
+            vhostHolder = client.getVhostHolder();
+            if(vhostHolder.getDefaultHostName().equals(hostName)){
+                urlPrefix = defaultPrefix;
+            }
             if (webappState.equalsIgnoreCase("all")) {
                 webapp = client.getStartedWebapp(webappFileName, hostName);
                 if(webapp == null) {

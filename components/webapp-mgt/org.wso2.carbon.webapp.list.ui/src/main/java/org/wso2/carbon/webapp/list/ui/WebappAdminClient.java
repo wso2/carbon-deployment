@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.webapp.mgt.stub.WebappAdminStub;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.SessionsWrapper;
+import org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper;
@@ -374,5 +375,9 @@ public class WebappAdminClient {
         } catch (Exception e) {
             handleException("cannot.make.default.version", e);
         }
+    }
+
+    public VhostHolder getVhostHolder() throws RemoteException {
+        return stub.getVhostHolder();
     }
 }
