@@ -558,18 +558,16 @@ public class GhostWebappDeployerUtils {
      * @return - derived ghost file name
      */
     public static String calculateGhostFileName(String fileName, String repoPath) {
-        String pathPrefix = "";
         String javaTmpDir = System.getProperty("java.io.tmpdir");
         String cappUnzipPath  = javaTmpDir.endsWith(File.separator) ?
                 javaTmpDir + "carbonapps" :
                 javaTmpDir + File.separator + "carbonapps";
-        if (fileName != null && fileName.contains("\\")) {
-            pathPrefix = "/";
-        }
         fileName = separatorsToUnix(fileName);
         cappUnzipPath = separatorsToUnix(cappUnzipPath);
+        repoPath = separatorsToUnix(
+                new File(repoPath).getAbsolutePath().concat(File.separator));
+
         String ghostFileName = null;
-        fileName = pathPrefix + fileName;
 
         if (fileName.startsWith(repoPath)) {
             // first drop the repo path
