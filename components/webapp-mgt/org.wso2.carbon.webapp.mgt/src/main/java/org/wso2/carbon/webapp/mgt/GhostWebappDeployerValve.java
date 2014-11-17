@@ -155,7 +155,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
                                                         ConfigurationContext cfgCtx) {
         WebApplication deployedWebapp = null;
         //check if the Host for this request is included in the vhost list. If not, default the default vhost
-        List<String> vhostNames = WebAppUtils.getVhostNames();
+        List<String> vhostNames = WebAppUtils.vhostNames;
         if (!vhostNames.contains(hostName)) {
             WebApplicationsHolder webappHolder = WebAppUtils.getDefaultWebappHolder(cfgCtx);
             for (WebApplication webApplication : webappHolder.getStartedWebapps().values()) {
@@ -190,7 +190,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
         if (webappFileName != null) {
             WebApplication ghostWebapp = null;
             //check if the Host for this request is included in the vhost list. If not, default the default vhost
-            List<String> vhostNames = WebAppUtils.getVhostNames();
+            List<String> vhostNames = WebAppUtils.vhostNames;
             if (!vhostNames.contains(hostName)) {
                 WebApplicationsHolder webappHolder = WebAppUtils.getDefaultWebappHolder(cfgCtx);
                 ghostWebapp = webappHolder.getStartedWebapps().get(webappFileName);
