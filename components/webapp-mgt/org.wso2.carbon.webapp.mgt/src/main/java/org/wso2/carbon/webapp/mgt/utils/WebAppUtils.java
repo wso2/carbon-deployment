@@ -83,7 +83,6 @@ public class WebAppUtils {
      * @return  virtual host name for web app dir
      */
     public static String getMatchingHostName(String filePath) {
-        String virtualHost = "";
         Container[] virtualHosts = findHostChildren();
         for (Container vHost : virtualHosts) {
             Host childHost = (Host) vHost;
@@ -198,7 +197,6 @@ public class WebAppUtils {
      * @return relevant webapplication holder
      */
     public static WebApplicationsHolder getWebappHolder(String webappFilePath, ConfigurationContext configurationContext) {
-        WebApplicationsHolder webApplicationsHolder;
         String baseDir = getWebappDir(webappFilePath);
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
                 (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
