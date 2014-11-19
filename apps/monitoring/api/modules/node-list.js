@@ -17,7 +17,6 @@
  */
 
 include('../db.jag');
-var helper = require('as-data-util.js');
 
 function buildNodeListSql() {
     return 'SELECT distinct(serverName) from REQUESTS_SUMMARY_PER_MINUTE;';
@@ -25,31 +24,20 @@ function buildNodeListSql() {
 
 function getNodeList() {
     var dataArray = [];
+    var elements = []
     var i, len;
     var sql = buildNodeListSql();
     var results = executeQuery(sql);
 
     dataArray.push('All');
     for (i = 0, len = results.length; i < len; i++) {
-        dataArray.push(results[i]['node']);
+        elements.push(results[i]['serverName']);
     }
 
-//    print(dataArray);
+    dataArray.push({
+        'groupName': 'Other Nodes',
+        'elements': elements
+    });
 
-    print([
-        'All',
-        {
-            'groupName': 'Group 1',
-            'elements': ['10.100.5.118', '10.100.5.119', '10.100.5.120']
-        },
-        {
-            'groupName': 'Group 2',
-            'elements': ['10.100.5.121', '10.100.5.122', '10.100.5.123', '10.100.5.124',
-                '10.100.5.125']
-        },
-        {
-            'groupName': 'Group 3',
-            'elements': ['10.100.5.126', '10.100.5.127']
-        }
-    ]);
+    print(dataArray);
 }
