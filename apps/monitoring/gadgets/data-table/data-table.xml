@@ -60,13 +60,28 @@
 	<script language="javascript" type="text/javascript" src="js/jquery.dataTables.js"></script>
 	<script language="javascript" type="text/javascript" src="js/moment.js"></script>
 	<script language="javascript" type="text/javascript" src="js/data-table.js"></script>
-
+	<script language="javascript" type="text/javascript" src="js/handlebars-v2.0.0.js"></script>
+    <script language="javascript" type="text/javascript" src="js/dataTables.bootstrap.js"></script>
 </head>
 
 <body>
-	<div id="placeholder" class="demo-placeholder"></div>
+	<div id="placeholder" class="demo-placeholder">
+        <script id="table-template" type="text/x-handlebars-template">
+	        <table cellpadding="0" cellspacing="0" border="0" class="display" id="table" style="width: 100%">
+	            <thead>
+                    {{#each this}}
+	                    <tr>
+                            {{#each this}}
+                                {{{generateHeadingTag this}}}
+                            {{/each}}
+	                    </tr>
+	                {{/each}}
+	            </thead>
+	            <tbody></tbody>
+	        </table>
+	    </script>
+	</div>
 </body>
-<script language="javascript" type="text/javascript" src="js/dataTables.bootstrap.js"></script>
 </html>
     ]]>
     </Content>

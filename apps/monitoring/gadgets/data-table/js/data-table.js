@@ -5,6 +5,8 @@ var end = pref.getString('endTime') || undefined;
 
 var url = pref.getString('dataSource');
 
+var template;
+
 function fetchData(startTime, endTime) {
     var url = pref.getString('dataSource');
 
@@ -35,11 +37,8 @@ function onDataReceived(data) {
     var table;
     var headings;
 
-    table = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="table" style="width: 100%">';
-
     headings = getTableHeader(tableHeadings);
-
-    $('#placeholder').html(table + headings + '</table>');
+    $('#placeholder').html(template(headings));
 
     var dataTableOptions = {};
 
@@ -91,9 +90,11 @@ function registerWebappSelect(table) {
 }
 
 function getTableHeader(tableHeadings) {
-    var headings = '<thead><tr>';
+    var headingArray = [];
+    var row = [];
+    var th = {};
     var rowSpan = 1;
-    var i, len;
+    var i, j, len, len2;
 
     for (i = 0, len = tableHeadings.length; i < len; i++) {
         if (tableHeadings[i] instanceof Object) {
@@ -103,34 +104,35 @@ function getTableHeader(tableHeadings) {
     }
 
     for (i = 0, len = tableHeadings.length; i < len; i++) {
+        th = {};
         if (typeof(tableHeadings[i]) == 'string') {
-            headings += "<th rowspan='" + rowSpan + "'>";
-            headings += tableHeadings[i];
+            th.rowSpan = rowSpan;
+            th.text = tableHeadings[i];
         } else {
-            headings += "<th colspan='" + tableHeadings[i]["sub"].length + "'>";
-            headings += tableHeadings[i]["parent"];
+            th.colSpan = tableHeadings[i]["sub"].length;
+            th.text = tableHeadings[i]['parent'];
         }
-        headings += '</th>';
+        row.push(th);
     }
 
-    headings += '</tr>';
+    headingArray.push(row);
 
     if (rowSpan > 1) {
-        headings += '<tr>';
+        row = [];
         for (i = 0, len = tableHeadings.length; i < len; i++) {
             if (tableHeadings[i] instanceof Object) {
                 var subHeadings = tableHeadings[i]['sub'];
                 for (j = 0, len2 = subHeadings.length; j < len2; j++) {
-                    headings += '<th>' + subHeadings[j] + '</th>'
+                    th = {};
+                    th.text = subHeadings[j];
+                    row.push(th);
                 }
             }
         }
-        headings += '</tr>';
+        headingArray.push(row);
     }
 
-    headings += '</thead>';
-
-    return headings;
+    return headingArray;
 }
 
 function publishRedirectUrl(url){
@@ -139,6 +141,15 @@ function publishRedirectUrl(url){
 
 $(function () {
     fetchData();
+
+    Handlebars.registerHelper('generateHeadingTag', function (th) {
+        var properties = '';
+        properties += (th.rowSpan) ? " rowspan='" + th.rowSpan + "'" : '';
+        properties += (th.colSpan) ? " colspan='" + th.colSpan + "'" : '';
+        return new Handlebars.SafeString('<th' + properties + '>' + th.text + '</th>');
+    });
+
+    template = Handlebars.compile($('#table-template').html());
 });
 
 gadgets.HubSettings.onConnect = function () {
