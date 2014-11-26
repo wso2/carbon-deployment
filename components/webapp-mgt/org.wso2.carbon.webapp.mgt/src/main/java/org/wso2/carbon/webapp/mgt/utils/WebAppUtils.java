@@ -172,7 +172,10 @@ public class WebAppUtils {
             for (Container host : childHosts) {
                 Host vHost = (Host) host;
                 if (vHost.getName().equals(hostName)) {
-                    return vHost.getAppBase();
+                    //catalina-server.xml has appBase value with file separators "/"
+                    //But in windows environment File.separator should change to "\\"
+                    //Hence replacing file.separators
+                    return vHost.getAppBase().replace("/", File.separator);
                 }
             }
         }
