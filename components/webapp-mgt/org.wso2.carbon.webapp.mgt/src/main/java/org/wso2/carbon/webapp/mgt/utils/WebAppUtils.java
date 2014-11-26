@@ -85,18 +85,19 @@ public class WebAppUtils {
         Container[] virtualHosts = findHostChildren();
         for (Container vHost : virtualHosts) {
             Host childHost = (Host) vHost;
+            String appBase = childHost.getAppBase().replace("/", File.separator);
 
-            if (childHost.getAppBase().endsWith(File.separator)) {
+            if (appBase.endsWith(File.separator)) {
                 //append a file separator to make webAppFilePath equal to appBase
-                if (isEqualTo(filePath + File.separator, childHost.getAppBase())) {
-                    if(childHost.getName().equals(getDefaultHost())){
+                if (isEqualTo(filePath + File.separator, appBase)) {
+                    if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
                     return childHost.getName();
                 }
             } else {
-                if (isEqualTo(filePath + File.separator, childHost.getAppBase() + File.separator)) {
-                    if(childHost.getName().equals(getDefaultHost())){
+                if (isEqualTo(filePath + File.separator, appBase + File.separator)) {
+                    if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
                     return childHost.getName();
