@@ -263,7 +263,8 @@ public class WebAppUtils {
         Container[] childHosts = findHostChildren();
         for (Container host : childHosts) {
             Host vHost = (Host) host;
-            String appBase = vHost.getAppBase();
+            //Replacing file separators according to current OS
+            String appBase = vHost.getAppBase().replace("/", File.separator);
             if (appBase.endsWith(File.separator)) {
                 String dir = appBase.substring(0,appBase.lastIndexOf(File.separator));
                 baseDirs.add(dir.substring(dir.lastIndexOf(File.separator) + 1, dir.length()));
