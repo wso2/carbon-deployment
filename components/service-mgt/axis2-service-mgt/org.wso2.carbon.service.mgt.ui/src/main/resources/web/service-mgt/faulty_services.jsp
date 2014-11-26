@@ -203,7 +203,7 @@
                 <tr>
                     <td rowspan="2">
                         <input type="checkbox" name="serviceGroups"
-                               value="<%=service.getArtifact()%>"
+                               value="<%=service.getServiceName()%>"
                                onclick="resetVars()" class="chkBox"/>
                     </td>
                     <td width="300px">
