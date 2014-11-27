@@ -21,6 +21,7 @@
         <module>features/service-mgt</module>
         <module>features/webapp-mgt</module>
         <module>features/javaee</module>
+        <!--<module>features/feature-test</module>-->
         <module>features/monitoring</module>
     </modules>
 
@@ -836,6 +837,57 @@
             </dependency>
 
             <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.engine</artifactId>
+                <version>${automation.framework.verion}</version>
+                <!--<scope>test</scope>-->
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.extensions</artifactId>
+                <version>${automation.framework.verion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.jmeter</groupId>
+                        <artifactId>ApacheJMeter</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.jmeter</groupId>
+                        <artifactId>ApacheJMeter_core</artifactId>
+                    </exclusion>
+                </exclusions>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+                <version>${automation.framework.verion}</version>
+            </dependency>
+            <!-- kernel-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.server.admin.stub</artifactId>
+                <version>${carbon.stub.version}</version>
+            </dependency>
+            <!-- identity-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
+                <version>${carbon.stub.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                <version>${carbon.stub.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.tenant.mgt.stub</artifactId>
+                <version>${carbon.stub.version}</version>
+            </dependency>
+            <dependency>    
                 <groupId>org.eclipse</groupId>
                 <artifactId>org.eclipse.osgi</artifactId>
                 <version>${eclipse.osgi.version}</version>
@@ -1173,6 +1225,8 @@
         <version.json.wso2>2.0.0.wso2v1</version.json.wso2>
 
         <javax.ws.rs-api.version>2.0-m10</javax.ws.rs-api.version>
+        <automation.framework.verion>4.3.1-SNAPSHOT</automation.framework.verion>
+        <carbon.stub.version>4.3.0-SNAPSHOT</carbon.stub.version>
     </properties>
 
     <repositories>
