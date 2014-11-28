@@ -30,7 +30,7 @@ xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assemb
     <fileSet>
         <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
         <useDefaultExcludes>true</useDefaultExcludes>
-        <!--<outputDirectory>../../</outputDirectory>-->
+        <outputDirectory>/</outputDirectory>
     </fileSet>
 </fileSets>
 </assembly>
