@@ -38,6 +38,8 @@ import java.util.regex.Pattern;
 
 public class WebAppUtils {
 
+    public static List<String> vhostNames = getVhostNames();
+    public static List<String> appBases = getAppBases();
     /**
      * This util method is used to check if the given application is a Jax-RS/WS app
      *
@@ -81,22 +83,22 @@ public class WebAppUtils {
      * @return  virtual host name for web app dir
      */
     public static String getMatchingHostName(String filePath) {
-        String virtualHost = "";
         Container[] virtualHosts = findHostChildren();
         for (Container vHost : virtualHosts) {
             Host childHost = (Host) vHost;
+            String appBase = childHost.getAppBase().replace("/", File.separator);
 
-            if (childHost.getAppBase().endsWith(File.separator)) {
+            if (appBase.endsWith(File.separator)) {
                 //append a file separator to make webAppFilePath equal to appBase
-                if (isEqualTo(filePath + File.separator, childHost.getAppBase())) {
-                    if(childHost.getName().equals(getDefaultHost())){
+                if (isEqualTo(filePath + File.separator, appBase)) {
+                    if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
                     return childHost.getName();
                 }
             } else {
-                if (isEqualTo(filePath + File.separator, childHost.getAppBase() + File.separator)) {
-                    if(childHost.getName().equals(getDefaultHost())){
+                if (isEqualTo(filePath + File.separator, appBase + File.separator)) {
+                    if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
                     return childHost.getName();
@@ -141,7 +143,7 @@ public class WebAppUtils {
     /**
      * @return List of virtual hosts
      */
-    public static List<String> getVhostNames() {
+    private static List<String> getVhostNames() {
         List<String> vHosts = new ArrayList<String>();
         Container[] childHosts = findHostChildren();
         for (Container vHost : childHosts) {
@@ -171,7 +173,10 @@ public class WebAppUtils {
             for (Container host : childHosts) {
                 Host vHost = (Host) host;
                 if (vHost.getName().equals(hostName)) {
-                    return vHost.getAppBase();
+                    //catalina-server.xml has appBase value with file separators "/"
+                    //But in windows environment File.separator should change to "\\"
+                    //Hence replacing file.separators
+                    return vHost.getAppBase().replace("/", File.separator);
                 }
             }
         }
@@ -199,12 +204,10 @@ public class WebAppUtils {
         String baseDir = getWebappDir(webappFilePath);
         Map<String, WebApplicationsHolder> webApplicationsHolderList =
                 (Map<String, WebApplicationsHolder>) configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST);
-        WebApplicationsHolder webApplicationsHolder = webApplicationsHolderList.get(baseDir);
-        if(webApplicationsHolder == null){
-            //return default webapp holder if no webApplicationsHolder is found
-            webApplicationsHolder = getDefaultWebappHolder(configurationContext);
+        if (!appBases.contains(baseDir)) {
+            return getDefaultWebappHolder(configurationContext);
         }
-        return webApplicationsHolder;
+        return webApplicationsHolderList.get(baseDir);
     }
 
     /**
@@ -258,4 +261,20 @@ public class WebAppUtils {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
         return carbonTomcatService.getTomcat().getEngine().findChildren();
     }
+
+    private static List<String> getAppBases() {
+        List<String> baseDirs = new ArrayList<String>();
+        Container[] childHosts = findHostChildren();
+        for (Container host : childHosts) {
+            Host vHost = (Host) host;
+            //Replacing file separators according to current OS
+            String appBase = vHost.getAppBase().replace("/", File.separator);
+            if (appBase.endsWith(File.separator)) {
+                appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
+            }
+            baseDirs.add(appBase.substring(appBase.lastIndexOf(File.separator) + 1, appBase.length()));
+        }
+        return baseDirs;
+    }
+
 }

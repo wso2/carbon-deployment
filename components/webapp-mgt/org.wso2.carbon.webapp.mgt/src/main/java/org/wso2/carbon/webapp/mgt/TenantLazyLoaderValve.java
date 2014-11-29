@@ -82,25 +82,28 @@ public class TenantLazyLoaderValve extends CarbonTomcatValve {
 
 
         ConfigurationContext serverConfigCtx = DataHolder.getServerConfigContext();
-        if (TenantAxisUtils.getLastAccessed(domain, serverConfigCtx) == -1) { // First time access
-            try {
-                setTenantAccessed(domain, serverConfigCtx);
-                if (requestURI.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/") ||
-                        requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/") ||
-                        requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/")) {
-                    TomcatUtil.remapRequest(request);
-                } else {
-                    request.getRequestDispatcher(requestURI).forward(request, response);
+        // Fixing NPE when server shutting down while requests keep coming in - WSAS-1867
+        if (serverConfigCtx != null) {
+            if (TenantAxisUtils.getLastAccessed(domain, serverConfigCtx) == -1) { // First time access
+                try {
+                    setTenantAccessed(domain, serverConfigCtx);
+                    if (requestURI.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/") ||
+                            requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/") ||
+                            requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/")) {
+                        TomcatUtil.remapRequest(request);
+                    } else {
+                        request.getRequestDispatcher(requestURI).forward(request, response);
+                    }
+                } catch (Exception e) {
+                    String msg = "Cannot redirect tenant request to " + requestURI +
+                            " for tenant " + domain;
+                    log.error(msg, e);
+                    throw new RuntimeException(msg, e);
                 }
-            } catch (Exception e) {
-                String msg = "Cannot redirect tenant request to " + requestURI +
-                        " for tenant " + domain;
-                log.error(msg, e);
-                throw new RuntimeException(msg, e);
             }
+            setTenantAccessed(domain, serverConfigCtx);
+            getNext().invoke(request, response, compositeValve);
         }
-        setTenantAccessed(domain, serverConfigCtx);
-        getNext().invoke(request, response, compositeValve);
     }
 
 

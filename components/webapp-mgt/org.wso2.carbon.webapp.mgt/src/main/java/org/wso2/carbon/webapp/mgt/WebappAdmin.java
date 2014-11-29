@@ -509,8 +509,7 @@ public class WebappAdmin extends AbstractAdmin {
             } else {
                 webApplication = webapps.get(key);
             }
-            if ((webApplication != null && (getProperty("HostName", key)).equals(webApplication.getHostName())) ||
-                    (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
+            if ((webApplication != null && (getProperty("HostName", key)).equals(webApplication.getHostName()))) {
                 try {
                     webapps.remove(webApplication.getWebappFile().getName());
                     webApplication.delete();
