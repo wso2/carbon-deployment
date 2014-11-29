@@ -270,11 +270,9 @@ public class WebAppUtils {
             //Replacing file separators according to current OS
             String appBase = vHost.getAppBase().replace("/", File.separator);
             if (appBase.endsWith(File.separator)) {
-                String dir = appBase.substring(0,appBase.lastIndexOf(File.separator));
-                baseDirs.add(dir.substring(dir.lastIndexOf(File.separator) + 1, dir.length()));
-            } else {
-                baseDirs.add(appBase.substring(appBase.lastIndexOf(File.separator) + 1, appBase.length()));
+                appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
             }
+            baseDirs.add(appBase.substring(appBase.lastIndexOf(File.separator) + 1, appBase.length()));
         }
         return baseDirs;
     }
