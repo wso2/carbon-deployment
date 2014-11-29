@@ -31,6 +31,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.ResourceBundle" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
 <%@ page import="java.util.TreeMap" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VersionedWebappMetadata" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
@@ -47,6 +48,7 @@
     String tenantContext = "/t/" + tenantDomain + "/webapps";
 
     WebappAdminClient client;
+    VhostHolder vhostHolder = null;
 
     int numberOfPages;
     String pageNumber = request.getParameter("pageNumber");
@@ -85,6 +87,7 @@
                                                        Integer.parseInt(pageNumber));
         numberOfPages = webappsWrapper.getNumberOfPages();
         webapps = webappsWrapper.getWebapps();
+        vhostHolder = client.getVhostHolder();
     } catch (Exception e) {
         response.setStatus(500);
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -530,8 +533,13 @@
 
             String hostName = null;
             if(vWebapp.getHostName().length() !=0){
-               url =  urlPrefix + vWebapp.getHostName() + urlSuffix;
+               if(vhostHolder.getDefaultHostName().equals(vWebapp.getHostName())){
+                   url =  urlPrefix + webappsWrapper.getHostName() + urlSuffix;
+               } else {
+                   url =  urlPrefix + vWebapp.getHostName() + urlSuffix;
+               }
                hostName = vWebapp.getHostName();
+
              }else{
                 url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
                 hostName = webappsWrapper.getHostName();
