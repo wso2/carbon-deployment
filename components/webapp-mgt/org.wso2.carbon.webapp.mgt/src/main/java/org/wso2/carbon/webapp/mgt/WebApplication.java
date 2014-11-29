@@ -25,6 +25,7 @@ import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
@@ -400,6 +401,16 @@ public class WebApplication {
             webappDir = new File(filePath.substring(0, filePath.lastIndexOf('.')));
         } else {
             webappDir = webappFile;
+        }
+        String cAppTmpDir = CarbonUtils.getCarbonHome() + File.separator + "tmp" +
+                File.separator + "carbonapps" + File.separator;                      //FIXME :  add a method to CarbonUtils to read cAppTmpDir
+        if (webappDir.getAbsolutePath().contains(cAppTmpDir)) {
+            //if webapp is deployed from a capp, delete the exploded webapp from "webapps"
+            String webappDeploymentDir = webappDir.getAbsolutePath().substring(webappDir.getAbsolutePath().
+                    lastIndexOf(File.separator) + 1, webappDir.getAbsolutePath().length());
+            webappDir = new File(DataHolder.getServerConfigContext().getAxisConfiguration().
+                    getRepository().getPath() + File.separator +
+                    WebappsConstants.WEBAPP_DEPLOYMENT_FOLDER + File.separator + webappDeploymentDir);
         }
         // Delete the exploded dir of war based webapps upon undeploy. But omit deleting
         // directory based webapps.
