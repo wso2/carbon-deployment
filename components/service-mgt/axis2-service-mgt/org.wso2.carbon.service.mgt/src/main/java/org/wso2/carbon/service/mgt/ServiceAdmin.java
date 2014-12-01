@@ -791,7 +791,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         if (archiveName.indexOf(repository) != 0) {
-        	originalName = repository +"/synapse-configs/default/proxy-services/"+ archiveName + ".xml";
+        	originalName = repository + archiveName;
         }
 
         if (log.isDebugEnabled()) {
