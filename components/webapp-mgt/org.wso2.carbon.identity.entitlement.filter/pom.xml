@@ -40,7 +40,6 @@
         <dependency>
             <groupId>org.eclipse.equinox</groupId>
             <artifactId>javax.servlet</artifactId>
-            <version>${version.javax.servlet}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -49,7 +48,6 @@
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
-            <version>0.8.0.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

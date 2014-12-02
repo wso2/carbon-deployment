@@ -1038,6 +1038,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>javax.servlet</artifactId>
+                <version>${version.javax.servlet}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>libthrift.wso2</groupId>
                 <artifactId>libthrift</artifactId>
                 <version>${libthrift.wso2.version}</version>
