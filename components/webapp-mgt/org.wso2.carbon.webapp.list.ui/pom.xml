@@ -57,7 +57,6 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.url.mapper.stub</artifactId>
-            <version>${previous.version}</version>
         </dependency>
     </dependencies>
 
