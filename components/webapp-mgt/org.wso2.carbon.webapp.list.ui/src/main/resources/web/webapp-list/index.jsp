@@ -582,9 +582,8 @@
               URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
               webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
             <%=vWebapp.getContext()%> <img src="images/applications.gif"
-                                           title="CApp Artifact : Artifact should not be modified from the web based UI"
-                                           alt="CApp Artifact"/>
-        </a>
+                                           title="<fmt:message key="capp.web.artifact.text"/>"
+                                           alt="<fmt:message key="capp.web.artifact"/>"/> </a>
         <%}%>
     </td>
 

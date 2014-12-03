@@ -435,8 +435,8 @@ padding:0 10px;
                     <% } else { %>
                     <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
                         <img src="images/applications.gif"
-                             title="CApp Artifact : Artifact should not be modified from the web based UI"
-                             alt="CApp Artifact"/>
+                             title="<fmt:message key="capp.service.artifact.text"/>"
+                             alt="<fmt:message key="capp.service.artifact"/>"/> </a>
                     <% } %>
                 </nobr>
             </td>
