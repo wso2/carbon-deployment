@@ -169,7 +169,11 @@ public class WebappAdmin extends AbstractAdmin {
         } else if (appContext.endsWith("/*")) {
             appContext = appContext.substring(0, appContext.indexOf("/*"));
         }
-
+        String cAppDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                         "carbonapps" + File.separator + "work";
+        if (webApplication.getWebappFile().getAbsolutePath().contains(cAppDir)) {
+            webappMetadata.setCAppArtifact(true);
+        }
         webappMetadata.setDisplayName(webApplication.getDisplayName());
         webappMetadata.setContext(webApplication.getContextName());
         webappMetadata.setHostName(webApplication.getHostName());
@@ -181,7 +185,6 @@ public class WebappAdmin extends AbstractAdmin {
         webappMetadata.setServiceListPath(webApplication.getServiceListPath());
         webappMetadata.setAppVersion(webApplication.getVersion());
         webappMetadata.setContextPath(webApplication.getContext().getPath());
-
         WebApplication.Statistics statistics = webApplication.getStatistics();
         WebappStatistics stats = new WebappStatistics();
         stats.setActiveSessions(statistics.getActiveSessions());
