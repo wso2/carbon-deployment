@@ -382,7 +382,7 @@ padding:0 10px;
             <%
                 if (loggedIn && hasDownloadableServices) {
             %>
-            <th colspan="10"><fmt:message key="services"/></th>
+            <th colspan="12"><fmt:message key="services"/></th>
             <%
             } else if (loggedIn) {
             %>
@@ -401,6 +401,7 @@ padding:0 10px;
             for (ServiceMetaData service : serviceData) {
                 String bgColor = ((position % 2) == 1) ? "#EEEFFB" : "white";
                 position++;
+                boolean isCAppArtifact = service.getCAppArtifact();
                 if (service == null) {
                     continue;
                 }
@@ -427,12 +428,15 @@ padding:0 10px;
                 <nobr>
                     <%
                         String serviceName = service.getName();
-                        if (loggedIn) {
+                        if (loggedIn && !isCAppArtifact) {
                     %>
                     <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
                     </a>
                     <% } else { %>
-                    <%=serviceName%>
+                    <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
+                        <img src="images/applications.gif"
+                             title="CApp Artifact : Artifact should not be modified from the web based UI"
+                             alt="CApp Artifact"/>
                     <% } %>
                 </nobr>
             </td>
@@ -444,7 +448,6 @@ padding:0 10px;
                 <%= service.getServiceType() %>
                 </nobr>
             </td>
-            <% if(isAuthorizedToManage) { %>
             <td style="text-align:left;" width="10px">
                 <nobr>
                     <%= service.getSecurityScenarioId() != null ?
@@ -453,7 +456,6 @@ padding:0 10px;
                     %>
                  </nobr>
             </td>
-            <% } %>
             <td width="100px">
                 <% if (service.getActive()) {%>
                 <a href="<%=service.getWsdlURLs()[0]%>" class="icon-link"
