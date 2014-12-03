@@ -43,6 +43,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisEvent;
 import org.apache.axis2.util.PolicyLocator;
 import org.apache.axis2.wsdl.WSDLConstants;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Assertion;
@@ -555,11 +556,12 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             ServiceMetaData service = new ServiceMetaData();
             String serviceName = axisService.getName();
             service.setName(serviceName);
-            String cAppdir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                             "carbonapps" + File.separator + "work";
+            String nCApp = FilenameUtils.normalize(File.separator + "repository" + File.separator +
+                                                   "carbonapps" + File.separator + "work");
             if (axisService.getFileName() != null) {
                 try {
-                    if (new File(axisService.getFileName().toURI()).getAbsolutePath().contains(cAppdir)) {
+                    if (FilenameUtils.normalize(new File(axisService.getFileName().toURI()).getAbsolutePath()).contains
+                            (nCApp)) {
                         service.setCAppArtifact(true);
                     }
                 } catch (URISyntaxException e) {
