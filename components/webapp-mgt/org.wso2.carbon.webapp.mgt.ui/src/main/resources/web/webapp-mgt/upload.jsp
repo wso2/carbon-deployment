@@ -69,7 +69,8 @@
             var validFileNames = true;
             var emptyFields = true;
 
-            if (document.webappUploadForm.warFileName.value) {
+            if (document.webappUploadForm.warFileName.value != null &&
+                    document.webappUploadForm.warFileName.value != '') {
 
                 var jarinput = document.webappUploadForm.warFileName.value;
                 if (jarinput != '') {
@@ -88,7 +89,7 @@
                     CARBON.showWarningDialog('<fmt:message key="whitespace.contains.webapp"/>');
                     validFileNames = false;
                 }
-            } else if (document.webappUploadForm.warFileName[0].value) {
+            } else if (document.webappUploadForm.warFileName[0].value != null) {
               
 
                 for (var i=0; i<document.webappUploadForm.warFileName.length; i++) {
@@ -112,7 +113,7 @@
                 }
             }
 
-             if(document.webappUploadForm.version.value){
+             if(document.webappUploadForm.version.value != null){
 
                  var appVersion =  document.webappUploadForm.version.value;
                  if(appVersion.indexOf("#")!=-1) {
@@ -131,7 +132,7 @@
                      CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
                      validFileNames = false;
                  }
-             } else if (document.webappUploadForm.version[0].value){
+             } else if (document.webappUploadForm.version[0].value != null){
                  for (var i=0; i<document.webappUploadForm.version.length; i++) {
                      var appVersion =  document.webappUploadForm.version[i].value;
                      if(appVersion.indexOf("#")!=-1) {
