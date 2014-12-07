@@ -123,6 +123,7 @@
                                 <includedFeatureDef>
                                     org.wso2.carbon:org.wso2.carbon.module.mgt.ui.feature:${project.version}
                                 </includedFeatureDef>
+<!--
                                 <includedFeatureDef>
                                     org.wso2.carbon:org.wso2.carbon.throttle.ui.feature:${project.version}
                                 </includedFeatureDef>
@@ -131,6 +132,7 @@
                                 </includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rm.ui.feature:${project.version}
                                 </includedFeatureDef>
+-->
                                 <includedFeatureDef>
                                     org.wso2.carbon:org.wso2.carbon.security.mgt.ui.feature:${project.version}
                                 </includedFeatureDef>
