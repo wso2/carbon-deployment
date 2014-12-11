@@ -56,7 +56,7 @@ public class AuthenticateStubUtil {
      *
      * @param stub Axis2 service stub which needs to be authenticated
      */
-    public static void authenticateStub(String userName, String password, Stub stub) {
-        CarbonUtils.setBasicAccessSecurityHeaders(userName, password, stub._getServiceClient());
+    public static void authenticateStub(String userName, char[] password, Stub stub) {
+        CarbonUtils.setBasicAccessSecurityHeaders(userName, String.valueOf(password), stub._getServiceClient());
     }
 }

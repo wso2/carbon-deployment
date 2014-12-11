@@ -50,7 +50,7 @@ public class AARServiceUploaderClient {
         }
     }
 
-    public AARServiceUploaderClient(String backEndUrl, String userName, String password)
+    public AARServiceUploaderClient(String backEndUrl, String userName, char [] password)
             throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         try {

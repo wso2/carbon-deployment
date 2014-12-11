@@ -52,7 +52,7 @@ public class LoginLogoutClient {
         this.port = backend.getPort();
         this.hostName = backend.getHost();
         this.automationContext = context;
-        this.loginClient = new AuthenticatorClient(backendURL);
+        loginClient = new AuthenticatorClient(backendURL);
     }
 
     /**
@@ -65,7 +65,7 @@ public class LoginLogoutClient {
                                  URISyntaxException, SAXException, XPathExpressionException {
         String userName;
         userName = automationContext.getContextTenant().getContextUser().getUserName();
-        return loginClient.login(userName, automationContext.getContextTenant().getContextUser().getPassword()
+        return loginClient.login(userName, automationContext.getContextTenant().getContextUser().getPassword().toCharArray()
                 , automationContext.getInstance().getHosts().get("default"));
     }
 

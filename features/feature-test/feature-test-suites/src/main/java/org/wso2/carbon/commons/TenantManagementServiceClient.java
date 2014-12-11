@@ -51,7 +51,7 @@ public class TenantManagementServiceClient {
      * @throws TenantMgtAdminServiceExceptionException
      *
      */
-    public void addTenant(String domainName, String password, String firstName, String usagePlan)
+    public void addTenant(String domainName, char [] password, String firstName, String usagePlan)
             throws RemoteException, TenantMgtAdminServiceExceptionException {
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
@@ -60,7 +60,7 @@ public class TenantManagementServiceClient {
         tenantInfoBean.setActive(true);
         tenantInfoBean.setEmail(firstName + "@" + domainName);
         tenantInfoBean.setAdmin(firstName);
-        tenantInfoBean.setAdminPassword(password);
+        tenantInfoBean.setAdminPassword(String.valueOf(password));
         tenantInfoBean.setUsagePlan(usagePlan);
         tenantInfoBean.setLastname(firstName + "wso2automation");
         tenantInfoBean.setSuccessKey("true");

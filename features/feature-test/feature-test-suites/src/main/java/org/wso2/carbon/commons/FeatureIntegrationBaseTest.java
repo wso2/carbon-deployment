@@ -27,8 +27,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.extensions.LoginLogoutClient;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.lang.System;
 import java.rmi.RemoteException;
-import java.util.Calendar;
 
 
 /*
@@ -38,23 +38,25 @@ import java.util.Calendar;
 *
 * */
 
-public class FeatureIntegrationTest {
-    private static final Log log = LogFactory.getLog(FeatureIntegrationTest.class);
+public class FeatureIntegrationBaseTest {
+    private static final Log log = LogFactory.getLog(FeatureIntegrationBaseTest.class);
     protected AutomationContext automationContext;
     protected String sessionCookie;
     protected String backendURL;
     protected String webAppURL;
     protected LoginLogoutClient loginLogoutClient;
-    private static int SERVICE_DEPLOYMENT_DELAY = 90 * 1000;
+    private static int SERVICE_DEPLOYMENT_DELAY_IN_MILLIS = 90 * 1000;
+    private String PRODUCT_GROUP_NAME = "CARBON_DEPLOYMENT";
 
 
     /**
      * Create AutomationContext,LoginLogoutClient,sessionCookie,backendURL and webAppURL
      * with only super tenant admin.
+     *
      * @throws Exception
      */
     protected void init() throws Exception {
-        automationContext = new AutomationContext("CARBON_DEPLOYMENT", TestUserMode.SUPER_TENANT_ADMIN);
+        automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         loginLogoutClient = new LoginLogoutClient(automationContext);
         sessionCookie = loginLogoutClient.login();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
@@ -64,31 +66,19 @@ public class FeatureIntegrationTest {
     /**
      * Create AutomationContext,LoginLogoutClient,sessionCookie,backendURL and webAppURL
      * with multiple user modes
+     *
      * @param testUserMode multiple user modes to create Automation context
      * @throws Exception
      */
     protected void init(TestUserMode testUserMode) throws Exception {
-        automationContext = new AutomationContext("CARBON_DEPLOYMENT", testUserMode);
+        automationContext = new AutomationContext(PRODUCT_GROUP_NAME, testUserMode);
         loginLogoutClient = new LoginLogoutClient(automationContext);
         sessionCookie = loginLogoutClient.login();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         webAppURL = automationContext.getContextUrls().getWebAppURL();
     }
 
-    /**
-     * Create AutomationContext,LoginLogoutClient,sessionCookie,backendURL and webAppURL
-     * with domainKey and userKey
-     * @param domainKey
-     * @param userKey
-     * @throws Exception
-     */
-    protected void init(String domainKey, String userKey) throws Exception {
-        automationContext = new AutomationContext("CARBON_DEPLOYMENT","carbon_deployment", domainKey, userKey);
-        loginLogoutClient = new LoginLogoutClient(automationContext);
-        sessionCookie = loginLogoutClient.login();
-        backendURL = automationContext.getContextUrls().getBackEndUrl();
-        webAppURL = automationContext.getContextUrls().getWebAppURL();
-    }
+
 
 
     protected String getServiceUrl(String serviceName) throws XPathExpressionException {
@@ -97,6 +87,7 @@ public class FeatureIntegrationTest {
 
     /**
      * Check whether service is deployed oor not
+     *
      * @param serviceName
      * @return
      * @throws RemoteException
@@ -108,6 +99,7 @@ public class FeatureIntegrationTest {
 
     /**
      * Check whether service is deployed oor not
+     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
@@ -117,15 +109,15 @@ public class FeatureIntegrationTest {
     public static boolean isServiceDeployed(String backEndUrl, String sessionCookie,
                                             String serviceName)
             throws RemoteException {
-        log.info("waiting " + SERVICE_DEPLOYMENT_DELAY + " millis for Service deployment " + serviceName);
+        log.info("waiting " + SERVICE_DEPLOYMENT_DELAY_IN_MILLIS + " millis for Service deployment " + serviceName);
         boolean isServiceDeployed = false;
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < SERVICE_DEPLOYMENT_DELAY) {
+        long startTime = System.currentTimeMillis();
+
+        while ((System.currentTimeMillis() - startTime) < SERVICE_DEPLOYMENT_DELAY_IN_MILLIS) {
             if (adminServiceService.isServiceExists(serviceName)) {
                 isServiceDeployed = true;
-                log.info(serviceName + " Service Deployed in " + time + " millis");
+                log.info(serviceName + " Service Deployed in " + (System.currentTimeMillis() - startTime) + " millis");
                 break;
             }
             try {
@@ -138,6 +130,7 @@ public class FeatureIntegrationTest {
 
     /**
      * Delete the service
+     *
      * @param serviceName
      * @throws RemoteException
      */

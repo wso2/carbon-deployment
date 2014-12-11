@@ -23,7 +23,6 @@ package org.wso2.carbon.commons;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminStub;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyServicesWrapper;
@@ -46,13 +45,6 @@ public class ServiceAdminClient {
         AuthenticateStubUtil.authenticateStub(sessionCookie, serviceAdminStub);
     }
 
-    public ServiceAdminClient(String backEndUrl, String userName, String password)
-            throws AxisFault {
-
-        String endPoint = backEndUrl + serviceName;
-        serviceAdminStub = new ServiceAdminStub(endPoint);
-        AuthenticateStubUtil.authenticateStub(userName, password, serviceAdminStub);
-    }
 
     public void deleteService(String[] serviceGroup) throws RemoteException {
 
@@ -60,14 +52,6 @@ public class ServiceAdminClient {
 
     }
 
-    public boolean deleteFaultyService(String archiveName) throws RemoteException {
-        try {
-            return serviceAdminStub.deleteFaultyServiceGroup(archiveName);
-        } catch (RemoteException e) {
-            log.error("Faulty service deletion fails", e);
-            throw new RemoteException("Faulty service deletion fails", e);
-        }
-    }
 
     public boolean deleteFaultyServiceByServiceName(String serviceName) throws RemoteException {
         try {
@@ -78,11 +62,6 @@ public class ServiceAdminClient {
         }
     }
 
-    public void deleteAllNonAdminServiceGroups() throws RemoteException {
-
-        serviceAdminStub.deleteAllNonAdminServiceGroups();
-
-    }
 
     public ServiceMetaDataWrapper listServices(String serviceName)
             throws RemoteException {
@@ -91,26 +70,6 @@ public class ServiceAdminClient {
         serviceAdminStub.getFaultyServiceArchives(0);
         return serviceMetaDataWrapper;
     }
-
-    public ServiceMetaDataWrapper listServices(String serviceName, String filerType)
-            throws RemoteException {
-        ServiceMetaDataWrapper serviceMetaDataWrapper;
-        serviceMetaDataWrapper = serviceAdminStub.listServices(filerType, serviceName, 0);
-        serviceAdminStub.getFaultyServiceArchives(0);
-        return serviceMetaDataWrapper;
-    }
-
-    public FaultyServicesWrapper getFaultyServiceArchives(int pageNumber) throws RemoteException {
-        FaultyServicesWrapper faultyServicesWrapper;
-        try {
-            faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(pageNumber);
-        } catch (RemoteException e) {
-            log.error("Unable to get faulty service Archives", e);
-            throw new RemoteException("Unable to get faulty service Archives", e);
-        }
-        return faultyServicesWrapper;
-    }
-
 
     public FaultyServicesWrapper listFaultyServices() throws RemoteException {
         FaultyServicesWrapper faultyServicesWrapper;
@@ -140,66 +99,6 @@ public class ServiceAdminClient {
         return serviceState;
     }
 
-    public void deleteMatchingServiceByGroup(String serviceFileName)
-            throws RemoteException {
-        String matchingServiceName = getMatchingServiceName(serviceFileName);
-        if (matchingServiceName != null) {
-            String serviceGroup[] = {getServiceGroup(matchingServiceName)};
-            log.info("Service group name " + serviceGroup[0]);
-
-            serviceAdminStub.deleteServiceGroups(serviceGroup);
-
-        } else {
-            log.error("Service group name cannot be null");
-        }
-    }
-
-    public String deleteAllServicesByType(String type)
-            throws RemoteException {
-        ServiceMetaDataWrapper serviceMetaDataWrapper;
-
-        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", null, 0);
-
-        ServiceMetaData[] serviceMetaDataList;
-        if (serviceMetaDataWrapper != null) {
-            serviceMetaDataList = serviceMetaDataWrapper.getServices();
-
-            String[] serviceGroup;
-            if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
-
-                for (ServiceMetaData serviceData : serviceMetaDataList) {
-                    if (serviceData.getServiceType().equalsIgnoreCase(type)) {
-                        serviceGroup = new String[]{serviceData.getServiceGroupName()};
-                        deleteService(serviceGroup);
-                    }
-                }
-            }
-        }
-        return null;
-
-    }
-
-    public String getMatchingServiceName(String serviceFileName)
-            throws RemoteException {
-
-        ServiceMetaDataWrapper serviceMetaDataWrapper;
-        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceFileName, 0);
-
-
-        ServiceMetaData[] serviceMetaDataList;
-        if (serviceMetaDataWrapper != null) {
-            serviceMetaDataList = serviceMetaDataWrapper.getServices();
-            if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
-
-                for (ServiceMetaData serviceData : serviceMetaDataList) {
-                    if (serviceData != null && serviceData.getName().contains(serviceFileName)) {
-                        return serviceData.getName();
-                    }
-                }
-            }
-        }
-        return null;
-    }
 
     public String getServiceGroup(String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
@@ -258,40 +157,5 @@ public class ServiceAdminClient {
             throw new RuntimeException("Service not found in faulty service list " + faultyService);
         }
         return faultyService;
-    }
-
-    public ServiceMetaData getServicesData(String serviceName)
-            throws ServiceAdminException, RemoteException {
-
-        return serviceAdminStub.getServiceData(serviceName);
-
-    }
-
-    public void startService(String serviceName) throws ServiceAdminException, RemoteException {
-
-        serviceAdminStub.startService(serviceName);
-        log.info("Service Started");
-
-    }
-
-    public void stopService(String serviceName) throws ServiceAdminException, RemoteException {
-
-        serviceAdminStub.stopService(serviceName);
-        log.info("Service Stopped");
-
-    }
-
-    /**
-     *
-     * @param serviceName
-     * @return
-     * @throws ServiceAdminException
-     * @throws RemoteException
-     */
-    public String[] getExposedTransports(String serviceName)
-            throws ServiceAdminException, RemoteException {
-
-        return serviceAdminStub.getExposedTransports(serviceName);
-
     }
 }

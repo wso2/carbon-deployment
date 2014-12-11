@@ -77,41 +77,6 @@ public class WebAppAdminClient {
         webappAdminStub.deleteStartedWebapps(new String[]{fileName});
     }
 
-    public void deleteFaultyWebAppFile(String fileName) throws RemoteException {
-        webappAdminStub.deleteFaultyWebapps(new String[]{fileName});
-    }
-
-    public void deleteStoppedWebapps(String fileName) throws RemoteException {
-
-        webappAdminStub.deleteStoppedWebapps(new String[]{fileName});
-    }
-
-    public void deleteFaultyWebApps(String fileName) throws RemoteException {
-        try {
-            webappAdminStub.deleteFaultyWebapps(new String[]{fileName});
-        } catch (RemoteException e) {
-            throw new RemoteException("Faulty webApp deletion fail", e);
-        }
-    }
-
-
-
-    public WebappMetadata getWebAppInfo(String webAppName) throws RemoteException {
-        WebappsWrapper wrapper = getPagedWebappsSummary(webAppName, "ALL", "ALL", 0);
-        VersionedWebappMetadata[] webappGroups = wrapper.getWebapps();
-        if (webappGroups == null || webappGroups.length == 0) {
-            throw new RemoteException("No Web Application Found with given name " + webAppName);
-        }
-        if (webappGroups.length > 1) {
-            // this is happened there are more service available with the given web app name prefix
-            throw new RemoteException("More than one service found with the given name");
-        }
-
-        WebappMetadata[] webappMetadatas = webappGroups[0].getVersionGroups();
-        return webappMetadatas[0];
-
-    }
-
     public WebappsWrapper getPagedWebappsSummary(String searchString, String webAppType,
                                                  String webAppState, int pageNo)
             throws RemoteException {
@@ -152,8 +117,5 @@ public class WebAppAdminClient {
         return list;
     }
 
-    public void reloadWebApp(String webAppFileName) throws RemoteException {
-        webappAdminStub.reloadWebapps(new String[]{webAppFileName});
-    }
 }
 

@@ -10,6 +10,12 @@
     <name>WSO2 Carbon - Platform Aggregator Pom</name>
     <url>http://wso2.org</url>
 
+    <parent>
+        <groupId>org.wso2</groupId>
+        <artifactId>wso2</artifactId>
+        <version>1</version>
+    </parent>
+
     <modules>
         <module>service-stubs/service-mgt</module>
         <module>service-stubs/webapp-mgt</module>
@@ -21,7 +27,7 @@
         <module>features/service-mgt</module>
         <module>features/webapp-mgt</module>
         <module>features/javaee</module>
-        <!--<module>features/feature-test</module>-->
+        <module>features/feature-test</module>
         <module>features/monitoring</module>
     </modules>
 

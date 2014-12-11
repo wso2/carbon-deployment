@@ -34,7 +34,7 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.carbon.commons.AARServiceUploaderClient;
-import org.wso2.carbon.commons.FeatureIntegrationTest;
+import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
 
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
@@ -42,7 +42,7 @@ import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 
-public class CommodityQuoteTestCase extends FeatureIntegrationTest {
+public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
     private static final Log log = LogFactory.getLog(CommodityQuoteTestCase.class);
     private TestUserMode userMode;
 

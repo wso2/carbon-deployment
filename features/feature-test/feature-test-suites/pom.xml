@@ -29,7 +29,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
                 <inherited>false</inherited>
                 <configuration>
                     <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
@@ -51,7 +50,7 @@
                         <property>
                             <name>carbon.zip</name>
                             <value>
-                                ${basedir}/../feature-distribution/target/wso2carbon-core-${carbon.platform.version}.zip
+                                ${basedir}/../feature-distribution/target/wso2carbon-core-${carbon.kernel.version}.zip
                             </value>
                         </property>
                         <property>
@@ -94,7 +93,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
                 <executions>
                     <execution>
                         <goals>

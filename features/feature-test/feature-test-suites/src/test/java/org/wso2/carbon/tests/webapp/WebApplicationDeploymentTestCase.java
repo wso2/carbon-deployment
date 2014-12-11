@@ -28,9 +28,9 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.commons.FeatureIntegrationTest;
-import org.wso2.carbon.commons.WebAppAdminClient;
-import org.wso2.carbon.commons.WebAppDeploymentUtil;
+import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.*;
+//import org.wso2.carbon.commons.WebAppDeploymentUtil;
 
 import java.io.File;
 
@@ -40,27 +40,23 @@ import static org.testng.Assert.assertTrue;
 /**
  * Copy a war file and check the war is deployed
  */
-public class WebApplicationDeploymentTestCase extends FeatureIntegrationTest {
+public class WebApplicationDeploymentTestCase extends FeatureIntegrationBaseTest {
     private final String webAppFileName = "appServer-valied-deploymant-1.0.0.war";
     private final String webAppName = "appServer-valied-deploymant-1.0.0";
     private WebAppAdminClient webAppAdminClient;
 
-    /**
-     * Create the necessary variables for this test
-     * @throws Exception
-     */
+
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         webAppAdminClient = new WebAppAdminClient(backendURL, sessionCookie);
-
     }
 
     @Test(groups = "carbon_deployment.test", description = "Deploying web application")
     public void testWebApplicationDeployment() throws Exception {
-        webAppAdminClient.warFileUplaoder(FrameworkPathUtil.getSystemResourceLocation() +
-                                          "artifacts" + File.separator + "carbon_deployment" + File.separator + "war"
-                                          + File.separator + webAppFileName);
+        webAppAdminClient.warFileUplaoder(
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "carbon_deployment" +
+                File.separator + "war" + File.separator + webAppFileName);
 
         assertTrue(WebAppDeploymentUtil.isWebApplicationDeployed(
                 backendURL, sessionCookie, webAppName)
@@ -82,8 +78,7 @@ public class WebApplicationDeploymentTestCase extends FeatureIntegrationTest {
     public void testDeleteWebApplication() throws Exception {
         webAppAdminClient.deleteWebAppFile(webAppFileName);
         assertTrue(WebAppDeploymentUtil.isWebApplicationUnDeployed(
-                           backendURL, sessionCookie, webAppName),
-                   "Web Application unDeployment failed");
+                backendURL, sessionCookie, webAppName), "Web Application unDeployment failed");
 
         HttpResponse response = HttpRequestUtil.sendGetRequest(webAppURL, null);
         Assert.assertEquals(response.getResponseCode(), 302, "Response code mismatch. Client request " +

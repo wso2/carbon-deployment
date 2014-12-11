@@ -30,8 +30,8 @@ import org.wso2.carbon.automation.test.utils.common.FileManager;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.commons.FeatureIntegrationTest;
-import org.wso2.carbon.commons.WebAppDeploymentUtil;
+import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.*;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
@@ -43,7 +43,7 @@ import static org.testng.Assert.assertTrue;
  * Deploying the web application by dropping the war file to the repository/deployment/server/webapp folder &
  * invoke once deployed successfully
  */
-public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationTest {
+public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationBaseTest {
     private final String webAppFileName = "appServer-valied-deploymant-1.0.0.war";
     private final String webAppName = "appServer-valied-deploymant-1.0.0";
     private String webAppDeploymentDir;

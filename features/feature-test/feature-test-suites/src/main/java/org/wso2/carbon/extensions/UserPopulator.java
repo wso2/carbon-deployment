@@ -26,8 +26,7 @@ import org.wso2.carbon.automation.engine.configurations.AutomationConfiguration;
 import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.commons.TenantManagementServiceClient;
-import org.wso2.carbon.commons.UserManagementClient;
+import org.wso2.carbon.commons.*;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.rmi.RemoteException;
@@ -76,7 +75,7 @@ public class UserPopulator {
             if(!tenants.equals(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME)) {
                 tenantStub.addTenant(tenants, automationContext.getConfigurationValue(
                         String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD,
-                                AutomationXpathConstants.TENANTS, tenants)),
+                                AutomationXpathConstants.TENANTS, tenants)).toCharArray(),
                         automationContext.getConfigurationValue(String.format(AutomationXpathConstants.ADMIN_USER_USERNAME,
                                 AutomationXpathConstants.TENANTS, tenants)), FrameworkConstants.TENANT_USAGE_PLAN_DEMO);
             }
@@ -90,7 +89,7 @@ public class UserPopulator {
             tenantAdminSession =
                     login(automationContext.getConfigurationValue(String.format(AutomationXpathConstants.ADMIN_USER_USERNAME,
                             superTenantReplacement, tenants)), tenants, automationContext.getConfigurationValue(
-                            String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD, superTenantReplacement, tenants)),
+                            String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD, superTenantReplacement, tenants)).toCharArray(),
                             backendURL, UrlGenerationUtil.getManagerHost(automationContext.getInstance()));
 
             //here we populate the user list of the current tenant
@@ -130,7 +129,7 @@ public class UserPopulator {
                     format(AutomationXpathConstants.ADMIN_USER_USERNAME, superTenantReplacement, tenants)),
                     tenants, automationContext.
                     getConfigurationValue(String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD,
-                            superTenantReplacement, tenants)), backendURL,
+                            superTenantReplacement, tenants)).toCharArray(), backendURL,
                     UrlGenerationUtil.getManagerHost(automationContext.getInstance()));
 
             userManagementClient = new UserManagementClient(backendURL, tenantAdminSession);
@@ -150,7 +149,7 @@ public class UserPopulator {
         }
     }
 
-    protected String login(String userName, String domain, String password, String backendUrl, String hostName) throws
+    protected String login(String userName, String domain, char [] password, String backendUrl, String hostName) throws
             RemoteException, LoginAuthenticationExceptionException, XPathExpressionException {
         AuthenticatorClient loginClient = new AuthenticatorClient(backendUrl);
         if(!domain.equals(AutomationConfiguration.getConfigurationValue(ExtensionCommonConstants.SUPER_TENANT_DOMAIN_NAME))) {

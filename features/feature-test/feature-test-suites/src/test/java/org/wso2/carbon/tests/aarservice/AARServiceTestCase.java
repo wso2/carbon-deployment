@@ -33,7 +33,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.commons.AARServiceUploaderClient;
-import org.wso2.carbon.commons.FeatureIntegrationTest;
+import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
 
 import java.io.File;
 
@@ -42,7 +42,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * Deploy a aar service and check it using web services.
  */
-public class AARServiceTestCase extends FeatureIntegrationTest {
+public class AARServiceTestCase extends FeatureIntegrationBaseTest {
     private static final Log log = LogFactory.getLog(AARServiceTestCase.class);
     private TestUserMode userMode;
 

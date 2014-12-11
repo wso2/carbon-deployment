@@ -34,7 +34,7 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.carbon.commons.AARServiceUploaderClient;
-import org.wso2.carbon.commons.FeatureIntegrationTest;
+import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
@@ -47,7 +47,7 @@ import static org.testng.Assert.assertNotNull;
 /*
 copy a JSONService.aar to the server , verify deployment and invokes the service
 */
-public class JSONTestCase extends FeatureIntegrationTest {
+public class JSONTestCase extends FeatureIntegrationBaseTest {
 
     private static final Log log = LogFactory.getLog(JSONTestCase.class);
     private static final String APPLICATION_JSON = "application/json";

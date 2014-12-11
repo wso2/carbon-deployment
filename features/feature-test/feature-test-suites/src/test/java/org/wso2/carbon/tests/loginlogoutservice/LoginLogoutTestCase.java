@@ -24,13 +24,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.commons.FeatureIntegrationTest;
-import org.wso2.carbon.extensions.AuthenticatorClient;
+import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.extensions.*;
 
 /**
  * Login and logout to the sever to test login is available
  */
-public class LoginLogoutTestCase extends FeatureIntegrationTest {
+public class LoginLogoutTestCase extends FeatureIntegrationBaseTest {
 
     private static final Log log = LogFactory.getLog(LoginLogoutTestCase.class);
     private AuthenticatorClient authClient;
@@ -48,7 +48,7 @@ public class LoginLogoutTestCase extends FeatureIntegrationTest {
     public void login() throws Exception {
         authClient = new AuthenticatorClient(backendURL);
         String loginStatus = authClient.login(automationContext.getSuperTenant().getTenantAdmin().getUserName(),
-                                              automationContext.getSuperTenant().getTenantAdmin().getPassword(),
+                                              automationContext.getSuperTenant().getTenantAdmin().getPassword().toCharArray(),
                                               automationContext.getInstance().getHosts().get("default"));
         log.info("Login status " + loginStatus);
     }
