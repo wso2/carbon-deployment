@@ -85,42 +85,5 @@ public class TenantManagementServiceClient {
             throw new RemoteException("RemoteException thrown while adding user/tenants : ", e);
         }
     }
-
-    /**
-     * @param domainName domain name of the tenant
-     */
-    public void deleteTenant(String domainName) {
-        try {
-            tenantMgtAdminServiceStub.deactivateTenant(domainName);
-            tenantMgtAdminServiceStub.deleteTenant(domainName);
-        } catch (RemoteException e) {
-            log.error("Error while reach the tenant");
-        } catch (TenantMgtAdminServiceExceptionException e) {
-            log.error("No such tenant found");
-        }
-    }
-
-    public TenantInfoBean getTenant(String tenantDomain)
-            throws TenantMgtAdminServiceExceptionException, RemoteException {
-        TenantInfoBean getTenantBean;
-        try {
-            getTenantBean = tenantMgtAdminServiceStub.getTenant(tenantDomain);
-            assert getTenantBean == null : "Domain Name not found";
-        } catch (RemoteException e) {
-            log.error("RemoteException thrown while retrieving user/tenants : ", e);
-            throw new RemoteException("RemoteException thrown while retrieving user/tenants : ", e);
-        }
-        return getTenantBean;
-    }
-
-    public void updateTenant(TenantInfoBean infoBean)
-            throws TenantMgtAdminServiceExceptionException, RemoteException {
-        try {
-            tenantMgtAdminServiceStub.updateTenant(infoBean);
-        } catch (RemoteException e) {
-            log.error("RemoteException thrown while retrieving user/tenants : ", e);
-            throw new RemoteException("RemoteException thrown while retrieving user/tenants : ", e);
-        }
-    }
 }
 

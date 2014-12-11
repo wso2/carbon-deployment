@@ -51,8 +51,6 @@ public class UserManagementClient {
         userAdminStub.deleteUser(userName);
     }
 
-  
-
     public HashSet<String> getUserList() throws RemoteException, UserAdminUserAdminException {
         return new HashSet<String>(Arrays.asList(userAdminStub.listUsers("*", LIMIT)));
     }

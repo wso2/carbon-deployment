@@ -89,8 +89,7 @@ public class JSONTestCase extends FeatureIntegrationBaseTest {
         AARServiceUploaderClient aarServiceUploaderClient
                 = new AARServiceUploaderClient(backendURL, sessionCookie);
 
-        aarServiceUploaderClient.uploadAARFile("JSONService.aar",
-                                               FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+        aarServiceUploaderClient.uploadAARFile("JSONService.aar",FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                                                File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
                                                "JSONService.aar", "");
         AxisServiceClientUtils.waitForServiceDeployment(this.automationContext.getContextUrls().getServiceUrl() +

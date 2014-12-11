@@ -71,8 +71,7 @@ public class AARServiceTestCase extends FeatureIntegrationBaseTest {
     public void testAarServiceUpload() throws Exception {
         AARServiceUploaderClient aarServiceUploaderClient
                 = new AARServiceUploaderClient(backendURL, sessionCookie);
-        aarServiceUploaderClient.uploadAARFile("Axis2Service.aar",
-                                               FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+        aarServiceUploaderClient.uploadAARFile("Axis2Service.aar",FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                                                File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
                                                "Axis2Service.aar", "");
         String axis2Service = "Axis2Service";

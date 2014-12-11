@@ -48,10 +48,6 @@ public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationBaseT
     private final String webAppName = "appServer-valied-deploymant-1.0.0";
     private String webAppDeploymentDir;
 
-    /**
-     * Create the necessary variables for this test
-     * @throws Exception
-     */
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();

@@ -24,7 +24,6 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.client.Stub;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.utils.CarbonUtils;
 
 
 public class AuthenticateStubUtil {
@@ -50,13 +49,4 @@ public class AuthenticateStubUtil {
         }
     }
 
-    /**
-     * Authenticate the given web service stub against the Product user manager. This
-     * will make it possible to use the stub for invoking Product admin services.
-     *
-     * @param stub Axis2 service stub which needs to be authenticated
-     */
-    public static void authenticateStub(String userName, char[] password, Stub stub) {
-        CarbonUtils.setBasicAccessSecurityHeaders(userName, String.valueOf(password), stub._getServiceClient());
-    }
 }

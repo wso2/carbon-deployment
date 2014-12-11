@@ -53,6 +53,7 @@ public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
 
     /**
      * Create the necessary variables for this test
+     *
      * @throws Exception
      */
     @BeforeClass(alwaysRun = true)
@@ -73,15 +74,16 @@ public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
         log.info("CommodityQuote service deleted");
     }
 
-    @Test(groups = "wso2.as", description = "upload CommodityQuoteService.aar file and verify" +
-                                            " deployment")
+    @Test(groups = "wso2.as", description = "upload CommodityQuoteService.aar file and verify deployment")
     public void testComQuoSerUpload() throws Exception {
         AARServiceUploaderClient aarServiceUploaderClient
                 = new AARServiceUploaderClient(backendURL, sessionCookie);
-        aarServiceUploaderClient.uploadAARFile("CommodityQuoteService.aar",
-                                               FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                                               File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
-                                               "CommodityQuoteService.aar", "");
+
+        aarServiceUploaderClient.uploadAARFile(
+                "CommodityQuoteService.aar", FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                                             File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
+                                             "CommodityQuoteService.aar", "");
+
         AxisServiceClientUtils.waitForServiceDeployment(getServiceUrl("CommodityQuote"));
         log.info("CommodityQuoteService.aar service uploaded successfully");
     }

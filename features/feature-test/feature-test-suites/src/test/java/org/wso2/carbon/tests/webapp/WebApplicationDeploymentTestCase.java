@@ -54,7 +54,7 @@ public class WebApplicationDeploymentTestCase extends FeatureIntegrationBaseTest
 
     @Test(groups = "carbon_deployment.test", description = "Deploying web application")
     public void testWebApplicationDeployment() throws Exception {
-        webAppAdminClient.warFileUplaoder(
+        webAppAdminClient.warFileUploader(
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "carbon_deployment" +
                 File.separator + "war" + File.separator + webAppFileName);
 
