@@ -58,9 +58,8 @@ public class WebApplicationDeploymentTestCase extends FeatureIntegrationBaseTest
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "carbon_deployment" +
                 File.separator + "war" + File.separator + webAppFileName);
 
-        assertTrue(WebAppDeploymentUtil.isWebApplicationDeployed(
-                backendURL, sessionCookie, webAppName)
-                , "Web Application Deployment failed");
+        assertTrue(WebAppDeploymentUtil.isWebApplicationDeployed(backendURL, sessionCookie, webAppName),
+                   "Web Application Deployment failed");
 
     }
 
