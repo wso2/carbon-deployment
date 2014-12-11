@@ -520,6 +520,7 @@
             /*if ("/0".equals(version)) {
                 version = "default";
             }*/
+            boolean isCAppArtifact = vWebapp.getCAppArtifact();
 
             String proxyContextPath = CarbonUtils.getProxyContextPath(false);
             String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
@@ -570,11 +571,20 @@
             firstWebappFlag = false;
     %>
     <td <%= rowspanHtmlAtt %> >
-           <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
+        <%if (!isCAppArtifact) {%>
+        <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
               URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
               hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
-              <%=vWebapp.getContext()%>
-           </a>
+            <%=vWebapp.getContext()%>
+        </a>
+        <%} else {%>
+        <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
+              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
+              webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
+            <%=vWebapp.getContext()%> <img src="images/applications.gif"
+                                           title="<fmt:message key="capp.web.artifact.text"/>"
+                                           alt="<fmt:message key="capp.web.artifact"/>"/> </a>
+        <%}%>
     </td>
 
     <%} %>
@@ -689,7 +699,6 @@
         </a>
     </td>
 </tr>
-
 
 <% } %>      <% } %>
 
