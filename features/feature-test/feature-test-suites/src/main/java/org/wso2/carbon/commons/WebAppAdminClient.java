@@ -91,12 +91,12 @@ public class WebAppAdminClient {
     }
 
     /**
-     *
-     * @param searchString
-     * @param webAppType
-     * @param webAppState
-     * @param pageNo
-     * @return
+     * Get summary of web applications for the following criteria
+     * @param searchString - string contain in service name
+     * @param webAppType - web application type
+     * @param webAppState - web appliocation state
+     * @param pageNo - page number
+     * @return WebappsWrapper - web applications summary
      * @throws RemoteException
      */
     public WebappsWrapper getPagedWebappsSummary(String searchString, String webAppType,
