@@ -32,6 +32,9 @@ import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException
 
 import java.rmi.RemoteException;
 
+/**
+ * This Class in for login logout users to carbon server
+ */
 public class AuthenticatorClient {
     private static final Log log = LogFactory.getLog(AuthenticatorClient.class);
     private AuthenticationAdminStub authenticationAdminStub;
@@ -54,6 +57,15 @@ public class AuthenticatorClient {
         return this.authenticationAdminStub;
     }
 
+    /**
+     * Method to login a user
+     * @param userName - use name for the login
+     * @param password - password for the login
+     * @param host - login host
+     * @return - sessionCookie of the project as String
+     * @throws LoginAuthenticationExceptionException
+     * @throws RemoteException
+     */
     public String login(String userName, char[] password, String host)
             throws LoginAuthenticationExceptionException, RemoteException {
         Boolean loginStatus;
@@ -73,6 +85,11 @@ public class AuthenticatorClient {
     }
 
 
+    /**
+     * Log out the logged in user
+     * @throws LogoutAuthenticationExceptionException
+     * @throws RemoteException
+     */
     public void logOut() throws LogoutAuthenticationExceptionException, RemoteException {
         authenticationAdminStub.logout();
         log.info("log out");

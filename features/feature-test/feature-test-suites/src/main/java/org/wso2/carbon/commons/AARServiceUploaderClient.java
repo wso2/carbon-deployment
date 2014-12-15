@@ -32,12 +32,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+/**
+ * This Class is to upload a aar service
+ */
+
 public class AARServiceUploaderClient {
     private static final Log log = LogFactory.getLog(AARServiceUploaderClient.class);
 
     private ServiceUploaderStub serviceUploaderStub;
     private final String serviceName = "ServiceUploader";
 
+    /**
+     * This Contractor is for authenticating the endpoint url
+     * @param backEndUrl - server back end url
+     * @param sessionCookie - sessionCookie of the logged in user
+     * @throws AxisFault
+     */
     public AARServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
 
         String endPoint = backEndUrl + serviceName;
@@ -50,6 +60,15 @@ public class AARServiceUploaderClient {
         }
     }
 
+    /**
+     * This method is for copying aar files to relevant folder.
+     * @param fileName - Name of the file which has to be copied.
+     * @param filePath - Path of the aar file which has to be copied.
+     * @param serviceHierarchy
+     * @throws ExceptionException - Error while uploading the aar file
+     * @throws RemoteException - Error while uploading the aar file
+     * @throws MalformedURLException - Variable filePath is invalid
+     */
     public void uploadAARFile(String fileName, String filePath,
                               String serviceHierarchy)
             throws ExceptionException, RemoteException, MalformedURLException {

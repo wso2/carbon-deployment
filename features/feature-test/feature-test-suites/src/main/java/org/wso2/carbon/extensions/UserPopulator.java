@@ -33,12 +33,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.wso2.carbon.integration.common.admin.client.TenantManagementServiceClient;
-//import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
-//import org.wso2.carbon.integration.common.extensions.utils.AutomationXpathConstants;
-//import org.wso2.carbon.integration.common.extensions.utils.ExtensionCommonConstants;
-//import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-
 /**
  * This class is responsible for adding tenants and users
  * defined under userManagement entry in automation.xml to servers.
@@ -53,12 +47,17 @@ public class UserPopulator {
     String productGroupName;
     String instanceName;
 
+
     public UserPopulator(String productGroupName, String instanceName) throws XPathExpressionException {
         this.productGroupName = productGroupName;
         this.instanceName = instanceName;
         tenantsList = getTenantsDomainList();
     }
 
+    /**
+     * This method is to populate users from automation.xml for given parameters in constructor
+     * @throws Exception
+     */
     public void populateUsers() throws Exception {
         String tenantAdminSession;
         UserManagementClient userManagementClient;
@@ -115,6 +114,10 @@ public class UserPopulator {
         }
     }
 
+    /**
+     * This method is to delete users which we have created using automation.xml
+     * @throws Exception
+     */
     public void deleteUsers() throws Exception {
         String tenantAdminSession;
         AutomationContext automationContext = new AutomationContext(productGroupName, instanceName, TestUserMode.SUPER_TENANT_ADMIN);
@@ -149,6 +152,19 @@ public class UserPopulator {
         }
     }
 
+    /**
+     * This method is to login to the server and return sessionCookie as a String
+     *
+     * @param userName - login username
+     * @param domain - login domain
+     * @param password - login password
+     * @param backendUrl - backend url of the server
+     * @param hostName - host name of the server
+     * @return - sessionCookie of the login as a String
+     * @throws RemoteException
+     * @throws LoginAuthenticationExceptionException
+     * @throws XPathExpressionException
+     */
     protected String login(String userName, String domain, char [] password, String backendUrl, String hostName) throws
             RemoteException, LoginAuthenticationExceptionException, XPathExpressionException {
         AuthenticatorClient loginClient = new AuthenticatorClient(backendUrl);
@@ -158,6 +174,11 @@ public class UserPopulator {
         return loginClient.login(userName, password, hostName);
     }
 
+    /**
+     * This method is to get list of tenant domains available in the automation.xml
+     * @return List of tenant domains
+     * @throws XPathExpressionException
+     */
     public List<String> getTenantsDomainList() throws XPathExpressionException {
         List<String> tenantDomain = new ArrayList<String>();
         tenantDomain.add(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME);
@@ -172,6 +193,12 @@ public class UserPopulator {
         return tenantDomain;
     }
 
+    /**
+     * This method is to get all the users as list for a tenant domain
+     * @param tenantDomain - Tenant domain
+     * @return
+     * @throws XPathExpressionException
+     */
     public List<String> getUserList(String tenantDomain) throws XPathExpressionException {
         //according to the automation xml the super tenant no has to be accessed explicitly
         List<String> userList = new ArrayList<String>();

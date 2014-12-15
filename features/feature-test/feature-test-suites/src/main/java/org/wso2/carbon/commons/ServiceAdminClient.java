@@ -31,6 +31,9 @@ import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaDataWrapper;
 
 import java.rmi.RemoteException;
 
+/**
+ * This class is for managing all service operations
+ */
 public class ServiceAdminClient {
 
     private static final Log log = LogFactory.getLog(ServiceAdminClient.class);
@@ -39,13 +42,16 @@ public class ServiceAdminClient {
 
 
     public ServiceAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
-
         String endPoint = backEndUrl + serviceName;
         serviceAdminStub = new ServiceAdminStub(endPoint);
         AuthenticateStubUtil.authenticateStub(sessionCookie, serviceAdminStub);
     }
 
-
+    /**
+     * This method is to delete one or more services
+     * @param serviceGroup - services which has to be deleted
+     * @throws RemoteException
+     */
     public void deleteService(String[] serviceGroup) throws RemoteException {
 
         serviceAdminStub.deleteServiceGroups(serviceGroup);
@@ -53,6 +59,12 @@ public class ServiceAdminClient {
     }
 
 
+    /**
+     * Delete faulty service
+     * @param serviceName - Service name to be deleted
+     * @return boolean - deleted or not
+     * @throws RemoteException
+     */
     public boolean deleteFaultyServiceByServiceName(String serviceName) throws RemoteException {
         try {
             return serviceAdminStub.deleteFaultyServiceGroup(getFaultyData(serviceName).getArtifact());
@@ -63,6 +75,12 @@ public class ServiceAdminClient {
     }
 
 
+    /**
+     * Get all the services for a service name
+     * @param serviceName - service name to search
+     * @return ServiceMetaDataWrapper - service list
+     * @throws RemoteException
+     */
     public ServiceMetaDataWrapper listServices(String serviceName)
             throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
@@ -71,6 +89,12 @@ public class ServiceAdminClient {
         return serviceMetaDataWrapper;
     }
 
+
+    /**
+     * Get all the faulty services
+     * @return FaultyServicesWrapper - all faulty services.
+     * @throws RemoteException
+     */
     public FaultyServicesWrapper listFaultyServices() throws RemoteException {
         FaultyServicesWrapper faultyServicesWrapper;
 
@@ -80,6 +104,12 @@ public class ServiceAdminClient {
     }
 
 
+    /**
+     * Check whether service is available or not
+     * @param serviceName - service name
+     * @return - service is available or not
+     * @throws RemoteException
+     */
     public boolean isServiceExists(String serviceName)
             throws RemoteException {
         boolean serviceState = false;
@@ -100,6 +130,12 @@ public class ServiceAdminClient {
     }
 
 
+    /**
+     * Get service group by service name
+     * @param serviceName - service name
+     * @return
+     * @throws RemoteException
+     */
     public String getServiceGroup(String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
@@ -116,6 +152,12 @@ public class ServiceAdminClient {
     }
 
 
+    /**
+     * Check this service is faulty or not
+     * @param serviceName -  service name
+     * @return boolean - faulty or nor
+     * @throws RemoteException
+     */
     public boolean isServiceFaulty(String serviceName) throws RemoteException {
         boolean serviceState = false;
         FaultyServicesWrapper faultyServicesWrapper;
@@ -136,6 +178,12 @@ public class ServiceAdminClient {
         return serviceState;
     }
 
+    /**
+     * Get a faulty service data by service name
+     * @param serviceName - service name
+     * @return FaultyService - faulty service data
+     * @throws RemoteException
+     */
     public FaultyService getFaultyData(String serviceName) throws RemoteException {
         FaultyService faultyService = null;
         FaultyServicesWrapper faultyServicesWrapper;

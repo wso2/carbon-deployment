@@ -36,9 +36,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+/**
+ * This class is for login and logout to carbon server
+ */
 public class LoginLogoutClient {
     private static final Log log = LogFactory.getLog(LoginLogoutClient.class);
-    private String sessionCookie;
     private int port;
     private String hostName;
     private String backendURL;

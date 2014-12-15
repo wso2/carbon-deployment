@@ -95,6 +95,11 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
         return instanceList;
     }
 
+    /**
+     * This method is to get all the product groups define in the automation.xml
+     * @return List of product groups available
+     * @throws XPathExpressionException
+     */
     private List<Node> getAllProductNodes() throws XPathExpressionException {
         List<Node> nodeList = new ArrayList<Node>();
         NodeList productGroups = AutomationConfiguration.getConfigurationNodeList(AutomationXpathConstants.PRODUCT_GROUP);

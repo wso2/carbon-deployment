@@ -34,9 +34,6 @@
             <package name="org.wso2.carbon.tests.*"/>
         </packages>
     </test>
-
-
-
 </suite>
 
 

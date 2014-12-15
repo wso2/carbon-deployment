@@ -48,7 +48,6 @@ public class FeatureIntegrationBaseTest {
     private static int SERVICE_DEPLOYMENT_DELAY_IN_MILLIS = 90 * 1000;
     private String PRODUCT_GROUP_NAME = "CARBON_DEPLOYMENT";
 
-
     /**
      * Create AutomationContext,LoginLogoutClient,sessionCookie,backendURL and webAppURL
      * with only super tenant admin.
@@ -67,7 +66,7 @@ public class FeatureIntegrationBaseTest {
      * Create AutomationContext,LoginLogoutClient,sessionCookie,backendURL and webAppURL
      * with multiple user modes
      *
-     * @param testUserMode multiple user modes to create Automation context
+     * @param testUserMode - multiple user modes to create Automation context
      * @throws Exception
      */
     protected void init(TestUserMode testUserMode) throws Exception {
@@ -78,37 +77,41 @@ public class FeatureIntegrationBaseTest {
         webAppURL = automationContext.getContextUrls().getWebAppURL();
     }
 
-
-
-
+    /**
+     * This method is to get service url for a service name
+     * @param serviceName - service name
+     * @return
+     * @throws XPathExpressionException
+     */
     protected String getServiceUrl(String serviceName) throws XPathExpressionException {
         return automationContext.getContextUrls().getServiceUrl() + "/" + serviceName;
     }
 
     /**
-     * Check whether service is deployed oor not
+     * Check whether service is deployed or not
      *
      * @param serviceName
      * @return
      * @throws RemoteException
      */
-    protected boolean isServiceDeployed(String serviceName) throws RemoteException {
+    protected boolean isServiceDeployed(String serviceName)
+            throws RemoteException, InterruptedException {
         return isServiceDeployed(backendURL,
                                  sessionCookie, serviceName);
     }
 
     /**
-     * Check whether service is deployed oor not
+     * Check whether service is deployed or not
      *
-     * @param backEndUrl
-     * @param sessionCookie
-     * @param serviceName
+     * @param backEndUrl - back end url of the server
+     * @param sessionCookie - sessionCookie of the login
+     * @param serviceName - service name
      * @return
      * @throws RemoteException
      */
     public static boolean isServiceDeployed(String backEndUrl, String sessionCookie,
                                             String serviceName)
-            throws RemoteException {
+            throws RemoteException, InterruptedException {
         log.info("waiting " + SERVICE_DEPLOYMENT_DELAY_IN_MILLIS + " millis for Service deployment " + serviceName);
         boolean isServiceDeployed = false;
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
@@ -120,10 +123,7 @@ public class FeatureIntegrationBaseTest {
                 log.info(serviceName + " Service Deployed in " + (System.currentTimeMillis() - startTime) + " millis");
                 break;
             }
-            try {
                 Thread.sleep(500);
-            } catch (InterruptedException ignored) {
-            }
         }
         return isServiceDeployed;
     }
@@ -131,7 +131,7 @@ public class FeatureIntegrationBaseTest {
     /**
      * Delete the service
      *
-     * @param serviceName
+     * @param serviceName - service name
      * @throws RemoteException
      */
     protected void deleteService(String serviceName) throws RemoteException {

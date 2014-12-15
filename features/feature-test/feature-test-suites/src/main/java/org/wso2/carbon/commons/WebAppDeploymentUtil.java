@@ -25,10 +25,21 @@ import org.apache.commons.logging.LogFactory;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * This class is to check web application deployed and un deployed
+ */
 public class WebAppDeploymentUtil {
     private static Log log = LogFactory.getLog(WebAppDeploymentUtil.class);
     private static int WEBAPP_DEPLOYMENT_DELAY = 90 * 1000;
 
+    /**
+     * This method is to check whether application has deployed or not
+     * @param backEndUrl - back end url of the server
+     * @param sessionCookie - sessionCookie of the login
+     * @param webAppFileName - web application name
+     * @return - boolean for deployed or not
+     * @throws Exception
+     */
     public static boolean isWebApplicationDeployed(String backEndUrl, String sessionCookie,
                                                    String webAppFileName) throws Exception {
         log.info("waiting " + WEBAPP_DEPLOYMENT_DELAY + " millis for Service deployment " + webAppFileName);
@@ -59,16 +70,19 @@ public class WebAppDeploymentUtil {
                     return isWebAppDeployed;
                 }
             }
-
-            try {
                 Thread.sleep(500);
-            } catch (InterruptedException ignored) {
-
-            }
         }
         return isWebAppDeployed;
     }
 
+    /**
+     * This method is to check whether method has un deployed or not
+     * @param backEndUrl - back end url of the server
+     * @param sessionCookie - sessionCookie of the login
+     * @param webAppFileName - web application name
+     * @return - boolean for un deployed or not
+     * @throws Exception
+     */
     public static boolean isWebApplicationUnDeployed(String backEndUrl, String sessionCookie,
                                                      String webAppFileName) throws Exception {
         log.info("waiting " + WEBAPP_DEPLOYMENT_DELAY + " millis for webApp undeployment " + webAppFileName);
@@ -90,11 +104,7 @@ public class WebAppDeploymentUtil {
             } else {
                 return true;
             }
-            try {
                 Thread.sleep(500);
-            } catch (InterruptedException ignored) {
-
-            }
         }
         return isWebAppUnDeployed;
     }

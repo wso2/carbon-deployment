@@ -31,6 +31,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * This class in for manage tenants.
+ */
+
 public class TenantManagementServiceClient {
     private TenantMgtAdminServiceStub tenantMgtAdminServiceStub;
     private static final Log log = LogFactory.getLog(TenantManagementServiceClient.class);
@@ -47,7 +51,7 @@ public class TenantManagementServiceClient {
      * @param password   password of the tenant admin user
      * @param firstName  first name of the tenant admin user
      * @param usagePlan  Usage plan of the tenant
-     * @throws java.rmi.RemoteException
+     * @throws RemoteException
      * @throws TenantMgtAdminServiceExceptionException
      *
      */

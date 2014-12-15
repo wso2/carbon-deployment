@@ -37,6 +37,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Class is for manage web applications
+ */
 public class WebAppAdminClient {
 
     private final Log log = LogFactory.getLog(WebAppAdminClient.class);
@@ -50,6 +53,11 @@ public class WebAppAdminClient {
         AuthenticateStubUtil.authenticateStub(sessionCookie, webappAdminStub);
     }
 
+    /**
+     * Upload a war file
+     * @param filePath - file path of the war file
+     * @throws RemoteException
+     */
     public void warFileUploader(String filePath) throws RemoteException {
         File file = new File(filePath);
         String fileName = file.getName();
@@ -73,16 +81,36 @@ public class WebAppAdminClient {
         }
     }
 
+    /**
+     * Delete a web application by file name
+     * @param fileName - file name
+     * @throws RemoteException
+     */
     public void deleteWebAppFile(String fileName) throws RemoteException {
         webappAdminStub.deleteStartedWebapps(new String[]{fileName});
     }
 
+    /**
+     *
+     * @param searchString
+     * @param webAppType
+     * @param webAppState
+     * @param pageNo
+     * @return
+     * @throws RemoteException
+     */
     public WebappsWrapper getPagedWebappsSummary(String searchString, String webAppType,
                                                  String webAppState, int pageNo)
             throws RemoteException {
         return webappAdminStub.getPagedWebappsSummary(searchString, webAppType, webAppState, pageNo);
     }
 
+    /**
+     * All the web apps in the server which contain the search string
+     * @param webAppNameSearchString - web applications search string
+     * @return - List of web applications which contain the search string.
+     * @throws RemoteException
+     */
     public List<String> getWebApplist(String webAppNameSearchString) throws RemoteException {
         List<String> list = new ArrayList<String>();
         WebappsWrapper wrapper = getPagedWebappsSummary(webAppNameSearchString, "ALL", "ALL", 0);
@@ -98,12 +126,26 @@ public class WebAppAdminClient {
         return list;
     }
 
+    /**
+     * Get faulty web applications with the following search criteria
+     * @param searchString - web application name contain string
+     * @param webAppType - web application type
+     * @param pageNo - page number
+     * @return List of faulty web applications
+     * @throws RemoteException
+     */
     public WebappsWrapper getPagedFaultyWebappsSummary(String searchString, String webAppType,
                                                        int pageNo)
             throws RemoteException {
         return webappAdminStub.getPagedFaultyWebappsSummary(searchString, webAppType, pageNo);
     }
 
+    /**
+     * Get faulty web applications for a name contain string.
+     * @param webAppNameSearchString - Faulty web application name contain string
+     * @return List of faulty web applications
+     * @throws RemoteException
+     */
     public List<String> getFaultyWebAppList(String webAppNameSearchString) throws RemoteException {
         List<String> list = new ArrayList<String>();
         WebappsWrapper wrapper = getPagedFaultyWebappsSummary(webAppNameSearchString, "ALL", 0);

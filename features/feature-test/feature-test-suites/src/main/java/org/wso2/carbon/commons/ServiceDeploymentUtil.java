@@ -26,23 +26,50 @@ import org.apache.commons.logging.LogFactory;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 
+/**
+ * This Class is for check service is deployed successfully and deleted successfully.
+ */
+
 public class ServiceDeploymentUtil {
     private static int SERVICE_DEPLOYMENT_DELAY = 90 * 1000;
     private static Log log = LogFactory.getLog(ServiceDeploymentUtil.class);
 
+    /**
+     * Check whether service is available or not
+     * @param backEndUrl - server back end url
+     * @param sessionCookie - login sessionCookie
+     * @param serviceName - service name
+     * @return boolean - is service exist or not
+     * @throws RemoteException
+     */
     public static boolean isServiceExist(String backEndUrl, String sessionCookie, String serviceName)
             throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         return adminServiceService.isServiceExists(serviceName);
     }
 
+    /**
+     * Check whether this service is faulty service or not
+     * @param backEndUrl - server back end url
+     * @param sessionCookie - login sessionCookie
+     * @param serviceName - service name
+     * @return boolean - is service faulty or not
+     * @throws RemoteException
+     */
     public static boolean isFaultyService(String backEndUrl, String sessionCookie, String serviceName)
             throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         return adminServiceService.isServiceFaulty(serviceName);
     }
 
-
+    /**
+     * Check whether service has deleted or not
+     * @param backEndUrl - server back end url
+     * @param sessionCookie - login sessionCookie
+     * @param serviceName - service name
+     * @return boolean - is service deleted or not
+     * @throws RemoteException
+     */
     public static boolean isServiceDeleted(String backEndUrl, String sessionCookie, String serviceName)
             throws RemoteException {
         log.info("waiting " + SERVICE_DEPLOYMENT_DELAY + " millis for service un-deployment");

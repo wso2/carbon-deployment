@@ -27,6 +27,9 @@ import org.apache.commons.logging.LogFactory;
 
 
 public class AuthenticateStubUtil {
+    /**
+     * This Class is to authenticate service stub
+     */
 
     private static final Log log = LogFactory.getLog(AuthenticateStubUtil.class);
 

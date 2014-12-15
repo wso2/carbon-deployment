@@ -29,6 +29,9 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashSet;
 
+/**
+ * This Class is for manage users
+ */
 public class UserManagementClient {
     private static final int LIMIT = 100;
     private final Log log = LogFactory.getLog(UserManagementClient.class);
@@ -41,16 +44,36 @@ public class UserManagementClient {
         AuthenticateStubUtil.authenticateStub(sessionCookie, userAdminStub);
     }
 
+    /**
+     * This method is to add users
+     * @param userName - user name to be added
+     * @param password - password to be given
+     * @param roles - user roles to be added
+     * @param profileName - profile name to be added
+     * @throws RemoteException
+     * @throws UserAdminUserAdminException
+     */
     public void addUser(String userName, String password, String[] roles,
                         String profileName) throws RemoteException, UserAdminUserAdminException {
         userAdminStub.addUser(userName, password, roles, null, profileName);
     }
 
-
+    /**
+     * This method is to delete users
+     * @param userName - user name of the user who has to be deleted
+     * @throws RemoteException
+     * @throws UserAdminUserAdminException
+     */
     public void deleteUser(String userName) throws RemoteException, UserAdminUserAdminException {
         userAdminStub.deleteUser(userName);
     }
 
+    /**
+     * Get all users
+     * @return String HashSet
+     * @throws RemoteException
+     * @throws UserAdminUserAdminException
+     */
     public HashSet<String> getUserList() throws RemoteException, UserAdminUserAdminException {
         return new HashSet<String>(Arrays.asList(userAdminStub.listUsers("*", LIMIT)));
     }
