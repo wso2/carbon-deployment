@@ -113,7 +113,7 @@
                 }
             }
 
-             if(document.webappUploadForm.version.value != null) {
+             if (document.webappUploadForm.version.value != null) {
 
                  var appVersion =  document.webappUploadForm.version.value;
                  if(appVersion.indexOf("#")!=-1) {
