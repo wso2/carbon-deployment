@@ -85,7 +85,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
             currentCtx = DataHolder.getServerConfigContext();
         }
 
-        //TODO: If webapp deployment takes time, then the immediate subsequent requests will fail after the after request
+        //TODO: If webapp deployment takes time, then the immediate subsequent requests will fail after the request
         //Since getDeployedWebappFromThisURI returns null just after the first request
         WebApplication deployedWebapp = getDeployedWebappFromThisURI(request.getContext().getPath(),
                                      request.getHost().getName(), currentCtx);
