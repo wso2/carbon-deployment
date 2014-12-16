@@ -113,7 +113,7 @@
                 }
             }
 
-             if(document.webappUploadForm.version.value != null){
+             if(document.webappUploadForm.version.value != null) {
 
                  var appVersion =  document.webappUploadForm.version.value;
                  if(appVersion.indexOf("#")!=-1) {
@@ -132,7 +132,7 @@
                      CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
                      validFileNames = false;
                  }
-             } else if (document.webappUploadForm.version[0].value != null){
+             } else if (document.webappUploadForm.version[0].value != null) {
                  for (var i=0; i<document.webappUploadForm.version.length; i++) {
                      var appVersion =  document.webappUploadForm.version[i].value;
                      if(appVersion.indexOf("#")!=-1) {
