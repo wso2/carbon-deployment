@@ -533,7 +533,7 @@
 
             String hostName = null;
             if(vWebapp.getHostName().length() !=0){
-               if(vhostHolder.getDefaultHostName().equals(vWebapp.getHostName())) {
+               if (vhostHolder.getDefaultHostName().equals(vWebapp.getHostName())) {
                    url =  urlPrefix + webappsWrapper.getHostName() + urlSuffix;
                } else {
                    url =  urlPrefix + vWebapp.getHostName() + urlSuffix;

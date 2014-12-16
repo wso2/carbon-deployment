@@ -87,7 +87,7 @@
         try {
             client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
             vhostHolder = client.getVhostHolder();
-            if(vhostHolder.getDefaultHostName().equals(hostName)) {
+            if (vhostHolder.getDefaultHostName().equals(hostName)) {
                 urlPrefix = defaultPrefix;
             }
             if (webappState.equalsIgnoreCase("all")) {
