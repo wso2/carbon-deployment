@@ -274,4 +274,9 @@ public class WebAppUtils {
         return baseDirs;
     }
 
+    public static String generateMetaFileDirName(String webappFilePath, ConfigurationContext configurationContext) {
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath, configurationContext);
+        return webApplicationsHolder.getWebappsDir().getName();
+    }
+
 }
