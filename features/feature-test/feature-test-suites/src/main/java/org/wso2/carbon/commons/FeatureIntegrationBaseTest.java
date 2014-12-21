@@ -1,5 +1,4 @@
 /*
- *
  * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,7 +14,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * /
  */
 
 package org.wso2.carbon.commons;
@@ -36,7 +34,7 @@ import java.rmi.RemoteException;
 * Class to have common methods to all TestCase classes.
 * This Class has to be extended by all TestCase classes.
 *
-* */
+*/
 
 public class FeatureIntegrationBaseTest {
     private static final Log log = LogFactory.getLog(FeatureIntegrationBaseTest.class);
