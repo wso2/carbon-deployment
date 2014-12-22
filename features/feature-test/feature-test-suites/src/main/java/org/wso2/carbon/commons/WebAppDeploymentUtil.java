@@ -32,11 +32,12 @@ public class WebAppDeploymentUtil {
 
     /**
      * This method is to check whether application has deployed or not
-     * @param backEndUrl - back end url of the server
-     * @param sessionCookie - sessionCookie of the login
+     *
+     * @param backEndUrl     - back end url of the server
+     * @param sessionCookie  - sessionCookie of the login
      * @param webAppFileName - web application name
      * @return - boolean for deployed or not
-     * @throws Exception
+     * @throws Exception - Error while calling web app admin client
      */
     public static boolean isWebApplicationDeployed(String backEndUrl, String sessionCookie,
                                                    String webAppFileName) throws Exception {
@@ -68,18 +69,18 @@ public class WebAppDeploymentUtil {
                     return isWebAppDeployed;
                 }
             }
-                Thread.sleep(500);
         }
         return isWebAppDeployed;
     }
 
     /**
      * This method is to check whether method has un deployed or not
-     * @param backEndUrl - back end url of the server
-     * @param sessionCookie - sessionCookie of the login
+     *
+     * @param backEndUrl     - back end url of the server
+     * @param sessionCookie  - sessionCookie of the login
      * @param webAppFileName - web application name
      * @return - boolean for un deployed or not
-     * @throws Exception
+     * @throws Exception - Error while calling web app admin client
      */
     public static boolean isWebApplicationUnDeployed(String backEndUrl, String sessionCookie,
                                                      String webAppFileName) throws Exception {
@@ -102,7 +103,6 @@ public class WebAppDeploymentUtil {
             } else {
                 return true;
             }
-                Thread.sleep(500);
         }
         return isWebAppUnDeployed;
     }

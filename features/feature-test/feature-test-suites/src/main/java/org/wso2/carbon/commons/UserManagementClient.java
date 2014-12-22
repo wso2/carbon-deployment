@@ -44,12 +44,13 @@ public class UserManagementClient {
 
     /**
      * This method is to add users
-     * @param userName - user name to be added
-     * @param password - password to be given
-     * @param roles - user roles to be added
+     *
+     * @param userName    - user name to be added
+     * @param password    - password to be given
+     * @param roles       - user roles to be added
      * @param profileName - profile name to be added
-     * @throws RemoteException
-     * @throws UserAdminUserAdminException
+     * @throws RemoteException             - Error when adding user
+     * @throws UserAdminUserAdminException - Error when adding user
      */
     public void addUser(String userName, String password, String[] roles,
                         String profileName) throws RemoteException, UserAdminUserAdminException {
@@ -58,9 +59,10 @@ public class UserManagementClient {
 
     /**
      * This method is to delete users
+     *
      * @param userName - user name of the user who has to be deleted
-     * @throws RemoteException
-     * @throws UserAdminUserAdminException
+     * @throws RemoteException             - Error when deleting user
+     * @throws UserAdminUserAdminException - Error when deleting user
      */
     public void deleteUser(String userName) throws RemoteException, UserAdminUserAdminException {
         userAdminStub.deleteUser(userName);
@@ -68,9 +70,10 @@ public class UserManagementClient {
 
     /**
      * Get all users
-     * @return String HashSet
-     * @throws RemoteException
-     * @throws UserAdminUserAdminException
+     *
+     * @return String HashSet - List of users
+     * @throws RemoteException             - Error when calling listUsers method
+     * @throws UserAdminUserAdminException - Error when calling listUsers method
      */
     public HashSet<String> getUserList() throws RemoteException, UserAdminUserAdminException {
         return new HashSet<String>(Arrays.asList(userAdminStub.listUsers("*", LIMIT)));

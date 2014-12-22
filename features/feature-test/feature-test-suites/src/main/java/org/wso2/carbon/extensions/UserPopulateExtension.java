@@ -40,7 +40,11 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
         productGroupsList = getAllProductNodes();
     }
 
-    // Populate all tenants and user on execution start of the test
+    /**
+     * Populate all tenants and user on execution start of the test
+     *
+     * @throws Exception - Error when populating users
+     */
     public void onExecutionStart() throws Exception {
         for (Node aProductGroupsList : productGroupsList) {
             String productGroupName = aProductGroupsList.getAttributes().
@@ -52,15 +56,24 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
         }
     }
 
-    // Remove the populated users on execution finish of the test
+    /**
+     * Remove the populated users on execution finish of the test
+     *
+     * @throws Exception - Error when deleting users
+     */
     public void onExecutionFinish() throws Exception {
         for (UserPopulator userPopulator : userPopulatorList) {
             userPopulator.deleteUsers();
         }
     }
 
-    //get the instance which can call admin services for provided product group
-    private String getProductGroupInstance(Node productGroup) throws Exception {
+    /**
+     * get the instance which can call admin services for provided product group
+     *
+     * @param productGroup - product group
+     * @return - product group instance
+     */
+    private String getProductGroupInstance(Node productGroup) {
         String instanceName = "";
         Boolean isClusteringEnabled = Boolean.parseBoolean(productGroup.getAttributes().
                 getNamedItem(AutomationXpathConstants.CLUSTERING_ENABLED).getNodeValue());
@@ -78,7 +91,13 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
         return instanceName;
     }
 
-    // get all specific typed instances in provided productGroup
+    /**
+     * Get all specific typed instances in provided productGroup
+     *
+     * @param productGroup - product group
+     * @param type         - instance type
+     * @return - List of Instances
+     */
     private List<String> getInstanceList(Node productGroup, String type) {
         List<String> instanceList = new ArrayList<String>();
         int numberOfInstances = productGroup.getChildNodes().getLength();
@@ -95,8 +114,9 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
 
     /**
      * This method is to get all the product groups define in the automation.xml
-     * @return List of product groups available
-     * @throws XPathExpressionException
+     *
+     * @return Node list - List of product groups available
+     * @throws XPathExpressionException - Error when getting product group from automation.xml
      */
     private List<Node> getAllProductNodes() throws XPathExpressionException {
         List<Node> nodeList = new ArrayList<Node>();

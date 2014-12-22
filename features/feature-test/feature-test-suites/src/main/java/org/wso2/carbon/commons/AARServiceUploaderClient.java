@@ -42,29 +42,25 @@ public class AARServiceUploaderClient {
 
     /**
      * This Contractor is for authenticating the endpoint url
-     * @param backEndUrl - server back end url
+     *
+     * @param backEndUrl    - server back end url
      * @param sessionCookie - sessionCookie of the logged in user
-     * @throws AxisFault
+     * @throws AxisFault - Error when initializing ServiceUploaderStub
      */
     public AARServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
-
         String endPoint = backEndUrl + serviceName;
-        try {
-            serviceUploaderStub = new ServiceUploaderStub(endPoint);
-            AuthenticateStubUtil.authenticateStub(sessionCookie, serviceUploaderStub);
-        } catch (AxisFault axisFault) {
-            log.error("ServiceUploaderStub Initialization fail " + axisFault.getMessage());
-            throw new AxisFault("ServiceUploaderStub Initialization fail " + axisFault.getMessage());
-        }
+        serviceUploaderStub = new ServiceUploaderStub(endPoint);
+        AuthenticateStubUtil.authenticateStub(sessionCookie, serviceUploaderStub);
     }
 
     /**
      * This method is for copying aar files to relevant folder.
-     * @param fileName - Name of the file which has to be copied.
-     * @param filePath - Path of the aar file which has to be copied.
-     * @param serviceHierarchy
-     * @throws ExceptionException - Error while uploading the aar file
-     * @throws RemoteException - Error while uploading the aar file
+     *
+     * @param fileName         - Name of the file which has to be copied.
+     * @param filePath         - Path of the aar file which has to be copied.
+     * @param serviceHierarchy - Service hierarchy
+     * @throws ExceptionException    - Error while uploading the aar file
+     * @throws RemoteException       - Error while uploading the aar file
      * @throws MalformedURLException - Variable filePath is invalid
      */
     public void uploadAARFile(String fileName, String filePath,

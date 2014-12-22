@@ -34,8 +34,8 @@ public class AuthenticateStubUtil {
     /**
      * Stub authentication method
      *
-     * @param stub          valid stub
-     * @param sessionCookie session cookie
+     * @param stub          -     valid stub
+     * @param sessionCookie - session cookie
      */
     public static void authenticateStub(String sessionCookie, Stub stub) {
         long soTimeout = 5 * 60 * 1000; // Three minutes
@@ -49,5 +49,4 @@ public class AuthenticateStubUtil {
             log.debug("AuthenticateStub : Stub created with session " + sessionCookie);
         }
     }
-
 }

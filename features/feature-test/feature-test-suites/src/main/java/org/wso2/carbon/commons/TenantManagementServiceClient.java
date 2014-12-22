@@ -45,15 +45,16 @@ public class TenantManagementServiceClient {
     }
 
     /**
+     * This method is to add tenants
+     *
      * @param domainName domain of the tenant
      * @param password   password of the tenant admin user
      * @param firstName  first name of the tenant admin user
      * @param usagePlan  Usage plan of the tenant
-     * @throws RemoteException
-     * @throws TenantMgtAdminServiceExceptionException
-     *
+     * @throws RemoteException                         - Error when calling TenantMgtAdminServiceStub stub
+     * @throws TenantMgtAdminServiceExceptionException - Error when calling TenantMgtAdminServiceStub stub
      */
-    public void addTenant(String domainName, char [] password, String firstName, String usagePlan)
+    public void addTenant(String domainName, char[] password, String firstName, String usagePlan)
             throws RemoteException, TenantMgtAdminServiceExceptionException {
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();

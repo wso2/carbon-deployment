@@ -47,8 +47,9 @@ public class ServiceAdminClient {
 
     /**
      * This method is to delete one or more services
+     *
      * @param serviceGroup - services which has to be deleted
-     * @throws RemoteException
+     * @throws RemoteException - Error when deleting service group
      */
     public void deleteService(String[] serviceGroup) throws RemoteException {
 
@@ -56,12 +57,12 @@ public class ServiceAdminClient {
 
     }
 
-
     /**
      * Delete faulty service
+     *
      * @param serviceName - Service name to be deleted
      * @return boolean - deleted or not
-     * @throws RemoteException
+     * @throws RemoteException - Error when deleting faulty service group
      */
     public boolean deleteFaultyServiceByServiceName(String serviceName) throws RemoteException {
         try {
@@ -72,12 +73,12 @@ public class ServiceAdminClient {
         }
     }
 
-
     /**
      * Get all the services for a service name
+     *
      * @param serviceName - service name to search
      * @return ServiceMetaDataWrapper - service list
-     * @throws RemoteException
+     * @throws RemoteException - Error when list services.
      */
     public ServiceMetaDataWrapper listServices(String serviceName)
             throws RemoteException {
@@ -87,11 +88,11 @@ public class ServiceAdminClient {
         return serviceMetaDataWrapper;
     }
 
-
     /**
      * Get all the faulty services
+     *
      * @return FaultyServicesWrapper - all faulty services.
-     * @throws RemoteException
+     * @throws RemoteException - Error when getting faulty service archives
      */
     public FaultyServicesWrapper listFaultyServices() throws RemoteException {
         FaultyServicesWrapper faultyServicesWrapper;
@@ -101,12 +102,12 @@ public class ServiceAdminClient {
         return faultyServicesWrapper;
     }
 
-
     /**
      * Check whether service is available or not
+     *
      * @param serviceName - service name
-     * @return - service is available or not
-     * @throws RemoteException
+     * @return boolean - service is available or not
+     * @throws RemoteException - Error when list services.
      */
     public boolean isServiceExists(String serviceName)
             throws RemoteException {
@@ -127,12 +128,12 @@ public class ServiceAdminClient {
         return serviceState;
     }
 
-
     /**
      * Get service group by service name
+     *
      * @param serviceName - service name
-     * @return
-     * @throws RemoteException
+     * @return - service group
+     * @throws RemoteException - Error when list services.
      */
     public String getServiceGroup(String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
@@ -149,12 +150,12 @@ public class ServiceAdminClient {
         return null;
     }
 
-
     /**
      * Check this service is faulty or not
+     *
      * @param serviceName -  service name
-     * @return boolean - faulty or nor
-     * @throws RemoteException
+     * @return boolean - faulty or not
+     * @throws RemoteException - Error when getting all faulty services
      */
     public boolean isServiceFaulty(String serviceName) throws RemoteException {
         boolean serviceState = false;
@@ -178,9 +179,10 @@ public class ServiceAdminClient {
 
     /**
      * Get a faulty service data by service name
+     *
      * @param serviceName - service name
      * @return FaultyService - faulty service data
-     * @throws RemoteException
+     * @throws RemoteException - Error when getting all faulty services
      */
     public FaultyService getFaultyData(String serviceName) throws RemoteException {
         FaultyService faultyService = null;

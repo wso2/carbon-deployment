@@ -34,13 +34,15 @@ public class ServiceDeploymentUtil {
 
     /**
      * Check whether service is available or not
-     * @param backEndUrl - server back end url
+     *
+     * @param backEndUrl    - server back end url
      * @param sessionCookie - login sessionCookie
-     * @param serviceName - service name
+     * @param serviceName   - service name
      * @return boolean - is service exist or not
-     * @throws RemoteException
+     * @throws RemoteException - Error when checking service exist or not
      */
-    public static boolean isServiceExist(String backEndUrl, String sessionCookie, String serviceName)
+    public static boolean isServiceExist(String backEndUrl, String sessionCookie,
+                                         String serviceName)
             throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         return adminServiceService.isServiceExists(serviceName);
@@ -48,13 +50,15 @@ public class ServiceDeploymentUtil {
 
     /**
      * Check whether this service is faulty service or not
-     * @param backEndUrl - server back end url
+     *
+     * @param backEndUrl    - server back end url
      * @param sessionCookie - login sessionCookie
-     * @param serviceName - service name
+     * @param serviceName   - service name
      * @return boolean - is service faulty or not
-     * @throws RemoteException
+     * @throws RemoteException - Error when checking faulty service exist or not
      */
-    public static boolean isFaultyService(String backEndUrl, String sessionCookie, String serviceName)
+    public static boolean isFaultyService(String backEndUrl, String sessionCookie,
+                                          String serviceName)
             throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         return adminServiceService.isServiceFaulty(serviceName);
@@ -62,13 +66,15 @@ public class ServiceDeploymentUtil {
 
     /**
      * Check whether service has deleted or not
-     * @param backEndUrl - server back end url
+     *
+     * @param backEndUrl    - server back end url
      * @param sessionCookie - login sessionCookie
-     * @param serviceName - service name
+     * @param serviceName   - service name
      * @return boolean - is service deleted or not
-     * @throws RemoteException
+     * @throws RemoteException - Error when checking service exist or not
      */
-    public static boolean isServiceDeleted(String backEndUrl, String sessionCookie, String serviceName)
+    public static boolean isServiceDeleted(String backEndUrl, String sessionCookie,
+                                           String serviceName)
             throws RemoteException {
         log.info("waiting " + SERVICE_DEPLOYMENT_DELAY + " millis for service un-deployment");
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
@@ -80,10 +86,6 @@ public class ServiceDeploymentUtil {
                 isServiceDeleted = true;
                 log.info(serviceName + " Service un-deployed in " + time + " millis");
                 break;
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ignored) {
             }
         }
         return isServiceDeleted;

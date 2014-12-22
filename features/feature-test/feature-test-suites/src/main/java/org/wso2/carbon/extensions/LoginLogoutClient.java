@@ -21,16 +21,11 @@ package org.wso2.carbon.extensions;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
@@ -59,10 +54,9 @@ public class LoginLogoutClient {
      * Log in to a Carbon server
      *
      * @return The session cookie on successful login
+     * @throws Exception - Error when calling login method
      */
-    public String login() throws LoginAuthenticationExceptionException, IOException,
-                                 XMLStreamException,
-                                 URISyntaxException, SAXException, XPathExpressionException {
+    public String login() throws Exception {
         String userName;
         userName = automationContext.getContextTenant().getContextUser().getUserName();
         return loginClient.login(userName, automationContext.getContextTenant().getContextUser().getPassword().toCharArray()

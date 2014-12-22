@@ -61,8 +61,8 @@ public class AuthenticatorClient {
      * @param password - password for the login
      * @param host - login host
      * @return - sessionCookie of the project as String
-     * @throws LoginAuthenticationExceptionException
-     * @throws RemoteException
+     * @throws LoginAuthenticationExceptionException - Error while checking login status
+     * @throws RemoteException - Error while checking login status
      */
     public String login(String userName, char[] password, String host)
             throws LoginAuthenticationExceptionException, RemoteException {
@@ -85,8 +85,8 @@ public class AuthenticatorClient {
 
     /**
      * Log out the logged in user
-     * @throws LogoutAuthenticationExceptionException
-     * @throws RemoteException
+     * @throws LogoutAuthenticationExceptionException - Error while logging out
+     * @throws RemoteException - Error while logging out
      */
     public void logOut() throws LogoutAuthenticationExceptionException, RemoteException {
         authenticationAdminStub.logout();

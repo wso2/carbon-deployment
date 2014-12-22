@@ -50,7 +50,7 @@ public class FeatureIntegrationBaseTest {
      * Create AutomationContext,LoginLogoutClient,sessionCookie,backendURL and webAppURL
      * with only super tenant admin.
      *
-     * @throws Exception
+     * @throws Exception - Error when reading xml content
      */
     protected void init() throws Exception {
         automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
@@ -65,7 +65,7 @@ public class FeatureIntegrationBaseTest {
      * with multiple user modes
      *
      * @param testUserMode - multiple user modes to create Automation context
-     * @throws Exception
+     * @throws Exception - Error when reading xml content
      */
     protected void init(TestUserMode testUserMode) throws Exception {
         automationContext = new AutomationContext(PRODUCT_GROUP_NAME, testUserMode);
@@ -77,9 +77,10 @@ public class FeatureIntegrationBaseTest {
 
     /**
      * This method is to get service url for a service name
+     *
      * @param serviceName - service name
-     * @return
-     * @throws XPathExpressionException
+     * @return - service url
+     * @throws XPathExpressionException - Error when getting context url
      */
     protected String getServiceUrl(String serviceName) throws XPathExpressionException {
         return automationContext.getContextUrls().getServiceUrl() + "/" + serviceName;
@@ -88,9 +89,9 @@ public class FeatureIntegrationBaseTest {
     /**
      * Check whether service is deployed or not
      *
-     * @param serviceName
-     * @return
-     * @throws RemoteException
+     * @param serviceName - service name
+     * @return boolean - true : if service has deployed , false : if not deployed successfully
+     * @throws RemoteException - Error when checking service has deployed
      */
     protected boolean isServiceDeployed(String serviceName)
             throws RemoteException, InterruptedException {
@@ -101,11 +102,11 @@ public class FeatureIntegrationBaseTest {
     /**
      * Check whether service is deployed or not
      *
-     * @param backEndUrl - back end url of the server
+     * @param backEndUrl    - back end url of the server
      * @param sessionCookie - sessionCookie of the login
-     * @param serviceName - service name
-     * @return
-     * @throws RemoteException
+     * @param serviceName   - service name
+     * @return boolean - true : if service has deployed successfully , false : if not deployed successfully
+     * @throws RemoteException - Error when initializing ServiceAdminClient
      */
     public static boolean isServiceDeployed(String backEndUrl, String sessionCookie,
                                             String serviceName)
@@ -121,7 +122,6 @@ public class FeatureIntegrationBaseTest {
                 log.info(serviceName + " Service Deployed in " + (System.currentTimeMillis() - startTime) + " millis");
                 break;
             }
-                Thread.sleep(500);
         }
         return isServiceDeployed;
     }
@@ -130,7 +130,7 @@ public class FeatureIntegrationBaseTest {
      * Delete the service
      *
      * @param serviceName - service name
-     * @throws RemoteException
+     * @throws RemoteException - Error when checking service status
      */
     protected void deleteService(String serviceName) throws RemoteException {
         ServiceAdminClient adminServiceService =
