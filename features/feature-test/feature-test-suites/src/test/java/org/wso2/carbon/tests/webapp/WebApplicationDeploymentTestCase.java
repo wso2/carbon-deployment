@@ -19,21 +19,20 @@
 package org.wso2.carbon.tests.webapp;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
-import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
-import org.wso2.carbon.commons.*;
-//import org.wso2.carbon.commons.WebAppDeploymentUtil;
+import org.wso2.carbon.commons.WebAppAdminClient;
+import org.wso2.carbon.commons.WebAppDeploymentUtil;
 
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+
+//import org.wso2.carbon.commons.WebAppDeploymentUtil;
 
 /**
  * Copy a war file and check the war is deployed
@@ -68,17 +67,5 @@ public class WebApplicationDeploymentTestCase extends FeatureIntegrationBaseTest
         HttpClientUtil client = new HttpClientUtil();
         OMElement omElement = client.get(webAppURLLocal);
         assertEquals(omElement.toString(), "<status>success</status>", "Web app invocation fail");
-    }
-
-    @Test(groups = "wso2.as", description = "UnDeploying web application",
-          dependsOnMethods = "testInvokeWebApp")
-    public void testDeleteWebApplication() throws Exception {
-        webAppAdminClient.deleteWebAppFile(webAppFileName);
-        assertTrue(WebAppDeploymentUtil.isWebApplicationUnDeployed(
-                backendURL, sessionCookie, webAppName), "Web Application unDeployment failed");
-
-        HttpResponse response = HttpRequestUtil.sendGetRequest(webAppURL, null);
-        Assert.assertEquals(response.getResponseCode(), 302, "Response code mismatch. Client request " +
-                                                             "got a response even after web app is undeployed");
     }
 }
