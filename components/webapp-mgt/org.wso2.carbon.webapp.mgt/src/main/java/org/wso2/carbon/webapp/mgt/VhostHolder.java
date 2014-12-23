@@ -32,7 +32,7 @@ public class VhostHolder {
 
 
     public List<String> getVhosts() {
-        return WebAppUtils.getVhostNames();
+        return WebAppUtils.vhostNames;
     }
 
     public String getDefaultHostName(){

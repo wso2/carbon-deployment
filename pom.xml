@@ -954,7 +954,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <source>1.6</source>
@@ -992,7 +991,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.1.2</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -1015,7 +1013,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
     <pluginRepositories>
         <pluginRepository>
             <id>wso2.releases</id>
@@ -1059,7 +1056,6 @@
             <url>http://dist.wso2.org/snapshots/maven2</url>
         </pluginRepository>
     </pluginRepositories>
-
     <profiles>
         <profile>
             <id>default</id>
@@ -1105,7 +1101,7 @@
         <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
         <axis2.wso2.version.aar.plugin>1.6.2</axis2.wso2.version.aar.plugin>
 
-        <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
+        <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 
 
         <!-- Carbon platform version comes here-->
@@ -1272,63 +1268,6 @@
         <maven-antrun-plugin.version>1.1</maven-antrun-plugin.version>
         <maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
     </properties>
-
-    <repositories>
-        <!-- Before adding ANYTHING in here, please start a discussion on the dev list.
-             Ideally the Axis2 build should only use Maven central (which is available
-             by default) and nothing else. We had troubles with other repositories in
-             the past. Therefore configuring additional repositories here should be
-             considered very carefully. -->
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-
-        <repository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-
-    <distributionManagement>
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>
 

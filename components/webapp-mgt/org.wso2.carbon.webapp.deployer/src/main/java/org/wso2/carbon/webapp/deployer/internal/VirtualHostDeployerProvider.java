@@ -68,6 +68,7 @@ public class VirtualHostDeployerProvider implements Axis2DeployerProvider {
 
     private String getDirectoryName(String appBase) {
         String baseDir;
+        appBase = appBase.replace("/", File.separator);
         if (appBase.endsWith(File.separator)) {
             baseDir = appBase.substring(0, appBase.lastIndexOf(File.separator));
         } else {

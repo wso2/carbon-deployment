@@ -83,7 +83,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             webApplicationsHolderMap = new HashMap<String, WebApplicationsHolder>();
             configCtx.setProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST, webApplicationsHolderMap);
         }
-        if (!webApplicationsHolderMap.containsKey(webappsDir)) {
+        if (!webApplicationsHolderMap.containsKey(webappsDir) && WebAppUtils.appBases.contains(webappsDir)) {
             WebApplicationsHolder webApplicationsHolder = new WebApplicationsHolder(new File(webappsDir));
             webApplicationsHolderMap.put(webappsDir, webApplicationsHolder);
         }
