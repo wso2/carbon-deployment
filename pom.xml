@@ -1245,8 +1245,8 @@
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 
         <!-- Carbon kernel version -->
-        <carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
-        <carbon.kernel.imp.pkg.version>[4.3.0.SNAPSHOT, 4.4.0)
+        <carbon.kernel.version>4.3.0</carbon.kernel.version>
+        <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)
         </carbon.kernel.imp.pkg.version>
 
         <!-- Carbon platform version comes here-->
