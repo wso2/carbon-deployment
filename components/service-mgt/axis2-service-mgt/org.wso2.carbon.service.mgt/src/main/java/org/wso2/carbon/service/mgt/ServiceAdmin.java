@@ -791,7 +791,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         if (archiveName.indexOf(repository) != 0) {
-            originalName = repository + archiveName;
+        	originalName = repository + archiveName;
         }
 
         if (log.isDebugEnabled()) {
@@ -812,7 +812,11 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                     getAxisConfig().getFaultyServices().remove(originalName);
                 }
             }
-        }
+        } else {
+	        	isDeleted = true;
+	        	getAxisConfig().getFaultyServices().remove(archiveName);
+	        	deleteServiceGroup(archiveName);
+        	}
 
         return isDeleted;
     }
