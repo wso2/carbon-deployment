@@ -209,7 +209,7 @@
             oCell.innerHTML = "<input type='text' name='version' value=''>"
             oCell.className = "formRow";
 
-            if(tenantid == -1234){
+            if (tenantid == -1234) {
               oCell = newRow.insertCell(-1);
               oCell.innerHTML = ""+
                                                 " <select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %>"+
@@ -261,7 +261,7 @@
                         <td class="formRow">
                             <input type="text" name="version" value="">
                         </td>
-                        <%if(tenantId == -1234) { %>
+                        <%if (tenantId == -1234) { %>
                         <td class="formRow">
                             <select name="hostName">
                                <%    for(String vhostName:vhostHolder.getVhosts()){  %>
