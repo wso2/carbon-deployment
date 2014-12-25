@@ -43,10 +43,10 @@
     if(redirectPage.startsWith("index.jsp")) {
         redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt;
     } else {
-        if(webappKeySet[0].split(":").length>1){
+        if (webappKeySet[0].split(":").length>1) {
            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
                                  URLEncoder.encode(webappKeySet[0].split(":")[1], "UTF-8");
-        }else{
+        } else {
            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
                                  URLEncoder.encode(webappKeySet[0], "UTF-8");
         }

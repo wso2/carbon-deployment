@@ -22,6 +22,8 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.catalina.Container;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
@@ -37,7 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WebAppUtils {
-
+    private static final Log log = LogFactory.getLog(WebAppUtils.class);
     public static List<String> vhostNames = getVhostNames();
     public static List<String> appBases = getAppBases();
 
@@ -237,6 +239,10 @@ public class WebAppUtils {
      */
     public static String getDefaultHost() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+        if (carbonTomcatService == null) {
+            log.error("Carbon Tomcat Service returned a null value");
+            return null;
+        }
         return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
     }
 
