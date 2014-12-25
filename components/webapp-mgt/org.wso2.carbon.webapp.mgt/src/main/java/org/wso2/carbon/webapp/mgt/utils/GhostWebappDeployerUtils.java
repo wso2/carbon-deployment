@@ -42,6 +42,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
+import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.deployment.DeploymentFileDataWrapper;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
@@ -362,9 +363,14 @@ public class GhostWebappDeployerUtils {
                 }
                 if (dummyContextPath != null) {
                     String hostName = WebAppUtils.getMatchingHostName(WebAppUtils.getWebappDirPath(originalFile.getAbsolutePath()));
-                    Host host = (Host)DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChild(hostName);
-                    if(host == null){
-                        host = (Host)DataHolder.getCarbonTomcatService().getTomcat().
+                    CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+                    if (carbonTomcatService == null) {
+                        log.error("Error while reading Carbon Tomcat service");
+                        return null;
+                    }
+                    Host host = (Host) carbonTomcatService.getTomcat().getEngine().findChild(hostName);
+                    if (host == null) {
+                        host = (Host) carbonTomcatService.getTomcat().
                                 getEngine().findChild(WebAppUtils.getDefaultHost());
                     }
                     if (host.findChild(contextName) == null) {
