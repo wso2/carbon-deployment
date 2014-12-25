@@ -402,8 +402,7 @@ public class WebApplication {
         } else {
             webappDir = webappFile;
         }
-        String cAppTmpDir = CarbonUtils.getCarbonHome() + File.separator + "tmp" +
-                File.separator + "carbonapps" + File.separator;                      //FIXME :  add a method to CarbonUtils to read cAppTmpDir
+        String cAppTmpDir = CarbonUtils.getTmpDir() + File.separator + "carbonapps" + File.separator;
         if (webappDir.getAbsolutePath().contains(cAppTmpDir)) {
             //if webapp is deployed from a capp, delete the exploded webapp from "webapps"
             String webappDeploymentDir = webappDir.getAbsolutePath().substring(webappDir.getAbsolutePath().
