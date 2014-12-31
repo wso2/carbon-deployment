@@ -364,22 +364,21 @@ public class GhostWebappDeployerUtils {
                 if (dummyContextPath != null) {
                     String hostName = WebAppUtils.getMatchingHostName(WebAppUtils.getWebappDirPath(originalFile.getAbsolutePath()));
                     CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-                    if (carbonTomcatService == null) {
-                        log.error("Error while reading Carbon Tomcat service");
-                        return null;
+                    if (carbonTomcatService != null) {
+                        Host host = (Host) carbonTomcatService.getTomcat().getEngine().findChild(hostName);
+                        if (host == null) {
+                            host = (Host) carbonTomcatService.getTomcat().
+                                    getEngine().findChild(WebAppUtils.getDefaultHost());
+                        }
+                        if (host.findChild(contextName) == null) {
+                            context.setDocBase(dummyContextPath);
+                            ContextConfig ctxCfg = new ContextConfig();
+                            context.addLifecycleListener(ctxCfg);
+                            context.addLifecycleListener(new DefaultConfListener(displayName));
+                            host.addChild(context);
+                        }
                     }
-                    Host host = (Host) carbonTomcatService.getTomcat().getEngine().findChild(hostName);
-                    if (host == null) {
-                        host = (Host) carbonTomcatService.getTomcat().
-                                getEngine().findChild(WebAppUtils.getDefaultHost());
-                    }
-                    if (host.findChild(contextName) == null) {
-                        context.setDocBase(dummyContextPath);
-                        ContextConfig ctxCfg = new ContextConfig();
-                        context.addLifecycleListener(ctxCfg);
-                        context.addLifecycleListener(new DefaultConfListener(displayName));
-                        host.addChild(context);
-                    }
+
                 }
 
                 ghostWebApp = new WebApplication(applicationDeployer, context, originalFile);
