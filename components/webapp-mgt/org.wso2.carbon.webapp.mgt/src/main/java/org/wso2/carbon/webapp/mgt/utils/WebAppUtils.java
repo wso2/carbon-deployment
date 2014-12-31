@@ -239,11 +239,10 @@ public class WebAppUtils {
      */
     public static String getDefaultHost() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-        if (carbonTomcatService == null) {
-            log.error("Carbon Tomcat Service returned a null value");
-            return null;
+        if (carbonTomcatService != null) {
+            return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
         }
-        return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
+        return null;
     }
 
     /**
