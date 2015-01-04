@@ -34,7 +34,6 @@ public class WebappMetadata {
     private String serviceListPath;
     private String appVersion;
     private String contextPath;
-    private boolean isCAppArtifact = false;
     private String hostName;
     private String webappKey;
 
@@ -172,23 +171,5 @@ public class WebappMetadata {
 
     public void setWebappKey(String webappKey) {
         this.webappKey = webappKey;
-    }
-
-    /**
-     * get isCAppArtifact property
-     *
-     * @return boolean
-     */
-    public boolean isCAppArtifact() {
-        return isCAppArtifact;
-    }
-
-    /**
-     * This will be the place to enable service as CApp artifact
-     *
-     * @param isCAppArtifact
-     */
-    public void setCAppArtifact(boolean isCAppArtifact) {
-        this.isCAppArtifact = isCAppArtifact;
     }
 }
