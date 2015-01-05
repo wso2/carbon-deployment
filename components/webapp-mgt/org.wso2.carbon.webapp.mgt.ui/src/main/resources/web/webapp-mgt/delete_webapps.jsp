@@ -62,11 +62,11 @@
             if (webappState.equalsIgnoreCase("started")) {
                 client.deleteAllStartedWebapps();
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.started.webapps"),
-                                                    CarbonUIMessage.INFO, request);
+                        CarbonUIMessage.INFO, request);
             } else if (webappState.equalsIgnoreCase("stopped")) {
                 client.deleteAllStoppedWebapps();
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.stopped.webapps"),
-                                                    CarbonUIMessage.INFO, request);
+                        CarbonUIMessage.INFO, request);
             } else {
                 throw new ServletException("Unknown webappstate " + webappState);
             }
@@ -74,11 +74,11 @@
             if (webappState.equalsIgnoreCase("started")) {
                 client.deleteStartedWebapps(webappFileNames);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
-                                                    CarbonUIMessage.INFO, request);
+                        CarbonUIMessage.INFO, request);
             } else if (webappState.equalsIgnoreCase("stopped")) {
                 client.deleteStoppedWebapps(webappFileNames);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
-                                                    CarbonUIMessage.INFO, request);
+                        CarbonUIMessage.INFO, request);
             } else {
                 throw new ServletException("Unknown webappstate " + webappState);
             }
