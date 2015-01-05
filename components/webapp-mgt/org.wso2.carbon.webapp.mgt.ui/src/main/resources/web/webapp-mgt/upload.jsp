@@ -68,30 +68,11 @@
 
             var validFileNames = true;
             var emptyFields = true;
-            if (document.webappUploadForm.warFileName.value != null) {
-                var jarinput = document.webappUploadForm.warFileName.value;
-                if (jarinput != '' || jarinput.length <= 0) {
-                    emptyFields = false;
-                }
-                if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
-                    CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
-                    validFileNames = false;
-                } else if (jarinput.indexOf("#") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                    validFileNames = false;
-                } else if (validateName(jarinput, true)) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                    validFileNames = false;
-                } else if (jarinput.trim().indexOf(" ") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.webapp"/>');
-                    validFileNames = false;
-                }
-            } else if (document.webappUploadForm.warFileName[0].value != null) {
+            if (document.webappUploadForm.warFileName[0] && document.webappUploadForm.warFileName[0].value) {
                 for (var i = 0; i < document.webappUploadForm.warFileName.length; i++) {
                     var jarinput = document.webappUploadForm.warFileName[i].value;
-                    if (jarinput != '' || jarinput.length <= 0) {
-                        emptyFields = false;
-                    }
+                    emptyFields = false;
+
                     if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
                         CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                         validFileNames = false;
@@ -109,28 +90,26 @@
                         validFileNames = false;
                     }
                 }
-            }
+            } else if (document.webappUploadForm.warFileName.value) {
+                var jarinput = document.webappUploadForm.warFileName.value;
 
-            if (document.webappUploadForm.version.value != null) {
+                emptyFields = false;
 
-                var appVersion = document.webappUploadForm.version.value;
-                if (appVersion.indexOf("#") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
+                    CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                     validFileNames = false;
-                } else if (appVersion.indexOf("/") != -1 || appVersion.indexOf("\\") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                } else if (jarinput.indexOf("#") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
                     validFileNames = false;
-                } else if (validateName(appVersion, false)) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                } else if (validateName(jarinput, true)) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
                     validFileNames = false;
-                } else if (appVersion.trim().charAt(appVersion.trim().length - 1) == ".") {
-                    CARBON.showWarningDialog('<fmt:message key="dot.contains.version"/>');
-                    validFileNames = false
-                } else if (appVersion.trim().indexOf(" ") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
+                } else if (jarinput.trim().indexOf(" ") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.webapp"/>');
                     validFileNames = false;
                 }
-            } else if (document.webappUploadForm.version[0].value != null) {
+            }
+            if (document.webappUploadForm.version[0] && document.webappUploadForm.version[0].value) {
                 for (var i = 0; i < document.webappUploadForm.version.length; i++) {
                     var appVersion = document.webappUploadForm.version[i].value;
                     if (appVersion.indexOf("#") != -1) {
@@ -152,6 +131,25 @@
                         CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
                         validFileNames = false;
                     }
+                }
+            } else if (document.webappUploadForm.version.value) {
+
+                var appVersion = document.webappUploadForm.version.value;
+                if (appVersion.indexOf("#") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                    validFileNames = false;
+                } else if (appVersion.indexOf("/") != -1 || appVersion.indexOf("\\") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                    validFileNames = false;
+                } else if (validateName(appVersion, false)) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                    validFileNames = false;
+                } else if (appVersion.trim().charAt(appVersion.trim().length - 1) == ".") {
+                    CARBON.showWarningDialog('<fmt:message key="dot.contains.version"/>');
+                    validFileNames = false
+                } else if (appVersion.trim().indexOf(" ") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
+                    validFileNames = false;
                 }
             }
 
