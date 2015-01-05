@@ -212,10 +212,10 @@
             if (tenantid == -1234) {
               oCell = newRow.insertCell(-1);
               oCell.innerHTML = ""+
-                                                " <select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %>"+
-                                                "<% if(vhostHolder.getDefaultHostName().equals(vhostName)) {%><option selected='selected'><%=vhostName%></option>"+
-                                                "<%       }else {               %><option><%=vhostName%></option>"+"<%      }                     %>" +
-                                                "<%}%></select>"
+                                " <select name='hostName'><%for (String vhostName : vhostHolder.getVhosts()) {  %>"+
+                                "<% if (vhostHolder.getDefaultHostName().equals(vhostName)) {%><option selected='selected'><%=vhostName%></option>"+
+                                "<%       } else {               %><option><%=vhostName%></option>"+"<%      }                     %>" +
+                                "<%}%></select>"
               oCell.className = "formRow";
             }
 
@@ -264,10 +264,10 @@
                         <%if (tenantId == -1234) { %>
                         <td class="formRow">
                             <select name="hostName">
-                               <%    for(String vhostName:vhostHolder.getVhosts()){  %>
-                               <% if(vhostHolder.getDefaultHostName().equals(vhostName)) {%>
+                               <%    for (String vhostName : vhostHolder.getVhosts()) {  %>
+                               <% if (vhostHolder.getDefaultHostName().equals(vhostName)) {%>
                                <option selected="selected"><%=vhostName%></option>
-                               <%       }else {               %>
+                               <%       } else {               %>
                                <option><%=vhostName%></option>
                                <%      }                     %>
                                <%      }                     %>
