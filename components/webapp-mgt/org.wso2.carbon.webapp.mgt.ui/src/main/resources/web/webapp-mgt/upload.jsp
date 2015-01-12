@@ -44,7 +44,7 @@
        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
-       int super_tenant_id = MultitenantConstants.SUPER_TENANT_ID;
+       int superTenantId = MultitenantConstants.SUPER_TENANT_ID;
 
        WebappAdminClient client;
        VhostHolder vhostHolder = null;
@@ -210,7 +210,7 @@
             oCell.innerHTML = "<input type='text' name='version' value=''>"
             oCell.className = "formRow";
 
-            if (tenantid == <%=super_tenant_id%>) {
+            if (tenantid == <%=superTenantId%>) {
               oCell = newRow.insertCell(-1);
               oCell.innerHTML = ""+
                                                 " <select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %>"+
@@ -262,7 +262,7 @@
                         <td class="formRow">
                             <input type="text" name="version" value="">
                         </td>
-                        <%if (tenantId == super_tenant_id) { %>
+                        <%if (tenantId == superTenantId) { %>
                         <td class="formRow">
                             <select name="hostName">
                                <%    for(String vhostName:vhostHolder.getVhosts()){  %>
