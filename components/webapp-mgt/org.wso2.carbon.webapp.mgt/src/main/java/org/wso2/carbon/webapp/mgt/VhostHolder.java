@@ -27,10 +27,6 @@ import java.util.List;
  */
 public class VhostHolder {
 
-    private List<String> vhosts;
-    private String defaultHostName;
-
-
     public List<String> getVhosts() {
         return WebAppUtils.vhostNames;
     }
