@@ -90,14 +90,14 @@ public class WebAppUtils {
 
             if (appBase.endsWith(File.separator)) {
                 //append a file separator to make webAppFilePath equal to appBase
-                if (isEqualTo(filePath + File.separator, appBase)) {
+                if (isWebappUploadedToAppBase(filePath + File.separator, appBase)) {
                     if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
                     return childHost.getName();
                 }
             } else {
-                if (isEqualTo(filePath + File.separator, appBase + File.separator)) {
+                if (isWebappUploadedToAppBase(filePath + File.separator, appBase + File.separator)) {
                     if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
@@ -114,7 +114,7 @@ public class WebAppUtils {
      * @param baseName appBase value
      * @return true if values are equal, false otherwise
      */
-    private static boolean isEqualTo(String webAppFilePath, String baseName) {
+    private static boolean isWebappUploadedToAppBase(String webAppFilePath, String baseName) {
         if (webAppFilePath.equals(baseName)) {
             return true;
         } else {
