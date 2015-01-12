@@ -30,6 +30,7 @@
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.ResourceBundle" %>
+<%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
 
 <!-- This page is included to display messages which are set to request scope or session scope -->
 <jsp:include page="../dialog/display_messages.jsp"/>
@@ -43,6 +44,7 @@
        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+       int super_tenant_id = MultitenantConstants.SUPER_TENANT_ID;
 
        WebappAdminClient client;
        VhostHolder vhostHolder = null;
@@ -208,7 +210,7 @@
             oCell.innerHTML = "<input type='text' name='version' value=''>"
             oCell.className = "formRow";
 
-            if(tenantid == -1234){
+            if (tenantid == <%=super_tenant_id%>) {
               oCell = newRow.insertCell(-1);
               oCell.innerHTML = ""+
                                                 " <select name='hostName'><%for(String vhostName:vhostHolder.getVhosts()){  %>"+
@@ -260,7 +262,7 @@
                         <td class="formRow">
                             <input type="text" name="version" value="">
                         </td>
-                        <%if(tenantId == -1234) { %>
+                        <%if (tenantId == super_tenant_id) { %>
                         <td class="formRow">
                             <select name="hostName">
                                <%    for(String vhostName:vhostHolder.getVhosts()){  %>
