@@ -28,7 +28,7 @@ import java.util.List;
 public class VhostHolder {
     private static VhostHolder vhostHolderInstance = new VhostHolder();
 
-    public static VhostHolder getInstance(){
+    public static VhostHolder getInstance() {
         return vhostHolderInstance;
     }
 
@@ -36,7 +36,7 @@ public class VhostHolder {
         return WebAppUtils.vhostNames;
     }
 
-    public String getDefaultHostName(){
+    public String getDefaultHostName() {
         return WebAppUtils.getServerConfigHostName();
     }
 }
