@@ -28,6 +28,10 @@
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -45,7 +49,8 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.webapp.ext.cxf.*;version="${project.version}"
+                            org.wso2.carbon.webapp.ext.cxf.*;version="${project.version}",
+                            org.wso2.carbon.webapp.ext.jaxrs.designator.*;version="${project.version}"
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
