@@ -738,6 +738,16 @@
                 <version>${orbit.version.spring}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.discovery.core</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scannotation</groupId>
+                <artifactId>scannotation</artifactId>
+                <version>${org.scannotation.version}</version>
+            </dependency>
 
             <!--CXF runtime environment-->
             <dependency>
@@ -1249,6 +1259,8 @@
         <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)
         </carbon.kernel.imp.pkg.version>
 
+        <carbon.commons.version>4.3.0-SNAPSHOT</carbon.commons.version>
+
         <!-- Carbon platform version comes here-->
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
         <carbon.platform.package.export.version>4.3.0-SNAPSHOT
@@ -1363,6 +1375,7 @@
         <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
         <orbit.version.spring>3.2.9.wso2v1</orbit.version.spring>
         <imp.pkg.version.spring>[3.2.9.wso2v1, 3.3.0)</imp.pkg.version.spring>
+        <org.scannotation.version>1.0.3</org.scannotation.version>
 
         <orbit.version.commons.fileuploader>1.2.0.wso2v1</orbit.version.commons.fileuploader>
         <orbit.version.woden>1.0.0.M8-wso2v1</orbit.version.woden>
