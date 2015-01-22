@@ -26,19 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.naming.Binding;
@@ -99,6 +87,7 @@ import org.apache.tomcat.util.digester.RuleSet;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.scan.Jar;
 import org.apache.tomcat.util.scan.JarFactory;
+import org.wso2.carbon.webapp.mgt.utils.CarbonWebappServiceLoader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
@@ -1536,11 +1525,19 @@ public class ContextConfig implements LifecycleListener {
     protected void processServletContainerInitializers(ServletContext servletContext) {
 
         List<ServletContainerInitializer> detectedScis;
+        List<ServletContainerInitializer> totalDetectedScis;
         try {
             WebappServiceLoader<ServletContainerInitializer> loader =
                     new WebappServiceLoader<ServletContainerInitializer>(
                             servletContext, context.getContainerSciFilter());
             detectedScis = loader.load(ServletContainerInitializer.class);
+
+            CarbonWebappServiceLoader webappServiceLoader =   CarbonWebappServiceLoader.getInstance();
+            List<ServletContainerInitializer>  detectedOSGiScis =
+                    webappServiceLoader.load(ServletContainerInitializer.class, null);
+            detectedOSGiScis.addAll(detectedScis);
+
+            totalDetectedScis = Collections.unmodifiableList(detectedOSGiScis);
         } catch (IOException e) {
             log.error(sm.getString(
                     "contextConfig.servletContainerInitializerFail",
@@ -1550,7 +1547,7 @@ public class ContextConfig implements LifecycleListener {
             return;
         }
 
-        for (ServletContainerInitializer sci : detectedScis) {
+        for (ServletContainerInitializer sci : totalDetectedScis) {
             initializerClassMap.put(sci, new HashSet<Class<?>>());
 
             HandlesTypes ht;
