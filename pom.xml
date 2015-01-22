@@ -15,9 +15,11 @@
         <module>service-stubs/webapp-mgt</module>
         <module>components/service-mgt</module>
         <module>components/webapp-mgt</module>
+        <module>components/monitoring</module>
         <module>features/as-runtimes</module>
         <module>features/service-mgt</module>
         <module>features/webapp-mgt</module>
+        <module>features/monitoring</module>
     </modules>
 
     <dependencyManagement>
@@ -608,11 +610,6 @@
                 <version>${httpcore.nio.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>${javax.ws.rs.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
                 <version>${jaxb.impl.version}</version>
@@ -817,6 +814,49 @@
                 <version>${carbon.platform.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.core</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.stat.collector.http</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ua.parser.wso2</groupId>
+                <artifactId>ua-parser</artifactId>
+                <version>${ua.parser.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.publisher.bam</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.stat.collector.jmx</artifactId>
+                <version>4.3.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.publisher.bam.feature</artifactId>
+                <version>${carbon.platform.version}</version>
+                <type>zip</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.monitoring.stat.collector.feature</artifactId>
+                <version>4.3.0-SNAPSHOT</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -859,7 +899,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.7.2</version>
+                    <version>1.7.4</version>
                     <executions>
                         <execution>
                             <id>generate-scr-scrdescriptor</id>
@@ -1120,7 +1160,6 @@
         <woodstox.core.version>4.2.0</woodstox.core.version>
         <jaxb.xjc.version>2.1.13</jaxb.xjc.version>
         <jaxb.impl.version>2.1.13</jaxb.impl.version>
-        <javax.ws.rs.version>2.0-m10</javax.ws.rs.version>
         <httpcore.nio.version>4.2.4</httpcore.nio.version>
         <httpcore.version>4.2.4</httpcore.version>
         <httpclient.version>4.2.5</httpclient.version>
@@ -1139,6 +1178,8 @@
         <geronimo-jms.version>1.1.1</geronimo-jms.version>
         <geronimo-jpa.version>1.1</geronimo-jpa.version>
         <geronimo-jta.version>1.1.1</geronimo-jta.version>
+
+        <ua.parser.version>1.3.0.wso2v1</ua.parser.version>
 
         <!--json wso2-->
         <version.json.wso2>2.0.0.wso2v1</version.json.wso2>
