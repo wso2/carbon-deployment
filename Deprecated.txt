@@ -1,0 +1,3 @@
+This fork is deprecated. Do not send any PRs here. All the changes should go to - https://github.com/wso2/carbon-deployment
+
+Moved all the existing PRs to wso2 repo, and synced the repo.
