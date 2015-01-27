@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon.deployment</groupId>
+        <groupId>org.wso2.carbon</groupId>
         <artifactId>jar-services-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -36,11 +36,11 @@
     </description>
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.jarservices.ui</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.jarservices.stub</artifactId>
         </dependency>
     </dependencies>
@@ -67,8 +67,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.jarservices.ui</bundleDef>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.jarservices.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.jarservices.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.jarservices.stub</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.service.mgt.ui:${project.version}
