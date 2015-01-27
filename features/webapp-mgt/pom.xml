@@ -33,6 +33,9 @@
     <url>http://wso2.org</url>
 
     <modules>
+        <module>org.wso2.carbon.application.mgt.webapp.feature</module>
+        <module>org.wso2.carbon.application.mgt.webapp.server.feature</module>
+        <module>org.wso2.carbon.application.mgt.webapp.ui.feature</module>
         <module>org.wso2.carbon.webapp.mgt.feature</module>
         <module>org.wso2.carbon.webapp.mgt.server.feature</module>
         <module>org.wso2.carbon.webapp.mgt.common.ui.feature</module>
