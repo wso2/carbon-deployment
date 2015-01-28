@@ -26,16 +26,17 @@ import java.util.List;
  * This class is used to read virtual hostnames from webappAdmin service
  */
 public class VhostHolder {
+    private static VhostHolder vhostHolderInstance = new VhostHolder();
 
-    private List<String> vhosts;
-    private String defaultHostName;
-
+    public static VhostHolder getInstance() {
+        return vhostHolderInstance;
+    }
 
     public List<String> getVhosts() {
         return WebAppUtils.vhostNames;
     }
 
-    public String getDefaultHostName(){
+    public String getDefaultHostName() {
         return WebAppUtils.getServerConfigHostName();
     }
 }
