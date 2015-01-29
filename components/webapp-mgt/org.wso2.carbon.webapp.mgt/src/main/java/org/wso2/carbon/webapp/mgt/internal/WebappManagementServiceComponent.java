@@ -149,13 +149,11 @@ public class WebappManagementServiceComponent {
             servletContextParameters.add(serverUrlParam);
         }
 
-        for(WebApplicationsHolder webApplicationsHolder: webApplicationsHolderList.values()){
+        for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderList.values()) {
             if (webApplicationsHolder != null) {
-                for (WebApplication application :
-                        webApplicationsHolder.getStartedWebapps().values()) {
+                for (WebApplication application : webApplicationsHolder.getStartedWebapps().values()) {
                     application.getContext().getServletContext().
-                            setInitParameter(serverUrlParam.getName(),
-                                    serverUrlParam.getValue());
+                            setInitParameter(serverUrlParam.getName(), serverUrlParam.getValue());
                 }
             }
 

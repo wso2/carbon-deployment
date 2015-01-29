@@ -37,7 +37,7 @@
     WebappAdminClient client = new WebappAdminClient(
             cookie, backendServerURL, configContext, request.getLocale());
 
-    try{
+    try  {
         client.setBamConfig(webappFileName, value, hostName);
     } catch (Exception e) {
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);

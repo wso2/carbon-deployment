@@ -33,11 +33,11 @@
         response.sendRedirect("/carbon/admin/login.jsp");
         return;
     }
-    if (!CarbonUtils.isRunningOnLocalTransportMode())
-    {
-        %><jsp:forward page="index.jsp" /><%
+    if (!CarbonUtils.isRunningOnLocalTransportMode()) {
+%>
+<jsp:forward page="index.jsp"/>
+<%
     }
-
 
     WebappAdminClient client;
     String fileName = request.getParameter("name");

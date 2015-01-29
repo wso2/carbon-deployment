@@ -442,7 +442,7 @@
             String urlSuffix = null;
             String url = null;
 
-            if(webappsWrapper.getHttpPort() != 0) {
+            if (webappsWrapper.getHttpPort() != 0) {
                 urlPrefix = "http://";
                 urlSuffix = ":" + webappsWrapper.getHttpPort();
             } else {
@@ -456,12 +456,12 @@
                 String bgColor = ((position % 2) == 1) ? "#EEEFFB" : "white";
                 position++;
 
-                if(webapp.getHostName().length() !=0){
-                      url =  urlPrefix + webapp.getHostName() + urlSuffix;
-                      hostName = webapp.getHostName();
-                }else{
-                      url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
-                      hostName = webappsWrapper.getHostName();
+                if (webapp.getHostName().length() != 0) {
+                    url = urlPrefix + webapp.getHostName() + urlSuffix;
+                    hostName = webapp.getHostName();
+                } else {
+                    url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
+                    hostName = webappsWrapper.getHostName();
                 }
                 String webappURL = url + webapp.getContext();
         %>
