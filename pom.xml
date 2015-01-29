@@ -569,7 +569,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.ui.feature</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.identity.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -597,7 +597,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.infinispan.wso2</groupId>
@@ -670,7 +670,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.identity.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -978,12 +978,12 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
-                <version>${carbon.deployment.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.javaee.tomee.patch</artifactId>
-                <version>${carbon.deployment.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.tomee</groupId>
@@ -1300,7 +1300,6 @@
     </profiles>
 
     <properties>
-        <carbon.deployment.version>4.3.0-SNAPSHOT</carbon.deployment.version>
         <previous.version>4.2.0</previous.version>
         <version.jettison>1.3.4</version.jettison>
         <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
@@ -1314,8 +1313,10 @@
         <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)
         </carbon.kernel.imp.pkg.version>
 
-        <carbon.commons.version>4.3.0-SNAPSHOT</carbon.commons.version>
         <project.scm.id>my-scm-server</project.scm.id>
+
+        <carbon.commons.version>4.3.0-SNAPSHOT</carbon.commons.version>
+        <carbon.identity.version>4.3.0-SNAPSHOT</carbon.identity.version>
 
         <!-- Carbon platform version comes here-->
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
@@ -1523,12 +1524,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
-        <repository>
-            <id>nexus-releases</id>
-            <name>WSO2 Release Distribution Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
-        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -1571,9 +1566,9 @@
 
     <distributionManagement>
         <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <id>nexus-releases</id>
+            <name>WSO2 Release Distribution Repository</name>
+            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
         </repository>
 
         <snapshotRepository>
