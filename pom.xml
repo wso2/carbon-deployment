@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
+    <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>carbon-deployment</artifactId>
     <packaging>pom</packaging>
     <version>4.3.0-SNAPSHOT</version>
@@ -341,55 +341,60 @@
                 <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.data.publisher.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.webapp.stat.publisher.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.data.publisher</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.data.publisher.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.agent.server.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.agent.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.webapp.stat.publisher</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.webapp.stat.publisher.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.webapp.agent.server.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.webapp.agent.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
@@ -477,70 +482,70 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.webapp</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.webapp.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.webapp.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.operation.mgt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.operation.mgt.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.operation.mgt.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.webapp.server.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.webapp.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.module.mgt.server.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.module.mgt.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
@@ -603,17 +608,17 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.module.mgt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.module.mgt.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.module.mgt.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -623,13 +628,13 @@
                 <version>${orbit.version.json}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.server.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
@@ -641,13 +646,13 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.server.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
@@ -665,22 +670,22 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -690,32 +695,32 @@
                 <version>${orbit.version.commons.fileuploader}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.jaxws.webapp.mgt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.webapp.mgt.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.webapp.list.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -723,44 +728,44 @@
             <!-- Feature related dependencies -->
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.jarservices</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.jarservices.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.jarservices.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.aarservices</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.aarservices.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.springservices</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.springservices.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.springservices.stub</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -967,12 +972,12 @@
             <!-- J2EE Tomee feature related dependencies-->
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
                 <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.javaee.tomee.patch</artifactId>
                 <version>${carbon.deployment.version}</version>
             </dependency>
@@ -1127,7 +1132,7 @@
                 <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.as.monitoring</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
@@ -1139,7 +1144,7 @@
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.as.monitoring.feature</artifactId>
                 <version>${carbon.platform.version}</version>
                 <type>zip</type>

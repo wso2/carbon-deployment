@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>javaee-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -36,11 +36,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.javaee.tomee.patch</artifactId>
         </dependency>
         <dependency>
@@ -127,8 +127,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.javaee.tomee</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.javaee.tomee.patch</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.javaee.tomee</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.javaee.tomee.patch</bundleDef>
                                 <bundleDef>org.wso2.tomee:tomee</bundleDef>
                                 <bundleDef>org.wso2.tomee:tomee-resources</bundleDef>
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-jsf</bundleDef>
