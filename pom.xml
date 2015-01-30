@@ -30,6 +30,13 @@
         <module>features/monitoring</module>
     </modules>
 
+    <scm>
+        <url>https://github.com/wso2/carbon-deployment.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/carbon-deployment.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/carbon-deployment.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
     <dependencyManagement>
         <dependencies>
             <!-- Carbon Kernel Dependencies-->
@@ -1207,6 +1214,18 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>2.4</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <configuration>
+                        <preparationGoals>clean install</preparationGoals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -1442,7 +1461,17 @@
         <commons.lang3.version>3.1</commons.lang3.version>
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
+
+        <!-- for maven release process -->
+        <project.scm.id>my-scm-server</project.scm.id>
+
     </properties>
+
+    <repository>
+        <id>nexus-releases</id>
+        <name>WSO2 Release Distribution Repository</name>
+        <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
+    </repository>
 
 </project>
 
