@@ -393,11 +393,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.identity.entitlement.filter</artifactId>
-                <version>${carbon.identity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.security.mgt</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
@@ -734,6 +729,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.as.monitoring</artifactId>
+                <version>${carbon.deployment.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.identity.entitlement.filter</artifactId>
                 <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
@@ -1294,14 +1294,13 @@
 
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 
-        <!-- Carbon kernel version -->
         <!-- Carbon kernel version-->
         <carbon.kernel.version>4.3.0</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)</carbon.kernel.imp.pkg.version>
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
 
         <!-- Carbon Commons version-->
-        <carbon.commons.version>4.3.0</carbon.commons.version>
+        <carbon.commons.version>4.3.1</carbon.commons.version>
         <carbon.commons.imp.pkg.version>[4.3.1, 4.4.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
@@ -1310,8 +1309,8 @@
 
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.3.0-SNAPSHOT</carbon.deployment.version>
-        <carbon.deployment.exp.pkg.version>4.3.0-SNAPSHOT</carbon.deployment.exp.pkg.version>
-        <carbon.deployment.imp.pkg.version>[4.3.0-SNAPSHOT, 4.4.0)</carbon.deployment.imp.pkg.version>
+        <carbon.deployment.exp.pkg.version>4.3.0</carbon.deployment.exp.pkg.version>
+        <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
 
         <!-- Carbon platform version comes here-->
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>

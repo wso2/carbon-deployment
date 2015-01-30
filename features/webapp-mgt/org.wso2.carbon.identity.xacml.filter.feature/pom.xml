@@ -31,12 +31,22 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.identity.entitlement.filter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.entitlement.proxy</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.balana</groupId>
+                    <artifactId>org.wso2.balana</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.ws.security.wso2</groupId>
+                    <artifactId>wss4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.commons</groupId>
@@ -76,7 +86,7 @@
                             <bundles>
                                 <bundleDef>libthrift.wso2:libthrift</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.entitlement.proxy</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.entitlement.filter</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.identity.entitlement.filter</bundleDef>
                                 <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.identity.entitlement.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.authenticator.stub</bundleDef>
                             </bundles>
