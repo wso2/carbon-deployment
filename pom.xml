@@ -724,7 +724,7 @@
                 <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.cxf.ext</artifactId>
                 <version>${carbon.deployment.version}</version>
             </dependency>
