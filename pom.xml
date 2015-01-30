@@ -1308,7 +1308,7 @@
         <carbon.identity.imp.pkg.version>[4.3.0, 4.4.0)</carbon.identity.imp.pkg.version>
 
         <!-- Carbon Deployment version-->
-        <carbon.deployment.version>4.3.0</carbon.deployment.version>
+        <carbon.deployment.version>4.3.0-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>4.3.0</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
 
