@@ -80,7 +80,7 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.security.mgt.ui.feature</artifactId>
             <type>zip</type>
         </dependency>
