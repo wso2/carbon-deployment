@@ -35,7 +35,7 @@
             <artifactId>org.wso2.carbon.identity.entitlement.filter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.entitlement.proxy</artifactId>
             <exclusions>
                 <exclusion>
@@ -85,7 +85,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>libthrift.wso2:libthrift</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.entitlement.proxy</bundleDef>
+                                <bundleDef>org.wso2.carbon.identity:org.wso2.carbon.identity.entitlement.proxy</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.identity.entitlement.filter</bundleDef>
                                 <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.identity.entitlement.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.authenticator.stub</bundleDef>
