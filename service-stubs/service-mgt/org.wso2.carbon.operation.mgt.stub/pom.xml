@@ -99,7 +99,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.operation.mgt.stub.*; version="${carbon.platform.package.export.version}"
+                            org.wso2.carbon.operation.mgt.stub.*; version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <_nouse>true</_nouse>
                         <!--<Import-Package>

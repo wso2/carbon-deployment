@@ -144,7 +144,7 @@
                             <id>org.wso2.carbon.as.runtimes.j2ee</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.webapp.mgt:${project.version}
+                                <importFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${carbon.deployment.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>

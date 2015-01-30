@@ -36,9 +36,5 @@
         <module>org.wso2.carbon.as.runtimes.cxf.feature</module>
         <module>org.wso2.carbon.as.runtimes.j2ee.feature</module>
     </modules>
-    <properties>
-        <wso2carbon.version.as.runtimes>${wso2carbon.version}</wso2carbon.version.as.runtimes>
-    </properties>
-
 </project>
 

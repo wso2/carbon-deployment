@@ -101,7 +101,7 @@
                         </Private-Package>
                         <Export-Package>
                             org.wso2.carbon.repomanager.axis2.stub.*;
-                            version="${carbon.platform.package.export.version}"
+                            version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.repomanager.axis2.stub.*

@@ -42,7 +42,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.jarservices.*;version=${project.version},
+                            org.wso2.carbon.jarservices.*;version=${carbon.deployment.exp.pkg.version},
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.jarservices.*,

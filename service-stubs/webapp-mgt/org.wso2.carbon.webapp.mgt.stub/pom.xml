@@ -102,7 +102,7 @@
                         </Private-Package>
                         <Export-Package>
                             org.wso2.carbon.webapp.mgt.stub.*;
-                            version="${carbon.platform.package.export.version}"
+                            version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.webapp.mgt.stub.*

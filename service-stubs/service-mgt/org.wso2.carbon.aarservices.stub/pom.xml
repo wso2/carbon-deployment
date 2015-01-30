@@ -99,7 +99,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.aarservices.stub.*;version="${carbon.platform.package.export.version}",
+                            org.wso2.carbon.aarservices.stub.*;version="${carbon.deployment.exp.pkg.version}",
                         </Export-Package>
                         <Import-Package>
                             !javax.xml.namespace,

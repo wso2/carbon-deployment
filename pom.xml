@@ -419,6 +419,24 @@
             <!-- Endo of Carbon-Identity Dependency -->
 
             <!-- Carbon-Deployment Dependency -->
+	   <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.aarservices.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.jarservices.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.springservices.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.data.publisher.stub</artifactId>
@@ -576,6 +594,30 @@
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.repomanager.axis2.ui.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.springservices.server.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.springservices.ui.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.webapp.mgt.server.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
             </dependency>
@@ -1129,6 +1171,30 @@
                 <artifactId>rampart-core</artifactId>
                 <version>1.6.1.wso2v13</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.aarservices.server.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.aarservices.ui.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.jarservices.server.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.jarservices.ui.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1293,13 +1359,6 @@
         <carbon.deployment.version>4.3.0-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>4.3.0</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
-
-        <!-- Carbon platform version comes here-->
-        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
-        <carbon.platform.package.export.version>4.3.0-SNAPSHOT
-        </carbon.platform.package.export.version>
-        <carbon.platform.package.import.version.range>[4.3.0.SNAPSHOT, 4.4.0)
-        </carbon.platform.package.import.version.range>
 
         <version.tomcat>7.0.52</version.tomcat>
         <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>

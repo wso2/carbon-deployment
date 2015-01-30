@@ -37,19 +37,16 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.aarservices.feature</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.jarservices.feature</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.springservices.feature</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -71,12 +68,11 @@
                             <id>org.wso2.carbon.servicehosting</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.service.mgt:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.service.mgt:${carbon.deployment.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.aarservices.feature
                                 </includedFeatureDef>
-                                <!--<includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.dataservices.feature</includedFeatureDef>-->
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.jarservices.feature
                                 </includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.springservices.feature

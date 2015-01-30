@@ -73,13 +73,13 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
                             !org.wso2.carbon.webapp.list.ui.internal,
-                            org.wso2.carbon.webapp.list.ui.*;version="${carbon.platform.package.export.version}"
+                            org.wso2.carbon.webapp.list.ui.*;version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Private-Package>org.wso2.carbon.webapp.list.ui.internal</Private-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>
                         <Import-Package>
                             !org.wso2.carbon.webapp.list.ui.*,
-                            org.wso2.carbon.webapp.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.webapp.mgt.stub.*;version="${carbon.deployment.imp.pkg.version}",
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
                             org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             *;resolution:=optional

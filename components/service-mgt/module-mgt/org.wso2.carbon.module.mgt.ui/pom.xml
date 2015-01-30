@@ -43,10 +43,10 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.module.mgt.ui.*;version="${carbon.platform.package.export.version}"
+                            org.wso2.carbon.module.mgt.ui.*;version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.carbon.module.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.module.mgt.stub.*;version="${carbon.deployment.imp.pkg.version}",
                             javax.servlet.*;version="${imp.pkg.version.javax.servlet}",
                             *;resolution:=optional
                         </Import-Package>

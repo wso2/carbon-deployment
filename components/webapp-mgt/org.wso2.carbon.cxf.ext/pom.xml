@@ -49,8 +49,8 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.webapp.ext.cxf.*;version="${project.version}",
-                            org.wso2.carbon.webapp.ext.jaxrs.designator.*;version="${project.version}"
+                            org.wso2.carbon.webapp.ext.cxf.*;version="${carbon.deployment.exp.pkg.version}",
+                            org.wso2.carbon.webapp.ext.jaxrs.designator.*;version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

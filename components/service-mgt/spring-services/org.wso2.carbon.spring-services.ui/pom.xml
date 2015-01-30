@@ -45,7 +45,7 @@
                             org.wso2.carbon.springservices.ui.*
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.carbon.springservices.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.springservices.stub.*;version="${carbon.deployment.imp.pkg.version}",
                             org.wso2.carbon.core.*,
                             org.apache.commons.fileupload.*,
                             javax.servlet.http.*;version="2.4.0",

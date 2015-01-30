@@ -48,7 +48,7 @@
                             org.wso2.carbon.as.monitoring.AsMonitoringActivator
                         </Bundle-Activator>
                         <Export-Package>
-                            org.wso2.carbon.as.monitoring.*;version="${project.version}"
+                            org.wso2.carbon.as.monitoring.*;version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Import-Package>
                             javax.servlet;version="${imp.pkg.version.javax.servlet}",

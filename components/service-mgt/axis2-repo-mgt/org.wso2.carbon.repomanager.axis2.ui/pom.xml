@@ -47,11 +47,11 @@
                         </Bundle-SymbolicName>
                         <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
                         <Export-Package>
-                            org.wso2.carbon.repomanager.axis2.ui.*;version=${project.version}"
+                            org.wso2.carbon.repomanager.axis2.ui.*;version=${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Import-Package>
                             javax.servlet.http.*;version="${imp.pkg.version.javax.servlet}",
-                            org.wso2.carbon.repomanager.axis2.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.repomanager.axis2.stub.*;version="${carbon.deployment.imp.pkg.version}",
                             *;resolution:=optional
                         </Import-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>

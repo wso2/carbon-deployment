@@ -98,7 +98,7 @@
                         </Bundle-SymbolicName>
                         <Export-Package>
                             org.wso2.carbon.bam.service.data.publisher.stub.*;
-                            version="${carbon.platform.package.export.version}"
+                            version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                     </instructions>
                 </configuration>

@@ -61,11 +61,11 @@
                             <id>org.wso2.carbon.bam.webapp.agent</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon:org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.server.feature:${carbon.platform.version}</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.ui.feature:${carbon.platform.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.server.feature:${carbon.deployment.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.ui.feature:${carbon.deployment.version}</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>
