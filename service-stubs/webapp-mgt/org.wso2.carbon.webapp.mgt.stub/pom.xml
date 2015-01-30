@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-stub</artifactId>
-        <version>4.3.0</version>
+        <version>4.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -29,7 +29,7 @@
     <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Webapp Management Stub</name>
-    <version>4.3.0</version>
+    <version>4.3.1-SNAPSHOT</version>
     <url>http://wso2.org</url>
 
     <build>
@@ -54,7 +54,7 @@
                                     <pathelement location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${orbit.version.axis2}/axis2-${orbit.version.axis2}.jar" />
                                 </path>
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
-                                    <arg line="-uri src/main/resources/WebappAdmin.wsdl -u -uw -o target/generated-code -p org.wso2.carbon.webapp.mgt.stub                                     -ns2p http://utils.carbon.wso2.org/xsd=org.wso2.carbon.webapp.mgt.stub.types.carbon,http://util.java/xsd=org.wso2.carbon.webapp.mgt.stub.types.carbon,http://mgt.webapp.carbon.wso2.org/xsd=org.wso2.carbon.webapp.mgt.stub.types.carbon,http://org.apache.axis2/xsd=org.wso2.carbon.webapp.mgt.stub.types.axis2,http://neethi.apache.org/xsd=org.wso2.carbon.webapp.mgt.stub.types.neethi" />
+                                    <arg line="-uri src/main/resources/WebappAdmin.wsdl -u -uw -o target/generated-code -p org.wso2.carbon.webapp.mgt.stub -ns2p http://utils.carbon.wso2.org/xsd=org.wso2.carbon.webapp.mgt.stub.types.carbon,http://util.java/xsd=org.wso2.carbon.webapp.mgt.stub.types.carbon,http://mgt.webapp.carbon.wso2.org/xsd=org.wso2.carbon.webapp.mgt.stub.types.carbon,http://org.apache.axis2/xsd=org.wso2.carbon.webapp.mgt.stub.types.axis2,http://neethi.apache.org/xsd=org.wso2.carbon.webapp.mgt.stub.types.neethi" />
                                     <classpath refid="wsdl2java.classpath" />
                                 </java>
                             </tasks>
