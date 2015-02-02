@@ -221,7 +221,7 @@
                             <id>org.wso2.carbon.as.runtimes.cxf</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.server:${carbon.deployment.version}
+                                <importFeatureDef>org.wso2.carbon.webapp.mgt.server:${carbon.deployment.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>
