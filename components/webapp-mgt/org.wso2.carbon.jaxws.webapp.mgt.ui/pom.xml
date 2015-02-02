@@ -14,20 +14,18 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.jaxws.webapp.mgt.ui</artifactId>
-    <version>4.3.0-SNAPSHOT</version>
+    <version>4.3.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - JAX-WS/JAX-RS Webapp Management UI</name>
     <description>JAX-WS/JAX-RS Webapp management UI bundle</description>
@@ -59,12 +57,12 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.jaxws.webapp.mgt.ui.*;version="${carbon.platform.package.export.version}"
+                            org.wso2.carbon.jaxws.webapp.mgt.ui.*;version="${carbon.deployment.exp.pkg.version}"
                         </Export-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>
                         <Import-Package>
                             !org.wso2.carbon.jaxws.webapp.mgt.ui.*,
-                            org.wso2.carbon.webapp.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.webapp.mgt.stub.*;version="${carbon.deployment.imp.pkg.version}",
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
                             org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             *;resolution:=optional

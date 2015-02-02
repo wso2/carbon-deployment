@@ -62,7 +62,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.application.deployer.webapp</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.application.deployer.webapp</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>
