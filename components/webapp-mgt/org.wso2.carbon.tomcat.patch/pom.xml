@@ -13,19 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.1-SNAPSHOT</version>
 	    <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
-    <version>4.3.0-SNAPSHOT</version>
+    <version>4.3.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Tomcat patch</name>
 	<description>The bundle to patch Tomcat source</description>
@@ -34,17 +32,35 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tomcat</artifactId>
-            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tomcat.ext</artifactId>
-            <version>${carbon.platform.version}</version>
         </dependency>
 	</dependencies>
 
 	<build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-patch-jar</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>patch</finalName>
+                            <archive>
+                                <index>true</index>
+                            </archive>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -53,25 +69,20 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+
                         <Export-Package>
-                            org.apache.coyote.*,
-                            org.apache.catalina.startup.*,
-			                org.apache.tomcat.util.http.mapper.*,
-                            org.apache.juli.logging.*
                         </Export-Package>
+
                         <Import-Package>
-                            !org.apache.coyote.*,
-                            !org.apache.catalina.startup.*,
-                            !org.apache.tomcat.util.http.mapper.*,
-                            !org.apache.juli.logging.*,
-                            org.wso2.carbon.tomcat.version.*,
                             *;resolution:=optional
                         </Import-Package>
+
                         <Private-Package>
-                            javax.annotation.*,
-                            javax.ejb.*,
-                            javax.persistence.*,
                         </Private-Package>
+
+                        <Include-Resource>target/patch.jar</Include-Resource>
+                        <Bundle-Classpath>patch.jar,.</Bundle-Classpath>
+                        <Fragment-Host>tomcat</Fragment-Host>
                         <DynamicImport-Package>*</DynamicImport-Package> 
                     </instructions>
                 </configuration>

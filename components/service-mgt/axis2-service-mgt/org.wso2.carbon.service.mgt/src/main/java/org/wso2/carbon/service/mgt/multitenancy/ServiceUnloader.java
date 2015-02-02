@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -32,7 +32,8 @@ import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.service.mgt.internal.DataHolder;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.deployment.GhostDeployer;
+import org.wso2.carbon.utils.deployment.DeploymentFileDataWrapper;
+import org.wso2.carbon.utils.deployment.GhostArtifactRepository;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
@@ -51,7 +52,6 @@ public class ServiceUnloader implements ArtifactUnloader {
 
     // Maximum allowed inactive time period for services. Default is set to 10 mins
     private static final long DEFAULT_MAX_INACTIVE_INTERVAL = 10;
-
 
     @Override
     public void unload() {
@@ -103,8 +103,7 @@ public class ServiceUnloader implements ArtifactUnloader {
                             .getParameter(CarbonConstants.SERVICE_LAST_USED_TIME);
                     if (lastUsageParam != null && isInactive((Long) lastUsageParam.getValue())) {
                         // service is inactive. now we have to unload it..
-                        GhostDeployer ghostDeployer = GhostDeployerUtils.getGhostDeployer(axisConfig);
-                        if (ghostDeployer != null && service.getFileName() != null) {
+                        if (service.getFileName() != null) {
                             AxisServiceGroup existingSG = (AxisServiceGroup) service.getParent();
                             // remove the existing actual service
                             log.info("Unloading actual Service Group : " + existingSG
@@ -130,6 +129,15 @@ public class ServiceUnloader implements ArtifactUnloader {
                             if (ghostServiceGroup != null) {
                                 // add the ghost service
                                 axisConfig.addServiceGroup(ghostServiceGroup);
+
+                                //change the DeploymentFileData state to ghost
+                                GhostArtifactRepository ghostArtifactRegistry =
+                                        GhostDeployerUtils.getGhostArtifactRepository(axisConfig);
+                                DeploymentFileDataWrapper ghostingDfdWrapper =
+                                ghostArtifactRegistry.getDeploymentFileData(service.getFileName().getPath());
+                                ghostArtifactRegistry.addDeploymentFileData(
+                                        ghostingDfdWrapper.getDeploymentFileData(), Boolean.TRUE);
+
                                 // remove the service group from transit map
                                 GhostDeployerUtils.removeServiceGroupFromTransitMap(ghostServiceGroup,
                                         axisConfig);

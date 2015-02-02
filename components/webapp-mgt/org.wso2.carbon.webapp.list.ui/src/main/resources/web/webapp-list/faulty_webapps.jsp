@@ -35,7 +35,7 @@
     }
 
     String webappType = request.getParameter("webappType");
-    if(webappType == null || "".equals(webappType)){
+    if (webappType == null || "".equals(webappType)) {
         webappType = "all";
     }
 
@@ -205,7 +205,7 @@
                     <tr>
                         <td>
                             <input type="checkbox" name="webappFileName"
-                                   value="<%= webappFile %>"
+                                   value="<%= webapp.getHostName()+":"+webappFile %>"
                                    onclick="resetVars()"/>
                         </td>
                         <td width="300px">

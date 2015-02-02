@@ -23,7 +23,7 @@
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+    String[] webappkeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
     String deleteAllWebapps = request.getParameter("deleteAllWebapps");
     String webappState = request.getParameter("webappState");
@@ -59,13 +59,12 @@
 
     try {
         if (deleteAllWebapps != null) {
-            if(webappState.equalsIgnoreCase("all")) {
+            if (webappState.equalsIgnoreCase("all")) {
                 client.deleteAllStartedWebapps();
                 client.deleteAllStoppedWebapps();
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.webapps"),
                                                     CarbonUIMessage.INFO, request);
-            }
-            else if (webappState.equalsIgnoreCase("started")) {
+            } else if (webappState.equalsIgnoreCase("started")) {
                 client.deleteAllStartedWebapps();
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.started.webapps"),
                                                     CarbonUIMessage.INFO, request);
@@ -77,17 +76,16 @@
                 throw new ServletException("Unknown webappstate " + webappState);
             }
         } else {
-            if(webappState.equalsIgnoreCase("all")) {
-                client.deleteAllWebapps(webappFileNames);
+            if (webappState.equalsIgnoreCase("all")) {
+                client.deleteAllWebapps(webappkeySet);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
                                                     CarbonUIMessage.INFO, request);
-            }
-            else if (webappState.equalsIgnoreCase("started")) {
-                client.deleteStartedWebapps(webappFileNames);
+            } else if (webappState.equalsIgnoreCase("started")) {
+                client.deleteStartedWebapps(webappkeySet);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
                                                     CarbonUIMessage.INFO, request);
             } else if (webappState.equalsIgnoreCase("stopped")) {
-                client.deleteStoppedWebapps(webappFileNames);
+                client.deleteStoppedWebapps(webappkeySet);
                 CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
                                                     CarbonUIMessage.INFO, request);
             } else {

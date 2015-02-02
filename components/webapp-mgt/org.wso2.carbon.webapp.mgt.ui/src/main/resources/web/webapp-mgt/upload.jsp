@@ -18,8 +18,45 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.context.CarbonContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.webapp.mgt.ui.WebappAdminClient" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.ResourceBundle" %>
+
 <!-- This page is included to display messages which are set to request scope or session scope -->
 <jsp:include page="../dialog/display_messages.jsp"/>
+
+<%
+   String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+
+    ConfigurationContext configContext =
+               (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+
+       String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+       String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+       int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+
+       WebappAdminClient client;
+       VhostHolder vhostHolder = null;
+
+        try {
+               client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
+               vhostHolder = client.getVhostHolder();
+
+           } catch (Exception e) {
+                     response.setStatus(500);
+                     CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
+                     session.setAttribute(CarbonUIMessage.ID, uiMsg);
+         }
+%>
 
 <fmt:bundle basename="org.wso2.carbon.webapp.mgt.ui.i18n.Resources">
     <carbon:breadcrumb label="add.webapp"
@@ -31,100 +68,98 @@
 
             var validFileNames = true;
             var emptyFields = true;
-
-            if (document.webappUploadForm.warFileName.value != null) {
-
-                var jarinput = document.webappUploadForm.warFileName.value;
-                if (jarinput != '') {
-                    emptyFields = false;
-                }
-                if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
-                    CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
-                    validFileNames = false;
-                } else if(jarinput.indexOf("#") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                    validFileNames = false;
-                }  else if(validateName(jarinput,true)) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                    validFileNames = false;
-                } else if(jarinput.trim().indexOf(" ") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.webapp"/>');
-                    validFileNames = false;
-                }
-            } else if (document.webappUploadForm.warFileName[0].value != null) {
-              
-
-                for (var i=0; i<document.webappUploadForm.warFileName.length; i++) {
+            if (document.webappUploadForm.warFileName[0] && document.webappUploadForm.warFileName[0].value) {
+                for (var i = 0; i < document.webappUploadForm.warFileName.length; i++) {
                     var jarinput = document.webappUploadForm.warFileName[i].value;
-                    if (jarinput != '') {
-                        emptyFields = false;
-                    }
+                    emptyFields = false;
+
                     if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
                         CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
-                        validFileNames = false; break;
-                    } else if(jarinput.indexOf("#") != -1) {
+                        validFileNames = false;
+                        break;
+                    } else if (jarinput.indexOf("#") != -1) {
                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                        validFileNames = false; break;
-                    } else if(validateName(jarinput,true)) {
+                        validFileNames = false;
+                        break;
+                    } else if (validateName(jarinput, true)) {
                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                        validFileNames = false; break;
-                    } else if(jarinput.trim().indexOf(" ") != -1) {
+                        validFileNames = false;
+                        break;
+                    } else if (jarinput.trim().indexOf(" ") != -1) {
                         CARBON.showWarningDialog('<fmt:message key="whitespace.contains.webapp"/>');
                         validFileNames = false;
                     }
                 }
+            } else if (document.webappUploadForm.warFileName.value) {
+                var jarinput = document.webappUploadForm.warFileName.value;
+
+                emptyFields = false;
+
+                if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
+                    CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
+                    validFileNames = false;
+                } else if (jarinput.indexOf("#") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
+                    validFileNames = false;
+                } else if (validateName(jarinput, true)) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
+                    validFileNames = false;
+                } else if (jarinput.trim().indexOf(" ") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.webapp"/>');
+                    validFileNames = false;
+                }
+            }
+            if (document.webappUploadForm.version[0] && document.webappUploadForm.version[0].value) {
+                for (var i = 0; i < document.webappUploadForm.version.length; i++) {
+                    var appVersion = document.webappUploadForm.version[i].value;
+                    if (appVersion.indexOf("#") != -1) {
+                        CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                        validFileNames = false;
+                        break;
+                    } else if (appVersion.indexOf("/") != -1 || appVersion.indexOf("\\") != -1) {
+                        CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                        validFileNames = false;
+                        break;
+                    } else if (validateName(appVersion, false)) {
+                        CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                        validFileNames = false;
+                        break;
+                    } else if (appVersion.trim().charAt(appVersion.trim().length - 1) == ".") {
+                        CARBON.showWarningDialog('<fmt:message key="dot.contains.version"/>');
+                        validFileNames = false
+                    } else if (appVersion.trim().indexOf(" ") != -1) {
+                        CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
+                        validFileNames = false;
+                    }
+                }
+            } else if (document.webappUploadForm.version.value) {
+
+                var appVersion = document.webappUploadForm.version.value;
+                if (appVersion.indexOf("#") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                    validFileNames = false;
+                } else if (appVersion.indexOf("/") != -1 || appVersion.indexOf("\\") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                    validFileNames = false;
+                } else if (validateName(appVersion, false)) {
+                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
+                    validFileNames = false;
+                } else if (appVersion.trim().charAt(appVersion.trim().length - 1) == ".") {
+                    CARBON.showWarningDialog('<fmt:message key="dot.contains.version"/>');
+                    validFileNames = false
+                } else if (appVersion.trim().indexOf(" ") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
+                    validFileNames = false;
+                }
             }
 
-             if(document.webappUploadForm.version.value != null){
-
-                 var appVersion =  document.webappUploadForm.version.value;
-                 if(appVersion.indexOf("#")!=-1) {
-                     CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
-                     validFileNames = false;
-                 } else if(appVersion.indexOf("/")!=-1 || appVersion.indexOf("\\")!=-1) {
-                     CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
-                     validFileNames = false;
-                 } else if(validateName(appVersion,false)) {
-                     CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
-                     validFileNames = false;
-                 } else if(appVersion.trim().charAt(appVersion.trim().length-1) == "."){
-                     CARBON.showWarningDialog('<fmt:message key="dot.contains.version"/>');
-                     validFileNames = false
-                 }  else if(appVersion.trim().indexOf(" ") != -1) {
-                     CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
-                     validFileNames = false;
-                 }
-             } else if (document.webappUploadForm.version[0].value != null){
-                 for (var i=0; i<document.webappUploadForm.version.length; i++) {
-                     var appVersion =  document.webappUploadForm.version[i].value;
-                     if(appVersion.indexOf("#")!=-1) {
-                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
-                         validFileNames = false; break;
-                     } else if(appVersion.indexOf("/")!=-1 || appVersion.indexOf("\\")!=-1) {
-                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
-                         validFileNames = false; break;
-                     } else if(validateName(appVersion,false)) {
-                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.version"/>');
-                         validFileNames = false; break;
-                     } else if(appVersion.trim().charAt(appVersion.trim().length-1) == "."){
-                         CARBON.showWarningDialog('<fmt:message key="dot.contains.version"/>');
-                         validFileNames = false
-                     } else if(appVersion.trim().indexOf(" ") != -1) {
-                         CARBON.showWarningDialog('<fmt:message key="whitespace.contains.version"/>');
-                         validFileNames = false;
-                     }
-                 }
-             }
-
-                if(emptyFields){
-                    CARBON.showWarningDialog('<fmt:message key="select.webapp.file"/>');
-                }else if(validFileNames) {
-                    document.webappUploadForm.submit();
-                } else {
-                    return;
-                }
-
-
+            if (emptyFields) {
+                CARBON.showWarningDialog('<fmt:message key="select.webapp.file"/>');
+            } else if (validFileNames) {
+                document.webappUploadForm.submit();
+            } else {
+                return;
+            }
         }
 
         function validateName(fileName, val){
@@ -153,6 +188,7 @@
             //add a row to the rows collection and get a reference to the newly added row
             var newRow = document.getElementById("webappTbl").insertRow(-1);
             newRow.id = 'file' + rows;
+            var tenantid = <%=tenantId%>;
 
             var oCell = newRow.insertCell(-1);
             oCell.innerHTML = '<label><fmt:message key="webapp.archive"/> (.war)<font color="red">*</font></label>';
@@ -167,8 +203,23 @@
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
-            oCell.innerHTML = "<input type='text' name='version' value=''><input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
+            oCell.innerHTML = "<input type='text' name='version' value=''>"
             oCell.className = "formRow";
+
+            if (tenantid == -1234) {
+              oCell = newRow.insertCell(-1);
+              oCell.innerHTML = ""+
+                                " <select name='hostName'><%for (String vhostName : vhostHolder.getVhosts()) {  %>"+
+                                "<% if (vhostHolder.getDefaultHostName().equals(vhostName)) {%><option selected='selected'><%=vhostName%></option>"+
+                                "<%       } else {               %><option><%=vhostName%></option>"+"<%      }                     %>" +
+                                "<%}%></select>"
+              oCell.className = "formRow";
+            }
+
+            oCell = newRow.insertCell(-1);
+            oCell.innerHTML = "<input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file"+ rows +"');\" />";
+            oCell.className = "formRow";
+
 
             alternateTableRows('webappTbl', 'tableEvenRow', 'tableOddRow');
         }
@@ -206,8 +257,25 @@
                         </td>
                         <td class="formRow">
                             <input type="text" name="version" value="">
+                        </td>
+                        <%if (tenantId == -1234) { %>
+                        <td class="formRow">
+                            <select name="hostName">
+                               <%    for (String vhostName : vhostHolder.getVhosts()) {  %>
+                               <% if (vhostHolder.getDefaultHostName().equals(vhostName)) {%>
+                               <option selected="selected"><%=vhostName%></option>
+                               <%       } else {               %>
+                               <option><%=vhostName%></option>
+                               <%      }                     %>
+                               <%      }                     %>
+                            </select>
+                        </td>
+                        <%   }  %>
+                        <td class="formRow">
                             <input type="button"  width='20px' class="button" onclick="addRow();" value=" + "/>
                         </td>
+
+
                     </tr>
                 </table>
 

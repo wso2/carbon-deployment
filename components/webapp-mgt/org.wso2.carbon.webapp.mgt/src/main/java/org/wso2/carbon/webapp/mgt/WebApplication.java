@@ -1,36 +1,34 @@
-/*                                                                             
- * Copyright 2004,2005 The Apache Software Foundation.                         
- *                                                                             
- * Licensed under the Apache License, Version 2.0 (the "License");             
- * you may not use this file except in compliance with the License.            
- * You may obtain a copy of the License at                                     
- *                                                                             
- *      http://www.apache.org/licenses/LICENSE-2.0                             
- *                                                                             
- * Unless required by applicable law or agreed to in writing, software         
- * distributed under the License is distributed on an "AS IS" BASIS,           
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    
- * See the License for the specific language governing permissions and         
- * limitations under the License.                                              
+/*
+ * Copyright (c) 2004-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.wso2.carbon.webapp.mgt;
 
 import org.apache.axis2.AxisFault;
-import org.apache.catalina.Container;
-import org.apache.catalina.Context;
-import org.apache.catalina.Engine;
-import org.apache.catalina.Host;
-import org.apache.catalina.LifecycleState;
-import org.apache.catalina.Manager;
-import org.apache.catalina.Session;
+import org.apache.catalina.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import javax.servlet.ServletRegistration;
 import java.io.File;
@@ -61,6 +59,7 @@ public class WebApplication {
     private Map<String, Object> properties = new HashMap<String, Object>();
     private TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer;
     private String version;
+    private String hostName;
 
     // We need this variable to use in the Statistics inner class which is static
     private boolean isThisGhost = false;
@@ -68,6 +67,7 @@ public class WebApplication {
     public WebApplication(TomcatGenericWebappsDeployer tomcatGenericWebappsDeployer, Context context, File webappFile) {
         this.tomcatGenericWebappsDeployer = tomcatGenericWebappsDeployer;
         this.context = context;
+        this.hostName = WebAppUtils.getMatchingHostName(WebAppUtils.getWebappDirPath(webappFile.getAbsolutePath()));
         setWebappFile(webappFile);
         setLastModifiedTime(webappFile.lastModified());
 
@@ -274,12 +274,12 @@ public class WebApplication {
      * @throws ArtifactMetadataException
      */
     protected String getBamEnableFromWebappMetaData() throws AxisFault, ArtifactMetadataException {
-        return tomcatGenericWebappsDeployer.recievePersistedWebappMetaData(getWebappFile().getName(), WebappsConstants.ENABLE_BAM_STATISTICS);
+        return tomcatGenericWebappsDeployer.recievePersistedWebappMetaData(getWebappFile(), WebappsConstants.ENABLE_BAM_STATISTICS);
     }
 
     protected void updateWebappMetaDataforBam(String value) {
         try {
-            tomcatGenericWebappsDeployer.setPersistedWebappMetaData(getWebappFile().getName(), WebappsConstants.ENABLE_BAM_STATISTICS, value);
+            tomcatGenericWebappsDeployer.setPersistedWebappMetaData(getWebappFile(), WebappsConstants.ENABLE_BAM_STATISTICS, value);
             reload();
         } catch (Exception e) {
             log.error("Unable to persist data - bam enable",e);
@@ -401,6 +401,15 @@ public class WebApplication {
             webappDir = new File(filePath.substring(0, filePath.lastIndexOf('.')));
         } else {
             webappDir = webappFile;
+        }
+        String cAppTmpDir = CarbonUtils.getTmpDir() + File.separator + "carbonapps" + File.separator;
+        if (webappDir.getAbsolutePath().contains(cAppTmpDir)) {
+            //if webapp is deployed from a capp, delete the exploded webapp from "webapps"
+            String webappDeploymentDir = webappDir.getAbsolutePath().substring(webappDir.getAbsolutePath().
+                    lastIndexOf(File.separator) + 1, webappDir.getAbsolutePath().length());
+            webappDir = new File(DataHolder.getServerConfigContext().getAxisConfiguration().
+                    getRepository().getPath() + File.separator +
+                    WebappsConstants.WEBAPP_DEPLOYMENT_FOLDER + File.separator + webappDeploymentDir);
         }
         // Delete the exploded dir of war based webapps upon undeploy. But omit deleting
         // directory based webapps.
@@ -642,6 +651,14 @@ public class WebApplication {
         this.version = version;
     }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
     /**
      * Represents statistics corresponding to this webapp
      */
@@ -657,39 +674,42 @@ public class WebApplication {
         }
 
         public int getMaxActiveSessions() {
-            return sessionManager.getMaxActive();
+            return isGhostWebApp() ? 0 : sessionManager.getMaxActive();
         }
 
         public int getMaxSessionInactivityInterval() {
-            return sessionManager.getMaxInactiveInterval();
+            return isGhostWebApp() ? 0 : sessionManager.getMaxInactiveInterval();
         }
 
         public int getMaxSessionLifetime() {
-            return sessionManager.getSessionMaxAliveTime();
+            return isGhostWebApp() ? 0 : sessionManager.getSessionMaxAliveTime();
         }
 
         public int getAvgSessionLifetime() {
-            return sessionManager.getSessionAverageAliveTime();
+            return isGhostWebApp() ? 0 : sessionManager.getSessionAverageAliveTime();
         }
 
         public int getRejectedSessions() {
-            return sessionManager.getRejectedSessions();
+            return isGhostWebApp() ? 0 : sessionManager.getRejectedSessions();
         }
 
         public int getActiveSessions() {
-            if (GhostDeployerUtils.isGhostOn()) {
-                //If this webapp is in ghost from then we return 0
-                if (isThisGhost || sessionManager == null) {
-                    return 0;
-                }
-                return sessionManager.getActiveSessions();
-            } else {
-                return sessionManager.getActiveSessions();
-            }
+            return isGhostWebApp() ? 0 : sessionManager.getActiveSessions();
         }
 
         public long getExpiredSessions() {
-            return sessionManager.getExpiredSessions();
+            return isGhostWebApp() ? 0 : sessionManager.getExpiredSessions();
+        }
+
+        private boolean isGhostWebApp() {
+            if (GhostDeployerUtils.isGhostOn()) {
+                //If this webapp is in ghost from then we return 0
+                if (isThisGhost || sessionManager == null) {
+                    return true;
+                }
+
+            }
+            return false;
         }
     }
 
@@ -747,4 +767,9 @@ public class WebApplication {
     public void setIsGhostWebapp(boolean isThisGhost) {
         this.isThisGhost = isThisGhost;
     }
+
+    private String getWebappKey(){
+        return hostName+":"+webappFile.getName();
+    }
 }
+

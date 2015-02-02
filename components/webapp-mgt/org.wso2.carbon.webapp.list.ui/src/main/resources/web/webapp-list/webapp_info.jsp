@@ -22,6 +22,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappStatistics" %>
@@ -31,6 +32,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebAppDataExtractor" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
 
 <fmt:bundle basename="org.wso2.carbon.webapp.list.ui.i18n.Resources">
 <carbon:breadcrumb
@@ -48,15 +50,28 @@
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
     String webappType = request.getParameter("webappType");
+    String defaultHostName = request.getParameter("defaultHostName");
 
     WebAppDataExtractor webAppDataExtractor =new WebAppDataExtractor();
     List wsdlURLS=null;
     List wadlURLS=null;
     String serviceListPath = null;
+    VhostHolder vhostHolder = null;
 
     String servletContext = "/";
 
-    String urlPrefix = "http://" + hostName + ":" + httpPort;
+    String proxyContextPath = CarbonUtils.getProxyContextPath(false);
+    String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
+    String resolveProxyPath = "";// resolved proxy  path for worker / manager
+
+    if ("".equals(workerProxyContextPath)) {
+        resolveProxyPath = proxyContextPath;
+    } else{
+        resolveProxyPath = workerProxyContextPath;
+    }
+
+    String urlPrefix = "http://" + hostName + ":" + httpPort + resolveProxyPath;
+    String defaultPrefix = "http://" + defaultHostName + ":" + httpPort + resolveProxyPath;
 
     if (webappState == null) {
         webappState = "started";
@@ -71,22 +86,26 @@
         WebappMetadata webapp;
         try {
             client = new WebappAdminClient(cookie, backendServerURL, configContext, request.getLocale());
+            vhostHolder = client.getVhostHolder();
+            if (vhostHolder.getDefaultHostName().equals(hostName)) {
+                urlPrefix = defaultPrefix;
+            }
             if (webappState.equalsIgnoreCase("all")) {
-                webapp = client.getStartedWebapp(webappFileName);
+                webapp = client.getStartedWebapp(webappFileName, hostName);
                 if(webapp == null) {
-                    webapp = client.getStoppedWebapp(webappFileName);
+                    webapp = client.getStoppedWebapp(webappFileName, hostName);
                 }
                 if(webappType.equalsIgnoreCase("JaxWebapp")) {
-                    webAppDataExtractor.getServletXML(client.getWarFileInputStream(webapp.getWebappFile(),webappType));
+                    webAppDataExtractor.getServletXML(client.getWarFileInputStream(webapp.getWebappFile(), hostName, webappType));
                     wsdlURLS= webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
                     wadlURLS= webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
                     serviceListPath = webAppDataExtractor.getServiceListPath();
                 }
             }
             else if (webappState.equalsIgnoreCase("started")) {
-                webapp = client.getStartedWebapp(webappFileName);
+                webapp = client.getStartedWebapp(webappFileName,hostName);
             } else {
-                webapp = client.getStoppedWebapp(webappFileName);
+                webapp = client.getStoppedWebapp(webappFileName,hostName);
             }
             if (webapp == null) {
                 String msg = "Webapp is null. webappFileName: " + webappFileName + ", webappState=" + webappState;
@@ -127,7 +146,7 @@
     function expireAllSessions() {
         CARBON.showConfirmationDialog("<fmt:message key="session.expiry.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'expire_sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8")%>&redirectPage=webapp_info.jsp'
+                                          location.href = 'expire_sessions.jsp?webappKey=<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8")%>&redirectPage=webapp_info.jsp'
                                                   +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
                                       }
                 );
@@ -136,7 +155,7 @@
     function reloadWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="reload.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'reload_webapps.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
+                                          location.href = 'reload_webapps.jsp?webappKey=<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
                                                   +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
                                       }
                 );
@@ -145,7 +164,7 @@
     function stopWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="stop.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'stop_webapps.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
+                                          location.href = 'stop_webapps.jsp?webappKey=<%= hostName+':'+URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
                                                   +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
                                       }
                 );
@@ -154,7 +173,7 @@
     function startWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="start.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'start_webapps.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
+                                          location.href = 'start_webapps.jsp?webappKey=<%=hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
                                                   +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>';
                                       }
                 );
@@ -329,7 +348,7 @@
                                                     <nobr>
                                                         <form name="sessionExpiryForm" onsubmit="expireSessions();return false;" >
                                                             <input type="hidden" name="webappFileName"
-                                                                   value="<%= webappFileName%>"/>
+                                                                   value="<%=  hostName+':'+ webappFileName%>"/>
                                                             <input type="hidden" name="redirectPage"
                                                                    value="webapp_info.jsp"/>
                                                             <input type="hidden" name="hostName"
@@ -454,7 +473,7 @@
 
                                                         try{
 
-                                                            checked = adminClient.getBamConfig(webAppName);
+                                                            checked = adminClient.getBamConfig(webAppName,hostName);
 
                                                         }catch (Exception e) {
                                                             CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -671,7 +690,7 @@
                                 System.out.println(wadlURLS.get(i).toString().substring(0,wadlURLS.get(i).toString().indexOf("services")));
                                 System.out.println(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + " : "+ request.getContextPath());*/
                             %>
-                                <a href="<%=urlPrefix%>/services?wadltryit&resourceurl=<%=URLEncoder.encode(wadlURLS.get(i).toString().replace("?_wadl", ""), "UTF-8")%>" class="icon-link" style="background-image:url(images/tryit.gif);" target="_blank">  Try this </a>
+                                <a href="<%=defaultPrefix%>/services?wadltryit&resourceurl=<%=URLEncoder.encode(wadlURLS.get(i).toString().replace("?_wadl", ""), "UTF-8")%>" class="icon-link" style="background-image:url(images/tryit.gif);" target="_blank">  Try this </a>
                             </td>
                         </tr>
                         <tr>
@@ -718,7 +737,7 @@
                         <td><fmt:message key="active.sessions"/></td>
                         <td>
                             <% if (stats.getActiveSessions() > 0) { %>
-                            <a href="sessions.jsp?webappFileName=<%= URLEncoder.encode(webapp.getWebappFile(), "UTF-8") %>">
+                            <a href="sessions.jsp?webappFileName=<%= URLEncoder.encode(webapp.getWebappFile(), "UTF-8") %>&hostName=<%=webapp.getHostName()%>">
                                 <%= stats.getActiveSessions()%>
                             </a>
                             <% } else { %>
@@ -777,6 +796,7 @@
 
         jQuery("#bam_statistcs_disable_url").live("click", function (){
             var dataVal = "webappFileName="+'<%= URLEncoder.encode(webappFileName, "UTF-8") %>';
+            dataVal = dataVal+"&hostName=<%=hostName%>";
             dataVal = dataVal + '&value=1'
             jQuery.ajax({
                 type: "POST",
@@ -792,6 +812,7 @@
 
         jQuery("#bam_statistcs_enable_url").live("click", function (){
             var dataVal = "webappFileName="+'<%= URLEncoder.encode(webappFileName, "UTF-8") %>';
+            dataVal = dataVal+"&hostName=<%=hostName%>";
             dataVal = dataVal + '&value=0'
 
             jQuery.ajax({

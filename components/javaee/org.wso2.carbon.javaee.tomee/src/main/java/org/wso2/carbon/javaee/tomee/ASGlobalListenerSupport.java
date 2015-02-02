@@ -58,8 +58,8 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
 
                 if (!isJavaEEApp) {
                     if (log.isDebugEnabled()) {
-                        log.debug("JavaEE CRE was not found for this webapp. " +
-                                "Not continuing the OpenEJB container initialization.");
+                        log.debug("JavaEE CRE was not found for this webapp - " + ((StandardContext) source).getName() +
+                                ". Not continuing the OpenEJB container initialization.");
                     }
                     return;
                 }

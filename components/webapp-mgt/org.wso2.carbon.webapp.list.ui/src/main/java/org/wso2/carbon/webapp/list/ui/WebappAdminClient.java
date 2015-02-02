@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.webapp.mgt.stub.WebappAdminStub;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.SessionsWrapper;
+import org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper;
@@ -63,29 +64,29 @@ public class WebappAdminClient {
     }
 
     public WebappsWrapper getPagedWebappsSummary(String webappSearchString,
-                                                 String webappState,String webappType,
+                                                 String webappState, String webappType,
                                                  int pageNumber) throws AxisFault {
         try {
             return stub.getPagedWebappsSummary(webappSearchString, webappState, webappType,
-                                               pageNumber);
+                    pageNumber);
         } catch (RemoteException e) {
             handleException("cannot.get.webapp.data", e);
         }
         return null;
     }
 
-    public WebappMetadata getStartedWebapp(String webappFileName) throws AxisFault {
+    public WebappMetadata getStartedWebapp(String webappFileName, String hostName) throws AxisFault {
         try {
-            return stub.getStartedWebapp(webappFileName);
+            return stub.getStartedWebapp(webappFileName, hostName);
         } catch (RemoteException e) {
             handleException("cannot.get.started.webapp.data", e);
         }
         return null;
     }
 
-    public WebappMetadata getStoppedWebapp(String webappFileName) throws AxisFault {
+    public WebappMetadata getStoppedWebapp(String webappFileName, String hostName) throws AxisFault {
         try {
-            return stub.getStoppedWebapp(webappFileName);
+            return stub.getStoppedWebapp(webappFileName, hostName);
         } catch (RemoteException e) {
             handleException("cannot.get.stopped.webapp.data", e);
         }
@@ -108,9 +109,9 @@ public class WebappAdminClient {
         }
     }
 
-    public void deleteStartedWebapps(String[] webappFileNames) throws AxisFault {
+    public void deleteStartedWebapps(String[] webappkey) throws AxisFault {
         try {
-            stub.deleteStartedWebapps(webappFileNames);
+            stub.deleteStartedWebapps(webappkey);
         } catch (RemoteException e) {
             handleException("cannot.delete.webapps", e);
         }
@@ -124,9 +125,9 @@ public class WebappAdminClient {
         }
     }
 
-    public void deleteAllWebapps(String[] webappFileNames) throws AxisFault {
+    public void deleteAllWebapps(String[] webappkey) throws AxisFault {
         try {
-            stub.deleteAllWebApps(webappFileNames);
+            stub.deleteAllWebApps(webappkey);
         } catch (RemoteException e) {
             handleException("cannot.delete.webapps", e);
         }
@@ -143,9 +144,9 @@ public class WebappAdminClient {
         return null;
     }
 
-    public void deleteFaultyWebapps(String[] webappFileNames) throws AxisFault {
+    public void deleteFaultyWebapps(String[] webappkey) throws AxisFault {
         try {
-            stub.deleteFaultyWebapps(webappFileNames);
+            stub.deleteFaultyWebapps(webappkey);
         } catch (RemoteException e) {
             handleException("cannot.delete.all.faulty.webapps", e);
         }
@@ -208,18 +209,18 @@ public class WebappAdminClient {
     }
 
     public SessionsWrapper getActiveSessionsInWebapp(String webappFileName,
-                                                     int pageNumber) throws AxisFault {
+                                                     int pageNumber, String hostName) throws AxisFault {
         try {
-            return stub.getActiveSessions(webappFileName, pageNumber);
+            return stub.getActiveSessions(webappFileName, pageNumber, hostName);
         } catch (RemoteException e) {
             handleException("cannot.get.active.sessions", e);
         }
         return null;
     }
 
-    public void expireSessionsInWebapps(String[] webappFileNames) throws AxisFault {
+    public void expireSessionsInWebapps(String[] webappKeySet) throws AxisFault {
         try {
-            stub.expireSessionsInWebapps(webappFileNames);
+            stub.expireSessionsInWebapps(webappKeySet);
         } catch (RemoteException e) {
             handleException("cannot.expire.all.sessions.in.webapps", e);
         }
@@ -230,7 +231,7 @@ public class WebappAdminClient {
         try {
             // We have to send session life time in milliseconds to the BE
             long maxSessionLifetimeMillis = (long) (maxSessionLifetimeMinutes *
-                                                    MILLISECONDS_PER_MINUTE);
+                    MILLISECONDS_PER_MINUTE);
             stub.expireSessionsInWebapp(webappFileName, maxSessionLifetimeMillis);
         } catch (RemoteException e) {
             handleException("cannot.expire.all.sessions.in.webapps", e);
@@ -238,9 +239,9 @@ public class WebappAdminClient {
     }
 
     public void expireSessionsInWebapp(String webappFileName,
-                                       String[] sessionIDs) throws AxisFault {
+                                       String[] sessionIDs, String hostName) throws AxisFault {
         try {
-            stub.expireSessions(webappFileName, sessionIDs);
+            stub.expireSessions(webappFileName, sessionIDs, hostName);
         } catch (RemoteException e) {
             handleException("cannot.expire.all.sessions.in.webapps", e);
         }
@@ -262,7 +263,7 @@ public class WebappAdminClient {
         }
     }
 
-    public void uploadWebapp(WebappUploadData [] webappUploadDataList) throws AxisFault {
+    public void uploadWebapp(WebappUploadData[] webappUploadDataList) throws AxisFault {
         try {
             stub.uploadWebapp(webappUploadDataList);
         } catch (RemoteException e) {
@@ -270,11 +271,11 @@ public class WebappAdminClient {
         }
     }
 
-    public String findWebappState(String webappFileName) throws AxisFault{
-        try{
-            if(getStartedWebapp(webappFileName) != null) {
+    public String findWebappState(String webappFileName, String hostName) throws AxisFault {
+        try {
+            if (getStartedWebapp(webappFileName, hostName) != null) {
                 return "started";
-            } else if (getStoppedWebapp(webappFileName) != null) {
+            } else if (getStoppedWebapp(webappFileName, hostName) != null) {
                 return "stopped";
             }
         } catch (RemoteException e) {
@@ -289,11 +290,11 @@ public class WebappAdminClient {
         throw new AxisFault(msg, e);
     }
 
-    public void downloadWarFileHandler(String fileName, String webappType,
+    public void downloadWarFileHandler(String fileName, String hostName, String webappType,
                                        HttpServletResponse response) throws AxisFault {
         try {
             ServletOutputStream out = response.getOutputStream();
-            DataHandler handler = stub.downloadWarFileHandler(fileName, webappType);
+            DataHandler handler = stub.downloadWarFileHandler(fileName, hostName, webappType);
             if (handler != null) {
                 if ("jaggeryWebapp".equals(webappType)) {
                     if (!fileName.endsWith(".zip")) {
@@ -321,15 +322,14 @@ public class WebappAdminClient {
         }
     }
 
-
-    public InputStream getWarFileInputStream(String fileName, String webappType) throws AxisFault{
-        InputStream inputStream=null;
+    public InputStream getWarFileInputStream(String fileName, String hostName, String webappType) throws AxisFault {
+        InputStream inputStream = null;
         try {
 
-            DataHandler handler = stub.downloadWarFileHandler(fileName, webappType);
+            DataHandler handler = stub.downloadWarFileHandler(fileName, hostName, webappType);
             if (handler != null) {
 
-                inputStream= handler.getDataSource().getInputStream();
+                inputStream = handler.getDataSource().getInputStream();
 
             } else {
 
@@ -342,39 +342,42 @@ public class WebappAdminClient {
         return inputStream;
     }
 
-
-    public void setBamConfig(String fileName, String value){
-        if(value.contains("1")){
+    public void setBamConfig(String fileName, String value, String hostName) {
+        if (value.contains("1")) {
             value = "true";
-        }  else {
+        } else {
             value = "false";
         }
 
         try {
-            stub.setBamConfiguration(fileName,value);
+            stub.setBamConfiguration(fileName, value, hostName);
         } catch (Exception e) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Cannot set bam configuration to the back end.");
             }
         }
     }
 
-    public Boolean getBamConfig(String fileName){
+    public Boolean getBamConfig(String fileName, String hostName) {
         try {
-            return Boolean.parseBoolean(stub.getBamConfiguration(fileName));
+            return Boolean.parseBoolean(stub.getBamConfiguration(fileName, hostName));
         } catch (Exception e) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Cannot recieve bam configuration from the back end.");
             }
             return null;
         }
     }
 
-    public void changeDefaultAppVersion(String appFileName, String appContext) throws AxisFault {
+    public void changeDefaultAppVersion(String appFileName, String appContext, String hostName) throws AxisFault {
         try {
-            stub.changeDefaultAppVersion(appFileName, appContext);
+            stub.changeDefaultAppVersion(appContext, appFileName, hostName);
         } catch (Exception e) {
             handleException("cannot.make.default.version", e);
         }
+    }
+
+    public VhostHolder getVhostHolder() throws RemoteException {
+        return stub.getVhostHolder();
     }
 }

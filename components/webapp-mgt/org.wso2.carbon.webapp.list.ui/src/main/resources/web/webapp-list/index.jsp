@@ -22,6 +22,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
@@ -30,6 +31,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.ResourceBundle" %>
+<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
 <%@ page import="java.util.TreeMap" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VersionedWebappMetadata" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
@@ -46,6 +48,7 @@
     String tenantContext = "/t/" + tenantDomain + "/webapps";
 
     WebappAdminClient client;
+    VhostHolder vhostHolder = null;
 
     int numberOfPages;
     String pageNumber = request.getParameter("pageNumber");
@@ -84,6 +87,7 @@
                                                        Integer.parseInt(pageNumber));
         numberOfPages = webappsWrapper.getNumberOfPages();
         webapps = webappsWrapper.getWebapps();
+        vhostHolder = client.getVhostHolder();
     } catch (Exception e) {
         response.setStatus(500);
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -200,13 +204,13 @@
 
     function isWebappSelected() {
         var selected = false;
-        if (document.webappsForm.webappFileName[0] != null) { // there is more than 1
-            for (var j = 0; j < document.webappsForm.webappFileName.length; j++) {
-                selected = document.webappsForm.webappFileName[j].checked;
+        if (document.webappsForm.webappKey[0] != null) { // there is more than 1
+            for (var j = 0; j < document.webappsForm.webappKey.length; j++) {
+                selected = document.webappsForm.webappKey[j].checked;
                 if (selected) break;
             }
-        } else if (document.webappsForm.webappFileName != null) { // only 1
-            selected = document.webappsForm.webappFileName.checked;
+        } else if (document.webappsForm.webappKey != null) { // only 1
+            selected = document.webappsForm.webappKey.checked;
         }
         return selected;
     }
@@ -235,19 +239,19 @@
 
     function selectAllInThisPage(isSelected) {
         allWebappsSelected = false;
-        if (document.webappsForm.webappFileName != null &&
-            document.webappsForm.webappFileName[0] != null) { // there is more than 1
+        if (document.webappsForm.webappKey != null &&
+            document.webappsForm.webappKey[0] != null) { // there is more than 1
             if (isSelected) {
-                for (var j = 0; j < document.webappsForm.webappFileName.length; j++) {
-                    document.webappsForm.webappFileName[j].checked = true;
+                for (var j = 0; j < document.webappsForm.webappKey.length; j++) {
+                    document.webappsForm.webappKey[j].checked = true;
                 }
             } else {
-                for (j = 0; j < document.webappsForm.webappFileName.length; j++) {
-                    document.webappsForm.webappFileName[j].checked = false;
+                for (j = 0; j < document.webappsForm.webappKey.length; j++) {
+                    document.webappsForm.webappKey[j].checked = false;
                 }
             }
-        } else if (document.webappsForm.webappFileName != null) { // only 1
-            document.webappsForm.webappFileName.checked = isSelected;
+        } else if (document.webappsForm.webappKey != null) { // only 1
+            document.webappsForm.webappKey.checked = isSelected;
         }
         return false;
     }
@@ -262,14 +266,14 @@
         allWebappsSelected = false;
 
         var isSelected = false;
-        if (document.webappsForm.webappFileName[0] != null) { // there is more than 1 sg
-            for (var j = 0; j < document.webappsForm.webappFileName.length; j++) {
-                if (document.webappsForm.webappFileName[j].checked) {
+        if (document.webappsForm.webappKey[0] != null) { // there is more than 1 sg
+            for (var j = 0; j < document.webappsForm.webappKey.length; j++) {
+                if (document.webappsForm.webappKey[j].checked) {
                     isSelected = true;
                 }
             }
-        } else if (document.webappsForm.webappFileName != null) { // only 1 sg
-            if (document.webappsForm.webappFileName.checked) {
+        } else if (document.webappsForm.webappKey != null) { // only 1 sg
+            if (document.webappsForm.webappKey.checked) {
                 isSelected = true;
             }
         }
@@ -456,6 +460,9 @@
         <nobr><fmt:message key="webapp.display.name"/></nobr>
     </th>
     <th>
+            <nobr><fmt:message key="webapp.hostname"/></nobr>
+    </th>
+    <th>
         <nobr><fmt:message key="webapp.state"/></nobr>
     </th>
     <th>
@@ -488,13 +495,15 @@
 <%
     int position = 0;
     String urlPrefix = null;
+    String urlSuffix = null;
+    String url = null;
 
     if(webappsWrapper.getHttpPort() != 0) {
-        urlPrefix = "http://" + webappsWrapper.getHostName() + ":" +
-                webappsWrapper.getHttpPort();
+        urlPrefix = "http://";
+        urlSuffix = ":" + webappsWrapper.getHttpPort();
     } else {
-        urlPrefix = "https://" + webappsWrapper.getHostName() + ":" +
-                webappsWrapper.getHttpsPort();
+        urlPrefix = "https://";
+        urlSuffix = ":" + webappsWrapper.getHttpsPort();
     }
 
     for (VersionedWebappMetadata webapp : webapps) {
@@ -512,18 +521,42 @@
                 version = "default";
             }*/
 
-            String webappURL = urlPrefix + vWebapp.getContext();
-            if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
-                webappURL += vWebapp.getServletContext() + vWebapp.getServiceListPath();
-            } else {
-                webappURL = webappURL + "/";
+            String proxyContextPath = CarbonUtils.getProxyContextPath(false);
+            String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
+            String resolveProxyPath = "";// resolved proxy  path for worker / manager
+
+            if ("".equals(workerProxyContextPath)) {
+                resolveProxyPath = proxyContextPath;
+            } else{
+                resolveProxyPath = workerProxyContextPath;
             }
+
+            String hostName = null;
+            if(vWebapp.getHostName().length() !=0){
+               if (vhostHolder.getDefaultHostName().equals(vWebapp.getHostName())) {
+                   url =  urlPrefix + webappsWrapper.getHostName() + urlSuffix;
+               } else {
+                   url =  urlPrefix + vWebapp.getHostName() + urlSuffix;
+               }
+               hostName = vWebapp.getHostName();
+
+             }else{
+                url = urlPrefix + webappsWrapper.getHostName() + urlSuffix;
+                hostName = webappsWrapper.getHostName();
+             }
+
+            String webappURL = url + resolveProxyPath + vWebapp.getContext();
+             if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
+                webappURL += vWebapp.getServletContext() + vWebapp.getServiceListPath();
+             } else {
+                webappURL = webappURL + "/";
+             }
 %>
 
 <tr bgcolor="<%= bgColor%>">
     <td width="10px" style="text-align:center; !important">
-        <input type="checkbox" name="webappFileName"
-               value="<%= vWebapp.getWebappFile() %>"
+        <input type="checkbox" name="webappKey"
+               value="<%=vWebapp.getHostName()+':'+vWebapp.getWebappFile()%>"
                onclick="resetVars()" class="chkBox"/>
     </td>
     <%
@@ -539,7 +572,7 @@
     <td <%= rowspanHtmlAtt %> >
            <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
               URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
-              webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
+              hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
               <%=vWebapp.getContext()%>
            </a>
     </td>
@@ -552,12 +585,14 @@
         <% } else { %>
         <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
                     URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
-                     webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
+                     hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
             <%= version %>
         </a>
         <% } %>
     </td>
     <td><%= (vWebapp.getDisplayName() != null ? vWebapp.getDisplayName() : "") %>
+    </td>
+    <td><%=hostName%>
     </td>
     <td><%= (vWebapp.getState() != null ? vWebapp.getState() : "Started") %>
     </td>
@@ -590,7 +625,7 @@
                 if (vWebapp.getStatistics().getActiveSessions() != 0) {
         %>
         <a href="sessions.jsp?webappFileName=<%=
-              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8") %>">
+              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8") %>&hostName=<%=vWebapp.getHostName()%>">
             <%= vWebapp.getStatistics().getActiveSessions() %>
         </a>
         <%
@@ -639,7 +674,7 @@
     <td>
         &nbsp;
         <% if (!"/default".equals(version) && !(webapp.getVersionGroups().length == 1)) { %>
-            <a href="set_default_version.jsp?appGroupName=<%=webapp.getAppVersionRoot()%>&appFileName=<%=URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>"
+            <a href="set_default_version.jsp?appGroupName=<%=webapp.getAppVersionRoot()%>&appFileName=<%=URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&hostName=<%=vWebapp.getHostName()%>"
                     style='background:url(images/default-icon.png) no-repeat;padding-left:20px;display:block;white-space: nowrap;height:16px;'>
                 <fmt:message key="make.default"/>
             </a>
@@ -647,7 +682,7 @@
     </td>
     <%}%>
     <td>  &nbsp;
-        <a href="download-ajaxprocessor.jsp?name=<%=vWebapp.getWebappFile()%>&type=<%=vWebapp.getWebappType()%>"
+        <a href="download-ajaxprocessor.jsp?name=<%=vWebapp.getWebappFile()%>&hostName=<%=vWebapp.getHostName()%>&type=<%=vWebapp.getWebappType()%>"
            target="_self"
            style='background:url(images/download.gif) no-repeat;padding-left:20px;display:block;white-space: nowrap;height:16px;'>
             <fmt:message key="download"/>

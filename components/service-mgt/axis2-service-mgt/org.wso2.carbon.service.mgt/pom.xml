@@ -15,24 +15,21 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>axis2-service-mgt</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.service.mgt</artifactId>
     <packaging>bundle</packaging>
-    <version>4.3.0-SNAPSHOT</version>
+    <version>4.3.1-SNAPSHOT</version>
     <name>WSO2 Carbon - Service Management BE</name>
-    <description>org.wso2.carbon.service.mgt provides the service mgt fuctionalities</description>
+    <description>org.wso2.carbon.service.mgt provides the service mgt functionalities</description>
     <url>http://wso2.org</url>
 
     <dependencies>
@@ -49,7 +46,7 @@
             <artifactId>org.wso2.carbon.user.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.security.mgt</artifactId>
             <exclusions>
                 <exclusion>
@@ -59,6 +56,10 @@
                 <exclusion>
                     <groupId>org.apache.rampart.wso2</groupId>
                     <artifactId>rampart-trust</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.ws.security.wso2</groupId>
+                    <artifactId>wss4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -125,9 +126,9 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.service.mgt;version=${project.version},
-                            org.wso2.carbon.service.mgt.util;version=${project.version},
-                            org.wso2.carbon.service.mgt.multitenancy;version=${project.version}
+                            org.wso2.carbon.service.mgt;version=${carbon.deployment.exp.pkg.version},
+                            org.wso2.carbon.service.mgt.util;version=${carbon.deployment.exp.pkg.version},
+                            org.wso2.carbon.service.mgt.multitenancy;version=${carbon.deployment.exp.pkg.version}
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Require-CarbonUIComponents>${project.artifactId}.ui-${project.parent.version}

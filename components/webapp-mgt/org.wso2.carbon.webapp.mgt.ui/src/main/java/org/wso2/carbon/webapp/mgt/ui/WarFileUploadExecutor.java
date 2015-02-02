@@ -22,6 +22,7 @@ import org.wso2.carbon.ui.transports.fileupload.AbstractFileUploadExecutor;
 import org.wso2.carbon.utils.FileItemData;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,7 +63,8 @@ public class WarFileUploadExecutor extends AbstractFileUploadExecutor {
 
         Map<String, ArrayList<java.lang.String>> formFieldsMap = getFormFieldsMap();
         List<String> versions = formFieldsMap.get("version");
-         int i = 0;
+        List<String> hostNames = formFieldsMap.get("hostName");
+        int i = 0;
         try {
             for (FileItemData filedata : tempDataList) {
                 WebappUploadData tempData = new WebappUploadData();
@@ -70,6 +72,13 @@ public class WarFileUploadExecutor extends AbstractFileUploadExecutor {
                 tempData.setFileName(getFileName(filedata.getFileItem().getName()));
                 tempData.setDataHandler(filedata.getDataHandler());
                 tempData.setVersion(versions.get(i));
+                if (hostNames == null) {
+                    //tenants can not select hostName when uploading a webapp
+                    //Hence a null check is required
+                    tempData.setHostName(WebAppUtils.getServerConfigHostName());
+                } else {
+                    tempData.setHostName(hostNames.get(i));
+                }
                 webappUploadDataList.add(tempData);
                 i++;
             }
