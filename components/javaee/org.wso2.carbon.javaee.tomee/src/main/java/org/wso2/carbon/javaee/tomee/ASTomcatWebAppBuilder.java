@@ -25,6 +25,7 @@ import org.apache.catalina.startup.ContextConfig;
 import org.apache.openejb.OpenEJBRuntimeException;
 import org.apache.openejb.loader.SystemInstance;
 import org.apache.openejb.util.LogCategory;
+import org.apache.tomee.catalina.TomEERuntimeException;
 import org.apache.tomee.catalina.TomcatWebAppBuilder;
 import org.apache.tomee.common.UserTransactionFactory;
 import org.apache.tomee.loader.TomcatHelper;
@@ -32,6 +33,7 @@ import org.wso2.carbon.tomcat.ext.scan.CarbonTomcatJarScanner;
 
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
@@ -109,25 +111,29 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
         //TomEE jar scanner with Carbon bits
         standardContext.setJarScanner(new CarbonTomcatJarScanner());
 
-//        doInit(standardContext);
+        //doInit(standardContext);
 
-      //  setContextConfig(standardContext);
+        //setContextConfig(standardContext);
     }
 
+    /**
+     * over-ridden the super method to stop adding the tomee jar scanner,
+     */
     @Override
     public void configureStart(final StandardContext standardContext) {
         if (TomcatHelper.isTomcat7()) {
             //don't set this
-//            TomcatHelper.configureJarScanner(standardContext);
+            //TomcatHelper.configureJarScanner(standardContext);
 
             final ContextTransaction contextTransaction = new ContextTransaction();
             contextTransaction.setProperty(org.apache.naming.factory.Constants.FACTORY, UserTransactionFactory.class.getName());
             standardContext.getNamingResources().setTransaction(contextTransaction);
             try {
                 startInternal.invoke(this, standardContext);
-            } catch (Exception e) {
-                logger.debug(e.getMessage(), e);
-                //ignore
+            } catch (InvocationTargetException e) {
+                throw new TomEERuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new TomEERuntimeException(e);
             }
         }
 
@@ -135,9 +141,10 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
         try {
             addMyFacesDefaultParameters.invoke(this,
                     standardContext.getLoader().getClassLoader(), standardContext.getServletContext());
-        } catch (Exception e) {
-            logger.debug(e.getMessage(), e);
-            //ignore
+        } catch (InvocationTargetException e) {
+            throw new TomEERuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new TomEERuntimeException(e);
         }
 
         // breaks cdi
