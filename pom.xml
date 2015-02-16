@@ -1193,6 +1193,13 @@
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
             </dependency>
+
+            <!--todo remove this dependency-->
+            <dependency>
+                <groupId>org.wso2.carbon.apimgt</groupId>
+                <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
+                <version>${carbon.apimgt.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1351,6 +1358,10 @@
         <!-- Carbon Identity version-->
         <carbon.identity.version>4.3.0</carbon.identity.version>
         <carbon.identity.imp.pkg.version>[4.3.0, 4.4.0)</carbon.identity.imp.pkg.version>
+
+        <!-- Carbon API mgt Version-->
+        <!--todo remove this dependency-->
+        <carbon.apimgt.version>1.3.2</carbon.apimgt.version>
 
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.3.1-SNAPSHOT</carbon.deployment.version>
