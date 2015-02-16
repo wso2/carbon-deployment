@@ -22,6 +22,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.ArtifactUnloader;
+import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
@@ -39,6 +40,7 @@ import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
 import org.wso2.carbon.webapp.mgt.WebContextParameter;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
+import org.wso2.carbon.webapp.mgt.ext.ASAPIStartupObserver;
 import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
@@ -90,6 +92,9 @@ public class WebappManagementServiceComponent {
             } else {
                 TomcatValveContainer.addValves(valves);
             }
+
+            //registering ASAPIStartupObserver for publishing APIs at server startup
+            ctx.getBundleContext().registerService(ServerStartupObserver.class.getName(), new ASAPIStartupObserver(), null);
 
         } catch (Throwable e) {
             log.error("Error occurred while activating WebappManagementServiceComponent", e);

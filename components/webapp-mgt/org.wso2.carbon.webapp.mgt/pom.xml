@@ -34,6 +34,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.eclipse.equinox</groupId>
+            <artifactId>javax.servlet</artifactId>
+            <version>${version.javax.servlet}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tomcat.wso2</groupId>
             <artifactId>tomcat</artifactId>
         </dependency>
@@ -48,6 +53,20 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
+        </dependency>
+        <!-- APIM dependencies -->
+        <!-- todo remove this-->
+        <dependency>
+            <groupId>org.wso2.carbon.apimgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scannotation</groupId>
+            <artifactId>scannotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
         </dependency>
     </dependencies>
 
@@ -86,7 +105,8 @@
                             org.wso2.carbon.webapp.mgt.utils,
                             org.wso2.carbon.webapp.mgt.multitenancy,
                             org.wso2.carbon.webapp.mgt.sync,
-                            org.wso2.carbon.webapp.mgt.version
+                            org.wso2.carbon.webapp.mgt.version,
+                            org.wso2.carbon.webapp.mgt.ext,
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Axis2Deployer>WebappMetadataDeployer</Axis2Deployer>
