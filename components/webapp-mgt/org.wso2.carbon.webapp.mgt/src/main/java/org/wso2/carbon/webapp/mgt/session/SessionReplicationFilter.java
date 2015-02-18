@@ -23,6 +23,7 @@ import com.hazelcast.core.EntryListener;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.web.InvalidateEntryProcessor;
+import org.apache.log4j.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,51 +52,107 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Provides clustered sessions by backing session data with an {@link IMap}.
+ * <p/>
+ * Using this filter requires also registering a {@link SessionListener} to provide session timeout notifications.
+ * Failure to register the listener when using this filter will result in session state getting out of sync between
+ * the servlet container and Hazelcast.
+ * <p/>
+ * This filter supports the following {@code &lt;init-param&gt;} values:
+ * <ul>
+ * <li>{@code use-client}: When enabled, a {@link com.hazelcast.client.HazelcastClient HazelcastClient} is
+ * used to connect to the cluster, rather than joining as a full node. (Default: {@code false})</li>
+ * <li>{@code config-location}: Specifies the location of an XML configuration file that can be used to
+ * initialize the {@link HazelcastInstance} (Default: None; the {@link HazelcastInstance} is initialized
+ * using its own defaults)</li>
+ * <li>{@code client-config-location}: Specifies the location of an XML configuration file that can be
+ * used to initialize the {@link HazelcastInstance}. <i>This setting is only checked when {@code use-client}
+ * is set to {@code true}.</i> (Default: Falls back on {@code config-location})</li>
+ * <li>{@code instance-name}: Names the {@link HazelcastInstance}. This can be used to reference an already-
+ * initialized {@link HazelcastInstance} in the same JVM (Default: The configured instance name, or a
+ * generated name if the configuration does not specify a value)</li>
+ * <li>{@code shutdown-on-destroy}: When enabled, shuts down the {@link HazelcastInstance} when the filter is
+ * destroyed (Default: {@code true})</li>
+ * <li>{@code map-name}: Names the {@link IMap} the filter should use to persist session details (Default:
+ * {@code "_web_" + ServletContext.getServletContextName()}; e.g. "_web_MyApp")</li>
+ * <li>{@code session-ttl-seconds}: Sets the {@link MapConfig#setTimeToLiveSeconds(int) time-to-live} for
+ * the {@link IMap} used to persist session details (Default: Uses the existing {@link MapConfig} setting
+ * for the {@link IMap}, which defaults to infinite)</li>
+ * <li>{@code sticky-session}: When enabled, optimizes {@link IMap} interactions by assuming individual sessions
+ * are only used from a single node (Default: {@code true})</li>
+ * <li>{@code deferred-write}: When enabled, optimizes {@link IMap} interactions by only writing session attributes
+ * at the end of a request. This can yield significant performance improvements for session-heavy applications
+ * (Default: {@code false})</li>
+ * <li>{@code cookie-name}: Sets the name for the Hazelcast session cookie (Default:
+ * {@link #HAZELCAST_SESSION_COOKIE_NAME "hazelcast.sessionId"}</li>
+ * <li>{@code cookie-domain}: Sets the domain for the Hazelcast session cookie (Default: {@code null})</li>
+ * <li>{@code cookie-secure}: When enabled, indicates the Hazelcast session cookie should only be sent over
+ * secure protocols (Default: {@code false})</li>
+ * <li>{@code cookie-http-only}: When enabled, marks the Hazelcast session cookie as "HttpOnly", indicating
+ * it should not be available to scripts (Default: {@code false})
+ * <ul>
+ * <li>{@code cookie-http-only} requires a Servlet 3.0-compatible container, such as Tomcat 7+ or Jetty 8+</li>
+ * </ul>
+ * </li>
+ * </ul>
+ */
+
 public class SessionReplicationFilter implements Filter {
+
+	private static final Logger LOGGER = Logger.getLogger(SessionReplicationFilter.class);
 
 	static final String HAZELCAST_SESSION_ATTRIBUTE_SEPARATOR = "::hz::";
 	private static final String HAZELCAST_REQUEST = "*hazelcast-request";
-	private static final String HAZELCAST_SESSION_COOKIE_NAME = "hazelcast.sessionId";
+	private static final String HAZELCAST_SESSION_COOKIE_NAME =SessionReplicationConstant.HZ_COOKIE_NAME;
 	private static final LocalCacheEntry NULL_ENTRY = new LocalCacheEntry();
-	private static final ConcurrentMap<String, String> mapOriginalSessions = new
-			ConcurrentHashMap<String, String>(1000);
-	private static final ConcurrentMap<String, HazelcastHttpSession> mapSessions = new
-			ConcurrentHashMap<String, HazelcastHttpSession>(1000);
-	private HazelcastInstance hazelcastInstance;
-	private String clusterMapName = "my-sessions";
-	private String sessionCookieName = HAZELCAST_SESSION_COOKIE_NAME;
-	private String sessionCookieDomain = null;
-	private boolean sessionCookieSecure = false;
-	private boolean sessionCookieHttpOnly = false;
-	private boolean stickySession = true;
-	private boolean shutdownOnDestroy = true;
-	private boolean deferredWrite = false;
-	private Properties properties;
+
 	protected ServletContext servletContext;
 	protected FilterConfig filterConfig;
+
+	private static final ConcurrentMap<String, String> mapOriginalSessions = new
+			ConcurrentHashMap<String, String>(2000);
+
+	private static final ConcurrentMap<String, HazelcastHttpSession> mapSessions = new
+			ConcurrentHashMap<String, HazelcastHttpSession>(2000);
+
+	private HazelcastInstance hazelcastInstance;
+	private String clusterMapName = "none";
+	private String sessionCookieName;
+	private boolean sessionCookieSecure;
+	private boolean sessionCookieHttpOnly;
+	private boolean stickySession;
+	private boolean shutdownOnDestroy;
+	private boolean deferredWrite;
+	private String sessionCookieDomain;
+	private Properties properties;
+
+	public SessionReplicationFilter() {
+	}
+	public SessionReplicationFilter(Properties properties) {
+		this.properties = properties;
+	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 
 		filterConfig = config;
 		servletContext = filterConfig.getServletContext();
+		loadConfigProperties();
 		initInstance();
+		initCookieParams();
+		initParams();
 
-		String mapName = getParam("map-name");
-		if (mapName != null) {
-			clusterMapName = mapName;
-		} else {
-			clusterMapName = "_web_" + servletContext.getServletContextName();
-		}
 		try {
 			Config hzConfig = hazelcastInstance.getConfig();
-			String sessionTTL = getParam("session-ttl-seconds");
+			String sessionTTL =SessionReplicationConstant.HZ_SESSION_TTL_SECONDS;
 			if (sessionTTL != null) {
 				MapConfig mapConfig = hzConfig.getMapConfig(clusterMapName);
 				mapConfig.setTimeToLiveSeconds(Integer.parseInt(sessionTTL));
 				hzConfig.addMapConfig(mapConfig);
 			}
 		} catch (UnsupportedOperationException ignored) {
+			LOGGER.info("client cannot access Config.");
 		}
 		if (!stickySession) {
 			getClusterMap().addEntryListener(new EntryListener<String, Object>() {
@@ -116,38 +174,130 @@ public class SessionReplicationFilter implements Filter {
 				}
 			}, false);
 		}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("sticky:" + stickySession + ", shutdown-on-destroy: " +
+			             shutdownOnDestroy +
+			             ", map-name: " + clusterMapName);
+		}
 	}
 
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, final FilterChain chain)
-			throws IOException, ServletException {
+	private void initCookieParams() {
+			sessionCookieName = HAZELCAST_SESSION_COOKIE_NAME;
+			sessionCookieDomain = SessionReplicationConstant.HZ_SESSION_COOKIE_DOMAIN;
+			sessionCookieSecure = SessionReplicationConstant.HZ_SESSION_COOKIE_SECURE;
+			sessionCookieHttpOnly = SessionReplicationConstant.HZ_SESSION_COOKIE_HTTP_ONLY;
+	}
 
-		if (!(req instanceof HttpServletRequest)) {
-			chain.doFilter(req, res);
-		} else {
-			if (req instanceof RequestWrapper) {
-				chain.doFilter(req, res);
-				return;
+	private void initParams() {
+			clusterMapName = SessionReplicationConstant.HZ_CLUSTER_NAME;
+			stickySession =SessionReplicationConstant.HZ_STICKY_SESSION;
+			shutdownOnDestroy = SessionReplicationConstant.HZ_SHUTDOWN_ON_DESTROY;
+			deferredWrite = SessionReplicationConstant.HZ_DIFERRED_WRITE;
+	}
+
+	private void loadConfigProperties() {
+		String propFileName = "session-config.properties";
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+		try {
+			properties.load(inputStream);
+		} catch (IOException e) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("property file '" + propFileName + "' not found in the classpath");
 			}
-			HttpServletRequest httpReq = (HttpServletRequest) req;
-			RequestWrapper existingReq = (RequestWrapper) req.getAttribute(HAZELCAST_REQUEST);
-			final ResponseWrapper resWrapper = new ResponseWrapper((HttpServletResponse) res);
-			final RequestWrapper reqWrapper = new RequestWrapper(httpReq, resWrapper);
-			if (existingReq != null) {
-				reqWrapper.setHazelcastSession(existingReq.hazelcastSession,
-				                               existingReq.requestedSessionId);
-			}
-			chain.doFilter(reqWrapper, resWrapper);
-			if (existingReq != null) {
-				return;
-			}
-			HazelcastHttpSession session = reqWrapper.getSession(false);
-			if (session != null && session.isValid()) {
-				if (session.sessionChanged() || !deferredWrite) {
-					session.sessionDeferredWrite();
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Error occurred when closing InputStream");
 				}
 			}
 		}
+	}
+    private void setProperty(String propertyName) {
+        String value = getParam(propertyName);
+        if (value != null) {
+            properties.setProperty(propertyName, value);
+        }
+    }
+
+    private String getParam(String name) {
+        if (properties != null && properties.containsKey(name)) {
+            return properties.getProperty(name);
+        } else {
+            return filterConfig.getInitParameter(name);
+        }
+    }
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+	                     FilterChain filterChain) throws IOException, ServletException {
+
+		if (!(servletRequest instanceof HttpServletRequest)) {
+			filterChain.doFilter(servletRequest, servletResponse);
+		} else {
+			if (servletRequest instanceof RequestWrapper) {
+				LOGGER.debug("Request is instance of RequestWrapper! Continue...");
+				filterChain.doFilter(servletRequest, servletResponse);
+				return;
+			}
+			HttpServletRequest httpReq = (HttpServletRequest) servletRequest;
+			boolean isDistributable = isDistributable(httpReq);
+			String url = httpReq.getRequestURI();
+
+			if ((!isMgtConsoleWebAppRequest(url)) && isDistributable) {
+				RequestWrapper existingReq = (RequestWrapper) servletRequest.getAttribute
+						(HAZELCAST_REQUEST);
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug(
+							"contextPath :" + httpReq.getContextPath() + " getRequestURI: " + url);
+					LOGGER.debug(url + " is Distributable " + isDistributable);
+				}
+				final ResponseWrapper resWrapper = new ResponseWrapper((HttpServletResponse)
+						                                                       servletResponse);
+				final RequestWrapper reqWrapper = new RequestWrapper(httpReq, resWrapper);
+				if (existingReq != null) {
+					reqWrapper.setHazelcastSession(existingReq.hazelcastSession,
+					                               existingReq.requestedSessionId);
+				}
+				filterChain.doFilter(reqWrapper, resWrapper);
+				if (existingReq != null) {
+					return;
+				}
+				HazelcastHttpSession session = reqWrapper.getSession(false);
+				if (session != null && session.isValid()) {
+					if (session.sessionChanged() || !deferredWrite) {
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Putting Session " + session.getId());
+						}
+						session.sessionDeferredWrite();
+					}
+				}
+			} else {
+				filterChain.doFilter(servletRequest, servletResponse);
+				return;
+			}
+		}
+	}
+
+	/**
+	 * This will looking to the servlet request and filter all Mgt console requests
+	 *
+	 * @param url web app request url
+	 * @return <code>true</code> if request is directing through mgt console
+	 */
+	private boolean isMgtConsoleWebAppRequest(String url) {
+		return url.matches("\\/+carbon\\/.+");
+	}
+
+	/**
+	 * This will look in to the web.xml and check whether <distributable/> tag is exists or not
+	 *
+	 * @param httpReq web application servlet request
+	 * @return <code>true</code> if <distributable/> tag is enabled in the web.xml
+	 */
+	private boolean isDistributable(HttpServletRequest httpReq) {
+		return httpReq.getServletContext().getAttribute("org.apache.tomcat.util.scan.MergedWebXml").
+				toString().contains("distributable");
 	}
 
 	@Override
@@ -174,21 +324,6 @@ public class SessionReplicationFilter implements Filter {
 		hazelcastInstance = getInstance(properties);
 	}
 
-	private void setProperty(String propertyName) {
-		String value = getParam(propertyName);
-		if (value != null) {
-			properties.setProperty(propertyName, value);
-		}
-	}
-
-	private String getParam(String name) {
-		if (properties != null && properties.containsKey(name)) {
-			return properties.getProperty(name);
-		} else {
-			return filterConfig.getInitParameter(name);
-		}
-	}
-
 	protected HazelcastInstance getInstance(Properties properties) throws ServletException {
 		return HazelcastInstanceLoader.createInstance(filterConfig, properties);
 	}
@@ -197,6 +332,9 @@ public class SessionReplicationFilter implements Filter {
 		HazelcastHttpSession hazelSession = mapSessions.remove(sessionId);
 		if (hazelSession != null) {
 			mapOriginalSessions.remove(hazelSession.originalSession.getId());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Destroying session locally " + hazelSession);
+			}
 			hazelSession.destroy();
 		}
 	}
@@ -220,6 +358,7 @@ public class SessionReplicationFilter implements Filter {
 	                                              String existingSessionId) {
 		String id = existingSessionId != null ? existingSessionId : generateSessionId();
 		if (requestWrapper.getOriginalSession(false) != null) {
+			LOGGER.debug("Original session exists!!!");
 		}
 		HttpSession originalSession = requestWrapper.getOriginalSession(true);
 		HazelcastHttpSession hazelcastSession = new HazelcastHttpSession(
@@ -231,6 +370,15 @@ public class SessionReplicationFilter implements Filter {
 		mapSessions.put(hazelcastSession.getId(), hazelcastSession);
 		String oldHazelcastSessionId = mapOriginalSessions.put(originalSession.getId(),
 		                                                       hazelcastSession.getId());
+		if (oldHazelcastSessionId != null) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("!!! Overriding an existing hazelcastSessionId " +
+				             oldHazelcastSessionId);
+				LOGGER.debug("Created new session with id: " + id);
+				LOGGER.debug(mapSessions.size() + " is sessions.size and originalSessions.size: " +
+				             mapOriginalSessions.size());
+			}
+		}
 		addSessionCookie(requestWrapper, id);
 		if (deferredWrite) {
 			loadHazelcastSession(hazelcastSession);
@@ -249,6 +397,10 @@ public class SessionReplicationFilter implements Filter {
 				cacheEntry = new LocalCacheEntry();
 				cache.put(attributeKey, cacheEntry);
 			}
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Storing " + attributeKey + " on session " + hazelcastSession.getId
+						());
+			}
 			cacheEntry.value = entry.getValue();
 			cacheEntry.dirty = false;
 		}
@@ -263,11 +415,26 @@ public class SessionReplicationFilter implements Filter {
 		}
 	}
 
+	/**
+	 * Destroys a session, determining if it should be destroyed clusterwide automatically or via
+	 * expiry.
+	 *
+	 * @param session             The session to be destroyed
+	 * @param removeGlobalSession boolean value - true if the session should be destroyed
+	 *                            irrespective of active time
+	 */
 	private void destroySession(HazelcastHttpSession session, boolean removeGlobalSession) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Destroying local session: " + session.getId());
+		}
 		mapSessions.remove(session.getId());
 		mapOriginalSessions.remove(session.originalSession.getId());
 		session.destroy();
 		if (removeGlobalSession) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Destroying cluster session: " + session.getId() + " => " +
+				             "Ignore-timeout: true");
+			}
 			IMap<String, Object> clusterMap = getClusterMap();
 			clusterMap.delete(session.getId());
 			clusterMap.executeOnEntries(new InvalidateEntryProcessor(session.getId()));
@@ -275,7 +442,9 @@ public class SessionReplicationFilter implements Filter {
 	}
 
 	private IMap<String, Object> getClusterMap() {
-		return hazelcastInstance.getMap(clusterMapName);
+		IMap<String,Object> distributableMap = hazelcastInstance.getMap(clusterMapName);
+		distributableMap.addEntryListener(new MapEntryListener(),true);
+		return distributableMap;
 	}
 
 	private HazelcastHttpSession getSessionWithId(final String sessionId) {
@@ -287,6 +456,11 @@ public class SessionReplicationFilter implements Filter {
 		return session;
 	}
 
+	/**
+	 * To generate unique Hazelcast session d
+	 *
+	 * @return
+	 */
 	private static synchronized String generateSessionId() {
 		final String id = UUID.randomUUID().toString();
 		final StringBuilder sb = new StringBuilder("HZ");
@@ -396,6 +570,9 @@ public class SessionReplicationFilter implements Filter {
 		@Override
 		public HazelcastHttpSession getSession(final boolean create) {
 			if (hazelcastSession != null && !hazelcastSession.isValid()) {
+				if (LOGGER.isDebugEnabled()){
+					LOGGER.debug("Session is invalid!");
+				}
 				destroySession(hazelcastSession, true);
 				hazelcastSession = null;
 			}

@@ -1,19 +1,17 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2008-2013, Hazelcast, Inc. All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied. See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.wso2.carbon.webapp.mgt.session;
@@ -40,10 +38,10 @@ import static java.lang.String.format;
 
 final class HazelcastInstanceLoader {
 
-	private final static Logger logger = Logger.getLogger(HazelcastInstanceLoader.class);
-	public static final String INSTANCE_NAME = "instance-name";
+	private final static Logger LOGGER = Logger.getLogger(HazelcastInstanceLoader.class);
+	public static final String INSTANCE_NAME = SessionReplicationConstant.HZ_INSTANCE_NAME;
 	public static final String CONFIG_LOCATION = "config-location";
-	public static final String USE_CLIENT = "use-client";
+	public static final String USE_CLIENT =SessionReplicationConstant.USER_CLIENT;
 	public static final String CLIENT_CONFIG_LOCATION = "client-config-location";
 
 	public static HazelcastInstance createInstance(final FilterConfig filterConfig,
@@ -63,7 +61,7 @@ final class HazelcastInstanceLoader {
 		}
 
 		if (useClient) {
-			logger.warn("Creating HazelcastClient for session replication, " +
+			LOGGER.warn("Creating HazelcastClient for session replication, " +
 			            "" + "make sure this client has access to an already running cluster...");
 			ClientConfig clientConfig;
 			if (configUrl == null) {
@@ -91,14 +89,14 @@ final class HazelcastInstanceLoader {
 		}
 
 		if (!isEmpty(instanceName)) {
-			if (logger.isDebugEnabled()) {
-				logger.info(format("Getting an existing or creating a new HazelcastInstance for "
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.info(format("Getting an existing or creating a new HazelcastInstance for "
 				                   + "session replication, using name '%s'", instanceName));
 			}
 			config.setInstanceName(instanceName);
 			return Hazelcast.getOrCreateHazelcastInstance(config);
 		} else {
-			logger.info("Creating a new HazelcastInstance for session replication");
+			LOGGER.info("Creating a new HazelcastInstance for session replication");
 			return Hazelcast.newHazelcastInstance(config);
 		}
 	}
