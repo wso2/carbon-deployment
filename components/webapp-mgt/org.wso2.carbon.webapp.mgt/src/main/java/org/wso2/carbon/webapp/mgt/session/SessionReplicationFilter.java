@@ -42,6 +42,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -270,6 +271,7 @@ public class SessionReplicationFilter implements Filter {
 							LOGGER.debug("Putting Session " + session.getId());
 						}
 						session.sessionDeferredWrite();
+                        populateOriginalSessionAttributes(session, session.originalSession);
 					}
 				}
 			} else {
@@ -415,6 +417,17 @@ public class SessionReplicationFilter implements Filter {
 		}
 	}
 
+    public void populateOriginalSessionAttributes(HazelcastHttpSession hazelcastHttpSession,HttpSession httpSession){
+        Enumeration<?> e = hazelcastHttpSession.getAttributeNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            // Get the value of the attribute
+            Object value = hazelcastHttpSession.getAttribute(name);
+            httpSession.setAttribute(name, value);
+            LOGGER.debug("Added attribute " + name + " :" + value + " to Original Session, " + httpSession.getId());
+        }
+    }
+
 	/**
 	 * Destroys a session, determining if it should be destroyed clusterwide automatically or via
 	 * expiry.
@@ -443,7 +456,7 @@ public class SessionReplicationFilter implements Filter {
 
 	private IMap<String, Object> getClusterMap() {
 		IMap<String,Object> distributableMap = hazelcastInstance.getMap(clusterMapName);
-		distributableMap.addEntryListener(new MapEntryListener(),true);
+		distributableMap.addEntryListener(new MapEntryListener(), true);
 		return distributableMap;
 	}
 
@@ -567,50 +580,78 @@ public class SessionReplicationFilter implements Filter {
 			return getSession(true);
 		}
 
+        public void populateHzSessionAttributes(HazelcastHttpSession hazelcastHttpSession, HttpSession httpSession) {
+            Enumeration<?> e = httpSession.getAttributeNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                // Get the value of the attribute
+                Object value = httpSession.getAttribute(name);
+                hazelcastHttpSession.setAttribute(name, value);
+                LOGGER.debug(
+                        "Added attribute " + name + " :" + value + " to Hazelacast Session, " + httpSession.getId());
+            }
+        }
+
 		@Override
 		public HazelcastHttpSession getSession(final boolean create) {
-			if (hazelcastSession != null && !hazelcastSession.isValid()) {
-				if (LOGGER.isDebugEnabled()){
-					LOGGER.debug("Session is invalid!");
-				}
-				destroySession(hazelcastSession, true);
-				hazelcastSession = null;
-			}
-			if (hazelcastSession == null) {
-				HttpSession originalSession = getOriginalSession(false);
-				if (originalSession != null) {
-					String hazelcastSessionId = mapOriginalSessions.get(originalSession.getId());
-					if (hazelcastSessionId != null) {
-						hazelcastSession = mapSessions.get(hazelcastSessionId);
-					}
-					if (hazelcastSession == null) {
+            if (hazelcastSession != null && !hazelcastSession.isValid()) {
+                LOGGER.debug("Session is invalid!");
+                destroySession(hazelcastSession, true);
+                hazelcastSession = null;
+            }
+            if (hazelcastSession == null) {
+                // If session persistence enabled, there will be an originalSession, If attributes present,
+                // those will be included in the session.
+                HttpSession originalSession = getOriginalSession(false);
+                if (originalSession != null) {
+                    // The element of originalSession will return null if session persistence enabled,
+                    // due to server restart( whole cluster), in-memory values will be discarded.
+                    // If restart occurred in a single node, Hazelcast clusterWideMap contains all information.
+                    String hazelcastSessionId = mapOriginalSessions.get(originalSession.getId());
+                    if (hazelcastSessionId == null) {
+                        final String requestedSessionId = fetchHazelcastSessionId();
+                        if (requestedSessionId != null) {
+                            hazelcastSession = getSessionWithId(requestedSessionId);
+                            if (hazelcastSession == null) {
+                                hazelcastSession = createNewSession(RequestWrapper.this, requestedSessionId);
+                            }
+                            populateHzSessionAttributes(hazelcastSession, originalSession);
+                            LOGGER.debug("HZSession, " + hazelcastSession.getId() + " of Original session :" +
+                                        originalSession.getId() + ", Attribute count: . " +
+                                        Collections.list(hazelcastSession.getAttributeNames()).size() + "");
+                        }
+                    }
+                    if (hazelcastSessionId != null) {
+                        hazelcastSession = mapSessions.get(hazelcastSessionId);
+                    }
+				/*	if (hazelcastSession == null) {
 						mapOriginalSessions.remove(originalSession.getId());
 						originalSession.invalidate();
-					}
-				}
-			}
-			if (hazelcastSession != null) {
-				return hazelcastSession;
-			}
-			final String requestedSessionId = fetchHazelcastSessionId();
-			if (requestedSessionId != null) {
-				hazelcastSession = getSessionWithId(requestedSessionId);
-				if (hazelcastSession == null) {
-					final Boolean existing = (Boolean) getClusterMap().get(requestedSessionId);
-					if (existing != null && existing && create) {
-						// we already have the session in the cluster loading it...
-						hazelcastSession = createNewSession(RequestWrapper.this,
-						                                    requestedSessionId);
-					}
-				}
-			}
-			if (hazelcastSession == null && create) {
-				hazelcastSession = createNewSession(RequestWrapper.this, null);
-			}
-			if (deferredWrite) {
-				prepareReloadingSession(hazelcastSession);
-			}
-			return hazelcastSession;
+					}*/
+                }
+            }
+            if (hazelcastSession != null) {
+                return hazelcastSession;
+            }
+            final String requestedSessionId = fetchHazelcastSessionId();
+            if (requestedSessionId != null) {
+                hazelcastSession = getSessionWithId(requestedSessionId);
+                if (hazelcastSession == null) {
+                    final Boolean existing = (Boolean) getClusterMap().get(requestedSessionId);
+                    if (existing != null && existing && create) {
+                        // we already have the session in the cluster loading it...
+                        hazelcastSession = createNewSession(RequestWrapper.this,
+                                                            requestedSessionId);
+                    }
+                }
+            }
+            if (hazelcastSession == null && create) {
+                hazelcastSession = createNewSession(RequestWrapper.this, null);
+            }
+            if (deferredWrite) {
+                prepareReloadingSession(hazelcastSession);
+            }
+            return hazelcastSession;
 		}
 	}
 
