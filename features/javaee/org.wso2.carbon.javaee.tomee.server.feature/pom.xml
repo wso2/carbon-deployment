@@ -77,6 +77,10 @@
             <groupId>commons-beanutils.wso2</groupId>
             <artifactId>commons-beanutils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -132,6 +136,7 @@
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-jsf</bundleDef>
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-el22</bundleDef>
 
+                                <bundleDef>javax.ws.rs:javax.ws.rs-api</bundleDef>
                                 <bundleDef>org.wso2.serp:serp</bundleDef>
                                 <bundleDef>org.apache.tomcat.wso2:tribes</bundleDef>
                                 <bundleDef>commons-digester:commons-digester</bundleDef>
