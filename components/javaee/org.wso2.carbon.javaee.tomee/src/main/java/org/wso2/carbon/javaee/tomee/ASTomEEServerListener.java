@@ -28,6 +28,7 @@ import org.apache.openejb.util.JuliLogStreamFactory;
 import org.apache.openejb.util.OpenEjbVersion;
 import org.apache.tomee.catalina.ServerListener;
 import org.apache.tomee.loader.TomcatHelper;
+import org.wso2.carbon.base.ServerConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,7 +184,10 @@ public class ASTomEEServerListener extends ServerListener {
             field.setAccessible(true);
             final String version = OpenEjbVersion.get().getVersion();
             final String tomeeVersion = (Integer.parseInt("" + version.charAt(0)) - 3) + version.substring(1, version.length());
-            field.set(null, value.substring(0, slash) + " (TomEE)" + value.substring(slash) + " (" + tomeeVersion + ")");
+            final String asVersion = ServerConfiguration.getInstance().getFirstProperty("Version");
+            field.set(null, "WSO2 AS " + asVersion + " (" +
+                      value.substring(0, slash) + " " + value.substring(slash+1) +
+                      "/TomEE " + tomeeVersion + ")");
         } catch (Exception e) {
             // no-op
         } finally {
