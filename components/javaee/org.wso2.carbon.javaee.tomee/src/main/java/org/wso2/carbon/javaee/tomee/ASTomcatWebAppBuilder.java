@@ -104,11 +104,15 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
     }
 
     public void init(final StandardContext standardContext) {
+        //super init needs to be called to initialize the OpenEJBContextConfig,
+        //NamingContextListeners etc. Why was this not done before?
+        super.init(standardContext);
+
         //init will only get called if this is a JavaEE webapp.
         // So, we don't have to re-check the CRE
         standardContext.setIgnoreAnnotations(true);
 
-        //TomEE jar scanner with Carbon bits
+        //over-ride super.init - TomEE jar scanner with Carbon bits
         standardContext.setJarScanner(new CarbonTomcatJarScanner());
 
         //doInit(standardContext);
