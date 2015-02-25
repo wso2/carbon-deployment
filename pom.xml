@@ -403,6 +403,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
                 <version>${carbon.identity.version}</version>
                 <type>zip</type>
