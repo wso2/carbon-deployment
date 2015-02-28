@@ -48,12 +48,12 @@ public class ServiceAdminClient {
     /**
      * This method is to delete one or more services
      *
-     * @param serviceGroup - services which has to be deleted
+     * @param serviceGroups - services which has to be deleted
      * @throws RemoteException - Error when deleting service group
      */
-    public void deleteService(String[] serviceGroup) throws RemoteException {
+    public void deleteService(String[] serviceGroups) throws RemoteException {
 
-        serviceAdminStub.deleteServiceGroups(serviceGroup);
+        serviceAdminStub.deleteServiceGroups(serviceGroups);
 
     }
 
@@ -140,9 +140,9 @@ public class ServiceAdminClient {
         ServiceMetaData[] serviceMetaDataList;
         serviceMetaDataWrapper = listServices(serviceName);
         serviceMetaDataList = serviceMetaDataWrapper.getServices();
-        if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
+        if (serviceMetaDataList != null) {
             for (ServiceMetaData serviceData : serviceMetaDataList) {
-                if (serviceData != null && serviceData.getName().equalsIgnoreCase(serviceName)) {
+                if (serviceData != null && serviceData.getName().equals(serviceName)) {
                     return serviceData.getServiceGroupName();
                 }
             }

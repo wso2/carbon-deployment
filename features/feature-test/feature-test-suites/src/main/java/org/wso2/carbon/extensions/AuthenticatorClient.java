@@ -40,14 +40,12 @@ public class AuthenticatorClient {
     public AuthenticatorClient(String backendUrl) throws AxisFault {
         String serviceName = "AuthenticationAdmin";
         String endPoint = backendUrl + serviceName;
-        if (log.isDebugEnabled()) {
-            log.debug("EndPoint" + endPoint);
-        }
+            log.info("EndPoint" + endPoint);
         try {
             authenticationAdminStub = new AuthenticationAdminStub(endPoint);
         } catch (AxisFault axisFault) {
-            log.info("authenticationAdminStub initialization fails");
-            throw new AxisFault("authenticationAdminStub initialization fails");
+            log.error("authenticationAdminStub initialization fails",axisFault);
+            throw new AxisFault("authenticationAdminStub initialization fails",axisFault);
         }
     }
 
@@ -76,9 +74,6 @@ public class AuthenticatorClient {
         log.info("Login Successful");
         serviceContext = authenticationAdminStub._getServiceClient().getLastOperationContext().getServiceContext();
         sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
-        if (log.isDebugEnabled()) {
-            log.debug("SessionCookie :" + sessionCookie);
-        }
         return sessionCookie;
     }
 

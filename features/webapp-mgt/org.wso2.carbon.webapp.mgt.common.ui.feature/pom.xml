@@ -15,14 +15,12 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-feature</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,17 +28,17 @@
     <artifactId>org.wso2.carbon.webapp.mgt.common.ui.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Webapp Management UI Common Feature</name>
-    <version>4.3.0-SNAPSHOT</version>
+    <version>4.3.2-SNAPSHOT</version>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for Common Front-end Webapp Management functionality</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.webapp.list.ui</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
         </dependency>
     </dependencies>
@@ -68,8 +66,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.list.ui:${project.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.stub:${project.version}
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.list.ui:${carbon.deployment.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.stub:${carbon.deployment.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

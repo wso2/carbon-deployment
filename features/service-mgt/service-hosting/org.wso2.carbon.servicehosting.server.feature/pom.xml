@@ -15,14 +15,12 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>service-hosting-feature</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,21 +34,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.aarservices.server.feature</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.jarservices.server.feature</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.springservices.server.feature</artifactId>
-            <version>${project.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -78,12 +73,12 @@
                                 </properties>
                             </adviceFile>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.aarservices.server.feature
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.aarservices.server.feature
                                 </includedFeatureDef>
-                                <!-- <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.dataservices.server.feature</includedFeatureDef>-->
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.jarservices.server.feature
+                                <!-- <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.dataservices.server.feature</includedFeatureDef>-->
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.jarservices.server.feature
                                 </includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.springservices.server.feature
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.springservices.server.feature
                                 </includedFeatureDef>
                             </includedFeatures>
                         </configuration>

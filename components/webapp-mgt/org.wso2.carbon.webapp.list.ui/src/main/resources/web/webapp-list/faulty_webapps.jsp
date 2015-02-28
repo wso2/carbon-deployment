@@ -35,7 +35,7 @@
     }
 
     String webappType = request.getParameter("webappType");
-    if(webappType == null || "".equals(webappType)){
+    if (webappType == null || "".equals(webappType)) {
         webappType = "all";
     }
 

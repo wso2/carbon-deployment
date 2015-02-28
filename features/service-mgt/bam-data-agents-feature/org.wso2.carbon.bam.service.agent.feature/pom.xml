@@ -15,14 +15,12 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>bam-service-data-agent-feature</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.2-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -34,12 +32,12 @@
 
    <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.bam.service.agent.server.feature</artifactId>
             <type>zip</type>
 	    </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.bam.service.agent.ui.feature</artifactId>
             <type>zip</type>
 	</dependency>
@@ -64,8 +62,8 @@
                                 <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.bam.service.agent.server.feature:${project.version}</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.bam.service.agent.ui.feature:${project.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.service.agent.server.feature:${carbon.deployment.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.service.agent.ui.feature:${carbon.deployment.version}</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

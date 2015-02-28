@@ -18,8 +18,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>feature-test</artifactId>
-        <groupId>org.wso2.carbon</groupId>
-        <version>4.3.0-SNAPSHOT</version>
+        <groupId>org.wso2.carbon.deployment</groupId>
+        <version>4.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -72,70 +72,73 @@
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.as.runtimes.cxf.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.servicehosting.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.servicehosting.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam.service.agent.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.bam.service.agent.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.service.mgt.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.module.mgt.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.feature:${project.version}
+                                </featureArtifactDef>
+                                <!--<featureArtifactDef>-->
+                                    <!--org.wso2.carbon.deployment:org.wso2.carbon.as.monitoring.feature:${project.version}-->
+                                <!--</featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.deployment:org.wso2.carbon.aarservices.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.as.monitoring.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.jarservices.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.aarservices.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.service.mgt.server.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.jarservices.feature:${project.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.security.mgt.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.security.mgt.server.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.feature:${project.version}
+                                    org.wso2.carbon.commons:org.wso2.carbon.system.statistics.server.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.system.statistics.server.feature:${carbon.platform.version}
+                                    org.wso2.carbon.commons:org.wso2.carbon.system.statistics.ui.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.system.statistics.ui.feature:${carbon.platform.version}
+                                    org.wso2.carbon.commons:org.wso2.carbon.databridge.datapublisher.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.platform.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.repomanager.axis2.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.repomanager.axis2.feature:${project.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.springservices.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.springservices.feature:${project.version}
+                                    org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.deployment.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.tenant.deployment.feature:${carbon.platform.version}
+                                    org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.tenant.common.feature:${carbon.platform.version}
+                                    org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.throttling.agent.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.tenant.throttling.agent.feature:${carbon.platform.version}
+                                    org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.usage.agent.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.tenant.usage.agent.feature:${carbon.platform.version}
+                                    org.wso2.carbon.registry:org.wso2.carbon.registry.core.feature:${carbon.kernel.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.platform.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.platform.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.user.mgt.feature:${project.version}
+                                    org.wso2.carbon.commons:org.wso2.carbon.user.mgt.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -179,16 +182,20 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.service.mgt.server.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.module.mgt.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.as.monitoring.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.as.monitoring.feature.group</id>-->
+                                    <!--<version>${project.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.aarservices.feature.group</id>
@@ -204,47 +211,47 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.repomanager.axis2.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.server.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.ui.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.webapp.mgt.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.server.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.tenant.common.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.tenant.throttling.agent.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.tenant.usage.agent.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                             </features>
                         </configuration>

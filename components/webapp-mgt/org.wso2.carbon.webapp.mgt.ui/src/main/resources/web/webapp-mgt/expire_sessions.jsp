@@ -71,22 +71,22 @@
         if (expireAllSessions != null) {
             client.expireSessionsInAllWebapps();
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
-                                                CarbonUIMessage.INFO, request);
+                    CarbonUIMessage.INFO, request);
         } else if (sessionExpTime != -1) {
             client.expireSessionsInWebapp(webappFileNames[0], sessionExpTime);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
-                                                CarbonUIMessage.INFO, request);
+                    CarbonUIMessage.INFO, request);
         } else {
             client.expireSessionsInWebapps(webappFileNames);
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
-                                                CarbonUIMessage.INFO, request);
+                    CarbonUIMessage.INFO, request);
         }
 %>
 <script>
     location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= webappFileNames[0] %>'
-            <% if (hostName != null && httpPort != null) { %>
-            + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
-            <% } %> ;
+    <% if (hostName != null && httpPort != null) { %>
+    + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
+    <% } %>;
 </script>
 
 <%
@@ -95,9 +95,9 @@
 %>
 <script type="text/javascript">
     location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= webappFileNames[0] %>"
-                    <% if (hostName != null && httpPort != null) { %>
-                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
-                    <% } %> ;
+    <% if (hostName != null && httpPort != null) { %>
+    + "&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
+    <% } %>;
 
 </script>
 <%

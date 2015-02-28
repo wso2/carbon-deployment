@@ -82,7 +82,7 @@ public class WebappUnloader implements ArtifactUnloader {
                 ctx.setTenantDomain(tenantDomain, true);
             }
 
-            for(WebApplicationsHolder webApplicationsHolder: webApplicationsHolderList.values()){
+            for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderList.values()) {
                 if (webApplicationsHolder != null) {
                     for (WebApplication webApplication :
                             webApplicationsHolder.getStartedWebapps().values()) {

@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.extensions;
 
+/**
+ * This class is for create common constants
+ */
 public class ExtensionCommonConstants {
     public static final String SUPER_TENANT_DOMAIN_NAME = "carbon.super";
     public static final String ADMIN_USER = "admin";

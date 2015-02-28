@@ -18,21 +18,24 @@
 
 package org.wso2.carbon.extensions;
 
+/**
+ * This class is for xpath constants for automation.xml file
+ */
 public class AutomationXpathConstants {
-    public static final String ADMIN_USER_PASSWORD = "//%s/tenant[@domain='%s']/admin/user/password";
-    public static final String USERS_NODE = "//%s/tenant[@domain='%s']/users";
-    public static final String USER_NODE = "//%s/tenant[@domain='%s']/users/user";
-    public static final String ADMIN_USER_USERNAME = "//%s/tenant[@domain='%s']/admin/user/userName";
-    public static final String TENANT_USER_USERNAME = "//%s/tenant[@domain='%s']/users/user[@key='%s']/userName";
-    public static final String TENANT_USER_PASSWORD = "//%s/tenant[@domain='%s']/users/user[@key='%s']/password";
-    public static final String PRODUCT_GROUP = "//productGroup";
-    public static final String CLUSTERING_ENABLED = "clusteringEnabled";
-    public static final String TENANTS_NODE = "//tenants";
-    public static final String TENANTS = "tenants";
-    public static final String SUPER_TENANT = "superTenant";
-    public static final String DOMAIN = "domain";
-    public static final String KEY = "key";
-    public static final String NAME = "name";
-    public static final String TYPE = "type";
+    public static final String CONTEXT_XPATH_ADMIN_USER_PASSWORD = "//%s/tenant[@domain='%s']/admin/user/password";
+    public static final String CONTEXT_XPATH_USERS_NODE = "//%s/tenant[@domain='%s']/users";
+    public static final String CONTEXT_XPATH_USER_NODE = "//%s/tenant[@domain='%s']/users/user";
+    public static final String CONTEXT_XPATH_ADMIN_USER_USERNAME = "//%s/tenant[@domain='%s']/admin/user/userName";
+    public static final String CONTEXT_XPATH_TENANT_USER_USERNAME = "//%s/tenant[@domain='%s']/users/user[@key='%s']/userName";
+    public static final String CONTEXT_XPATH_TENANT_USER_PASSWORD = "//%s/tenant[@domain='%s']/users/user[@key='%s']/password";
+    public static final String CONTEXT_XPATH_PRODUCT_GROUP = "//productGroup";
+    public static final String CONTEXT_XPATH_CLUSTERING_ENABLED = "clusteringEnabled";
+    public static final String CONTEXT_XPATH_TENANTS_NODE = "//tenants";
+    public static final String CONTEXT_XPATH_TENANTS = "tenants";
+    public static final String CONTEXT_XPATH_SUPER_TENANT = "superTenant";
+    public static final String CONTEXT_XPATH_DOMAIN = "domain";
+    public static final String CONTEXT_XPATH_KEY = "key";
+    public static final String CONTEXT_XPATH_NAME = "name";
+    public static final String CONTEXT_XPATH_TYPE = "type";
 
 }

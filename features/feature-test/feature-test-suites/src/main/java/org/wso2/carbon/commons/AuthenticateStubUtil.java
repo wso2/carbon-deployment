@@ -45,8 +45,6 @@ public class AuthenticateStubUtil {
         option.setManageSession(true);
         option.setTimeOutInMilliSeconds(soTimeout);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, sessionCookie);
-        if (log.isDebugEnabled()) {
-            log.debug("AuthenticateStub : Stub created with session " + sessionCookie);
-        }
+        log.info("AuthenticateStub : Stub created with session " + sessionCookie);
     }
 }

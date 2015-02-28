@@ -26,7 +26,8 @@ import org.wso2.carbon.automation.engine.configurations.AutomationConfiguration;
 import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.commons.*;
+import org.wso2.carbon.commons.TenantManagementServiceClient;
+import org.wso2.carbon.commons.UserManagementClient;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.rmi.RemoteException;
@@ -75,22 +76,22 @@ public class UserPopulator {
         for (String tenants : tenantsList) {
             if (!tenants.equals(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME)) {
                 tenantStub.addTenant(tenants, automationContext.getConfigurationValue(
-                                             String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD,
-                                                           AutomationXpathConstants.TENANTS, tenants)).toCharArray(),
-                                     automationContext.getConfigurationValue(String.format(AutomationXpathConstants.ADMIN_USER_USERNAME,
-                                                                                           AutomationXpathConstants.TENANTS, tenants)), FrameworkConstants.TENANT_USAGE_PLAN_DEMO);
+                                             String.format(AutomationXpathConstants.CONTEXT_XPATH_ADMIN_USER_PASSWORD,
+                                                           AutomationXpathConstants.CONTEXT_XPATH_TENANTS, tenants)).toCharArray(),
+                                     automationContext.getConfigurationValue(String.format(AutomationXpathConstants.CONTEXT_XPATH_ADMIN_USER_USERNAME,
+                                                                                           AutomationXpathConstants.CONTEXT_XPATH_TENANTS, tenants)), FrameworkConstants.TENANT_USAGE_PLAN_DEMO);
             }
 
             log.info("Start populating users for " + tenants);
-            String superTenantReplacement = AutomationXpathConstants.TENANTS;
+            String superTenantReplacement = AutomationXpathConstants.CONTEXT_XPATH_TENANTS;
 
             if (tenants.equals(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME)) {
-                superTenantReplacement = AutomationXpathConstants.SUPER_TENANT;
+                superTenantReplacement = AutomationXpathConstants.CONTEXT_XPATH_SUPER_TENANT;
             }
             tenantAdminSession =
-                    login(automationContext.getConfigurationValue(String.format(AutomationXpathConstants.ADMIN_USER_USERNAME,
+                    login(automationContext.getConfigurationValue(String.format(AutomationXpathConstants.CONTEXT_XPATH_ADMIN_USER_USERNAME,
                                                                                 superTenantReplacement, tenants)), tenants, automationContext.getConfigurationValue(
-                                  String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD, superTenantReplacement, tenants)).toCharArray(),
+                                  String.format(AutomationXpathConstants.CONTEXT_XPATH_ADMIN_USER_PASSWORD, superTenantReplacement, tenants)).toCharArray(),
                           backendURL, UrlGenerationUtil.getManagerHost(automationContext.getInstance()));
 
             //here we populate the user list of the current tenant
@@ -99,12 +100,12 @@ public class UserPopulator {
             for (String tenantUsername : userList) {
                 System.out.println(userManagementClient.getUserList().size());
                 boolean isUserAddedAlready = userManagementClient.getUserList().contains(automationContext.
-                        getConfigurationValue(String.format(AutomationXpathConstants.TENANT_USER_USERNAME,
+                        getConfigurationValue(String.format(AutomationXpathConstants.CONTEXT_XPATH_TENANT_USER_USERNAME,
                                                             superTenantReplacement, tenants, tenantUsername)));
                 if (!isUserAddedAlready) {
                     userManagementClient.addUser(automationContext.getConfigurationValue(String.format(AutomationXpathConstants.
-                                                                                                               TENANT_USER_USERNAME, superTenantReplacement, tenants, tenantUsername)),
-                                                 automationContext.getConfigurationValue(String.format(AutomationXpathConstants.TENANT_USER_PASSWORD,
+                                                                                                               CONTEXT_XPATH_TENANT_USER_USERNAME, superTenantReplacement, tenants, tenantUsername)),
+                                                 automationContext.getConfigurationValue(String.format(AutomationXpathConstants.CONTEXT_XPATH_TENANT_USER_PASSWORD,
                                                                                                        superTenantReplacement, tenants, tenantUsername)), new String[]{FrameworkConstants.ADMIN_ROLE}, null);
                     log.info("User - " + tenantUsername + " created in tenant domain of " + " " + tenants);
                 } else {
@@ -127,15 +128,15 @@ public class UserPopulator {
         AutomationContext automationContext = new AutomationContext(productGroupName, instanceName, TestUserMode.SUPER_TENANT_ADMIN);
         UserManagementClient userManagementClient;
         for (String tenants : tenantsList) {
-            String superTenantReplacement = AutomationXpathConstants.TENANTS;
+            String superTenantReplacement = AutomationXpathConstants.CONTEXT_XPATH_TENANTS;
             if (tenants.equals(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME)) {
-                superTenantReplacement = AutomationXpathConstants.SUPER_TENANT;
+                superTenantReplacement = AutomationXpathConstants.CONTEXT_XPATH_SUPER_TENANT;
             }
             backendURL = automationContext.getContextUrls().getBackEndUrl();
             tenantAdminSession = login(automationContext.getConfigurationValue(String.
-                                               format(AutomationXpathConstants.ADMIN_USER_USERNAME, superTenantReplacement, tenants)),
+                                               format(AutomationXpathConstants.CONTEXT_XPATH_ADMIN_USER_USERNAME, superTenantReplacement, tenants)),
                                        tenants, automationContext.
-                            getConfigurationValue(String.format(AutomationXpathConstants.ADMIN_USER_PASSWORD,
+                            getConfigurationValue(String.format(AutomationXpathConstants.CONTEXT_XPATH_ADMIN_USER_PASSWORD,
                                                                 superTenantReplacement, tenants)).toCharArray(), backendURL,
                                        UrlGenerationUtil.getManagerHost(automationContext.getInstance()));
 
@@ -143,12 +144,12 @@ public class UserPopulator {
             List<String> userList = getUserList(tenants);
             for (String user : userList) {
                 boolean isUserAddedAlready = userManagementClient.getUserList().contains(automationContext.
-                        getConfigurationValue(String.format(AutomationXpathConstants.TENANT_USER_USERNAME,
+                        getConfigurationValue(String.format(AutomationXpathConstants.CONTEXT_XPATH_TENANT_USER_USERNAME,
                                                             superTenantReplacement, tenants, user)));
                 if (isUserAddedAlready) {
                     if (!user.equals(FrameworkConstants.ADMIN_ROLE)) {
                         userManagementClient.deleteUser(automationContext.getConfigurationValue(String.format(AutomationXpathConstants.
-                                                                                                                      TENANT_USER_USERNAME, superTenantReplacement, tenants, user)));
+                                                                                                                      CONTEXT_XPATH_TENANT_USER_USERNAME, superTenantReplacement, tenants, user)));
                         log.info("User was deleted successfully - " + user);
                     }
                 }
@@ -190,12 +191,12 @@ public class UserPopulator {
         List<String> tenantDomain = new ArrayList<String>();
         tenantDomain.add(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME);
         AutomationContext automationContext = new AutomationContext();
-        int numberOfTenants = automationContext.getConfigurationNodeList(AutomationXpathConstants.TENANTS_NODE).item(0).
+        int numberOfTenants = automationContext.getConfigurationNodeList(AutomationXpathConstants.CONTEXT_XPATH_TENANTS_NODE).item(0).
                 getChildNodes().getLength();
         for (int i = 0; i < numberOfTenants; i++) {
-            tenantDomain.add(automationContext.getConfigurationNodeList(AutomationXpathConstants.TENANTS_NODE).item(0).
+            tenantDomain.add(automationContext.getConfigurationNodeList(AutomationXpathConstants.CONTEXT_XPATH_TENANTS_NODE).item(0).
                     getChildNodes().
-                    item(i).getAttributes().getNamedItem(AutomationXpathConstants.DOMAIN).getNodeValue());
+                    item(i).getAttributes().getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_DOMAIN).getNodeValue());
         }
         return tenantDomain;
     }
@@ -212,16 +213,16 @@ public class UserPopulator {
         List<String> userList = new ArrayList<String>();
         AutomationContext automationContext = new AutomationContext();
         int numberOfUsers;
-        String superTenantReplacement = AutomationXpathConstants.TENANTS;
+        String superTenantReplacement = AutomationXpathConstants.CONTEXT_XPATH_TENANTS;
         if (tenantDomain.equals(FrameworkConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            superTenantReplacement = AutomationXpathConstants.SUPER_TENANT;
+            superTenantReplacement = AutomationXpathConstants.CONTEXT_XPATH_SUPER_TENANT;
         }
-        numberOfUsers = automationContext.getConfigurationNodeList(String.format(AutomationXpathConstants.USER_NODE,
+        numberOfUsers = automationContext.getConfigurationNodeList(String.format(AutomationXpathConstants.CONTEXT_XPATH_USER_NODE,
                                                                                  superTenantReplacement, tenantDomain)).getLength();
         for (int i = 0; i < numberOfUsers; i++) {
             String userKey = automationContext.getConfigurationNodeList(String.
-                    format(AutomationXpathConstants.USERS_NODE, superTenantReplacement, tenantDomain)).item(0).getChildNodes().
-                    item(i).getAttributes().getNamedItem(AutomationXpathConstants.KEY).getNodeValue();
+                    format(AutomationXpathConstants.CONTEXT_XPATH_USERS_NODE, superTenantReplacement, tenantDomain)).item(0).getChildNodes().
+                    item(i).getAttributes().getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_KEY).getNodeValue();
             userList.add(userKey);
         }
         return userList;

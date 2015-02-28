@@ -34,7 +34,7 @@ import java.util.List;
 public class UserPopulateExtension extends ExecutionListenerExtension {
     private static final Log log = LogFactory.getLog(UserPopulateExtension.class);
     private List<Node> productGroupsList;
-    private List<UserPopulator> userPopulatorList = new ArrayList<UserPopulator>(0);
+    private List<UserPopulator> userList = new ArrayList<UserPopulator>(0);
 
     public void initiate() throws Exception {
         productGroupsList = getAllProductNodes();
@@ -48,11 +48,13 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
     public void onExecutionStart() throws Exception {
         for (Node aProductGroupsList : productGroupsList) {
             String productGroupName = aProductGroupsList.getAttributes().
-                    getNamedItem(AutomationXpathConstants.NAME).getNodeValue();
-            String instanceName = getProductGroupInstance(aProductGroupsList);
-            UserPopulator userPopulator = new UserPopulator(productGroupName, instanceName);
-            userPopulator.populateUsers();
-            userPopulatorList.add(userPopulator);
+                    getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_NAME).getNodeValue();
+            List<String> instanceNameList = getProductGroupInstance(aProductGroupsList);
+            for (String instanceName : instanceNameList) {
+                UserPopulator userPopulator = new UserPopulator(productGroupName, instanceName);
+                userPopulator.populateUsers();
+                userList.add(userPopulator);
+            }
         }
     }
 
@@ -62,7 +64,7 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
      * @throws Exception - Error when deleting users
      */
     public void onExecutionFinish() throws Exception {
-        for (UserPopulator userPopulator : userPopulatorList) {
+        for (UserPopulator userPopulator : userList) {
             userPopulator.deleteUsers();
         }
     }
@@ -73,20 +75,16 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
      * @param productGroup - product group
      * @return - product group instance
      */
-    private String getProductGroupInstance(Node productGroup) {
-        String instanceName = "";
+    private List<String> getProductGroupInstance(Node productGroup) {
+        List<String> instanceName = new ArrayList<String>();
         Boolean isClusteringEnabled = Boolean.parseBoolean(productGroup.getAttributes().
-                getNamedItem(AutomationXpathConstants.CLUSTERING_ENABLED).getNodeValue());
+                getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_CLUSTERING_ENABLED).getNodeValue());
         if (!isClusteringEnabled) {
-            instanceName = getInstanceList(productGroup, InstanceType.standalone.name()).get(0);
+            instanceName = getInstanceList(productGroup, InstanceType.standalone.name());
         } else {
-            if (getInstanceList(productGroup, InstanceType.lb_worker_manager.name()).size() > 0) {
-                instanceName = getInstanceList(productGroup, InstanceType.lb_worker_manager.name()).get(0);
-            } else if (getInstanceList(productGroup, InstanceType.lb_manager.name()).size() > 0) {
-                instanceName = getInstanceList(productGroup, InstanceType.lb_manager.name()).get(0);
-            } else if (getInstanceList(productGroup, InstanceType.manager.name()).size() > 0) {
-                instanceName = getInstanceList(productGroup, InstanceType.manager.name()).get(0);
-            }
+                instanceName.addAll(getInstanceList(productGroup, InstanceType.lb_worker_manager.name()));
+                instanceName.addAll(getInstanceList(productGroup, InstanceType.lb_manager.name()));
+                instanceName.addAll(getInstanceList(productGroup, InstanceType.manager.name()));
         }
         return instanceName;
     }
@@ -103,8 +101,8 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
         int numberOfInstances = productGroup.getChildNodes().getLength();
         for (int i = 0; i < numberOfInstances; i++) {
             NamedNodeMap attributes = productGroup.getChildNodes().item(i).getAttributes();
-            String instanceName = attributes.getNamedItem(AutomationXpathConstants.NAME).getNodeValue();
-            String instanceType = attributes.getNamedItem(AutomationXpathConstants.TYPE).getNodeValue();
+            String instanceName = attributes.getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_NAME).getNodeValue();
+            String instanceType = attributes.getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_TYPE).getNodeValue();
             if (instanceType.equals(type)) {
                 instanceList.add(instanceName);
             }
@@ -120,7 +118,7 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
      */
     private List<Node> getAllProductNodes() throws XPathExpressionException {
         List<Node> nodeList = new ArrayList<Node>();
-        NodeList productGroups = AutomationConfiguration.getConfigurationNodeList(AutomationXpathConstants.PRODUCT_GROUP);
+        NodeList productGroups = AutomationConfiguration.getConfigurationNodeList(AutomationXpathConstants.CONTEXT_XPATH_PRODUCT_GROUP);
         for (int i = 0; i < productGroups.getLength(); i++) {
             nodeList.add(productGroups.item(i));
         }
