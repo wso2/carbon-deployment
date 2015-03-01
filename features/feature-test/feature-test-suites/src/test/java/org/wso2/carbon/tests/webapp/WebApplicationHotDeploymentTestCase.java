@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,7 +18,6 @@
 package org.wso2.carbon.tests.webapp;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -28,13 +27,14 @@ import org.wso2.carbon.automation.test.utils.common.FileManager;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
-import org.wso2.carbon.commons.*;
+import org.wso2.carbon.commons.utils.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.utils.WebAppDeploymentUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -49,19 +49,21 @@ public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationBaseT
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        webAppDeploymentDir = System.getProperty(ServerConstants.CARBON_HOME) + File.separator
-                              + "repository" + File.separator + "deployment" + File.separator + "server"
-                              + File.separator + "webapps" + File.separator;
+        webAppDeploymentDir =
+                System.getProperty(ServerConstants.CARBON_HOME) + File.separator
+                + "repository" + File.separator + "deployment" + File.separator + "server"
+                + File.separator + "webapps" + File.separator;
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.as", description = "Deploying web application by copying war file to deployment directory")
     public void testWebApplicationHotDeployment() throws Exception {
 
-        FileManager.copyJarFile(new File(FrameworkPathUtil.getSystemResourceLocation() +
-                                         "artifacts" + File.separator + "carbon_deployment" + File.separator
-                                         + "war" + File.separator + webAppFileName)
+        FileManager.copyJarFile(new File(
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator +
+                "carbon_deployment" + File.separator + "war" + File.separator + webAppFileName)
                 , webAppDeploymentDir);
+
         assertTrue(WebAppDeploymentUtil.isWebApplicationDeployed(
                 backendURL, sessionCookie, webAppName)
                 , "Web Application Deployment failed");
@@ -69,7 +71,7 @@ public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationBaseT
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.as", description = "Invoke web application",
-          dependsOnMethods = "testWebApplicationHotDeployment")
+            dependsOnMethods = "testWebApplicationHotDeployment")
     public void testInvokeWebApp() throws Exception {
         String webAppURLLocal = webAppURL + "/appServer-valied-deploymant-1.0.0";
         HttpClientUtil client = new HttpClientUtil();
@@ -79,15 +81,17 @@ public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationBaseT
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.as", description = "UnDeploying web application by deleting war file from deployment directory",
-          dependsOnMethods = "testInvokeWebApp")
+            dependsOnMethods = "testInvokeWebApp")
     public void testDeleteWebApplication() throws Exception {
-        Assert.assertTrue(FileManager.deleteFile(webAppDeploymentDir + webAppFileName));
-        assertTrue(WebAppDeploymentUtil.isWebApplicationUnDeployed(
-                           backendURL, sessionCookie, webAppName),
-                   "Web Application unDeployment failed");
+        assertTrue(FileManager.deleteFile(webAppDeploymentDir + webAppFileName));
+
+        assertFalse(WebAppDeploymentUtil.isWebApplicationUnDeployed(backendURL, sessionCookie, webAppName),
+                    "Web Application unDeployment failed");
+
         String webAppURLLocal = webAppURL + "/appServer-valied-deploymant-1.0.0";
         HttpResponse response = HttpRequestUtil.sendGetRequest(webAppURLLocal, null);
-        Assert.assertEquals(response.getResponseCode(), 302, "Response code mismatch. Client request " +
+
+        assertEquals(response.getResponseCode(), 302, "Response code mismatch. Client request " +
                                                              "got a response even after web app is undeployed");
     }
 }

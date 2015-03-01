@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -31,8 +31,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClientUtils;
-import org.wso2.carbon.commons.AARServiceUploaderClient;
-import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.admin.clients.AARServiceUploaderClient;
+import org.wso2.carbon.commons.utils.FeatureIntegrationBaseTest;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
@@ -42,9 +42,9 @@ import java.io.File;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-/*
-copy a JSONService.aar to the server , verify deployment and invokes the service
-*/
+/**
+ * copy a JSONService.aar to the server , verify deployment and invokes the service
+ */
 public class JSONTestCase extends FeatureIntegrationBaseTest {
 
     private static final Log log = LogFactory.getLog(JSONTestCase.class);
@@ -64,10 +64,6 @@ public class JSONTestCase extends FeatureIntegrationBaseTest {
     }
 
 
-    /**
-     * Create the necessary variables for this test
-     * @throws Exception
-     */
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init(this.userMode);
@@ -87,22 +83,28 @@ public class JSONTestCase extends FeatureIntegrationBaseTest {
         AARServiceUploaderClient aarServiceUploaderClient
                 = new AARServiceUploaderClient(backendURL, sessionCookie);
 
-        aarServiceUploaderClient.uploadAARFile("JSONService.aar",FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                                               File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
-                                               "JSONService.aar", "");
-        AxisServiceClientUtils.waitForServiceDeployment(this.automationContext.getContextUrls().getServiceUrl() +
-                                                        "/JSONService");
+        aarServiceUploaderClient.uploadAARFile(
+                "JSONService.aar",
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
+                "JSONService.aar", "");
+
+        AxisServiceClientUtils.waitForServiceDeployment(
+                this.automationContext.getContextUrls().getServiceUrl() + "/JSONService");
+
         log.info("JSONService.aar service uploaded successfully");
     }
 
     @Test(groups = {"wso2.as"}, description = "invoke the service",
-          dependsOnMethods = "jasonServiceUpload")
+            dependsOnMethods = "jasonServiceUpload")
     public void testGetQuoteRequest()
             throws AxisFault, XMLStreamException, XPathExpressionException {
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         String endpoint = getServiceUrl("JSONService");
-        OMElement result = axisServiceClient.sendReceive(createPayloadOne(), endpoint, "echoInt",
-                                                         APPLICATION_JSON);
+
+        OMElement result =
+                axisServiceClient.sendReceive(createPayloadOne(), endpoint, "echoInt",
+                                              APPLICATION_JSON);
         log.info(result);
         assertNotNull(result, "Result cannot be null");
         assertEquals(createPayloadOne().toString(), result.toString().trim());
@@ -110,13 +112,16 @@ public class JSONTestCase extends FeatureIntegrationBaseTest {
     }
 
     @Test(groups = {"wso2.as"}, description = "invoke the service",
-          dependsOnMethods = "testGetQuoteRequest")
+            dependsOnMethods = "testGetQuoteRequest")
     public void testGetQuoteRequestTwo()
             throws AxisFault, XMLStreamException, XPathExpressionException {
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         String endpoint = getServiceUrl("JSONService");
-        OMElement result = axisServiceClient.sendReceive(createPayloadTwo(), endpoint, "echoInt",
-                                                         APPLICATION_JSON_BADGERFISH);
+
+        OMElement result = axisServiceClient.sendReceive(
+                createPayloadTwo(), endpoint, "echoInt",
+                APPLICATION_JSON_BADGERFISH);
+
         log.info(result);
         assertNotNull(result, "Result cannot be null");
         assertEquals(createPayloadTwo().toString(), result.toString().trim());

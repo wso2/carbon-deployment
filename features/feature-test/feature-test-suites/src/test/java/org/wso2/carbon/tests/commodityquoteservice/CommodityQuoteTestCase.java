@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -20,6 +20,7 @@ package org.wso2.carbon.tests.commodityquoteservice;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
@@ -31,15 +32,20 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClientUtils;
-import org.wso2.carbon.commons.AARServiceUploaderClient;
-import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.admin.clients.AARServiceUploaderClient;
+import org.wso2.carbon.commons.utils.FeatureIntegrationBaseTest;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 
+/**
+ * Upload CommodityQuote service and invoke getQuote operation
+ */
 public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
     private static final Log log = LogFactory.getLog(CommodityQuoteTestCase.class);
     private TestUserMode userMode;
@@ -49,11 +55,7 @@ public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
         this.userMode = userMode;
     }
 
-    /**
-     * Create the necessary variables for this test
-     *
-     * @throws Exception
-     */
+
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init(this.userMode);
@@ -78,17 +80,19 @@ public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
                 = new AARServiceUploaderClient(backendURL, sessionCookie);
 
         aarServiceUploaderClient.uploadAARFile(
-                "CommodityQuoteService.aar", FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                                             File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
-                                             "CommodityQuoteService.aar", "");
+                "CommodityQuoteService.aar",
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "carbon_deployment" + File.separator + "aar" +
+                File.separator + "CommodityQuoteService.aar", "");
 
         AxisServiceClientUtils.waitForServiceDeployment(getServiceUrl("CommodityQuote"));
         log.info("CommodityQuoteService.aar service uploaded successfully");
     }
 
-    @Test(groups = {"wso2.as"}, description = "invoke the service",
-          dependsOnMethods = "testComQuoSerUpload")
-    public void testGetQuoteRequest() throws Exception {
+    @Test(groups = {"wso2.as"}, description = "invoke the service", dependsOnMethods = "testComQuoSerUpload")
+    public void testGetQuoteRequest() throws XPathExpressionException, XMLStreamException,
+                                             AxisFault {
+
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         String endpoint = this.automationContext.getContextUrls().getServiceUrl() + "/CommodityQuote";
         OMElement result = axisServiceClient.sendReceive(createPayload(), endpoint, "getQuoteRequest");
@@ -98,7 +102,7 @@ public class CommodityQuoteTestCase extends FeatureIntegrationBaseTest {
         assertEquals("<symbol>mn</symbol>", symbol.toString().trim());
     }
 
-    private OMElement createPayload() throws Exception {
+    private OMElement createPayload() throws XMLStreamException {
         String request = "<ns1:getQuoteRequest xmlns:ns1=\"http://www.wso2.org/types\">" +
                          "<symbol>mn</symbol></ns1:getQuoteRequest>";
         return new StAXOMBuilder(new ByteArrayInputStream(request.getBytes())).getDocumentElement();

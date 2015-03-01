@@ -1,5 +1,5 @@
 <!--
-~ Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+~ Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 ~
 ~ WSO2 Inc. licenses this file to you under the Apache License,
 ~ Version 2.0 (the "License"); you may not use this file except
@@ -24,10 +24,12 @@
         <version>4.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>feature-test-suites</artifactId>
     <name>Feature Test Suites</name>
     <packaging>jar</packaging>
+
     <build>
         <plugins>
             <plugin>
@@ -142,10 +144,6 @@
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>

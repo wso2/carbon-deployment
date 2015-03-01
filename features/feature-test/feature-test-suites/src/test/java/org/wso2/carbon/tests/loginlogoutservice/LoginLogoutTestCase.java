@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.utils.FeatureIntegrationBaseTest;
 import org.wso2.carbon.extensions.*;
 
 /**
@@ -33,10 +33,6 @@ public class LoginLogoutTestCase extends FeatureIntegrationBaseTest {
     private static final Log log = LogFactory.getLog(LoginLogoutTestCase.class);
     private AuthenticatorClient authClient;
 
-    /**
-     * Create the necessary variables for this test
-     * @throws Exception
-     */
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
@@ -45,12 +41,13 @@ public class LoginLogoutTestCase extends FeatureIntegrationBaseTest {
     @Test(groups = "carbon_deployment.test", description = "Login to server")
     public void login() throws Exception {
         authClient = new AuthenticatorClient(backendURL);
-        String loginStatus = authClient.login(automationContext.getSuperTenant().getTenantAdmin().getUserName(),
-                                              automationContext.getSuperTenant().getTenantAdmin().getPassword().toCharArray(),
-                                              automationContext.getInstance().getHosts().get("default"));
+        String loginStatus =
+                authClient.login(automationContext.getSuperTenant().getTenantAdmin().getUserName(),
+                                 automationContext.getSuperTenant().getTenantAdmin().getPassword().toCharArray(),
+                                 automationContext.getInstance().getHosts().get("default"));
+
         log.info("Login status " + loginStatus);
     }
-
 
     @Test(groups = "carbon_deployment.test", description = "Logout from server", dependsOnMethods = "login")
     public void logout() throws Exception {

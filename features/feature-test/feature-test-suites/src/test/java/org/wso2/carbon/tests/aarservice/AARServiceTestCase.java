@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 * WSO2 Inc. licenses this file to you under the Apache License,
 * Version 2.0 (the "License"); you may not use this file except
@@ -23,6 +23,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
@@ -32,9 +33,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
-import org.wso2.carbon.commons.AARServiceUploaderClient;
-import org.wso2.carbon.commons.FeatureIntegrationBaseTest;
+import org.wso2.carbon.commons.admin.clients.AARServiceUploaderClient;
+import org.wso2.carbon.commons.utils.FeatureIntegrationBaseTest;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 
 import static org.testng.Assert.assertTrue;
@@ -66,20 +68,25 @@ public class AARServiceTestCase extends FeatureIntegrationBaseTest {
                 new TestUserMode[]{TestUserMode.TENANT_USER}
         };
     }
+
     @Test(groups = "carbon_deployment.test", description = "Upload aar service and verify deployment")
     public void testAarServiceUpload() throws Exception {
         AARServiceUploaderClient aarServiceUploaderClient
                 = new AARServiceUploaderClient(backendURL, sessionCookie);
-        aarServiceUploaderClient.uploadAARFile("Axis2Service.aar",FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                                               File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
-                                               "Axis2Service.aar", "");
+
+        aarServiceUploaderClient.uploadAARFile(
+                "Axis2Service.aar",
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "carbon_deployment" + File.separator + "aar" + File.separator +
+                "Axis2Service.aar", "");
+
         String axis2Service = "Axis2Service";
         isServiceDeployed(axis2Service);
         log.info("Axis2Service.aar service uploaded successfully");
     }
 
     @Test(groups = "carbon_deployment.test", description = "invoke aar service", dependsOnMethods = "testAarServiceUpload")
-    public void invokeService() throws Exception {
+    public void invokeService() throws XPathExpressionException, AxisFault {
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         String endpoint = getServiceUrl("Axis2Service");
         OMElement response = axisServiceClient.sendReceive(createPayLoad(), endpoint, "echoInt");

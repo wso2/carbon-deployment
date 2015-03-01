@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -31,10 +31,13 @@ import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Populate user to the carbon server instance, just after starting the server
+ */
 public class UserPopulateExtension extends ExecutionListenerExtension {
     private static final Log log = LogFactory.getLog(UserPopulateExtension.class);
     private List<Node> productGroupsList;
-    private List<UserPopulator> userList = new ArrayList<UserPopulator>(0);
+    private List<UserPopulator> userList = new ArrayList<UserPopulator>();
 
     public void initiate() throws Exception {
         productGroupsList = getAllProductNodes();
@@ -50,6 +53,7 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
             String productGroupName = aProductGroupsList.getAttributes().
                     getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_NAME).getNodeValue();
             List<String> instanceNameList = getProductGroupInstance(aProductGroupsList);
+
             for (String instanceName : instanceNameList) {
                 UserPopulator userPopulator = new UserPopulator(productGroupName, instanceName);
                 userPopulator.populateUsers();
@@ -77,8 +81,11 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
      */
     private List<String> getProductGroupInstance(Node productGroup) {
         List<String> instanceName = new ArrayList<String>();
-        Boolean isClusteringEnabled = Boolean.parseBoolean(productGroup.getAttributes().
+
+        Boolean isClusteringEnabled =
+                Boolean.parseBoolean(productGroup.getAttributes().
                 getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_CLUSTERING_ENABLED).getNodeValue());
+
         if (!isClusteringEnabled) {
             instanceName = getInstanceList(productGroup, InstanceType.standalone.name());
         } else {
@@ -86,6 +93,7 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
                 instanceName.addAll(getInstanceList(productGroup, InstanceType.lb_manager.name()));
                 instanceName.addAll(getInstanceList(productGroup, InstanceType.manager.name()));
         }
+
         return instanceName;
     }
 
@@ -99,14 +107,18 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
     private List<String> getInstanceList(Node productGroup, String type) {
         List<String> instanceList = new ArrayList<String>();
         int numberOfInstances = productGroup.getChildNodes().getLength();
+
         for (int i = 0; i < numberOfInstances; i++) {
             NamedNodeMap attributes = productGroup.getChildNodes().item(i).getAttributes();
-            String instanceName = attributes.getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_NAME).getNodeValue();
-            String instanceType = attributes.getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_TYPE).getNodeValue();
+            String instanceName =
+                    attributes.getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_NAME).getNodeValue();
+            String instanceType =
+                    attributes.getNamedItem(AutomationXpathConstants.CONTEXT_XPATH_TYPE).getNodeValue();
             if (instanceType.equals(type)) {
                 instanceList.add(instanceName);
             }
         }
+
         return instanceList;
     }
 
@@ -118,10 +130,13 @@ public class UserPopulateExtension extends ExecutionListenerExtension {
      */
     private List<Node> getAllProductNodes() throws XPathExpressionException {
         List<Node> nodeList = new ArrayList<Node>();
-        NodeList productGroups = AutomationConfiguration.getConfigurationNodeList(AutomationXpathConstants.CONTEXT_XPATH_PRODUCT_GROUP);
+        NodeList productGroups =
+                AutomationConfiguration.getConfigurationNodeList(AutomationXpathConstants.CONTEXT_XPATH_PRODUCT_GROUP);
+
         for (int i = 0; i < productGroups.getLength(); i++) {
             nodeList.add(productGroups.item(i));
         }
+
         return nodeList;
     }
 }

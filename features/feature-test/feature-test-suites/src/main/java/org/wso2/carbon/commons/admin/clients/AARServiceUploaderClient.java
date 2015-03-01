@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.commons;
+package org.wso2.carbon.commons.admin.clients;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.aarservices.stub.ExceptionException;
 import org.wso2.carbon.aarservices.stub.ServiceUploaderStub;
 import org.wso2.carbon.aarservices.stub.types.carbon.AARServiceData;
+import org.wso2.carbon.commons.utils.AuthenticateStubUtil;
 
 import javax.activation.DataHandler;
 import java.net.MalformedURLException;
@@ -31,14 +32,12 @@ import java.net.URL;
 import java.rmi.RemoteException;
 
 /**
- * This Class is to upload a aar service
+ * Provides client to invoke ServiceUploader admin service.
+ * Can be used to upload aar files.
  */
-
 public class AARServiceUploaderClient {
     private static final Log log = LogFactory.getLog(AARServiceUploaderClient.class);
-
     private ServiceUploaderStub serviceUploaderStub;
-    private final String serviceName = "ServiceUploader";
 
     /**
      * This Contractor is for authenticating the endpoint url
@@ -48,6 +47,7 @@ public class AARServiceUploaderClient {
      * @throws AxisFault - Error when initializing ServiceUploaderStub
      */
     public AARServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String serviceName = "ServiceUploader";
         String endPoint = backEndUrl + serviceName;
         serviceUploaderStub = new ServiceUploaderStub(endPoint);
         AuthenticateStubUtil.authenticateStub(sessionCookie, serviceUploaderStub);
@@ -63,11 +63,9 @@ public class AARServiceUploaderClient {
      * @throws RemoteException       - Error while uploading the aar file
      * @throws MalformedURLException - Variable filePath is invalid
      */
-    public void uploadAARFile(String fileName, String filePath,
-                              String serviceHierarchy)
+    public void uploadAARFile(String fileName, String filePath,String serviceHierarchy)
             throws ExceptionException, RemoteException, MalformedURLException {
         AARServiceData aarServiceData;
-
         aarServiceData = new AARServiceData();
         aarServiceData.setFileName(fileName);
         aarServiceData.setDataHandler(createDataHandler(filePath));
@@ -83,7 +81,6 @@ public class AARServiceUploaderClient {
             log.error("File path URL is invalid" + e);
             throw new MalformedURLException("File path URL is invalid" + e);
         }
-        DataHandler dh = new DataHandler(url);
-        return dh;
+        return new DataHandler(url);
     }
 }

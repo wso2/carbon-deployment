@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,13 +16,10 @@
  * under the License.
  */
 
-package org.wso2.carbon.extensions;
+package org.wso2.carbon.commons.utils;
 
-/**
- * This class is for create common constants
- */
-public class ExtensionCommonConstants {
-    public static final String SUPER_TENANT_DOMAIN_NAME = "carbon.super";
-    public static final String ADMIN_USER = "admin";
+public class FeatureIntegrationConstant {
+    public static final int DEPLOYMENT_DELAY_IN_MILLIS = 90 * 1000;
+    public static final String PRODUCT_GROUP_NAME = "CARBON_DEPLOYMENT";
 
 }

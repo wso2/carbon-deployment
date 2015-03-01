@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,11 +16,12 @@
  * under the License.
  */
 
-package org.wso2.carbon.commons;
+package org.wso2.carbon.commons.admin.clients;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.commons.utils.AuthenticateStubUtil;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminStub;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyServicesWrapper;
@@ -30,16 +31,17 @@ import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaDataWrapper;
 import java.rmi.RemoteException;
 
 /**
- * This class is for managing all service operations
+ * Provides client to invoke ServiceAdmin admin service.
+ * Can be used to manage axis2 services.
  */
 public class ServiceAdminClient {
 
     private static final Log log = LogFactory.getLog(ServiceAdminClient.class);
-    private final String serviceName = "ServiceAdmin";
     private ServiceAdminStub serviceAdminStub;
-
+    private int pageNumber = 0;
 
     public ServiceAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
+        String serviceName = "ServiceAdmin";
         String endPoint = backEndUrl + serviceName;
         serviceAdminStub = new ServiceAdminStub(endPoint);
         AuthenticateStubUtil.authenticateStub(sessionCookie, serviceAdminStub);
@@ -52,9 +54,7 @@ public class ServiceAdminClient {
      * @throws RemoteException - Error when deleting service group
      */
     public void deleteService(String[] serviceGroups) throws RemoteException {
-
         serviceAdminStub.deleteServiceGroups(serviceGroups);
-
     }
 
     /**
@@ -65,40 +65,38 @@ public class ServiceAdminClient {
      * @throws RemoteException - Error when deleting faulty service group
      */
     public boolean deleteFaultyServiceByServiceName(String serviceName) throws RemoteException {
-        try {
-            return serviceAdminStub.deleteFaultyServiceGroup(getFaultyData(serviceName).getArtifact());
-        } catch (RemoteException e) {
-            log.error("Faulty service deletion fails", e);
-            throw new RemoteException("Faulty service deletion fails", e);
+        boolean isFaultyServiceDeleted = false;
+        FaultyService faultyService =  getFaultyData(serviceName);
+        if(faultyService != null){
+            isFaultyServiceDeleted =
+                    serviceAdminStub.deleteFaultyServiceGroup(faultyService.getArtifact());
         }
+        return isFaultyServiceDeleted;
     }
 
     /**
-     * Get all the services for a service name
+     * Get all the services for given service name
      *
      * @param serviceName - service name to search
      * @return ServiceMetaDataWrapper - service list
      * @throws RemoteException - Error when list services.
      */
-    public ServiceMetaDataWrapper listServices(String serviceName)
-            throws RemoteException {
+    public ServiceMetaDataWrapper listServices(String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
-        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
-        serviceAdminStub.getFaultyServiceArchives(0);
+        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, pageNumber);
+        serviceAdminStub.getFaultyServiceArchives(pageNumber);
         return serviceMetaDataWrapper;
     }
 
     /**
      * Get all the faulty services
      *
-     * @return FaultyServicesWrapper - all faulty services.
+     * @return FaultyServicesWrapper - FaultyServicesWrapper contain fault metadata
      * @throws RemoteException - Error when getting faulty service archives
      */
     public FaultyServicesWrapper listFaultyServices() throws RemoteException {
         FaultyServicesWrapper faultyServicesWrapper;
-
-        faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(0);
-
+        faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(pageNumber);
         return faultyServicesWrapper;
     }
 
@@ -109,8 +107,7 @@ public class ServiceAdminClient {
      * @return boolean - service is available or not
      * @throws RemoteException - Error when list services.
      */
-    public boolean isServiceExists(String serviceName)
-            throws RemoteException {
+    public boolean isServiceExists(String serviceName) throws RemoteException {
         boolean serviceState = false;
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
@@ -121,7 +118,8 @@ public class ServiceAdminClient {
         } else {
             for (ServiceMetaData serviceData : serviceMetaDataList) {
                 if (serviceData != null && serviceData.getName().equalsIgnoreCase(serviceName)) {
-                    return true;
+                    serviceState = true;
+                    break;
                 }
             }
         }
@@ -169,7 +167,8 @@ public class ServiceAdminClient {
             } else {
                 for (FaultyService faultyServiceData : faultyServiceList) {
                     if (faultyServiceData != null && faultyServiceData.getServiceName().equalsIgnoreCase(serviceName)) {
-                        return true;
+                        serviceState = true;
+                        break;
                     }
                 }
             }
@@ -191,18 +190,13 @@ public class ServiceAdminClient {
         faultyServicesWrapper = listFaultyServices();
         if (faultyServicesWrapper != null) {
             faultyServiceList = faultyServicesWrapper.getFaultyServices();
-            if (faultyServiceList == null || faultyServiceList.length == 0) {
-                throw new RuntimeException("Service not found in faulty service list");
-            } else {
+            if (faultyServiceList != null ) {
                 for (FaultyService faultyServiceData : faultyServiceList) {
                     if (faultyServiceData != null && faultyServiceData.getServiceName().equalsIgnoreCase(serviceName)) {
                         faultyService = faultyServiceData;
                     }
                 }
             }
-        }
-        if (faultyService == null) {
-            throw new RuntimeException("Service not found in faulty service list " + faultyService);
         }
         return faultyService;
     }

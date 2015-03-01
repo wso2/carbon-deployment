@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,7 +19,6 @@
 package org.wso2.carbon.extensions;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Stub;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
@@ -31,7 +30,7 @@ import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException
 import java.rmi.RemoteException;
 
 /**
- * This Class in for login logout users to carbon server
+ * Provides utility methods for authenticate user login and logout
  */
 public class AuthenticatorClient {
     private static final Log log = LogFactory.getLog(AuthenticatorClient.class);
@@ -40,25 +39,17 @@ public class AuthenticatorClient {
     public AuthenticatorClient(String backendUrl) throws AxisFault {
         String serviceName = "AuthenticationAdmin";
         String endPoint = backendUrl + serviceName;
-            log.info("EndPoint" + endPoint);
-        try {
-            authenticationAdminStub = new AuthenticationAdminStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("authenticationAdminStub initialization fails",axisFault);
-            throw new AxisFault("authenticationAdminStub initialization fails",axisFault);
-        }
-    }
-
-    public Stub getServiceStub(){
-        return this.authenticationAdminStub;
+        log.info("EndPoint" + endPoint);
+        authenticationAdminStub = new AuthenticationAdminStub(endPoint);
     }
 
     /**
      * Method to login a user
+     *
      * @param userName - use name for the login
      * @param password - password for the login
-     * @param host - login host
-     * @return - sessionCookie of the project as String
+     * @param host     - login host
+     * @return - returns sessionCookie after login
      * @throws LoginAuthenticationExceptionException - Error while checking login status
      * @throws RemoteException - Error while checking login status
      */
@@ -68,9 +59,11 @@ public class AuthenticatorClient {
         ServiceContext serviceContext;
         String sessionCookie;
         loginStatus = authenticationAdminStub.login(userName, String.valueOf(password), host);
+
         if (!loginStatus) {
             throw new LoginAuthenticationExceptionException("Login Unsuccessful. Return false as a login status by Server");
         }
+
         log.info("Login Successful");
         serviceContext = authenticationAdminStub._getServiceClient().getLastOperationContext().getServiceContext();
         sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
@@ -80,15 +73,14 @@ public class AuthenticatorClient {
 
     /**
      * Log out the logged in user
+     *
      * @throws LogoutAuthenticationExceptionException - Error while logging out
-     * @throws RemoteException - Error while logging out
+     * @throws RemoteException - Throws if error occurred while logout.
      */
     public void logOut() throws LogoutAuthenticationExceptionException, RemoteException {
         authenticationAdminStub.logout();
         log.info("log out");
     }
-
-
 }
 
 

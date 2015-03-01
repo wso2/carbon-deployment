@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,11 +16,12 @@
  * under the License.
  */
 
-package org.wso2.carbon.commons;
+package org.wso2.carbon.commons.admin.clients;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.commons.utils.AuthenticateStubUtil;
 import org.wso2.carbon.webapp.mgt.stub.WebappAdminStub;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.VersionedWebappMetadata;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata;
@@ -36,18 +37,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This Class is for manage web applications
+ * Provides client for invoking WebAppAdminService
+ * Can be used for web app management operation
  */
 public class WebAppAdminClient {
 
     private final Log log = LogFactory.getLog(WebAppAdminClient.class);
     private WebappAdminStub webappAdminStub;
+    private int pageNumber;
 
     public WebAppAdminClient(String backendUrl, String sessionCookie) throws AxisFault {
         String serviceName = "WebappAdmin";
         String endPoint = backendUrl + serviceName;
         webappAdminStub = new WebappAdminStub(endPoint);
         AuthenticateStubUtil.authenticateStub(sessionCookie, webappAdminStub);
+        pageNumber = 0;
     }
 
     /**
@@ -56,37 +60,18 @@ public class WebAppAdminClient {
      * @param filePath - file path of the war file
      * @throws RemoteException - Error when upload web applications
      */
-    public void warFileUploader(String filePath) throws RemoteException {
+    public void warFileUploader(String filePath) throws RemoteException, MalformedURLException {
         File file = new File(filePath);
         String fileName = file.getName();
-        URL url = null;
-        try {
-            url = new URL("file://" + filePath);
-        } catch (MalformedURLException e) {
-            log.error("Malformed URL " + e);
-        }
+        URL url = new URL("file://" + filePath);
         DataHandler dh = new DataHandler(url);
-        WebappUploadData webApp;
-        webApp = new WebappUploadData();
+
+        WebappUploadData webApp = new WebappUploadData();
         webApp.setFileName(fileName);
         webApp.setDataHandler(dh);
+        webappAdminStub.uploadWebapp(new WebappUploadData[]{webApp});
 
-        try {
-            assert webappAdminStub.uploadWebapp(new WebappUploadData[]{webApp}) : "webapp upload unsuccessful";
-        } catch (RemoteException e) {
-            log.error("Fail to upload webapp file :" + e);
-            throw new RemoteException("Fail to upload webapp file :" + e);
-        }
-    }
-
-    /**
-     * Delete a web application by file name
-     *
-     * @param fileName - file name
-     * @throws RemoteException - Error while deleting started web application
-     */
-    public void deleteWebAppFile(String fileName) throws RemoteException {
-        webappAdminStub.deleteStartedWebapps(new String[]{fileName});
+        log.info("Webapp " + fileName + "uploaded successfully");
     }
 
     /**
@@ -100,8 +85,7 @@ public class WebAppAdminClient {
      * @throws RemoteException - Error when getting paged web apps summary
      */
     public WebappsWrapper getPagedWebappsSummary(String searchString, String webAppType,
-                                                 String webAppState, int pageNo)
-            throws RemoteException {
+                                                 String webAppState, int pageNo) throws RemoteException {
         return webappAdminStub.getPagedWebappsSummary(searchString, webAppType, webAppState, pageNo);
     }
 
@@ -114,7 +98,7 @@ public class WebAppAdminClient {
      */
     public List<String> getWebApplist(String webAppNameSearchString) throws RemoteException {
         List<String> list = new ArrayList<String>();
-        WebappsWrapper wrapper = getPagedWebappsSummary(webAppNameSearchString, "ALL", "ALL", 0);
+        WebappsWrapper wrapper = getPagedWebappsSummary(webAppNameSearchString, "ALL", "ALL", pageNumber);
         VersionedWebappMetadata[] webappGroups = wrapper.getWebapps();
 
         if (webappGroups != null) {
@@ -137,8 +121,7 @@ public class WebAppAdminClient {
      * @throws RemoteException - Error when getting paged faulty web apps summary
      */
     public WebappsWrapper getPagedFaultyWebappsSummary(String searchString, String webAppType,
-                                                       int pageNo)
-            throws RemoteException {
+                                                       int pageNo) throws RemoteException {
         return webappAdminStub.getPagedFaultyWebappsSummary(searchString, webAppType, pageNo);
     }
 
@@ -151,7 +134,7 @@ public class WebAppAdminClient {
      */
     public List<String> getFaultyWebAppList(String webAppNameSearchString) throws RemoteException {
         List<String> list = new ArrayList<String>();
-        WebappsWrapper wrapper = getPagedFaultyWebappsSummary(webAppNameSearchString, "ALL", 0);
+        WebappsWrapper wrapper = getPagedFaultyWebappsSummary(webAppNameSearchString, "ALL", pageNumber);
         VersionedWebappMetadata[] webappGroups = wrapper.getWebapps();
 
         if (webappGroups != null && webappGroups[0].getVersionGroups() != null) {

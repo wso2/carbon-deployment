@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 
 /**
- * This class is for login and logout to carbon server
+ * Provides user login and logout to carbon server
  */
 public class LoginLogoutClient {
     private static final Log log = LogFactory.getLog(LoginLogoutClient.class);
