@@ -73,10 +73,10 @@ public class TenantManagementServiceClient {
         tenantInfoBean.setFirstname(firstName);
         TenantInfoBean tenantInfoBeanGet;
         tenantInfoBeanGet = tenantMgtAdminServiceStub.getTenant(domainName);
-        if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() != 0) {
+        if (!tenantInfoBeanGet.getActive()) {
             tenantMgtAdminServiceStub.activateTenant(domainName);
             log.info("Tenant domain " + domainName + " activated successfully");
-        } else if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() == 0) {
+        } else if (!tenantInfoBeanGet.getActive()) {
             tenantMgtAdminServiceStub.addTenant(tenantInfoBean);
             tenantMgtAdminServiceStub.activateTenant(domainName);
             log.info("Tenant domain " + domainName + " created and activated successfully");

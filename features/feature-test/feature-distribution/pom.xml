@@ -28,6 +28,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>feature-distribution</artifactId>
+    <name>WSO2 Carbon - Feature Distribution</name>
     <build>
         <finalName>wso2carbon-core-${carbon.kernel.version}</finalName>
         <plugins>

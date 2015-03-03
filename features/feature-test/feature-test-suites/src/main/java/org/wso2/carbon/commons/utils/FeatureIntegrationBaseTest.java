@@ -29,7 +29,6 @@ import javax.xml.xpath.XPathExpressionException;
 import java.lang.System;
 import java.rmi.RemoteException;
 
-
 /*
 * Base class for feature integration tests classed
 * Provide environment initialization and common functionalities

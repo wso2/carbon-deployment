@@ -19,15 +19,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <artifactId>feature-test</artifactId>
         <groupId>org.wso2.carbon.deployment</groupId>
+        <artifactId>feature-test</artifactId>
         <version>4.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>feature-test-suites</artifactId>
-    <name>Feature Test Suites</name>
+    <name>WSO2 Carbon - Feature Test Suites</name>
     <packaging>jar</packaging>
 
     <build>

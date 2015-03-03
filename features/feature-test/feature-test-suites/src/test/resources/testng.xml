@@ -1,7 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <!--
-
   ~  Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~  WSO2 Inc. licenses this file to you under the Apache License,
@@ -17,7 +16,6 @@
   ~  KIND, either express or implied.  See the License for the
   ~  specific language governing permissions and limitations
   ~  under the License.
-
 -->
 
 <suite name="ESBTestSuite" parallel="false">
@@ -29,7 +27,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
     </listeners>
 
-    <test name="Server-Stratup" preserve-order="true" verbose="2">
+    <test name="Server-Startup-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.tests.*"/>
         </packages>

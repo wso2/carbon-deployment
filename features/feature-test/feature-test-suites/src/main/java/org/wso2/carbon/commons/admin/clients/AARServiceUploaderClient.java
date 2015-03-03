@@ -65,22 +65,23 @@ public class AARServiceUploaderClient {
      */
     public void uploadAARFile(String fileName, String filePath,String serviceHierarchy)
             throws ExceptionException, RemoteException, MalformedURLException {
+        URL url = new URL("file://" + filePath);
         AARServiceData aarServiceData;
         aarServiceData = new AARServiceData();
         aarServiceData.setFileName(fileName);
-        aarServiceData.setDataHandler(createDataHandler(filePath));
+        aarServiceData.setDataHandler(createDataHandler(url));
         aarServiceData.setServiceHierarchy(serviceHierarchy);
         serviceUploaderStub.uploadService(new AARServiceData[]{aarServiceData});
     }
 
-    private DataHandler createDataHandler(String filePath) throws MalformedURLException {
-        URL url = null;
-        try {
-            url = new URL("file://" + filePath);
-        } catch (MalformedURLException e) {
-            log.error("File path URL is invalid" + e);
-            throw new MalformedURLException("File path URL is invalid" + e);
-        }
-        return new DataHandler(url);
+    /**
+     * Create data handler for given url
+     *
+     * @param url - file path
+     * @return DataHandler
+     * @throws MalformedURLException - Throws if error occurred while creating data handler.
+     */
+    private DataHandler createDataHandler(URL url) throws MalformedURLException {
+            return new DataHandler(url);
     }
 }
