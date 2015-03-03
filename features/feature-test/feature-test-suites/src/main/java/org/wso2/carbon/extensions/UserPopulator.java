@@ -358,7 +358,7 @@ public class UserPopulator {
     /**
      * Class to store data to be removed at the end of the test execution
      */
-    private class RemovableData {
+    private static class RemovableData {
         private String tenant;
         private String tenantType;
         private boolean isNewTenant = false;
