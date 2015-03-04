@@ -34,7 +34,6 @@ import org.wso2.carbon.utils.ServerConstants;
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -85,7 +84,7 @@ public class WebApplicationHotDeploymentTestCase extends FeatureIntegrationBaseT
     public void testDeleteWebApplication() throws Exception {
         assertTrue(FileManager.deleteFile(webAppDeploymentDir + webAppFileName));
 
-        assertFalse(WebAppDeploymentUtil.isWebApplicationUnDeployed(backendURL, sessionCookie, webAppName),
+        assertTrue(WebAppDeploymentUtil.isWebApplicationUnDeployed(backendURL, sessionCookie, webAppName),
                     "Web Application unDeployment failed");
 
         String webAppURLLocal = webAppURL + "/appServer-valied-deploymant-1.0.0";

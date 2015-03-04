@@ -54,7 +54,7 @@ public class WebAppDeploymentUtil {
         Calendar startTime = Calendar.getInstance();
         long time;
         while (!isWebAppDeployed && (time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) <
-               FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS) {
+                                    FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS) {
             webAppList = webAppAdminClient.getWebApplist(webAppFileName);
             for (String weApp : webAppList) {
                 if (webAppName.equalsIgnoreCase(weApp)) {
@@ -78,13 +78,17 @@ public class WebAppDeploymentUtil {
      */
     public static boolean isWebApplicationUnDeployed(String backEndUrl, String sessionCookie,
                                                      String webAppFileName) throws Exception {
-        log.info("waiting " + FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS + " millis for webApp undeployment " + webAppFileName);
+
+        log.info("waiting " + FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS +
+                 " millis for webApp undeployment " + webAppFileName);
+
         WebAppAdminClient webAppAdminClient = new WebAppAdminClient(backEndUrl, sessionCookie);
         List<String> webAppList;
 
         boolean isWebAppUnDeployed = false;
         Calendar startTime = Calendar.getInstance();
-        while ((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()) < FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS) {
+        while ((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()) <
+               FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS) {
             webAppList = webAppAdminClient.getWebApplist(webAppFileName);
             if (webAppList.size() != 0) {
                 for (String name : webAppList) {
@@ -92,10 +96,10 @@ public class WebAppDeploymentUtil {
                         isWebAppUnDeployed = false;
                         log.info(webAppFileName + " -  Web Application not undeployed yet");
                         break;
+                    } else {
+                        isWebAppUnDeployed = true;
                     }
                 }
-            } else {
-                return true;
             }
         }
         return isWebAppUnDeployed;

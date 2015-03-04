@@ -126,8 +126,8 @@
                 </admin>
                 <users>
                     <user key="user1">
-                        <userName>hello</userName>
-                        <password>hello</password>
+                        <userName>testuser11</userName>
+                        <password>testuser11</password>
                     </user>
                     <user key="user2">
                         <userName>testuser21</userName>
@@ -164,8 +164,8 @@
                 </admin>
                 <users>
                     <user key="user1">
-                        <userName>testuse11</userName>
-                        <password>testuse11</password>
+                        <userName>testuser11</userName>
+                        <password>testuser11</password>
                     </user>
                     <user key="user2">
                         <userName>testuser21</userName>
