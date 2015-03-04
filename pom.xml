@@ -818,7 +818,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.apache.tomcat.wso2</groupId>
+                <groupId>org.wso2.tomcat</groupId>
                 <artifactId>tomcat</artifactId>
                 <version>${orbit.version.tomcat}</version>
             </dependency>
@@ -1357,8 +1357,8 @@
         <carbon.deployment.exp.pkg.version>4.3.2</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
 
-        <version.tomcat>7.0.52</version.tomcat>
-        <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>
+        <version.tomcat>7.0.59</version.tomcat>
+        <orbit.version.tomcat>${version.tomcat}.wso2v1</orbit.version.tomcat>
 
         <eclipse.osgi.version>3.9.1.v20130814-1242</eclipse.osgi.version>
 
