@@ -16,7 +16,7 @@
 package org.wso2.carbon.bam.service.data.publisher.conf;
 
 
-import org.wso2.carbon.bam.service.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.publish.StreamDefinitionCreatorUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;

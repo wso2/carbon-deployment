@@ -21,7 +21,7 @@
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>carbon-deployment</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.2.2-SNAPSHOT</version>
     </parent>
 
 
@@ -32,10 +32,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>axis2-repo-mgt</module>
-        <module>axis2-service-mgt</module>
-        <module>service-hosting</module>
-        <module>module-mgt</module>
         <module>bam-data-agents-feature</module>
     </modules>
 

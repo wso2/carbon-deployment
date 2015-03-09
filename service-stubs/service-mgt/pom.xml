@@ -23,7 +23,7 @@
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>carbon-deployment</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.2.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -34,13 +34,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.aarservices.stub</module>
-        <module>org.wso2.carbon.jarservices.stub</module>
-        <module>org.wso2.carbon.springservices.stub</module>
-        <module>org.wso2.carbon.repomanager.axis2.stub</module>
-        <module>org.wso2.carbon.module.mgt.stub</module>
-        <module>org.wso2.carbon.operation.mgt.stub</module>
-        <module>org.wso2.carbon.service.mgt.stub</module>
         <module>org.wso2.carbon.bam.service.data.publisher.stub</module>
     </modules>
 
