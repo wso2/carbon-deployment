@@ -52,22 +52,22 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.statistics</artifactId>
-                <version>${carbon.commons.version}</version>
+                <version>${carbon.statistics.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
-                <version>${carbon.commons.version}</version>
+                <version>${carbon.databridge.agent.thrift.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-                <version>${carbon.commons.version}</version>
+                <version>${carbon.databridge.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
-                <version>${carbon.commons.version}</version>
+                <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -266,7 +266,6 @@
 
     <properties>
         <carbon.patchrelease.version.421>4.2.1</carbon.patchrelease.version.421>
-        <carbon.platform.version>4.2.1</carbon.platform.version>
         <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
 
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
@@ -275,9 +274,14 @@
         <carbon.kernel.version>4.2.0</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.2.0, 4.3.0)</carbon.kernel.imp.pkg.version>
 
-        <!-- Carbon Commons version-->
-        <carbon.commons.version>4.2.0</carbon.commons.version>
-        <carbon.commons.imp.pkg.version>[4.2.0, 4.3.0)</carbon.commons.imp.pkg.version>
+        <carbon.statistics.version>4.2.2</carbon.statistics.version>
+        <carbon.platform.version>4.2.0</carbon.platform.version>
+        <carbon.databridge.commons.version>4.2.3</carbon.databridge.commons.version>
+        <carbon.databridge.agent.thrift.version>4.2.4</carbon.databridge.agent.thrift.version>
+        <carbon.statistics.imp.pkg.version>[4.2.2, 4.3.0)</carbon.statistics.imp.pkg.version>
+        <carbon.platform.imp.pkg.version>[4.2.0, 4.3.0)</carbon.platform.imp.pkg.version>
+        <carbon.databridge.commons.imp.pkg.version>[4.2.3, 4.3.0)</carbon.databridge.commons.imp.pkg.version>
+        <carbon.databridge.agent.thrift.imp.pkg.version>[4.2.4, 4.3.0)</carbon.databridge.agent.thrift.imp.pkg.version>
 
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.2.2-SNAPSHOT</carbon.deployment.version>
@@ -285,7 +289,6 @@
         <carbon.deployment.imp.pkg.version>[4.2.0, 4.3.0)</carbon.deployment.imp.pkg.version>
 
         <!-- Axiom Version -->
-        <axiom.version>1.2.11</axiom.version>
         <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
         <axiom.osgi.version.range>[1.2.11.wso2v5, 1.3.0)</axiom.osgi.version.range>
 
