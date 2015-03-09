@@ -97,7 +97,7 @@
                                     org.wso2.carbon.deployment:org.wso2.carbon.bam.service.data.publisher:${carbon.deployment.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam.data.publisher.util:${project.version}
+                                    org.wso2.carbon:org.wso2.carbon.bam.data.publisher.util:${carbon.patchrelease.version.421}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
