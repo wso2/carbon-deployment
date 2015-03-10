@@ -27,6 +27,7 @@ import org.wso2.carbon.bam.service.data.publisher.conf.EventConfigNStreamDef;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.service.data.publisher.conf.RegistryPersistenceManager;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
+import org.wso2.carbon.bam.service.data.publisher.services.ServiceDataPublisherAdmin;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.TenantEventConfigData;
@@ -69,11 +70,21 @@ public class StatisticsServiceComponent {
     private static ConfigurationContext configurationContext;
     private static ServerConfiguration serverConfiguration;
 
+    private static ServiceDataPublisherAdmin dataPublisherAdminService;
+
     private static boolean publishingEnabled;
 
     private static Log log = LogFactory.getLog(StatisticsServiceComponent.class);
 
     protected void activate(ComponentContext context) {
+        try {
+            dataPublisherAdminService = new ServiceDataPublisherAdmin();
+            BundleContext bundleContext = context.getBundleContext();
+            bundleContext.registerService(ServiceDataPublisherAdmin.class.getName(),
+                    dataPublisherAdminService, null);
+        } catch (Throwable e) {
+            log.error("Error while registering service ", e);
+        }
         checkPublishingEnabled();
 
         ServiceAgentUtil.setPublishingEnabled(publishingEnabled);
