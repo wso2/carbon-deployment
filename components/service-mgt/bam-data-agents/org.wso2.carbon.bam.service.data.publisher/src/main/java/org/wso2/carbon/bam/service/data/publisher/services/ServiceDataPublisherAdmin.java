@@ -16,6 +16,7 @@
 package org.wso2.carbon.bam.service.data.publisher.services;
 
 
+import org.wso2.carbon.bam.service.data.publisher.conf.AnalyzingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.conf.RegistryPersistenceManager;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
@@ -35,6 +36,14 @@ public class ServiceDataPublisherAdmin extends AbstractAdmin {
 
     public EventingConfigData getEventingConfigData() {
         return registryPersistenceManager.getEventingConfigData();
+    }
+
+    public void configureAnalyzing(AnalyzingConfigData analyzingConfigData) throws Exception {
+        registryPersistenceManager.update(analyzingConfigData);
+    }
+
+    public AnalyzingConfigData getAnalyzingConfigData() {
+        return registryPersistenceManager.getAnaEventingConfigData();
     }
 
     public boolean isCloudDeployment(){

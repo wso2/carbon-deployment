@@ -278,6 +278,22 @@ public class RegistryPersistenceManager {
 
     }
 
+    /**
+     * Updates the Registry with given analytic node config data.
+     *
+     * @param analyzingConfigData analyzer node configuration data
+     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException
+     *          thrown when updating the registry properties fails.
+     */
+    public void update(AnalyzingConfigData analyzingConfigData) throws RegistryException {
+
+        updateConfigurationProperty(CommonConstants.ANALYZER_URL, analyzingConfigData.getUrl(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(CommonConstants.ANALYZER_USER_NAME, analyzingConfigData.getUserName(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(CommonConstants.ANALYZER_PASSWORD, analyzingConfigData.getPassword(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+    }
 
     /**
      * Fetches the value of the property with propertyName from registry. Returns null if no property
@@ -333,5 +349,33 @@ public class RegistryPersistenceManager {
         return load();
     }
 
+    public AnalyzingConfigData getAnaEventingConfigData() {
+        AnalyzingConfigData analyzingConfigData = new AnalyzingConfigData();
+        // First set it to defaults, but do not persist
+        analyzingConfigData.setUrl(EMPTY_STRING);
+        analyzingConfigData.setPassword(EMPTY_STRING);
+        analyzingConfigData.setUserName(EMPTY_STRING);
+
+        // then load it from registry
+        try {
+            String analyzerURL = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.ANALYZER_URL);
+            String analyzerUsername = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.ANALYZER_USER_NAME);
+            String analyzerPassword = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.ANALYZER_PASSWORD);
+
+            if (analyzerURL != null && analyzerUsername != null && analyzerPassword != null) {
+                analyzingConfigData.setUrl(analyzerURL);
+                analyzingConfigData.setUserName(analyzerUsername);
+                analyzingConfigData.setPassword(analyzerPassword);
+            } else { // Registry does not have analyzer config. Set to defaults.
+                update(analyzingConfigData);
+            }
+        } catch (Exception ignored) {
+            // If something went wrong, then we have the default, or whatever loaded so far
+        }
+        return analyzingConfigData;
+    }
 
 }
