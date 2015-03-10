@@ -85,7 +85,7 @@ public class ServiceDeploymentUtil {
                FeatureIntegrationConstant.DEPLOYMENT_DELAY_IN_MILLIS) {
             if (!adminServiceService.isServiceExists(serviceName)) {
                 isServiceDeleted = true;
-                log.info(serviceName + " Service un-deployed in " + time + " millis");
+                log.info(serviceName + " service un-deployed in " + time + " millis");
                 break;
             }
         }
