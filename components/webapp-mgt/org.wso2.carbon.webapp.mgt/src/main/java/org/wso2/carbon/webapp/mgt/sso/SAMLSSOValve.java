@@ -173,11 +173,15 @@ public class SAMLSSOValve extends SingleSignOn {
                 }
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 if (resolver.isHttpPostBinding()) {
-
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
-                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
-
+                    if (request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) != null) {
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                    } else {
+                        log.warn("Attempt to logout from a already logout session.");
+                        response.sendRedirect(request.getContext().getPath());
+                        return;
+                    }
                 } else {
                     //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
