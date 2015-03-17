@@ -266,7 +266,7 @@
 
     <properties>
         <carbon.patchrelease.version.421>4.2.1</carbon.patchrelease.version.421>
-        <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
+        <orbit.version.axis2>1.6.1.wso2v10</orbit.version.axis2>
 
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 
