@@ -3,7 +3,7 @@ package org.wso2.carbon.bam.service.data.publisher.publish;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.bam.service.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.conf.Property;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;

@@ -18,8 +18,8 @@ package org.wso2.carbon.bam.service.data.publisher.publish;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.bam.service.data.publisher.util.BAMDataPublisherConstants;
-import org.wso2.carbon.bam.service.data.publisher.util.PublisherUtil;
+import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.data.publisher.util.PublisherUtil;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventConfigNStreamDef;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
