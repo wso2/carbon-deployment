@@ -121,7 +121,6 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
                             waitForWebAppToLeaveTransit(transitWebapp.getContextName(), currentCtx);
                     try {
                         TomcatUtil.remapRequest(request);
-                        return;
                     } catch (Exception e) {
                         log.error("Error when redirecting response to " + requestURI, e);
                     }
