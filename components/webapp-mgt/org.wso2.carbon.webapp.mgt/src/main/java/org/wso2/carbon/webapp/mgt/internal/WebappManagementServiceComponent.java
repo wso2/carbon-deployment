@@ -154,7 +154,7 @@ public class WebappManagementServiceComponent {
             for (WebApplication application :
                     webApplicationsHolder.getStartedWebapps().values()) {
                 application.getContext().getServletContext().
-                        setInitParameter(serverUrlParam.getName(),
+                        setAttribute(serverUrlParam.getName(),
                                          serverUrlParam.getValue());
             }
         }
