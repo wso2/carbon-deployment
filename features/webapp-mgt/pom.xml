@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) 2009-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -19,22 +19,32 @@
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>service-mgt-feature</artifactId>
+        <artifactId>carbon-deployment</artifactId>
+        <relativePath>../../pom.xml</relativePath>
         <version>4.2.3-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>bam-service-data-agent-feature</artifactId>
+    <artifactId>webapp-mgt-feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - BAM Service Data Agent Feature Aggregator Module</name>
+    <name>WSO2 Carbon - Service Management Feature Aggregator Module</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.bam.service.agent.server.feature</module>
-        <module>org.wso2.carbon.bam.service.agent.ui.feature</module>
-	<module>org.wso2.carbon.bam.service.agent.feature</module>
+        <module>org.wso2.carbon.webapp.mgt.feature</module>
+        <module>org.wso2.carbon.webapp.mgt.server.feature</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
 

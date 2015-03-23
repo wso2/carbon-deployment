@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) 2009-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -19,28 +19,31 @@
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>bam-service-data-agent-feature</artifactId>
+        <artifactId>webapp-mgt-feature</artifactId>
         <version>4.2.3-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.bam.service.agent.feature</artifactId>
+    <artifactId>org.wso2.carbon.webapp.mgt.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - BAM Service Data Agent Aggregate Feature</name>
+    <name>WSO2 Carbon - Webapp Management Feature</name>
+    <version>4.2.3-SNAPSHOT</version>
     <url>http://wso2.org</url>
+    <description>This feature contains the bundles required for Webapp Management functionality
+    </description>
 
-   <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.bam.service.agent.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.webapp.mgt.server.feature</artifactId>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.bam.service.agent.ui.feature</artifactId>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
             <type>zip</type>
-	</dependency>
+        </dependency>
     </dependencies>
 
     <build>
@@ -48,22 +51,27 @@
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>4-p2-feature-generation</id>
+                        <id>p2-feature-generation</id>
                         <phase>package</phase>
                         <goals>
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.bam.service.agent</id>
-                            <propertiesFile>../../../../features/etc/feature.properties</propertiesFile>
+                            <id>org.wso2.carbon.webapp.mgt</id>
+                            <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.service.agent.server.feature:${carbon.deployment.version}</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.service.agent.ui.feature:${carbon.deployment.version}</includedFeatureDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.server.feature:${carbon.deployment.version}
+                                </includedFeatureDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.webapp.mgt.ui.feature:4.2.1
+                                </includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>
@@ -71,6 +79,5 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-    </properties>
+
 </project>

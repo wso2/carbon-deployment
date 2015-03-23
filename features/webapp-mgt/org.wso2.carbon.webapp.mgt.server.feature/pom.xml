@@ -1,47 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
- ~ WSO2 Inc. licenses this file to you under the Apache License,
- ~ Version 2.0 (the "License"); you may not use this file except
- ~ in compliance with the License.
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
  ~ You may obtain a copy of the License at
  ~
- ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~      http://www.apache.org/licenses/LICENSE-2.0
  ~
- ~ Unless required by applicable law or agreed to in writing,
- ~ software distributed under the License is distributed on an
- ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- ~ KIND, either express or implied.  See the License for the
- ~ specific language governing permissions and limitations
- ~ under the License.
- -->
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>bam-service-data-agent-feature</artifactId>
+        <artifactId>webapp-mgt-feature</artifactId>
         <version>4.2.3-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.bam.service.agent.server.feature</artifactId>
+    <artifactId>org.wso2.carbon.webapp.mgt.server.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - BAM Service Data Agent Server Feature</name>
+    <name>WSO2 Carbon - Webapp Management Core Feature</name>
+    <version>4.2.3-SNAPSHOT</version>
     <url>http://wso2.org</url>
-
-    <description>This feature contains the core bundles required for BAM Agent Service Statistics Server functionality
+    <description>This feature contains the core bundles required for Back-end Webapp Management functionality
     </description>
-
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.bam.service.data.publisher</artifactId>
+            <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.data.publisher.util</artifactId>
+            <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
         </dependency>
     </dependencies>
 
@@ -49,6 +48,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+		<version>2.6</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -63,7 +63,9 @@
                                     <directory>resources</directory>
                                     <includes>
                                         <include>build.properties</include>
-                                        <include>conf/etc/bam.xml</include>
+                                        <include>conf/tomcat/webapp-classloading.xml</include>
+                                        <include>conf/tomcat/webapp-classloading-environments.xml</include>
+                                        <include>conf/tomcat/context.xml</include>
                                         <include>p2.inf</include>
                                     </includes>
                                 </resource>
@@ -78,14 +80,14 @@
                 <version>${carbon.p2.plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>4-p2-feature-generation</id>
+                        <id>p2-feature-generation</id>
                         <phase>package</phase>
                         <goals>
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.bam.service.agent.server</id>
-                            <propertiesFile>../../../../features/etc/feature.properties</propertiesFile>
+                            <id>org.wso2.carbon.webapp.mgt.server</id>
+                            <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
@@ -93,20 +95,11 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.bam.service.data.publisher:${carbon.deployment.version}
-                                </bundleDef>
-                                <bundleDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam.data.publisher.util:${carbon.patchrelease.version.421}
-                                </bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${carbon.deployment.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.deployer:4.2.0</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.system.statistics.server:${carbon.platform.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.datapublisher:${carbon.platform.version}
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>
@@ -115,6 +108,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-    </properties>
 </project>
