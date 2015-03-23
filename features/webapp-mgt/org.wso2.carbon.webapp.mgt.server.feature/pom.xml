@@ -96,7 +96,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${carbon.deployment.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.deployer:4.2.0</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.deployer:${carbon.deployment.released.version}</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}

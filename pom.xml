@@ -114,17 +114,17 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
-                <version>4.2.0</version>
+                <version>${carbon.deployment.released.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.url.mapper.stub</artifactId>
-                <version>4.2.0</version>
+                <version>${carbon.deployment.released.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.url.mapper</artifactId>
-                <version>4.2.0</version>
+                <version>${carbon.deployment.released.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -147,7 +147,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
-                <version>4.2.1</version>
+                <version>${carbon.webapp.mgt.ui.feature.released.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -345,8 +345,11 @@
 
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.2.3-SNAPSHOT</carbon.deployment.version>
+        <carbon.deployment.released.version>4.2.0</carbon.deployment.released.version>
         <carbon.deployment.exp.pkg.version>4.2.2</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.2.0, 4.3.0)</carbon.deployment.imp.pkg.version>
+
+        <carbon.webapp.mgt.ui.feature.released.version>4.2.1</carbon.webapp.mgt.ui.feature.released.version>
 
         <!-- Axiom Version -->
         <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
