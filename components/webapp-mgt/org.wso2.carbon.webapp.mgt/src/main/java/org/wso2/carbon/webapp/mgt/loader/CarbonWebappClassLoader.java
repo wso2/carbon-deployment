@@ -32,8 +32,32 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
     private WebappClassloadingContext webappCC;
 
+    /**
+     * The bootstrap class loader used to load the JavaSE classes. In some
+     * implementations this class loader is always <code>null</null> and in
+     * those cases {@link ClassLoader#getParent()} will be called recursively on
+     * the system class loader and the last non-null result used.
+     */
+    private ClassLoader javaSEClassLoader;
+
     public CarbonWebappClassLoader(ClassLoader parent) {
         super(parent);
+
+        // The below code segment avoids the api change due tomcat version upgrade : CARBON-15181
+        ClassLoader p = getParent();
+        if (p == null) {
+            p = getSystemClassLoader();
+        }
+        this.parent = p;
+
+        ClassLoader j = String.class.getClassLoader();
+        if (j == null) {
+            j = getSystemClassLoader();
+            while (j.getParent() != null) {
+                j = j.getParent();
+            }
+        }
+        this.javaSEClassLoader = j;
     }
 
     public void setWebappCC(WebappClassloadingContext classloadingContext) {
@@ -80,7 +104,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         // (0.2) Try loading the class with the system class loader, to prevent
         //       the webapp from overriding J2SE classes
         try {
-            clazz = system.loadClass(name);
+            clazz = javaSEClassLoader.loadClass(name);
             if (clazz != null) {
                 if (resolve)
                     resolveClass(clazz);
@@ -144,7 +168,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             log.debug("  Delegating to parent classloader1 " + parent);
         ClassLoader loader = parent;
         if (loader == null)
-            loader = system;
+            loader = javaSEClassLoader;
         try {
             clazz = Class.forName(name, false, loader);
             if (clazz != null) {
