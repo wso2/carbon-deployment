@@ -96,12 +96,12 @@ public class TenantLazyLoaderValve extends CarbonTomcatValve {
                             requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/") ||
                             requestURI.contains("/" + WebappsConstants.JAGGERY_APPS_PREFIX + "/")) {
                         TomcatUtil.remapRequest(request);
+                        // Setting the application name to carbon context because it doesn't set the application
+                        // name in re-deployment
+                        carbonContext.setApplicationName(applicationName);
                     } else {
                         request.getRequestDispatcher(requestURI).forward(request, response);
                     }
-                    // Setting the application name to carbon context because it doesn't set the application
-                    // name in re-deployment
-                    carbonContext.setApplicationName(applicationName);
                 } catch (Exception e) {
                     String msg = "Cannot redirect tenant request to " + requestURI +
                             " for tenant " + domain;
