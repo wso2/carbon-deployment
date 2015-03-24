@@ -20,6 +20,7 @@ import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
@@ -86,6 +87,10 @@ public class TenantLazyLoaderValve extends CarbonTomcatValve {
         if (serverConfigCtx != null) {
             if (TenantAxisUtils.getLastAccessed(domain, serverConfigCtx) == -1) { // First time access
                 try {
+                    // Need to store the application name temporary because in the re-deployment
+                    // application name will be changed to null
+                    PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                    String applicationName = carbonContext.getApplicationName();
                     setTenantAccessed(domain, serverConfigCtx);
                     if (requestURI.contains("/" + WebappsConstants.WEBAPP_PREFIX + "/") ||
                             requestURI.contains("/" + WebappsConstants.JAX_WEBAPPS_PREFIX + "/") ||
@@ -94,6 +99,9 @@ public class TenantLazyLoaderValve extends CarbonTomcatValve {
                     } else {
                         request.getRequestDispatcher(requestURI).forward(request, response);
                     }
+                    // Setting the application name to carbon context because it doesn't set the application
+                    // name in re-deployment
+                    carbonContext.setApplicationName(applicationName);
                 } catch (Exception e) {
                     String msg = "Cannot redirect tenant request to " + requestURI +
                             " for tenant " + domain;
