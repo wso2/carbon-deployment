@@ -16,6 +16,8 @@
 package org.wso2.carbon.bam.service.data.publisher.conf;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.publish.StreamDefinitionCreatorUtil;
@@ -40,6 +42,7 @@ public class RegistryPersistenceManager {
     private static RegistryService registryService;
     private static EventConfigNStreamDef eventingConfigData = new EventConfigNStreamDef();
     public static final String EMPTY_STRING = "";
+    private static final Log log = LogFactory.getLog(RegistryPersistenceManager.class);
 
     public static void setRegistryService(RegistryService registryServiceParam) {
         registryService = registryServiceParam;
@@ -150,8 +153,9 @@ public class RegistryPersistenceManager {
             } else { // Registry does not have eventing config. Set to defaults.
                 update(eventingConfigData);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             // If something went wrong, then we have the default, or whatever loaded so far
+            log.error("Error while getting eventing config data", e);
         }
         return eventingConfigData;
     }
@@ -349,7 +353,7 @@ public class RegistryPersistenceManager {
         return load();
     }
 
-    public AnalyzingConfigData getAnaEventingConfigData() {
+    public AnalyzingConfigData getAnalyzingConfigData() {
         AnalyzingConfigData analyzingConfigData = new AnalyzingConfigData();
         // First set it to defaults, but do not persist
         analyzingConfigData.setUrl(EMPTY_STRING);
@@ -372,8 +376,9 @@ public class RegistryPersistenceManager {
             } else { // Registry does not have analyzer config. Set to defaults.
                 update(analyzingConfigData);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             // If something went wrong, then we have the default, or whatever loaded so far
+            log.error("Error while getting analyzing config data", e);
         }
         return analyzingConfigData;
     }

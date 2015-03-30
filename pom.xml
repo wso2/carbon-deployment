@@ -275,6 +275,7 @@
         <carbon.kernel.imp.pkg.version>[4.2.0, 4.3.0)</carbon.kernel.imp.pkg.version>
 
         <carbon.statistics.version>4.2.2</carbon.statistics.version>
+        <carbon.commons.version>4.2.1</carbon.commons.version>
         <carbon.platform.version>4.2.0</carbon.platform.version>
         <carbon.databridge.commons.version>4.2.3</carbon.databridge.commons.version>
         <carbon.databridge.agent.thrift.version>4.2.4</carbon.databridge.agent.thrift.version>

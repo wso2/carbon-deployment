@@ -43,7 +43,7 @@ public class ServiceDataPublisherAdmin extends AbstractAdmin {
     }
 
     public AnalyzingConfigData getAnalyzingConfigData() {
-        return registryPersistenceManager.getAnaEventingConfigData();
+        return registryPersistenceManager.getAnalyzingConfigData();
     }
 
     public boolean isCloudDeployment(){
