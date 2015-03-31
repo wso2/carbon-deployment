@@ -139,7 +139,7 @@ public class RegistryPersistenceManager {
 
 
                 EventConfigNStreamDef eventConfigNStreamDef = null;
-                if (statisticsType.equals(StatisticsType.SERVICE_STATS)){
+                if (StatisticsType.SERVICE_STATS.equals(statisticsType)){
                     StreamDefinition streamDefinition = StreamDefinitionCreatorUtil.getStreamDefinition(
                             eventingConfigData, StatisticsType.SERVICE_STATS);
                     eventConfigNStreamDef = fillEventingConfigData(eventingConfigData);
