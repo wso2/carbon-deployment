@@ -16,8 +16,6 @@
 package org.wso2.carbon.webapp.mgt.internal;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -26,27 +24,24 @@ import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
-import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
-//import org.wso2.carbon.url.mapper.UrlMapperValve;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.deployment.GhostMetaArtifactsLoader;
-import org.wso2.carbon.webapp.mgt.DataHolder;
-import org.wso2.carbon.webapp.mgt.GhostWebappDeployerValve;
-import org.wso2.carbon.webapp.mgt.TenantLazyLoaderValve;
-import org.wso2.carbon.webapp.mgt.WebApplication;
-import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
-import org.wso2.carbon.webapp.mgt.WebContextParameter;
-import org.wso2.carbon.webapp.mgt.WebappsConstants;
+import org.wso2.carbon.webapp.mgt.*;
 import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+//import org.wso2.carbon.url.mapper.UrlMapperValve;
 
 /**
  * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
@@ -61,6 +56,11 @@ import java.util.List;
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  * @scr.reference name="depsych.service" interface="org.wso2.carbon.core.deployment.DeploymentSynchronizer"
  * cardinality="0..1" policy="dynamic"  bind="setDeploymentSynchronizerService" unbind="unsetDeploymentSynchronizerService"
+ *@scr.reference name="tenant.registryloader"
+ * interface="org.wso2.carbon.registry.core.service.TenantRegistryLoader"
+ * cardinality="1..1" policy="dynamic"
+ * bind="setTenantRegistryLoader"
+ * unbind="unsetTenantRegistryLoader"
  */
 public class WebappManagementServiceComponent {
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
@@ -75,10 +75,10 @@ public class WebappManagementServiceComponent {
                 // registering WebappUnloader as an OSGi service
                 WebappUnloader webappUnloader = new WebappUnloader();
                 ctx.getBundleContext().registerService(ArtifactUnloader.class.getName(),
-                                                       webappUnloader, null);
+                        webappUnloader, null);
                 GhostWebappMetaArtifactsLoader artifactsLoader = new GhostWebappMetaArtifactsLoader();
                 ctx.getBundleContext().registerService(GhostMetaArtifactsLoader.class.getName(),
-                                                       artifactsLoader, null);
+                        artifactsLoader, null);
 
             } else {
                 setServerURLParam(DataHolder.getServerConfigContext());
@@ -119,7 +119,16 @@ public class WebappManagementServiceComponent {
     }
 
     protected void setRegistryService(RegistryService registryService) {
+        DataHolder.setRegistryService(registryService);
     }
+
+    protected void setTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
+        DataHolder.setTenantRegistryLoader(tenantRegistryLoader);
+    }
+
+    protected void unsetTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
+    }
+
 
     protected void unsetRegistryService(RegistryService registryService) {
     }
@@ -153,9 +162,8 @@ public class WebappManagementServiceComponent {
         if (webApplicationsHolder != null) {
             for (WebApplication application :
                     webApplicationsHolder.getStartedWebapps().values()) {
-                application.getContext().getServletContext().
-                        setAttribute(serverUrlParam.getName(),
-                                         serverUrlParam.getValue());
+                application.getContext().getServletContext().setAttribute(serverUrlParam.getName(),
+                                serverUrlParam.getValue());
             }
         }
 

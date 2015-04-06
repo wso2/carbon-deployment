@@ -22,6 +22,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.JavaUtils;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
+import org.apache.catalina.Manager;
 import org.apache.catalina.core.StandardContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -95,6 +96,9 @@ public class TomcatGenericWebappsDeployer {
     public void deploy(File webappFile,
                        List<WebContextParameter> webContextParams,
                        List<Object> applicationEventListeners) throws CarbonException {
+        //we set the application name to carbon context as we want to get for the corresponding logEvent (only for
+        // logging purpose
+        //So we will unset it just after deploy operation
         String webappName = webappFile.getName();
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -121,6 +125,8 @@ public class TomcatGenericWebappsDeployer {
                    faultyWebapp.getLastModifiedTime() != lastModifiedTime) {
             handleHotDeployment(webappFile, webContextParams, applicationEventListeners);
         }
+        //we unset application name from the carbon context otherwise this will be remain untill next web app deployment
+//        privilegedCarbonContext.setApplicationName(null);
     }
 
     /**
@@ -217,6 +223,8 @@ public class TomcatGenericWebappsDeployer {
     protected void handleWebappDeployment(File webappFile, String contextStr,
                                           List<WebContextParameter> webContextParams,
                                           List<Object> applicationEventListeners) throws CarbonException {
+        PrivilegedCarbonContext privilegedCarbonContext =
+                PrivilegedCarbonContext.getThreadLocalCarbonContext();
         String filename = webappFile.getName();
         try {
             Context context =
@@ -233,18 +241,31 @@ public class TomcatGenericWebappsDeployer {
                     log.info("Deployed webapp on host: " + contextForHost);
                 }
             }
-            if (context.getDistributable() &&
-                    (DataHolder.getCarbonTomcatService().getTomcat().
-                            getService().getContainer().getCluster()) != null) {
+
+            Manager manager = context.getManager();
+
+            if (context.getDistributable() && DataHolder.getCarbonTomcatService().getTomcat().
+                    getService().getContainer().getCluster() != null) {
+
                 // Using clusterable manager
-                CarbonTomcatClusterableSessionManager sessionManager =
-                        new CarbonTomcatClusterableSessionManager(tenantId);
-                context.setManager(sessionManager);
+                CarbonTomcatClusterableSessionManager sessionManager;
+
+                if (manager instanceof CarbonTomcatClusterableSessionManager) {
+                    sessionManager = (CarbonTomcatClusterableSessionManager) manager;
+                    sessionManager.setOwnerTenantId(tenantId);
+                } else {
+                    sessionManager = new CarbonTomcatClusterableSessionManager(tenantId);
+                    context.setManager(sessionManager);
+                }
                 sessionManagerMap.put(context.getName(), sessionManager);
-                configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,
-                        sessionManagerMap);
+                configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP, sessionManagerMap);
+
             } else {
-                context.setManager(new CarbonTomcatSessionManager(tenantId));
+                if (manager instanceof CarbonTomcatSessionManager) {
+                    ((CarbonTomcatSessionManager) manager).setOwnerTenantId(tenantId);
+                } else {
+                    context.setManager(new CarbonTomcatSessionManager(tenantId));
+                }
             }
 
             context.setReloadable(false);
@@ -281,6 +302,8 @@ public class TomcatGenericWebappsDeployer {
             webappsHolder.getFaultyWebapps().put(filename, webapp);
             webappsHolder.getStartedWebapps().remove(filename);
             throw new CarbonException(msg, e);
+        } finally {
+            privilegedCarbonContext.setApplicationName(null);
         }
     }
 
@@ -373,13 +396,14 @@ public class TomcatGenericWebappsDeployer {
         String fileName = webappFile.getName();
         if (deployedWebapps.containsKey(fileName)) {
             WebApplication deployWebapp = deployedWebapps.get(fileName);
-            Context context = deployWebapp.getContext();
+           Context context = deployWebapp.getContext();
             privilegedCarbonContext.setApplicationName(
                     TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
             deployWebapp.lazyUnload();
         }
 
         clearFaultyWebapp(fileName);
+        privilegedCarbonContext.setApplicationName(null);
     }
 
     private void clearFaultyWebapp(String fileName) {
@@ -393,6 +417,7 @@ public class TomcatGenericWebappsDeployer {
                     TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
             faultyWebapps.remove(fileName);
             log.info("Removed faulty webapp " + faultyWebapp);
+            privilegedCarbonContext.setApplicationName(null);
         }
     }
 
@@ -478,6 +503,7 @@ public class TomcatGenericWebappsDeployer {
                 TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
         webappsHolder.undeployWebapp(webapp);
         log.info("Undeployed webapp: " + webapp);
+        privilegedCarbonContext.setApplicationName(null);
     }
 
 
