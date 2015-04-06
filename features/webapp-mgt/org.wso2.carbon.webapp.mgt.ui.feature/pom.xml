@@ -15,34 +15,36 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon.deployment</groupId>
+    	<groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-feature</artifactId>
         <version>4.2.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.webapp.mgt.feature</artifactId>
+    <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Webapp Management Feature</name>
-    <version>4.2.3-SNAPSHOT</version>
+    <name>WSO2 Carbon - Webapp Management UI Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the bundles required for Webapp Management functionality
-    </description>
+    <description>This feature contains the bundles required for Front-end Webapp Management functionality</description>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.webapp.mgt.server.feature</artifactId>
-            <type>zip</type>
+            <artifactId>org.wso2.carbon.webapp.mgt.ui</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.webapp.list.ui</artifactId>
+        </dependency>
+	<dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
-            <type>zip</type>
+            <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
         </dependency>
     </dependencies>
 
@@ -60,24 +62,26 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.webapp.mgt</id>
-                            <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
+                            <id>org.wso2.carbon.webapp.mgt.ui</id>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <bundles>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.ui:${carbon.deployment.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.webapp.list.ui:${carbon.platform.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.stub:${carbon.deployment.version}</bundleDef>
+                            </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.ui:${carbon.platform.version}</importFeatureDef>
                             </importFeatures>
-                            <includedFeatures>
-                                <includedFeatureDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.server.feature:${carbon.deployment.version}
-                                </includedFeatureDef>
-                                <includedFeatureDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.ui.feature:${carbon.deployment.version}
-                                </includedFeatureDef>
-                            </includedFeatures>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
