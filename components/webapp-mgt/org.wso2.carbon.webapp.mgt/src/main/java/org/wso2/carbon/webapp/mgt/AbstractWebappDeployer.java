@@ -406,8 +406,16 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
 
     protected void handleRedeployment(File file) throws DeploymentException {
-        DeploymentFileData data = new DeploymentFileData(file, this);
-        deploy(data);
+        //handling : scenario for webapps within CApps
+        //have to handle this way since there is no other way to avoid redeploying issue when the CApp is undeployed
+        String cAppWorkDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                "carbonapps" + File.separator + "work";
+        if (!file.getAbsolutePath().contains(cAppWorkDir)) {
+            DeploymentFileData data = new DeploymentFileData(file, this);
+            deploy(data);
+        } else {
+            log.debug("Skipping redeployment of CApp.");
+        }
     }
 
 }

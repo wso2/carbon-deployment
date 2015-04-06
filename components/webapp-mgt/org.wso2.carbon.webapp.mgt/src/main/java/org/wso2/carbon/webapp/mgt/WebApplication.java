@@ -128,8 +128,7 @@ public class WebApplication {
      */
     public void setServletContextParameters(List<WebContextParameter> parameters) {
         for (WebContextParameter parameter : parameters) {
-            context.getServletContext().setAttribute(parameter.getName(),
-                    parameter.getValue()); // context-param in web.xml
+            context.getServletContext().setAttribute(parameter.getName(), parameter.getValue()); // context-param in web.xml
         }
     }
 
@@ -416,7 +415,7 @@ public class WebApplication {
                  !FileManipulator.deleteDir(warFile)) {
             throw new CarbonException("Webapp file " + warFile + " deletion failed");
         }
-
+        currentCarbonAppContextHolder.setApplicationName(null);
     }
 
     /**
