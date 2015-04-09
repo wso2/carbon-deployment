@@ -69,12 +69,12 @@ public class SAMLSSOValve extends SingleSignOn {
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Invoking SAMLSSOValve. Request URI : " + request.getRequestURI());
         }
         //Is enable SSO Valve defined in context param?
         if (!Boolean.parseBoolean(request.getContext().findParameter(WebappSSOConstants.ENABLE_SAML2_SSO))) {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Saml2 SSO not enabled in webapp " + request.getContext().getName());
             }
             getNext().invoke(request, response);
@@ -82,7 +82,7 @@ public class SAMLSSOValve extends SingleSignOn {
         }
 
         SSOAgentConfig ssoAgentConfig =
-                (SSOAgentConfig) request.getSession().getAttribute(WebappSSOConstants.SSO_AGENT_CONFIG);
+                (SSOAgentConfig) request.getSessionInternal().getNote(WebappSSOConstants.SSO_AGENT_CONFIG);
 
         if (ssoAgentConfig == null) {
             try {
@@ -101,8 +101,8 @@ public class SAMLSSOValve extends SingleSignOn {
                         ssoSPConfigProperties));
 
                 ssoAgentConfig.verifyConfig();
-                request.getSession().setAttribute(WebappSSOConstants.SSO_AGENT_CONFIG, ssoAgentConfig);
 
+                request.getSessionInternal().setNote(WebappSSOConstants.SSO_AGENT_CONFIG, ssoAgentConfig);
             } catch (Exception e) {
                 log.error("Error on initializing SAML2SSOManager", e);
                 return;
@@ -119,7 +119,7 @@ public class SAMLSSOValve extends SingleSignOn {
                     new SSOAgentRequestResolver(request, response, ssoAgentConfig);
 
             if (resolver.isURLToSkip()) {
-                if(log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Request matched a skip URL. Skipping..");
                 }
                 getNext().invoke(request, response);
@@ -129,7 +129,7 @@ public class SAMLSSOValve extends SingleSignOn {
             SAML2SSOManager samlSSOManager;
             if (resolver.isSLORequest()) {
 
-                if(log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Processing Single Log Out Request");
                 }
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
@@ -137,7 +137,7 @@ public class SAMLSSOValve extends SingleSignOn {
 
             } else if (resolver.isSAML2SSOResponse()) {
 
-                if(log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Processing SSO Response.");
                 }
 
@@ -145,21 +145,43 @@ public class SAMLSSOValve extends SingleSignOn {
                 try {
                     samlSSOManager.processResponse(request, response);
                     //redirect according to relay state attribute
-                    String relayState = ssoAgentConfig.getSAML2().getRelayState();
-                    if (relayState != null && request.getSession(Boolean.FALSE) != null) {
-                        String requestedURI = (String) request.getSession(Boolean.FALSE).getAttribute(relayState);
-                        if (requestedURI != null) {
-                            request.getSession(Boolean.FALSE).removeAttribute(relayState);
+                    String relayStateId = ssoAgentConfig.getSAML2().getRelayState();
+                    if (relayStateId != null && request.getSession(Boolean.FALSE) != null) {
+                        RelayState relayState = (RelayState) request.getSession(Boolean.FALSE).getAttribute(relayStateId);
+                        if (relayState != null) {
+                            request.getSession(Boolean.FALSE).removeAttribute(relayStateId);
+
+                            String requestedURI = relayState.getRequestedURL();
+                            if (relayState.getRequestQueryString() != null) {
+                                requestedURI = requestedURI.concat("?").concat(relayState.getRequestQueryString());
+                            }
+                            if (relayState.getRequestParameters() != null) {
+                                request.getSession(Boolean.FALSE).setAttribute(WebappSSOConstants.REQUEST_PARAM_MAP,
+                                        relayState.getRequestParameters());
+                            }
                             response.sendRedirect(requestedURI);
                             return;
                         }
                     }
                     //Handling redirect from acs page after SLO response. This will be done if
+                    // WWebappSSOConstants.HANDLE_CONSUMER_URL_AFTER_SLO is defined
+                    // WebappSSOConstants.REDIRECT_PATH_AFTER_SLO value is used determine the redirect path
                     else if (request.getRequestURI().endsWith(
                             ssoSPConfigProperties.getProperty(WebappSSOConstants.CONSUMER_URL_POSTFIX)) &&
                             Boolean.parseBoolean(ssoSPConfigProperties.getProperty(
                                     WebappSSOConstants.HANDLE_CONSUMER_URL_AFTER_SLO))) {
-                        response.sendRedirect(request.getContext().getPath());
+                        String redirectPath = (String) request.getServletContext().getAttribute(
+                                WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+                        request.getServletContext().removeAttribute(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+                        if (redirectPath == null) {
+                            redirectPath = ssoSPConfigProperties.getProperty(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+                        }
+                        if (redirectPath != null && !"".equals(redirectPath)) {
+                            redirectPath = request.getContext().getPath().concat(redirectPath);
+                        } else {
+                            redirectPath = request.getContext().getPath();
+                        }
+                        response.sendRedirect(redirectPath);
                         return;
                     }
                 } catch (SSOAgentException e) {
@@ -168,16 +190,20 @@ public class SAMLSSOValve extends SingleSignOn {
 
             } else if (resolver.isSLOURL()) {
 
-                if(log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Processing Single Log Out URL");
                 }
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 if (resolver.isHttpPostBinding()) {
-
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
-                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
-
+                    if (request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) != null) {
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                    } else {
+                        log.warn("Attempt to logout from a already logout session.");
+                        response.sendRedirect(request.getContext().getPath());
+                        return;
+                    }
                 } else {
                     //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
@@ -189,17 +215,23 @@ public class SAMLSSOValve extends SingleSignOn {
                     (ssoAgentConfig.isSAML2SSOLoginEnabled() && (request.getSession(false) == null ||
                             request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null))) {
                 //handling the unauthenticated requests for all contexts.
-                if(log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Processing SSO URL");
                 }
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 String relayStateId = SSOAgentUtils.createID();
+
+                RelayState relayState = new RelayState();
+                relayState.setRequestedURL(request.getRequestURI());
+                relayState.setRequestQueryString(request.getQueryString());
+                relayState.setRequestParameters(request.getParameterMap());
+
                 ssoAgentConfig.getSAML2().setRelayState(relayStateId);
-                request.getSession(Boolean.FALSE).setAttribute(relayStateId, request.getRequestURI());
+                request.getSession(Boolean.FALSE).setAttribute(relayStateId, relayState);
 
                 if (resolver.isHttpPostBinding()) {
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String htmlPayload = samlSSOManager.buildPostRequest(request,response,false);
+                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     return;
 
@@ -255,7 +287,7 @@ public class SAMLSSOValve extends SingleSignOn {
             throw e;
         }
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("End of SAMLSSOValve invoke.");
         }
 

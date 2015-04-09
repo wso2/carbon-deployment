@@ -30,8 +30,9 @@ public class WebappSSOConstants {
     public static final String SAMLSSOURL = "SAMLSSOUrl";
     public static final String SSO_AGENT_CONFIG = "SSOAgentConfig";
     public static final String HANDLE_CONSUMER_URL_AFTER_SLO = "handleConsumerURLAfterSLO";
+    public static final String REDIRECT_PATH_AFTER_SLO = "redirectPathAfterSLO";
+    protected static final String REQUEST_PARAM_MAP = "REQUEST_PARAM_MAP";
     public static String SSO_SP_CONFIG_PATH = CarbonUtils.getCarbonSecurityConfigDirPath() + File.separator + SSO_CONFIG_FILE_NAME;
-
 
     //SSO SP config property names
     public static String APP_SERVER_URL = "ApplicationServerURL";
