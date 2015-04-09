@@ -24,6 +24,7 @@ import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 //import org.wso2.carbon.url.mapper.UrlMapperValve;
@@ -61,6 +62,11 @@ import java.util.Map;
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  * @scr.reference name="depsych.service" interface="org.wso2.carbon.core.deployment.DeploymentSynchronizer"
  * cardinality="0..1" policy="dynamic"  bind="setDeploymentSynchronizerService" unbind="unsetDeploymentSynchronizerService"
+ * @scr.reference name="tenant.registryloader"
+ * interface="org.wso2.carbon.registry.core.service.TenantRegistryLoader"
+ * cardinality="1..1" policy="dynamic"
+ * bind="setTenantRegistryLoader"
+ * unbind="unsetTenantRegistryLoader"
  */
 public class WebappManagementServiceComponent {
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
@@ -119,9 +125,17 @@ public class WebappManagementServiceComponent {
     }
 
     protected void setRegistryService(RegistryService registryService) {
+        DataHolder.setRegistryService(registryService);
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
+    }
+
+    protected void setTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
+        DataHolder.setTenantRegistryLoader(tenantRegistryLoader);
+    }
+
+    protected void unsetTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
     }
 
     protected void setDeploymentSynchronizerService(DeploymentSynchronizer depSynchService) {
