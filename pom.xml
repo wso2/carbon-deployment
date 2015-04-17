@@ -1352,13 +1352,13 @@
         <carbon.commons.imp.pkg.version>[4.4.0, 4.5.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>4.3.4-SNAPSHOT</carbon.identity.version>
-        <carbon.identity.imp.pkg.version>[4.3.0, 4.4.0)</carbon.identity.imp.pkg.version>
+        <carbon.identity.version>4.4.0</carbon.identity.version>
+        <carbon.identity.imp.pkg.version>[4.4.0, 4.5.0)</carbon.identity.imp.pkg.version>
 
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.3.2-SNAPSHOT</carbon.deployment.version>
-        <carbon.deployment.exp.pkg.version>4.3.2</carbon.deployment.exp.pkg.version>
-        <carbon.deployment.imp.pkg.version>[4.3.0, 4.4.0)</carbon.deployment.imp.pkg.version>
+        <carbon.deployment.exp.pkg.version>${carbon.deployment.version}</carbon.deployment.exp.pkg.version>
+        <carbon.deployment.imp.pkg.version>[4.4.0, 4.5.0)</carbon.deployment.imp.pkg.version>
 
         <version.tomcat>7.0.59</version.tomcat>
         <orbit.version.tomcat>${version.tomcat}.wso2v1</orbit.version.tomcat>
