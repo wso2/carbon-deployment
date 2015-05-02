@@ -218,9 +218,9 @@ public class WebappAdminClient {
         return null;
     }
 
-    public void expireSessionsInWebapps(String[] webappFileNames) throws AxisFault {
+    public void expireSessionsInWebapps(String[] webappKeySet) throws AxisFault {
         try {
-            stub.expireSessionsInWebapps(webappFileNames);
+            stub.expireSessionsInWebapps(webappKeySet);
         } catch (RemoteException e) {
             handleException("cannot.expire.all.sessions.in.webapps", e);
         }

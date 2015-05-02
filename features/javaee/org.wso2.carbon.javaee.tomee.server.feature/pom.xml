@@ -15,14 +15,12 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>javaee-feature</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,70 +34,50 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.javaee.tomee</artifactId>
-            <version>${carbon.deployment.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.javaee.tomee.patch</artifactId>
-            <version>${carbon.deployment.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.tomee</groupId>
             <artifactId>tomee</artifactId>
-            <version>${tomee.orbit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.tomee</groupId>
             <artifactId>tomee-resources</artifactId>
-            <version>${tomee.resources.orbit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.openwebbeans</groupId>
             <artifactId>openwebbeans-jsf</artifactId>
-            <version>${openwebbeans.orbit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.openwebbeans</groupId>
             <artifactId>openwebbeans-el22</artifactId>
-            <version>${openwebbeans.orbit.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.serp</groupId>
             <artifactId>serp</artifactId>
-            <version>1.14.1.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.wso2</groupId>
             <artifactId>tribes</artifactId>
-            <version>7.0.34.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
-            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils.wso2</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.8.0.wso2v1</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <tomee.version>1.6.0.1</tomee.version>
-        <tomee.orbit.version>${tomee.version}.wso2v2</tomee.orbit.version>
-        <tomee.resources.orbit.version>${tomee.version}.wso2v1</tomee.resources.orbit.version>
-        <openwebbeans.version>1.2.1</openwebbeans.version>
-        <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
-    </properties>
 
     <build>
         <plugins>
@@ -147,8 +125,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.javaee.tomee</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.javaee.tomee.patch</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.javaee.tomee</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.javaee.tomee.patch</bundleDef>
                                 <bundleDef>org.wso2.tomee:tomee</bundleDef>
                                 <bundleDef>org.wso2.tomee:tomee-resources</bundleDef>
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-jsf</bundleDef>
@@ -162,8 +140,8 @@
 
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.webapp.mgt:${project.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.webapp.mgt:${carbon.deployment.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

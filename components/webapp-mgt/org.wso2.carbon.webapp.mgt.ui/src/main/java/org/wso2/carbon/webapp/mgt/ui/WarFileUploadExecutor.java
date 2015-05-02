@@ -72,11 +72,11 @@ public class WarFileUploadExecutor extends AbstractFileUploadExecutor {
                 tempData.setFileName(getFileName(filedata.getFileItem().getName()));
                 tempData.setDataHandler(filedata.getDataHandler());
                 tempData.setVersion(versions.get(i));
-                if(hostNames == null){
+                if (hostNames == null) {
                     //tenants can not select hostName when uploading a webapp
                     //Hence a null check is required
                     tempData.setHostName(WebAppUtils.getServerConfigHostName());
-                }else {
+                } else {
                     tempData.setHostName(hostNames.get(i));
                 }
                 webappUploadDataList.add(tempData);

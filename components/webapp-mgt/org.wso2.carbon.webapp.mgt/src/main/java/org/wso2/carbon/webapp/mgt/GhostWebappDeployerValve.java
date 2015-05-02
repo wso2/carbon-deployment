@@ -25,6 +25,7 @@ import org.apache.catalina.connector.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
@@ -85,7 +86,7 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
             currentCtx = DataHolder.getServerConfigContext();
         }
 
-        //TODO: If webapp deployment takes time, then the immediate subsequent requests will fail after the after request
+        //TODO: If webapp deployment takes time, then the immediate subsequent requests will fail after the request
         //Since getDeployedWebappFromThisURI returns null just after the first request
         WebApplication deployedWebapp = getDeployedWebappFromThisURI(request.getContext().getPath(),
                                      request.getHost().getName(), currentCtx);
@@ -121,7 +122,6 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
                             waitForWebAppToLeaveTransit(transitWebapp.getContextName(), currentCtx);
                     try {
                         TomcatUtil.remapRequest(request);
-                        return;
                     } catch (Exception e) {
                         log.error("Error when redirecting response to " + requestURI, e);
                     }
@@ -208,7 +208,15 @@ public class GhostWebappDeployerValve extends CarbonTomcatValve {
             }
 
             if (ghostWebapp != null) {
+                // Need to store the application name temporary because in the re-deployment
+                // application name will be changed to null
+                PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                String applicationName = carbonContext.getApplicationName();
                 GhostWebappDeployerUtils.deployActualWebApp(ghostWebapp, cfgCtx);
+                // Setting the application name to carbon context because it doesn't set the application
+                // name in re-deployment
+                carbonContext.setApplicationName(applicationName);
+
             }
         }
     }

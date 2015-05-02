@@ -196,7 +196,7 @@
             <xs:element name="expireSessionsInWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappFileNames" nillable="true" type="xs:string"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKeySet" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

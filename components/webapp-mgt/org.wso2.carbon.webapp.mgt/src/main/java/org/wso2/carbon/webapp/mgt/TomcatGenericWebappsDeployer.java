@@ -603,8 +603,8 @@ public class TomcatGenericWebappsDeployer {
         return false;
     }
 
-    private String generateMetaFileDirName(String webappFilePath){
-        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath,this.configurationContext);
+    private String generateMetaFileDirName(String webappFilePath) {
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath, this.configurationContext);
         return webApplicationsHolder.getWebappsDir().getName();
     }
 }

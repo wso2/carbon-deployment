@@ -124,12 +124,11 @@ public class WebApplication {
     /**
      * Set ServletContext parameters for this webapp
      *
-     * @param parameters ServletContext params for this webapp
+     * @param parameters ServletContext attributes for this webapp
      */
     public void setServletContextParameters(List<WebContextParameter> parameters) {
         for (WebContextParameter parameter : parameters) {
-            context.getServletContext().setInitParameter(parameter.getName(),
-                    parameter.getValue()); // context-param in web.xml
+            context.getServletContext().setAttribute(parameter.getName(), parameter.getValue());
         }
     }
 
@@ -402,8 +401,7 @@ public class WebApplication {
         } else {
             webappDir = webappFile;
         }
-        String cAppTmpDir = CarbonUtils.getCarbonHome() + File.separator + "tmp" +
-                File.separator + "carbonapps" + File.separator;                      //FIXME :  add a method to CarbonUtils to read cAppTmpDir
+        String cAppTmpDir = CarbonUtils.getTmpDir() + File.separator + "carbonapps" + File.separator;
         if (webappDir.getAbsolutePath().contains(cAppTmpDir)) {
             //if webapp is deployed from a capp, delete the exploded webapp from "webapps"
             String webappDeploymentDir = webappDir.getAbsolutePath().substring(webappDir.getAbsolutePath().
