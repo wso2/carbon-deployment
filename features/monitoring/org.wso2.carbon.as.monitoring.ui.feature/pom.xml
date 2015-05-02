@@ -33,7 +33,6 @@
     <artifactId>org.wso2.carbon.as.monitoring.ui.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - AS HTTP Monitoring UI Feature</name>
-    <version>4.3.0-SNAPSHOT</version>
     <url>http://wso2.org</url>
     <description>This feature contains the dashboard for Application Server HTTP monitoring</description>
 
