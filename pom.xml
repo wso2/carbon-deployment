@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.deployment</groupId>
@@ -26,6 +28,7 @@
         <module>features/webapp-mgt</module>
         <module>features/javaee</module>
         <module>features/monitoring</module>
+        <module>features/feature-test</module>
     </modules>
 
     <scm>
@@ -422,24 +425,24 @@
             <!-- Endo of Carbon-Identity Dependency -->
 
             <!-- Carbon-Deployment Dependency -->
-	   <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.aarservices.feature</artifactId>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.aarservices.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.jarservices.feature</artifactId>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.jarservices.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.springservices.feature</artifactId>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.springservices.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
-            <type>zip</type>
-        </dependency>
+                <type>zip</type>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.data.publisher.stub</artifactId>
@@ -1186,6 +1189,61 @@
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
             </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.engine</artifactId>
+                <version>${automation.framework.verion}</version>
+                <!--<scope>test</scope>-->
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.extensions</artifactId>
+                <version>${automation.framework.verion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.jmeter</groupId>
+                        <artifactId>ApacheJMeter</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.jmeter</groupId>
+                        <artifactId>ApacheJMeter_core</artifactId>
+                    </exclusion>
+                </exclusions>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+                <version>${automation.framework.verion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+                <version>${automation.framework.verion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.server.admin.stub</artifactId>
+                <version>${carbon.stub.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                <version>${carbon.stub.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.multitenancy</groupId>
+                <artifactId>org.wso2.carbon.tenant.mgt.stub</artifactId>
+                <version>${carbon.multitenancy.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.jarservices.server.feature</artifactId>
@@ -1501,6 +1559,12 @@
         <commons.lang3.version>3.1</commons.lang3.version>
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
+
+        <maven-antrun-plugin.version>1.1</maven-antrun-plugin.version>
+        <maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
+        <carbon.stub.version>4.3.0-SNAPSHOT</carbon.stub.version>
+        <automation.framework.verion>4.3.1</automation.framework.verion>
+        <carbon.multitenancy.version>4.3.4</carbon.multitenancy.version>
 
         <!-- for maven release process -->
         <project.scm.id>my-scm-server</project.scm.id>
