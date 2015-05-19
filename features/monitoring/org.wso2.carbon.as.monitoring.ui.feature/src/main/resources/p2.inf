@@ -1,0 +1,4 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/jaggeryapps); \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.as.monitoring.ui_${feature.version}/monitoring,target:${installFolder}/../../deployment/server/jaggeryapps/monitoring,overwrite:true); \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.carbon.as.monitoring.ui_${project.version}/monitoring); \

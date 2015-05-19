@@ -14,11 +14,13 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>monitoring</artifactId>
-        <groupId>org.wso2.carbon.deployment</groupId>
-        <version>4.4.1-SNAPSHOT</version>
+        <groupId>org.wso2.carbon</groupId>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -46,7 +48,7 @@
                             org.wso2.carbon.as.monitoring.AsMonitoringActivator
                         </Bundle-Activator>
                         <Export-Package>
-                            org.wso2.carbon.as.monitoring.*;version="${carbon.deployment.exp.pkg.version}"
+                            org.wso2.carbon.as.monitoring.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
                             javax.servlet;version="${imp.pkg.version.javax.servlet}",
@@ -66,7 +68,7 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
         </dependency>
         <dependency>
@@ -74,7 +76,7 @@
             <artifactId>ua-parser</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
         </dependency>
     </dependencies>

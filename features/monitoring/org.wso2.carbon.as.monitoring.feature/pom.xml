@@ -15,12 +15,14 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon.deployment</groupId>
+        <groupId>org.wso2.carbon</groupId>
         <artifactId>monitoring-feature</artifactId>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -37,7 +39,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.as.monitoring</artifactId>
         </dependency>
         <dependency>
@@ -99,15 +101,15 @@
                                     ua.parser.wso2:ua-parser:${ua.parser.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.as.monitoring:${carbon.deployment.version}
+                                    org.wso2.carbon:org.wso2.carbon.as.monitoring:${project.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>
-                                    org.wso2.carbon:org.wso2.carbon.core.server:${carbon.kernel.version}
+                                    org.wso2.carbon.core.server:${wso2carbon.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.databridge.datapublisher:${carbon.commons.version}
+                                    org.wso2.carbon.databridge.datapublisher:${carbon.platform.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>
