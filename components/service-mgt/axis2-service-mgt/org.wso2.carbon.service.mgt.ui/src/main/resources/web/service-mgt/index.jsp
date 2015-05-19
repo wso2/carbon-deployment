@@ -28,6 +28,10 @@
 <%@ page import="org.wso2.carbon.ui.CarbonSecuredHttpContext" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="org.osgi.framework.BundleContext" %>
+<%@ page import="org.osgi.util.tracker.ServiceTracker" %>
+<%@ page import="org.wso2.carbon.service.mgt.ui.ServiceManagementUIExtender" %>
 
 <!-- This page is included to display messages which are set to request scope or session scope -->
 
@@ -423,19 +427,30 @@ padding:0 10px;
                 <% } %>
             </td>
                     <% } %>
-            <td width="200px">
-                <nobr>
-                    <%
-                        String serviceName = service.getName();
-                        if (loggedIn) {
-                    %>
-                    <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
-                    </a>
-                    <% } else { %>
-                    <%=serviceName%>
-                    <% } %>
-                </nobr>
-            </td>
+
+            <nobr>
+             <%
+              String serviceName = service.getName();
+              if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+                String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
+              %>
+               <jsp:include page="<%= cApp_proxy%>"/>
+
+              <% } else { %>
+              <td width="200px">
+                              <nobr>
+                                  <%
+                                      if (loggedIn) {
+                                  %>
+                                  <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
+                                  </a>
+                                  <% } else { %>
+                                  <%=serviceName%>
+                                  <% } %>
+                              </nobr>
+                          </td>
+               <% } %>
+              </nobr>
             <td width="20px" style="text-align:left;">
                 <nobr>
                 <img src="../<%= service.getServiceType()%>/images/type.gif"
@@ -501,15 +516,22 @@ padding:0 10px;
             <% } %>
             <% if (service.getServiceType().equalsIgnoreCase("proxy")) { %>
             <% hasProxy = true; %>
+            <% if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+               String cApp_edit = "../" + service.getServiceType() + "/editCAppartifact.jsp?serviceName=" + serviceName;
+             %>
+             <jsp:include page="<%= cApp_edit%>"/>
+            <% } else { %>
             <td>
                 <a title="Edit '<%=service.getName()%>' in the design view" href="#" onclick="editPS('<%=service.getName()%>');return false;">
                     <img src="../proxyservices/images/design-view.gif" alt="" border="0"> Design View</a>
             </td>
             <td>
-                <a title="Edit '<%=service.getName()%>' in the source view editor" 
-                    style="background-image: url(../proxyservices/images/source-view.gif);" 
-                    class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
+                <a title="Edit '<%=service.getName()%>' in the source view editor"
+                                style="background-image: url(../proxyservices/images/source-view.gif);"
+                                class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
             </td>
+            <% } %>
+
             <% } else {%>
             <td colspan="2"></td>
             <% } %>
