@@ -28,10 +28,6 @@
 <%@ page import="org.wso2.carbon.ui.CarbonSecuredHttpContext" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.osgi.framework.BundleContext" %>
-<%@ page import="org.osgi.util.tracker.ServiceTracker" %>
-<%@ page import="org.wso2.carbon.service.mgt.ui.ServiceManagementUIExtender" %>
 
 <!-- This page is included to display messages which are set to request scope or session scope -->
 
