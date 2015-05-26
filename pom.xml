@@ -4,7 +4,7 @@
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>carbon-deployment</artifactId>
     <packaging>pom</packaging>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>4.4.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Platform Aggregator Pom</name>
     <url>http://wso2.org</url>
 
@@ -1348,15 +1348,15 @@
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
 
         <!-- Carbon Commons version-->
-        <carbon.commons.version>4.4.2</carbon.commons.version>
+        <carbon.commons.version>4.4.3</carbon.commons.version>
         <carbon.commons.imp.pkg.version>[4.4.0, 4.5.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>4.4.0</carbon.identity.version>
-        <carbon.identity.imp.pkg.version>[4.4.0, 4.5.0)</carbon.identity.imp.pkg.version>
+        <carbon.identity.version>4.5.0</carbon.identity.version>
+        <carbon.identity.imp.pkg.version>[4.5.0, 4.6.0)</carbon.identity.imp.pkg.version>
 
         <!-- Carbon Deployment version-->
-        <carbon.deployment.version>4.4.1-SNAPSHOT</carbon.deployment.version>
+        <carbon.deployment.version>4.4.2-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>${carbon.deployment.version}</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.4.0, 4.5.0)</carbon.deployment.imp.pkg.version>
 

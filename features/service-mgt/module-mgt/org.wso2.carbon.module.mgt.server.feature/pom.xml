@@ -20,14 +20,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>module-mgt-feature</artifactId>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>4.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.module.mgt.server.feature</artifactId>
     <packaging>pom</packaging>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>4.4.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Module Management Core Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Back-end Module Management functionality
@@ -55,7 +55,7 @@
                         </goals>
                         <configuration>
                             <id>org.wso2.carbon.module.mgt.server</id>
-                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
