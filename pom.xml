@@ -467,6 +467,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.discovery.cxf</artifactId>
+                <version>${carbon.deployment.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.bam.service.agent.server.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
