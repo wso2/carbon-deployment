@@ -31,11 +31,11 @@ var dbMapping = {
 
 function buildTrafficSql(dbEntry, whereClause) {
     return 'SELECT sum(averageRequestCount) as request_count, ' +
-        'round((sum(averageRequestCount) *100/(select sum(averageRequestCount) ' +
-        'FROM ' + dbEntry.table + ' ' + whereClause + ')),2) as percentage_request_count, ' +
-        dbEntry.field + ' as name ' +
-        'FROM ' + dbEntry.table + ' ' + whereClause +
-        ' GROUP BY ' + dbEntry.field + ';';
+           'round((sum(averageRequestCount) *100/(select sum(averageRequestCount) ' +
+           'FROM ' + dbEntry.table + ' ' + whereClause + ')),2) as percentage_request_count, ' +
+           dbEntry.field + ' as name ' +
+           'FROM ' + dbEntry.table + ' ' + whereClause +
+           ' GROUP BY ' + dbEntry.field + ';';
 }
 
 function getTrafficStatData(conditions, type) {
@@ -52,8 +52,7 @@ function getTrafficStat(conditions, type, tableHeadings, sortColumn) {
 
     for (i = 0, len = results.length; i < len; i++) {
         row = results[i];
-        dataArray.push([row['name'], row['request_count'],
-            row['percentage_request_count']]);
+        dataArray.push([row['name'], row['request_count'], row['percentage_request_count']]);
     }
     print({
         'data': dataArray,

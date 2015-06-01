@@ -36,12 +36,12 @@ var dbMapping = {
 
 function buildTechnologySql(dbEntry, whereClause) {
     return 'SELECT ' + dbEntry.field + ' as name, ' +
-        'sum(averageRequestCount) as request_count, ' +
-        'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
-        'FROM ' + dbEntry.table + ' ' + whereClause + ')), 2) as percentage_request_count ' +
-        'FROM ' + dbEntry.table + ' ' + whereClause +
-        ' GROUP BY ' + dbEntry.field +
-        ' ORDER BY percentage_request_count DESC;';
+           'sum(averageRequestCount) as request_count, ' +
+           'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
+           'FROM ' + dbEntry.table + ' ' + whereClause + ')), 2) as percentage_request_count ' +
+           'FROM ' + dbEntry.table + ' ' + whereClause +
+           ' GROUP BY ' + dbEntry.field +
+           ' ORDER BY percentage_request_count DESC;';
 }
 
 function getTechnologyStatData(conditions, type) {
@@ -78,12 +78,12 @@ function getTechnologyTubularStat(conditions, type, tableHeadings, sortColumn) {
 
 function buildHttpStatusSql(whereClause) {
     return 'SELECT responseHttpStatusCode as name, ' +
-        'sum(averageRequestCount) as request_count, ' +
-        'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
-        'FROM HTTP_STATUS ' + whereClause + ')),2) as percentage_request_count ' +
-        'FROM HTTP_STATUS ' + whereClause +
-        ' GROUP BY responseHttpStatusCode ' +
-        'ORDER BY percentage_request_count DESC;';
+           'sum(averageRequestCount) as request_count, ' +
+           'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
+           'FROM HTTP_STATUS ' + whereClause + ')),2) as percentage_request_count ' +
+           'FROM HTTP_STATUS ' + whereClause +
+           ' GROUP BY responseHttpStatusCode ' +
+           'ORDER BY percentage_request_count DESC;';
 }
 
 function getHttpStatusStatData(conditions) {

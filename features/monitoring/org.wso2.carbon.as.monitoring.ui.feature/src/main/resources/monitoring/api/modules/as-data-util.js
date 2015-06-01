@@ -82,7 +82,7 @@ function getTabularData(dataSet, columns, sortColumn) {
 
 function parseDate(input) {
     var parts;
-    if(!input){
+    if (!input) {
         return;
     }
     var p = input.split(' ');

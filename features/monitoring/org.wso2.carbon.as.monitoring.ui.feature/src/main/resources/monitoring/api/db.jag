@@ -23,7 +23,7 @@ function executeQuery(sql, params) {
     var results;
     var db = getDbConnection();
 
-    if(db == null){
+    if (db == null) {
         createDbConnection();
         db = getDbConnection();
     }
@@ -33,27 +33,27 @@ function executeQuery(sql, params) {
     }
 
     // duplicate the parameters in the case of percentage calculation
-    if(sql.split('?').length -1 > params.length){
+    if (sql.split('?').length - 1 > params.length) {
         params = params.concat(params);
     }
 
     // add sql statement as the first parameter
     params = [sql].concat(params);
 
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Query parameters: ' + params);
     }
 
     return db.query.apply(db, params);
 }
 
-function createDbConnection(){
+function createDbConnection() {
     var config = require('/config/config.json');
     var db = new Database(config.database);
     session.put('db', db);
 }
 
-function getDbConnection(){
+function getDbConnection() {
     return session.get('db');
 }
 %>

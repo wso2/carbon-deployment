@@ -32,12 +32,12 @@ var dbMapping = {
 
 function buildGeoSql(dbEntries, whereClause) {
     return 'SELECT ' + dbEntries.field + ' as name, ' +
-        'sum(averageRequestCount) as request_count, ' +
-        'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
-        'FROM ' + dbEntries.table + ' ' + whereClause + ')),2) as percentage_request_count ' +
-        'FROM ' + dbEntries.table + ' ' + whereClause +
-        ' GROUP BY ' + dbEntries.field +
-        ' ORDER BY percentage_request_count DESC;';
+           'sum(averageRequestCount) as request_count, ' +
+           'round((sum(averageRequestCount)*100/(select sum(averageRequestCount) ' +
+           'FROM ' + dbEntries.table + ' ' + whereClause + ')),2) as percentage_request_count ' +
+           'FROM ' + dbEntries.table + ' ' + whereClause +
+           ' GROUP BY ' + dbEntries.field +
+           ' ORDER BY percentage_request_count DESC;';
 }
 
 function getGeoStatData(conditions, type) {
@@ -49,7 +49,7 @@ function getGeoStatData(conditions, type) {
 function getLanguageStat(conditions) {
     var dataArray = [];
     var ticks = [];
-    var i,len;
+    var i, len;
     var row;
     var languageCode;
     var results = getGeoStatData(conditions, 'language');

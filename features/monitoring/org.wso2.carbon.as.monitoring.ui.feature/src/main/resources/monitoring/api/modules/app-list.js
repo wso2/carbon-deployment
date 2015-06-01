@@ -20,9 +20,9 @@ include('../db.jag');
 
 function buildPastStatSql(whereClause, endTime, timeUnit) {
     return 'SELECT webappName, ' +
-        'round(avg(averageRequestCount)) as averageRequestCount ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' ' +
-        'AND time  > (STR_TO_DATE(\'' + endTime + '\', \'%Y-%m-%d %H:%i\') - INTERVAL 1 ' + timeUnit + ') GROUP BY webappName;';
+           'round(avg(averageRequestCount)) as averageRequestCount ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' ' +
+           'AND time  > (STR_TO_DATE(\'' + endTime + '\', \'%Y-%m-%d %H:%i\') - INTERVAL 1 ' + timeUnit + ') GROUP BY webappName;';
 }
 
 function getPastStat(conditions, endTime, timeUnit) {
@@ -44,7 +44,8 @@ function getTableHeadings() {
     return [
         'Application / Service',
         'Type',
-        {'parent': 'Average request count',
+        {
+            'parent': 'Average request count',
             'sub': ['Last minute', 'Last hour', 'Last day']
         },
         'Total number of requests',
@@ -54,9 +55,9 @@ function getTableHeadings() {
 
 function buildAppsSql(whereClause) {
     return 'SELECT webappName, webappType, sum(averageRequestCount) as total_requests, ' +
-        'sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause +
-        ' GROUP BY webappName ORDER BY webappName;'
+           'sum(httpSuccessCount) as total_http_success, sum(httpErrorCount) as total_http_error ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause +
+           ' GROUP BY webappName ORDER BY webappName;'
 }
 
 function getAppsStat(conditions, endTime) {
@@ -90,13 +91,18 @@ function getAppsStat(conditions, endTime) {
 
         tempArray = [];
         for (key in app) {
-            if(app.hasOwnProperty(key)) {
+            if (app.hasOwnProperty(key)) {
                 tempArray.push(app[key]);
             }
         }
         appList.push(tempArray);
     }
 
-    print({ 'data': appList, 'headings': getTableHeadings(), 'orderColumn': ['1'], 'applist': 'true'});
+    print({
+        'data': appList,
+        'headings': getTableHeadings(),
+        'orderColumn': ['1'],
+        'applist': 'true'
+    });
 
 }

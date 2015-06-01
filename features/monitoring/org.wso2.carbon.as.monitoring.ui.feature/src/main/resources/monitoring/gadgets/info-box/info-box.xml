@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-    <Module>
+<Module>
     <ModulePrefs title="Info Box"
                  author="WSO2 Gadget Server"
                  height="230"
-                 scrolling="true"  category="Templates"
+                 scrolling="true" category="Templates"
                  tags="info box,visualization,template"
                  description="A info box gadget specifically developed for WSO2 AS HTTP Monitoring Dashboard.">
         <Require feature="pubsub-2">
@@ -45,7 +45,7 @@
               default_value="">
     </UserPref>
     <Content type="html">
-    <![CDATA[
+        <![CDATA[
  <html>
  <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -158,7 +158,7 @@
 </html>
 
     ]]>
-</Content>
+    </Content>
 </Module>
 
 

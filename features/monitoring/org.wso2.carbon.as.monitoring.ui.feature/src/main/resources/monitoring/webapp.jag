@@ -38,8 +38,8 @@ var nav = {};
 nav[elements.aspect] = true;
 
 caramel.render({
-    nav : nav,
-    aspect : elements.aspect,
+    nav: nav,
+    aspect: elements.aspect,
     appname: elements.webapp,
     error: [],
     config: require('/config/config.json')

@@ -41,11 +41,10 @@ var log = new Log();
 /*
  build the ammendment to the prepared statement along with the parameter values based on
  start_time, end_time, node and webapp
-*/
+ */
 function buildConditions() {
     // default data range is the past 24 hours
-    var startTime = request.getParameter('start_time') || util.formatDate(new Date(new Date() -
-            86400000));
+    var startTime = request.getParameter('start_time') || util.formatDate(new Date(new Date() - 86400000));
     var endTime = request.getParameter('end_time') || util.formatDate(new Date());
     var node = request.getParameter('node');
     var webapp = request.getParameter('appname');
@@ -73,7 +72,7 @@ function buildConditions() {
 
 function getNodeList() {
     var nodeList = require('modules/node-list.js');
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving node list');
     }
     nodeList.getNodeList();
@@ -81,7 +80,7 @@ function getNodeList() {
 
 function getAppsStat() {
     var appList = require('modules/app-list.js');
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving applicaiton list');
     }
     appList.getAppsStat(conditions, request.getParameter('end_time') || util.formatDate(new Date()));
@@ -89,7 +88,7 @@ function getAppsStat() {
 
 function getBrowserStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving browser stats');
     }
     technologyStat.getTechnologyStat(conditions, 'browser', BROWSER_SIGNIFICANT, 'Other Browsers');
@@ -97,7 +96,7 @@ function getBrowserStat() {
 
 function getBrowserTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving browser stat - tabular');
     }
     technologyStat.getTechnologyTubularStat(conditions, 'browser',
@@ -106,7 +105,7 @@ function getBrowserTabularStat() {
 
 function getOperatingSystemStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving operating system stat');
     }
     technologyStat.getTechnologyStat(conditions, 'os', OS_SIGNIFICANT, 'Other Operating Systems');
@@ -114,7 +113,7 @@ function getOperatingSystemStat() {
 
 function getOperatingSystemTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving operating system stat - tabular');
     }
     technologyStat.getTechnologyTubularStat(conditions, 'os',
@@ -123,7 +122,7 @@ function getOperatingSystemTabularStat() {
 
 function getDeviceTypeStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving device type stat');
     }
     technologyStat.getTechnologyStat(conditions, 'device-type', DEVICE_TYPE_SIGNIFICANT,
@@ -132,7 +131,7 @@ function getDeviceTypeStat() {
 
 function getDeviceTypeTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving device type stat - tabular');
     }
     technologyStat.getTechnologyTubularStat(conditions, 'device-type',
@@ -141,7 +140,7 @@ function getDeviceTypeTabularStat() {
 
 function getHttpStatusStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving HTTP response code stat');
     }
     technologyStat.getHttpStatusStat(conditions);
@@ -149,16 +148,16 @@ function getHttpStatusStat() {
 
 function getHttpStatusTabularStat() {
     var technologyStat = require('modules/technology-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving HTTP response code stat - tabular');
     }
     technologyStat.getHttpStatusTabularStat(conditions, ['HTTP Response Code', 'Request Count',
-        'Percentage'], HTTP_RESPONSE_SORT);
+                                                         'Percentage'], HTTP_RESPONSE_SORT);
 }
 
 function getLanguageStat() {
     var geoStat = require('modules/geo-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving language stat');
     }
     geoStat.getLanguageStat(conditions);
@@ -166,7 +165,7 @@ function getLanguageStat() {
 
 function getLanguageTabularStat() {
     var geoStat = require('modules/geo-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving language stat - tabular');
     }
     geoStat.getLanguageTabularStat(conditions, ['Language', 'Request Count', 'Percentage'],
@@ -175,7 +174,7 @@ function getLanguageTabularStat() {
 
 function getCountryStat() {
     var geoStat = require('modules/geo-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving country stat');
     }
     geoStat.getCountryStat(conditions);
@@ -183,7 +182,7 @@ function getCountryStat() {
 
 function getCountryTabularStat() {
     var geoStat = require('modules/geo-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving country stat - tabular');
     }
     geoStat.getCountryTabularStat(conditions, ['Country', 'Request Count', 'Percentage'],
@@ -192,7 +191,7 @@ function getCountryTabularStat() {
 
 function getContextStat() {
     var trafficStat = require('modules/traffic-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving context stat');
     }
     trafficStat.getTrafficStat(conditions, 'context', ['Context', 'Request Count', 'Percentage'],
@@ -201,16 +200,16 @@ function getContextStat() {
 
 function getReferralStat() {
     var trafficStat = require('modules/traffic-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving referral stat');
     }
     trafficStat.getTrafficStat(conditions, 'referral', ['Referrer', 'Request Count',
-        'Percentage'], REFERRAL_SORT)
+                                                        'Percentage'], REFERRAL_SORT)
 }
 
 function getRequestStat() {
     var timeVaryingStat = require('modules/time-varying-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving request count stat');
     }
     timeVaryingStat.getTimeVaryingStat(conditions, 'request');
@@ -218,7 +217,7 @@ function getRequestStat() {
 
 function getResponseStat() {
     var timeVaryingStat = require('modules/time-varying-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving response time stat');
     }
     timeVaryingStat.getTimeVaryingStat(conditions, 'response', '#bacf0b');
@@ -226,7 +225,7 @@ function getResponseStat() {
 
 function getErrorStat() {
     var timeVaryingStat = require('modules/time-varying-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving error count stat');
     }
     timeVaryingStat.getTimeVaryingStat(conditions, 'error', '#e7912a');
@@ -234,7 +233,7 @@ function getErrorStat() {
 
 function getInfoBoxRequestStat() {
     var infoBoxStat = require('modules/info-box-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving infobox stat - request count');
     }
     return infoBoxStat.getInfoBoxRequestStat(conditions);
@@ -242,7 +241,7 @@ function getInfoBoxRequestStat() {
 
 function getInfoBoxResponseStat() {
     var infoBoxStat = require('modules/info-box-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving infobox stat - response time');
     }
     return infoBoxStat.getInfoBoxResponseStat(conditions);
@@ -250,7 +249,7 @@ function getInfoBoxResponseStat() {
 
 function getInfoBoxSessionStat() {
     var infoBoxStat = require('modules/info-box-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving infobox stat - session count');
     }
     return infoBoxStat.getInfoBoxSessionStat(conditions);
@@ -258,7 +257,7 @@ function getInfoBoxSessionStat() {
 
 function getInfoBoxErrorStat() {
     var infoBoxStat = require('modules/info-box-stat.js');
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug('Retrieving infobox stat - error count');
     }
     return infoBoxStat.getInfoBoxErrorStat(conditions);

@@ -28,9 +28,9 @@ var parameterMapping = {
 
 function buildTimeVaryingSql(selectStatement, whereClause) {
     return 'SELECT ' + selectStatement + ' as value, ' +
-        'UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), \'%Y-%m-%d %H:\')) * 1000 as time ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause +
-        ' GROUP BY substring(time,1,13);';
+           'UNIX_TIMESTAMP(STR_TO_DATE(substring(time,1,13), \'%Y-%m-%d %H:\')) * 1000 as time ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause +
+           ' GROUP BY substring(time,1,13);';
 }
 
 function getTimeVaryingStatData(conditions, type) {

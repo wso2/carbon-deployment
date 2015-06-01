@@ -24,7 +24,7 @@ function buildNodeListSql() {
 
 function getNodeList() {
     var dataArray = [];
-    var elements = []
+    var elements = [];
     var i, len;
     var sql = buildNodeListSql();
     var results = executeQuery(sql);

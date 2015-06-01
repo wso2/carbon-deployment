@@ -18,7 +18,7 @@
 
 <%
 var log = new Log("asmonitor.index");
-var error=[];
+var error = [];
 var caramel = require('caramel');
 
 caramel.render({

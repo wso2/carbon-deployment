@@ -21,32 +21,32 @@ var helper = require('as-data-util.js');
 
 function buildInfoBoxGreaterThan1200DaysSql(selectStatement, type, whereClause) {
     return 'SELECT ' + selectStatement + '(' + type + ') as value, YEAR(time) as time ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY YEAR(time);';
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY YEAR(time);';
 }
 
 function buildInfoBoxGreaterThan90Days(selectStatement, type, whereClause) {
     return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
-        'DATE_FORMAT(time, \'%b %Y\') as time ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY MONTH(time);';
+           'DATE_FORMAT(time, \'%b %Y\') as time ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY MONTH(time);';
 }
 
 function buildInfoBoxGreaterThan30Days(selectStatement, type, whereClause) {
     return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
-        'CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),\'%b %d %Y\'), \' - \', ' +
-        'DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),\'%b %d %Y\')) as time ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY WEEK(time);';
+           'CONCAT(DATE_FORMAT(DATE_ADD(time, INTERVAL (1 - DAYOFWEEK(time)) DAY),\'%b %d %Y\'), \' - \', ' +
+           'DATE_FORMAT(DATE_ADD(time, INTERVAL (7 - DAYOFWEEK(time)) DAY),\'%b %d %Y\')) as time ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY WEEK(time);';
 }
 
 function buildInfoBoxGreaterThan1Day(selectStatement, type, whereClause) {
     return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
-        'DATE_FORMAT(time, \'%b %d %Y\') as time ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY DATE(time);';
+           'DATE_FORMAT(time, \'%b %d %Y\') as time ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY DATE(time);';
 }
 
 function buildInfoBoxLessThan1Day(selectStatement, type, whereClause) {
     return 'SELECT ' + selectStatement + '(' + type + ') as value, ' +
-        'DATE_FORMAT(time, \'%H:00\') as time ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY HOUR(time);';
+           'DATE_FORMAT(time, \'%H:00\') as time ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ' GROUP BY HOUR(time);';
 }
 
 function getDataForInfoBoxBarChart(type, conditions) {
@@ -95,8 +95,8 @@ function getDataForInfoBoxBarChart(type, conditions) {
 
 function buildInfoBoxRequestSql(whereClause) {
     return 'SELECT sum(averageRequestCount) as totalRequest, ' +
-        'max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, ' +
-        'min(averageRequestCount) as minRequest FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+           'max(averageRequestCount) as maxRequest, avg(averageRequestCount) as avgRequest, ' +
+           'min(averageRequestCount) as minRequest FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
 }
 
 function getInfoBoxRequestStat(conditions) {
@@ -121,8 +121,8 @@ function getInfoBoxRequestStat(conditions) {
 
 function buildInfoBoxResponseSql(whereClause) {
     return 'SELECT max(averageResponseTime) as maxResponse, ' +
-        'avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+           'avg(averageResponseTime) as avgResponse, min(averageResponseTime) as minResponse ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
 }
 
 function getInfoBoxResponseStat(conditions) {
@@ -146,7 +146,7 @@ function getInfoBoxResponseStat(conditions) {
 
 function buildInfoBoxSessionSql(whereClause) {
     return 'SELECT sum(sessionCount) as totalSession, avg(sessionCount) as avgSession ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
 }
 
 function getInfoBoxSessionStat(conditions) {
@@ -167,8 +167,8 @@ function getInfoBoxSessionStat(conditions) {
 
 function buildInfoBoxErrorSql(whereClause) {
     return 'SELECT sum(httpErrorCount) as totalError, ' +
-        '(sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError ' +
-        'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
+           '(sum(httpErrorCount)*100)/(sum(httpSuccessCount)+sum(httpErrorCount)) as percentageError ' +
+           'FROM REQUESTS_SUMMARY_PER_MINUTE ' + whereClause + ';';
 }
 
 function getInfoBoxErrorStat(conditions) {
