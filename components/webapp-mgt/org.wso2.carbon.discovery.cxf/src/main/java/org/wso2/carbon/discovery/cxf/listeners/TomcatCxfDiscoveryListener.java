@@ -443,7 +443,7 @@ public class TomcatCxfDiscoveryListener implements LifecycleListener {
 
     /**
      * Retrieve the added Metadata version in the <context-param> tag in the web.xml,
-     * if there is no context param defined for MetadataVersion will set the default scope
+     * if there is no context param defined for MetadataVersion will set the default version
      *
      * @param metaDataVersion version defined in the <param-value>
      */
