@@ -31,7 +31,7 @@
     <url>http://wso2.org</url>
 
     <properties>
-        <tomee.version>1.6.0.1</tomee.version>
+        <tomee.version>1.7.2</tomee.version>
     </properties>
 
     <dependencies>

@@ -42,11 +42,11 @@
             <artifactId>org.wso2.carbon.javaee.tomee.patch</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.tomee</groupId>
+            <groupId>org.wso2.orbit.org.apache.openejb</groupId>
             <artifactId>tomee</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.tomee</groupId>
+            <groupId>org.wso2.orbit.org.apache.openejb</groupId>
             <artifactId>tomee-resources</artifactId>
         </dependency>
         <dependency>
@@ -131,8 +131,8 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.javaee.tomee</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.javaee.tomee.patch</bundleDef>
-                                <bundleDef>org.wso2.tomee:tomee</bundleDef>
-                                <bundleDef>org.wso2.tomee:tomee-resources</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.openejb:tomee</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.openejb:tomee-resources</bundleDef>
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-jsf</bundleDef>
                                 <bundleDef>org.wso2.openwebbeans:openwebbeans-el22</bundleDef>
 
