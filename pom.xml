@@ -1498,7 +1498,7 @@
         <openwebbeans.version>1.2.1</openwebbeans.version>
         <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
         <tomcat.tribes.orbit.version>7.0.34.wso2v1</tomcat.tribes.orbit.version>
-        <commons.lang3.version>3.1</commons.lang3.version>
+        <commons.lang3.version>3.3.2</commons.lang3.version>
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 
