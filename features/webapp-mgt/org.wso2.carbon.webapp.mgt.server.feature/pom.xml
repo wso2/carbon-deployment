@@ -46,6 +46,10 @@
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.discovery.cxf</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -102,6 +106,7 @@
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${carbon.deployment.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.deployer</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.tomcat.patch</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.discovery.cxf</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
