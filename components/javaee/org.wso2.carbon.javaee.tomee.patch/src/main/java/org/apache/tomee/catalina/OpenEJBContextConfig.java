@@ -382,27 +382,40 @@ public class OpenEJBContextConfig extends ContextConfig {
         // read the real config
         super.webConfig();
 
-        if (IgnoredStandardContext.class.isInstance(context)) { // no need of jsf
-            return;
-        }
+		if (IgnoredStandardContext.class.isInstance(context)) { // no need of jsf
+			return;
+		}
 
-        // add myfaces auto-initializer if mojarra is not present
-        try {
-            context.getLoader().getClassLoader().loadClass("com.sun.faces.context.SessionMap");
-            return;
-        } catch (final Throwable ignored) {
-            // no-op
-        }
-        try {
-            final Class<?> myfacesInitializer = Class.forName(MYFACES_TOMEEM_CONTAINER_INITIALIZER, true, context.getLoader().getClassLoader());
-            final ServletContainerInitializer instance = (ServletContainerInitializer) myfacesInitializer.newInstance();
-            context.addServletContainerInitializer(instance, getJsfClasses(context));
-            context.addApplicationListener(new ApplicationListener(TOMEE_MYFACES_CONTEXT_LISTENER, false)); // cleanup listener
-        } catch (final Exception ignored) {
-            // no-op
-        } catch (final NoClassDefFoundError error) {
-            // no-op
-        }
+		if ("true".equalsIgnoreCase(SystemInstance.get().getProperty("tomee.jsp-development", "false"))) {
+			for (final Container c : context.findChildren()) {
+				if (Wrapper.class.isInstance(c)) {
+					final Wrapper servlet = Wrapper.class.cast(c);
+					if ("org.apache.jasper.servlet.JspServlet".equals(servlet.getServletClass())) {
+						servlet.addInitParameter("development", "true");
+					}
+				}
+			}
+		}
+
+		final ClassLoader classLoader = context.getLoader().getClassLoader();
+
+		// add myfaces auto-initializer if mojarra is not present
+		try {
+			classLoader.loadClass("com.sun.faces.context.SessionMap");
+			return;
+		} catch (final Throwable ignored) {
+			// no-op
+		}
+		try {
+			final Class<?> myfacesInitializer = Class.forName(MYFACES_TOMEEM_CONTAINER_INITIALIZER, true, classLoader);
+			final ServletContainerInitializer instance = (ServletContainerInitializer) myfacesInitializer.newInstance();
+			context.addServletContainerInitializer(instance, getJsfClasses(context));
+			context.addApplicationListener(new ApplicationListener(TOMEE_MYFACES_CONTEXT_LISTENER, false)); // cleanup listener
+		} catch (final Exception ignored) {
+			// no-op
+		} catch (final NoClassDefFoundError error) {
+			// no-op
+		}
     }
 
 	private Set<Class<?>> getJsfClasses(final Context context) {
