@@ -16,8 +16,6 @@
 package org.wso2.carbon.discovery.cxf;
 
 import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.util.UIDGenerator;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.ServiceClient;
@@ -52,18 +50,18 @@ public class CxfMessageSender {
 
     private static final Log log = LogFactory.getLog(CxfMessageSender.class);
 
-    public void sendHello(CXFServiceInfo serviceBean, Parameter discoveryParams) throws
+    public void sendHello(CXFServiceInfo serviceBean, Config config) throws
             DiscoveryException {
-        sendNotification(serviceBean, discoveryParams, DiscoveryConstants.NOTIFICATION_TYPE_HELLO);
+        sendNotification(serviceBean, config, DiscoveryConstants.NOTIFICATION_TYPE_HELLO);
     }
 
-    public void sendBye(CXFServiceInfo serviceBean, Parameter discoveryParams) throws
+    public void sendBye(CXFServiceInfo serviceBean, Config config) throws
             DiscoveryException {
-        sendNotification(serviceBean, discoveryParams, DiscoveryConstants.NOTIFICATION_TYPE_BYE);
+        sendNotification(serviceBean, config, DiscoveryConstants.NOTIFICATION_TYPE_BYE);
     }
 
     private void sendNotification(CXFServiceInfo serviceBean,
-                                  Parameter discoveryParams, int notificationType) throws DiscoveryException {
+                                  Config config, int notificationType) throws DiscoveryException {
 
         AxisConfiguration axisConfig = getAxisConfig();
         if (axisConfig == null) {
@@ -72,7 +70,6 @@ public class CxfMessageSender {
             return;
         }
 
-        Config config = getDiscoveryConfig(discoveryParams);
         Parameter discoveryProxyParam = DiscoveryMgtUtils.getDiscoveryParam(axisConfig);
         if (discoveryProxyParam == null) {
             return;
@@ -137,36 +134,6 @@ public class CxfMessageSender {
             throw new DiscoveryException("Error while sending the WS-Discovery notification " +
                     "for the service " + serviceBean.getServiceName(), e);
         }
-    }
-
-    private Config getDiscoveryConfig(Parameter discoveryParams) {
-        Config config;
-        if (discoveryParams != null) {
-            OMElement element = discoveryParams.getParameterElement();
-
-            if (element == null) {
-                if (discoveryParams.getValue() != null) {
-                    try {
-                        String wrappedElementText = "<wrapper>" + discoveryParams.getValue() + "</wrapper>";
-                        element = AXIOMUtil.stringToOM(wrappedElementText);
-                    } catch (Exception ignored) { }
-                } else {
-                    return getDefaultConfig();
-                }
-            }
-
-            config = Config.fromOM(element);
-        } else {
-            return getDefaultConfig();
-        }
-        return config;
-    }
-
-    private Config getDefaultConfig() {
-        Config config = new Config();
-        config.setMetadataVersion(DiscoveryConstants.DISCOVERY_DEFAULT_METADATA_VERSION);
-        config.addScope(DiscoveryConstants.DISCOVERY_DEFAULT_SCOPE);
-        return config;
     }
 
     private String getServerID(CXFServiceInfo serviceBean, Config config) throws Exception {
