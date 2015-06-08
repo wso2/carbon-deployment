@@ -1038,12 +1038,12 @@
                 <version>${tomee.resources.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.openwebbeans</groupId>
+                <groupId>org.wso2.orbit.org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-jsf</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.openwebbeans</groupId>
+                <groupId>org.wso2.orbit.org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-el22</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
@@ -1500,7 +1500,7 @@
         <tomee.version>1.7.2</tomee.version>
         <tomee.orbit.version>${tomee.version}.wso2v1</tomee.orbit.version>
         <tomee.resources.orbit.version>${tomee.version}.wso2v1</tomee.resources.orbit.version>
-        <openwebbeans.version>1.2.1</openwebbeans.version>
+        <openwebbeans.version>1.2.7</openwebbeans.version>
         <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
         <tomcat.tribes.orbit.version>7.0.34.wso2v1</tomcat.tribes.orbit.version>
         <commons.lang3.version>3.3.2</commons.lang3.version>
