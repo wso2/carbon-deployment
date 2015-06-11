@@ -1482,8 +1482,8 @@
         <cxf.bundle.version>2.7.6</cxf.bundle.version>
 
         <!-- J2EE Runtime Enviroment -->
-        <myfaces.version>2.1.11</myfaces.version>
-        <openjpa.version>2.2.2</openjpa.version>
+        <myfaces.version>2.1.17</myfaces.version>
+        <openjpa.version>2.4.0</openjpa.version>
         <jpa-commons-pool.version>1.5.4</jpa-commons-pool.version>
         <serp.version>1.13.1</serp.version>
         <geronimo-jms.version>1.1.1</geronimo-jms.version>
