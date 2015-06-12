@@ -174,7 +174,10 @@ public class ASTomEEServerListener extends ServerListener {
 						log.error(e.getMessage(), e);
 					}
 				} else {
-					log.info("container classloader is not an URL one so can't check provisining: " + classLoader);
+					// ###### WSO2 START PATCH ###### //
+					// Change log level from info to debug
+					log.debug("container classloader is not an URL one so can't check provisining: " + classLoader);
+					// ###### WSO2 END PATCH ###### //
 				}
 
 				// ###### WSO2 START PATCH ###### //
