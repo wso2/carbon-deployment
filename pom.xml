@@ -1028,22 +1028,22 @@
 
             <!-- J2EE Tomee feature related dependencies-->
             <dependency>
-                <groupId>org.wso2.tomee</groupId>
+                <groupId>org.wso2.orbit.org.apache.openejb</groupId>
                 <artifactId>tomee</artifactId>
                 <version>${tomee.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.tomee</groupId>
+                <groupId>org.wso2.orbit.org.apache.openejb</groupId>
                 <artifactId>tomee-resources</artifactId>
                 <version>${tomee.resources.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.openwebbeans</groupId>
+                <groupId>org.wso2.orbit.org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-jsf</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.openwebbeans</groupId>
+                <groupId>org.wso2.orbit.org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-el22</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
@@ -1366,7 +1366,7 @@
         <carbon.deployment.imp.pkg.version>[4.4.0, 4.5.0)</carbon.deployment.imp.pkg.version>
 
         <version.tomcat>7.0.59</version.tomcat>
-        <orbit.version.tomcat>${version.tomcat}.wso2v1</orbit.version.tomcat>
+        <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>
 
         <eclipse.osgi.version>3.9.1.v20130814-1242</eclipse.osgi.version>
 
@@ -1482,8 +1482,8 @@
         <cxf.bundle.version>2.7.6</cxf.bundle.version>
 
         <!-- J2EE Runtime Enviroment -->
-        <myfaces.version>2.1.11</myfaces.version>
-        <openjpa.version>2.2.2</openjpa.version>
+        <myfaces.version>2.1.17</myfaces.version>
+        <openjpa.version>2.4.0</openjpa.version>
         <jpa-commons-pool.version>1.5.4</jpa-commons-pool.version>
         <serp.version>1.13.1</serp.version>
         <geronimo-jms.version>1.1.1</geronimo-jms.version>
@@ -1497,13 +1497,13 @@
 
         <javax.ws.rs-api.version>2.0-m10</javax.ws.rs-api.version>
 
-        <tomee.version>1.6.0.1</tomee.version>
-        <tomee.orbit.version>${tomee.version}.wso2v3</tomee.orbit.version>
+        <tomee.version>1.7.2</tomee.version>
+        <tomee.orbit.version>${tomee.version}.wso2v1</tomee.orbit.version>
         <tomee.resources.orbit.version>${tomee.version}.wso2v1</tomee.resources.orbit.version>
-        <openwebbeans.version>1.2.1</openwebbeans.version>
+        <openwebbeans.version>1.2.7</openwebbeans.version>
         <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
         <tomcat.tribes.orbit.version>7.0.34.wso2v1</tomcat.tribes.orbit.version>
-        <commons.lang3.version>3.1</commons.lang3.version>
+        <commons.lang3.version>3.3.2</commons.lang3.version>
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 

@@ -31,10 +31,27 @@
     <url>http://wso2.org</url>
 
     <properties>
-        <tomee.version>1.6.0.1</tomee.version>
+        <tomee.version>1.7.2</tomee.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl</artifactId>
+            <version>${myfaces.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-beanutils</artifactId>
+                    <groupId>commons-beanutils</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>tomee-myfaces</artifactId>
+            <version>${tomee.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>tomee-catalina</artifactId>
