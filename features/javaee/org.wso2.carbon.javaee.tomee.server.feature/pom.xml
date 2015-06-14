@@ -58,6 +58,10 @@
             <artifactId>openwebbeans-el22</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.orbit.com.sun.xml.messaging.saaj</groupId>
+            <artifactId>saaj-impl</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.serp</groupId>
             <artifactId>serp</artifactId>
         </dependency>
@@ -137,6 +141,7 @@
                                 <bundleDef>org.wso2.orbit.org.apache.openwebbeans:openwebbeans-el22</bundleDef>
 
                                 <bundleDef>javax.ws.rs:javax.ws.rs-api</bundleDef>
+                                <bundleDef>org.wso2.orbit.com.sun.xml.messaging.saaj:saaj-impl</bundleDef>
                                 <bundleDef>org.wso2.serp:serp</bundleDef>
                                 <bundleDef>org.apache.tomcat.wso2:tribes</bundleDef>
                                 <bundleDef>commons-digester:commons-digester</bundleDef>
