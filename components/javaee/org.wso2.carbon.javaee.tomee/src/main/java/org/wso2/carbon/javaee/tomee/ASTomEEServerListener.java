@@ -245,8 +245,14 @@ public class ASTomEEServerListener extends ServerListener {
 			final String version = OpenEjbVersion.get().getVersion();
 			final String tomeeVersion = (Integer.parseInt(Character.toString(version.charAt(0))) - 3) +
 			                            version.substring(1, version.length());
-			field.set(null,
-			          value.substring(0, slash) + " (TomEE)" + value.substring(slash) + " (" + tomeeVersion + ")");
+                        // ###### WSO2 START PATCH ###### //
+                        // adding wso2 as signature to the page footer
+                        final String asVersion = ServerConfiguration.getInstance().getFirstProperty("Version");
+                        field.set(null, "WSO2 AS " + asVersion + " (" +
+                                  value.substring(0, slash) + " " + value.substring(slash+1) +
+                                  "/TomEE " + tomeeVersion + ")");
+                        // ###### WSO2 END PATCH ###### //
+
 		} catch (final Exception e) {
 			// no-op
 		} finally {
