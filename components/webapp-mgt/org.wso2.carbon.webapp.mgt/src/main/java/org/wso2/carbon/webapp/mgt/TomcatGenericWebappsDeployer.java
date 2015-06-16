@@ -299,7 +299,6 @@ public class TomcatGenericWebappsDeployer {
                 }
             }
 
-            context.setReloadable(false);
             WebApplication webapp = new WebApplication(this, context, webappFile);
             webapp.setServletContextParameters(webContextParams);
 
