@@ -45,59 +45,59 @@ public class ASJULOpenJPALog extends JULOpenJPALog {
         return LoggerCreator.Get.exec(logger, debug, info);
     }
 
-    @Override
-    public void trace(Object o) {
-        if (isTraceEnabled()) {
-            logger().log(record(o, Level.FINEST));
-        }
-    }
+	@Override
+	public void trace(final Object o) {
+		if (isTraceEnabled()) {
+			logger().log(record(o, Level.FINEST));
+		}
+	}
 
-    @Override
-    public void trace(Object o, Throwable t) {
-        if (isTraceEnabled()) {
-            logger().log(record(o, t, Level.FINEST));
-        }
-    }
+	@Override
+	public void trace(final Object o, final Throwable t) {
+		if (isTraceEnabled()) {
+			logger().log(record(o, t, Level.FINEST));
+		}
+	}
 
-    @Override
-    public void info(Object o) {
-        logger().log(record(o, Level.INFO));
-    }
+	@Override
+	public void info(final Object o) {
+		logger().log(record(o, Level.INFO));
+	}
 
-    @Override
-    public void info(Object o, Throwable t) {
-        logger().log(record(o, t, Level.INFO));
-    }
+	@Override
+	public void info(final Object o, final Throwable t) {
+		logger().log(record(o, t, Level.INFO));
+	}
 
-    @Override
-    public void warn(Object o) {
-        logger().log(record(o, Level.WARNING));
-    }
+	@Override
+	public void warn(final Object o) {
+		logger().log(record(o, Level.WARNING));
+	}
 
-    @Override
-    public void warn(Object o, Throwable t) {
-        logger().log(record(o, t, Level.WARNING));
-    }
+	@Override
+	public void warn(final Object o, final Throwable t) {
+		logger().log(record(o, t, Level.WARNING));
+	}
 
-    @Override
-    public void error(Object o) {
-        logger().log(record(o.toString(), Level.SEVERE));
-    }
+	@Override
+	public void error(final Object o) {
+		logger().log(record(o.toString(), Level.SEVERE));
+	}
 
-    @Override
-    public void error(Object o, Throwable t) {
-        logger().log(record(o, t, Level.SEVERE));
-    }
+	@Override
+	public void error(final Object o, final Throwable t) {
+		logger().log(record(o, t, Level.SEVERE));
+	}
 
-    @Override
-    public void fatal(Object o) {
-        logger().log(record(o, Level.SEVERE));
-    }
+	@Override
+	public void fatal(final Object o) {
+		logger().log(record(o, Level.SEVERE));
+	}
 
-    @Override
-    public void fatal(Object o, Throwable t) {
-        logger().log(record(o, t, Level.SEVERE));
-    }
+	@Override
+	public void fatal(final Object o, final Throwable t) {
+		logger().log(record(o, t, Level.SEVERE));
+	}
 
     private LogRecord record(final Object o, final Throwable t, final Level level) {
         final LogRecord record = record(o, level);

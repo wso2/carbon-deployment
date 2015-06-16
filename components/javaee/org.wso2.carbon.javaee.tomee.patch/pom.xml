@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>javaee-parent</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -31,17 +31,34 @@
     <url>http://wso2.org</url>
 
     <properties>
-        <tomee.version>1.6.0.1</tomee.version>
+        <tomee.version>1.7.2</tomee.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl</artifactId>
+            <version>${myfaces.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-beanutils</artifactId>
+                    <groupId>commons-beanutils</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>tomee-myfaces</artifactId>
+            <version>${tomee.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>tomee-catalina</artifactId>
             <version>${tomee.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.tomcat.wso2</groupId>
+            <groupId>org.wso2.tomcat</groupId>
             <artifactId>tomcat</artifactId>
         </dependency>
         <dependency>
@@ -49,10 +66,9 @@
             <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-            <!--<version>3.8.0.v20120529-1548</version>-->
-        </dependency>
+                <groupId>org.eclipse.osgi</groupId>
+                <artifactId>org.eclipse.osgi</artifactId>
+            </dependency>
     </dependencies>
 
     <build>

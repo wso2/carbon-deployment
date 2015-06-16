@@ -124,12 +124,11 @@ public class WebApplication {
     /**
      * Set ServletContext parameters for this webapp
      *
-     * @param parameters ServletContext params for this webapp
+     * @param parameters ServletContext attributes for this webapp
      */
     public void setServletContextParameters(List<WebContextParameter> parameters) {
         for (WebContextParameter parameter : parameters) {
-            context.getServletContext().setInitParameter(parameter.getName(),
-                    parameter.getValue()); // context-param in web.xml
+            context.getServletContext().setAttribute(parameter.getName(), parameter.getValue());
         }
     }
 

@@ -143,6 +143,10 @@ public class SAMLSSOValve extends SingleSignOn {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 try {
+                    // Read the redirect path. This has to read before the session get invalidated as it first
+                    // tries to read the redirect path form the session attribute
+                    String redirectPath = readAndForgetRedirectPathAfterSLO(request);
+
                     samlSSOManager.processResponse(request, response);
                     //redirect according to relay state attribute
                     String relayStateId = ssoAgentConfig.getSAML2().getRelayState();
@@ -170,17 +174,6 @@ public class SAMLSSOValve extends SingleSignOn {
                             ssoSPConfigProperties.getProperty(WebappSSOConstants.CONSUMER_URL_POSTFIX)) &&
                             Boolean.parseBoolean(ssoSPConfigProperties.getProperty(
                                     WebappSSOConstants.HANDLE_CONSUMER_URL_AFTER_SLO))) {
-                        String redirectPath = (String) request.getServletContext().getAttribute(
-                                WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
-                        request.getServletContext().removeAttribute(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
-                        if (redirectPath == null) {
-                            redirectPath = ssoSPConfigProperties.getProperty(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
-                        }
-                        if (redirectPath != null && !"".equals(redirectPath)) {
-                            redirectPath = request.getContext().getPath().concat(redirectPath);
-                        } else {
-                            redirectPath = request.getContext().getPath();
-                        }
                         response.sendRedirect(redirectPath);
                         return;
                     }
@@ -309,5 +302,37 @@ public class SAMLSSOValve extends SingleSignOn {
             request.getSession(false).removeAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
         }
         throw e;
+    }
+
+    /**
+     * This method reads the Redirect Path After SLO. If the redirect path is read from session then it is removed.
+     * Priority of reading the redirect path is 1. Session, 2. Context 3. Config
+     * @param request
+     * @return redirect path relative to the current application path
+     */
+    private String readAndForgetRedirectPathAfterSLO(Request request) {
+        String redirectPath = null;
+        if (request.getSession(false) != null) {
+            redirectPath = (String) request.getSession(false).getAttribute(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+            request.getSession(false).removeAttribute(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+        }
+        if (redirectPath == null) {
+            redirectPath = (String) request.getContext().findParameter(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+        }
+        if (redirectPath == null) {
+            redirectPath = ssoSPConfigProperties.getProperty(WebappSSOConstants.REDIRECT_PATH_AFTER_SLO);
+        }
+
+        if (redirectPath != null && !redirectPath.isEmpty()) {
+            redirectPath = request.getContext().getPath().concat(redirectPath);
+        } else {
+            redirectPath = request.getContext().getPath();
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Redirect path = " + redirectPath);
+        }
+
+        return redirectPath;
     }
 }

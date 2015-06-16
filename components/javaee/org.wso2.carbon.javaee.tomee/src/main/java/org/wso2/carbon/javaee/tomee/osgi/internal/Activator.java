@@ -25,6 +25,10 @@ public class Activator implements BundleActivator {
 
     }
 
+    /**
+     * Service Managers of tomee provides support for cxf jax-ws and jax-rs services
+     *
+     */
     @Override
     public void stop(BundleContext context) throws Exception {
         if (DataHolder.getServiceManager() != null) {

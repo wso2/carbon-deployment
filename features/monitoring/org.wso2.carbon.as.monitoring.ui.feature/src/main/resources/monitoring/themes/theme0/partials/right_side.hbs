@@ -1,0 +1,282 @@
+<div class="header-nav">
+	 <a class="toggle-sidebar" data-toggle="tooltip" data-placement="right" title="Click to Show/Hide menu">
+      <i class="fa fa-bars"></i>
+    </a>
+	<div class="title">HTTP Monitoring</div>
+	<div class="header-nav-right">
+    <!--<ul class="nav navbar-nav navbar-right">-->
+      <!--<li class="dropdown">-->
+        <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
+	        <!--<span class="user-image">-->
+	           <!--<img src="{{!-- url "/themes/theme0/ui/img/avatar/" --}}{{!-- user_avatar --}}
+	           .png" alt="Profile-image{{!-- user_avatar --}}">               -->
+	        <!--</span>-->
+          <!--{{!-- user_name --}}-->
+          <!--<span class="caret"></span>-->
+        <!--</a>-->
+              	<!---->
+        <!--<ul class="dropdown-menu" role="menu">-->
+	        <!--<li><a href="#">Settings</a></li>-->
+	        <!--<li><a href="#">Logout</a></li>-->
+        <!--</ul>-->
+      <!--</li>-->
+    <!--</ul>-->
+  </div>
+</div>
+
+<div class="subheader">
+
+  <h2 class="pull-left col-md-4">
+  	<span class="fa-stack fa-lg">
+  		<i class="fa fa-home fa-stack-1x" ></i>
+  		 <i class="fa fa-circle-thin fa-stack-2x"></i>
+  	</span>
+      Application Home 
+        <span>/</span>
+  </h2>
+
+  <span class="subheader-right pull-right col-md-8 col-sm-7">
+
+    
+
+   	<span class="dropdown server-select ">
+    	Servers: 
+		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+		    All
+		    <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 1</a></li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 2</a></li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Server 3</a></li>
+		  </ul>
+		</span>
+
+    <div class="btn-group quick-selection pull-right">
+      <button type="button" class="btn btn-default date-rage-opt">Hour</button>
+      <button type="button" class="btn btn-default date-rage-opt">Day</button>
+      <button type="button" class="btn btn-default date-rage-opt">Week</button>
+      <button type="button" class="btn btn-default date-rage-opt">Month</button>
+      <button type="button" class="btn btn-default" id="reportrange" ><i class="fa fa-calendar fa-lg"></i>
+        <span>July 16, 2014 - July 23, 2014 </span><b class="caret"></b></button>
+    </div>
+
+ 	
+  </span>
+
+</div>
+
+<div class="row row-overide">
+
+	<div class="col-sm-6 col-md-3">
+        <div class="panel panel-one panel-stat">
+            <div class="panel-heading">
+              
+              	<div class="statistics">
+                	<div class="row">
+                  		<div class="col-xs-8">
+                     		<small class="statistics-main">Total Requests</small>
+                    		<h2>4,243,625</h2>
+                  		</div>
+                  		<div class="col-xs-4">
+                   		
+                  		</div>
+                	</div><!-- row -->
+                	<div class="arrow-box"></div>
+                	<div class="row">
+                		<small class="measure-label">Per min</small>
+
+                  		<div class="col-xs-4 panel-bottom-box left-radius box-one-color">    	
+                  			<h4>350,100</h4>
+                    		<small class="stat-label">Max</small>
+                  		</div>
+                  
+                  		<div class="col-xs-4 line-seperator panel-bottom-box box-one-color">
+                  			<h4>5100</h4>
+                    		<small class="stat-label">Avg</small>
+                  		</div>
+
+                  		<div class="col-xs-4 line-seperator panel-bottom-box right-radius box-one-color">
+                  			<h4>100</h4>
+                    		<small class="stat-label">Min</small>
+                  		</div>
+                	</div><!-- row -->
+              </div><!-- statistics -->
+              
+            </div><!-- panel-heading -->
+        </div><!-- panel -->
+    </div><!-- col-sm-6 -->
+
+    <div class="col-sm-6 col-md-3">
+        <div class="panel panel-two panel-stat">
+            <div class="panel-heading">
+              
+              	<div class="statistics">
+                	<div class="row">
+                  		<div class="col-xs-8">
+                     		<small class="statistics-main">Response Time</small>
+                    		<i class="fa fa-clock-o fa-3x"></i>
+                  		</div>
+                  		<div class="col-xs-4">
+                   		
+                  		</div>
+                	</div><!-- row -->
+                	<div class="arrow-box2"></div>
+                	<div class="row">
+                		<small class="measure-label">ms</small>
+
+                  		<div class="col-xs-4 panel-bottom-box left-radius box-two-color">    	
+                  			<h4>545</h4>
+                    		<small class="stat-label">Max</small>
+                  		</div>
+                  
+                  		<div class="col-xs-4 line-seperator panel-bottom-box box-two-color">
+                  			<h4>90</h4>
+                    		<small class="stat-label">Avg</small>
+                  		</div>
+
+                  		<div class="col-xs-4 line-seperator panel-bottom-box right-radius box-two-color">
+                  			<h4>10</h4>
+                    		<small class="stat-label">Min</small>
+                  		</div>
+                	</div><!-- row -->
+              </div><!-- statistics -->
+              
+            </div><!-- panel-heading -->
+        </div><!-- panel -->
+    </div><!-- col-sm-6 -->
+
+    <div class="col-sm-6 col-md-3">
+        <div class="panel panel-three panel-stat">
+            <div class="panel-heading">
+              
+              	<div class="statistics">
+                	<div class="row">
+                  		<div class="col-xs-3">
+                     		<small class="statistics-main">Sessions</small>
+                    		<i class="fa fa-group fa-3x"></i>
+                  		</div>
+                  		<div class="col-xs-9">
+                   			<span> 23897</span>
+                  		</div>
+                	</div><!-- row -->
+                	<div class="arrow-box3"></div>
+                	<div class="row">
+
+                  		<div class="col-xs-8 panel-bottom-box left-radius box-three-color">    	
+                  			<div class="h4-stat-label">Avg per min.</div>
+                    		<small class="stat-label">&nbsp;</small>
+                  		</div>
+                  
+                  		<div class="col-xs-4 panel-bottom-box  right-radius  box-three-color">
+                  			<h4>120</h4>
+                    		<small class="stat-label">&nbsp;</small>
+                  		</div>
+                	</div><!-- row -->
+              </div><!-- statistics -->
+              
+            </div><!-- panel-heading -->
+        </div><!-- panel -->
+    </div><!-- col-sm-6 -->
+
+    <div class="col-sm-6 col-md-3">
+        <div class="panel panel-four panel-stat">
+            <div class="panel-heading">
+              
+              	<div class="statistics">
+                	<div class="row">
+                  		<div class="col-xs-3">
+                     		<small class="statistics-main">Errors</small>
+                    		<i class="fa fa-times-circle fa-3x"></i>
+
+                  		</div>
+                  		<div class="col-xs-9">
+                   			<span>123</span>
+                  		</div>
+                	</div><!-- row -->
+                	<div class="arrow-box4"></div>
+                	<div class="row">
+                  
+                  		<div class="col-xs-12 panel-bottom-box  right-radius left-radius  box-four-color">
+                  			<h4>23%</h4>
+                    		<small class="stat-label">&nbsp;</small>
+                  		</div>
+                	</div><!-- row -->
+              </div><!-- statistics -->
+              
+            </div><!-- panel-heading -->
+        </div><!-- panel -->
+    </div><!-- col-sm-6 -->
+
+</div>
+
+<div class="row row-overide">
+	<div class="col-sm-12">
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table id="main_app_table" class="display" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th rowspan="2">Application / Service</th>
+              <th rowspan="2">Type</th>
+              <th colspan="3">Average request count</th>
+              <th rowspan="2">Total number of requests</th>
+              <th rowspan="2">Percentage error</th>
+            </tr>
+            <tr>
+              <th>Last minute</th>
+              <th>Last hour</th>
+              <th>Last Day</th>
+            </tr>
+          </thead>
+        </table>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="row row-overide">
+
+    {{>request-panel}}
+    {{>response-panel}}
+    {{>error-panel}}
+
+
+</div>
+
+<div class="row row-overide">
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="tabbable tabs-below">
+			        <div class="tab-content">
+			         	<div class="tab-pane active" id="one_">Lorem ipsum dolor sit amet, charetra varius quam sit amet vulputate. 
+			         	Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero.</div>
+			         	<div class="tab-pane" id="two_">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. 
+			         	Aliquam in felis sit amet augue.</div>
+			         	<div class="tab-pane" id="twee_">Thirdamuno, ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate. 
+			         	Quisque mauris augue, molestie tincidunt condimentum vitae. </div>
+			        </div>
+			        
+			      </div>
+			</div>
+			<ul class="nav nav-tabs">
+			    <li><a href="#one_" data-toggle="tab">One</a></li>
+			    <li><a href="#two_" data-toggle="tab">Two</a></li>
+			    <li><a href="#two_" data-toggle="tab">Three</a></li>
+			    <li><a href="#twee_" data-toggle="tab">Four</a></li>
+			    <li><a href="#twee_" data-toggle="tab">Five</a></li>
+			</ul>
+		</div>
+
+    <script language="javascript">
+      $(document).ready(function() {
+        $('#main_app_table').dataTable( {
+            "ajax" :  '{{url ""}}/api/as-data.jag?action=apps'
+          } );
+      } );
+    </script>
+	</div>
+</div>

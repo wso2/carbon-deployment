@@ -51,7 +51,6 @@ public class ASOpenEJBContextConfig extends OpenEJBContextConfig {
     @Override
     protected void processServletContainerInitializers(ServletContext ctx) {
         super.processServletContainerInitializers(ctx);
-        //TODO: Add the code for SCIs that come via OSGi services
     }
 
     @Override

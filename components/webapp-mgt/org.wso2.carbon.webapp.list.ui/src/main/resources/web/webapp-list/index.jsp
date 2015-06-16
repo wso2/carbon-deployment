@@ -604,7 +604,7 @@
                 iconPath = "../webapp-mgt/images/webapps.gif";
                 webappDisplayType = "WebApp";
             } else if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
-                iconPath = "../jax-webapp-mgt/images/jax_type.gif";
+                iconPath = "../webapp-mgt/images/jax_type.gif";
                 webappDisplayType = "JAX-WS/RS Webapp";
             } else if(currentWebappType.equalsIgnoreCase("JaggeryWebapp")) {
                 iconPath = "../jaggeryapp-mgt/images/webapps.gif";
