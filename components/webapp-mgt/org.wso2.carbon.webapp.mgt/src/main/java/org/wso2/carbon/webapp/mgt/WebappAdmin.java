@@ -1260,7 +1260,7 @@ public class WebappAdmin extends AbstractAdmin {
      * @return new VhostHolder instance
      */
     public VhostHolder getVhostHolder() {
-        return new VhostHolder();
+        return new VhostHolder().getInstance();
     }
 
 }

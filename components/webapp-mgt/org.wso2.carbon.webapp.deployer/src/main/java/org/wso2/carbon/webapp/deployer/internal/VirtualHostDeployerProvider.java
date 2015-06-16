@@ -42,13 +42,15 @@ public class VirtualHostDeployerProvider implements Axis2DeployerProvider {
      */
     public VirtualHostDeployerProvider() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-        Container[] virtualHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
-        for (org.apache.catalina.Container vHost : virtualHosts) {
-            Host childHost = (Host) vHost;
-            String directory = getDirectoryName(childHost.getAppBase());
+        if (carbonTomcatService != null) {
+            Container[] virtualHosts = carbonTomcatService.getTomcat().getEngine().findChildren();
+            for (org.apache.catalina.Container vHost : virtualHosts) {
+                Host childHost = (Host) vHost;
+                String directory = getDirectoryName(childHost.getAppBase());
 
-            deployerConfigs.add(getDeployerConfig(directory, ".war"));
-            deployerConfigs.add(getDeployerConfig(directory, null));
+                deployerConfigs.add(getDeployerConfig(directory, ".war"));
+                deployerConfigs.add(getDeployerConfig(directory, null));
+            }
         }
     }
 
