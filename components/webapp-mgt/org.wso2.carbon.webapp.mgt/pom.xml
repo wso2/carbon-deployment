@@ -52,6 +52,7 @@
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -90,6 +91,7 @@
                             org.wso2.carbon.webapp.mgt.utils,
                             org.wso2.carbon.webapp.mgt.multitenancy,
                             org.wso2.carbon.webapp.mgt.sync,
+                            org.wso2.carbon.webapp.mgt.sso,
                             org.wso2.carbon.webapp.mgt.version
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
