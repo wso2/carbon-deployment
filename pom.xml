@@ -1047,6 +1047,11 @@
                 <artifactId>openwebbeans-el22</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>tomee-catalina</artifactId>
+                <version>${tomee.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.orbit.com.sun.xml.messaging.saaj</groupId>
@@ -1063,6 +1068,7 @@
                 <artifactId>tribes</artifactId>
                 <version>${tomcat.tribes.orbit.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
