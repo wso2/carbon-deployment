@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   WSO2 Inc. licenses this file to you under the Apache License,
  *   Version 2.0 (the "License"); you may not use this file except
@@ -116,7 +116,8 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
     }
 
     /**
-     * @return
+     * Returns the number of session creations that failed due to maxActiveSessions
+     * @return rejected count
      */
     @Override
     public int getRejectedSessions() {
@@ -192,10 +193,17 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
         if (allowedClasses.contains(callingClass)) {
             return;
         }
+        // When using IBM JDK, the MangerBase and Request is at 5th place in the stack trace,
+        // so we have to check that as well
         callingClass = trace[4].getClassName();
+
+        // A security issue may arise with SUN JDK , when sometime the allowed class is found at the
+        // 5th place in the stack. The following check will ensure that this will not arise and
+        // we allow only IBM JDK to proceed in this if statement
         if (System.getProperty("java.vm.name").contains("IBM") && allowedClasses.contains(callingClass)) {
             return;
         }
+
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
         if (tenantId != MultitenantConstants.SUPER_TENANT_ID && tenantId != ownerTenantId) {
             throw new SecurityException("Illegal access attempt by  tenant[" + tenantId +
@@ -204,7 +212,7 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
     }
 
     /**
-     *
+     * Sets the tenantID of the tenant who owns this Tomcat Session Manager
      * @param ownerTenantId Relevant tenantID which is associated to CarbonTomcatSessionPersistentManager
      */
     public void setOwnerTenantId(int ownerTenantId) {

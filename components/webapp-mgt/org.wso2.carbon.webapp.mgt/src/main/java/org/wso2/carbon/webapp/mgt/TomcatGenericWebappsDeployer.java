@@ -296,7 +296,7 @@ public class TomcatGenericWebappsDeployer {
                     ((CarbonTomcatSessionManager) manager).setOwnerTenantId(tenantId);
                 } else if (manager instanceof CarbonTomcatSessionPersistentManager){
                     ((CarbonTomcatSessionPersistentManager) manager).setOwnerTenantId(tenantId);
-                    log.info(manager.getInfo() +
+                    log.debug(manager.getInfo() +
                              " enabled Tomcat HTTP Session Persistent mode using " +
                              ((CarbonTomcatSessionPersistentManager) manager).getStore().getInfo());
                 } else {
