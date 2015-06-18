@@ -260,7 +260,7 @@
                         <td class="formRow">
                             <input type="text" name="version" value="">
                         </td>
-                        <%if (tenantId == <%=superTenantId%>) { %>
+                        <%if (tenantId == superTenantId) { %>
                         <td class="formRow">
                             <select name="hostName">
                                <%    for (String vhostName : vhostHolder.getVhosts()) {  %>
