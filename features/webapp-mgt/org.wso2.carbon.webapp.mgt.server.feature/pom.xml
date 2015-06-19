@@ -57,34 +57,7 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>${project.build.directory}/lib/</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib/dropins</outputDirectory>
-                            <includeArtifactIds>org.wso2.carbon.identity.sso.agent</includeArtifactIds>
-                            <excludeTransitive>true</excludeTransitive>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-<!--
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
@@ -112,7 +85,6 @@
                     </execution>
                 </executions>
             </plugin>
--->
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
@@ -138,7 +110,7 @@
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.deployer</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.tomcat.patch</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.discovery.cxf</bundleDef>
-                                <!--<bundleDef>org.wso2.carbon.identity:org.wso2.carbon.identity.sso.agent</bundleDef>-->
+                                <bundleDef>org.wso2.carbon.identity:org.wso2.carbon.identity.sso.agent</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}

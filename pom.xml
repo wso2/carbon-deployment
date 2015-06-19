@@ -1368,7 +1368,7 @@
         <carbon.commons.imp.pkg.version>[4.4.0, 4.5.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>4.5.0</carbon.identity.version>
+        <carbon.identity.version>4.5.2</carbon.identity.version>
         <carbon.identity.imp.pkg.version>[4.5.0, 4.6.0)</carbon.identity.imp.pkg.version>
 
         <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
