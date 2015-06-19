@@ -52,7 +52,6 @@
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
