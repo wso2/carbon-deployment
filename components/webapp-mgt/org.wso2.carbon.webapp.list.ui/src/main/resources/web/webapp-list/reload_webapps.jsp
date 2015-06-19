@@ -30,6 +30,8 @@
     String reloadAll = request.getParameter("reloadAll");
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
+    String webappType = request.getParameter("webappType");
+    String defaultHostName = request.getParameter("defaultHostName");
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
@@ -54,6 +56,8 @@
         if (hostName != null && httpPort != null) {
             redirectUrl += "&hostName=" + hostName + "&httpPort=" + httpPort;
         }
+
+        redirectUrl += "&webappType=" + webappType + "&webappState=all" + "&defaultHostName=" + defaultHostName;
     }
 %>
 

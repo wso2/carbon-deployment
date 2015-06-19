@@ -156,7 +156,7 @@
         CARBON.showConfirmationDialog("<fmt:message key="reload.selected.webapps.prompt"/>",
                                       function() {
                                           location.href = 'reload_webapps.jsp?webappKey=<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
+                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>';
                                       }
                 );
     }
