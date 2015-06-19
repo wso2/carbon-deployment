@@ -64,7 +64,7 @@
     <table class="styledLeft" id="webappTable" width="60%">
         <thead>
         <tr>
-            <th width="35%"><img src="../jax-webapp-mgt/images/jax_type.gif" alt="" style="vertical-align:middle;">&nbsp;<fmt:message key="carbonapps.webapp.jax.web.application"/></th>
+            <th width="35%"><img src="../webapp-mgt/images/jax_type.gif" alt="" style="vertical-align:middle;">&nbsp;<fmt:message key="carbonapps.webapp.jax.web.application"/></th>
             <th width="35%"><fmt:message key="carbonapps.webapp.context"/></th>
             <th width="15%"><fmt:message key="carbonapps.webapp.state"/></th>
             <th width="15%"><fmt:message key="carbonapps.webapp.actions"/></th>
