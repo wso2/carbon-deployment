@@ -147,7 +147,7 @@
         CARBON.showConfirmationDialog("<fmt:message key="session.expiry.selected.webapps.prompt"/>",
                                       function() {
                                           location.href = 'expire_sessions.jsp?webappKey=<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8")%>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
+                                          + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>';
                                       }
                 );
     }
@@ -347,14 +347,18 @@
                                                     </a>
                                                     <nobr>
                                                         <form name="sessionExpiryForm" onsubmit="expireSessions();return false;" >
-                                                            <input type="hidden" name="webappFileName"
-                                                                   value="<%=  hostName+':'+ webappFileName%>"/>
+                                                            <input type="hidden" name="webappKey"
+                                                                   value="<%=  hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8")%>"/>
                                                             <input type="hidden" name="redirectPage"
                                                                    value="webapp_info.jsp"/>
                                                             <input type="hidden" name="hostName"
                                                                    value="<%= hostName %>"/>
                                                             <input type="hidden" name="httpPort"
                                                                    value="<%= httpPort %>"/>
+                                                            <input type="hidden" name="webappType"
+                                                                   value="<%= webappType %>"/>
+                                                            <input type="hidden" name="defaultHostName"
+                                                                   value="<%= defaultHostName %>"/>
                                                             <label>
                                                                 &nbsp;<fmt:message key="with.idle"/> &ge;
                                                                 <input type="text" size="10" name="sessionExpiryTime"
