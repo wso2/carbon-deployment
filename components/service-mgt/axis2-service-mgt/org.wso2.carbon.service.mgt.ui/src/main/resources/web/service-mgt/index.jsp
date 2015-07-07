@@ -423,7 +423,6 @@ padding:0 10px;
                 <% } %>
             </td>
                     <% } %>
-
             <nobr>
              <%
               String serviceName = service.getName();
@@ -431,21 +430,18 @@ padding:0 10px;
                 String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
               %>
                <jsp:include page="<%= cApp_proxy%>"/>
-
               <% } else { %>
-              <td width="200px">
-                              <nobr>
-                                  <%
-                                      if (loggedIn) {
-                                  %>
+                    <td width="200px">
+                          <nobr>
+                               <% if (loggedIn) { %>
                                   <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
                                   </a>
-                                  <% } else { %>
+                               <% } else { %>
                                   <%=serviceName%>
-                                  <% } %>
-                              </nobr>
-                          </td>
-               <% } %>
+                               <% } %>
+                          </nobr>
+                    </td>
+              <% } %>
               </nobr>
             <td width="20px" style="text-align:left;">
                 <nobr>
@@ -515,7 +511,7 @@ padding:0 10px;
             <% if ("proxy".equalsIgnoreCase(service.getServiceType())) {
                String cApp_edit = "../" + service.getServiceType() + "/editCAppartifact.jsp?serviceName=" + serviceName;
              %>
-             <jsp:include page="<%= cApp_edit%>"/>
+                <jsp:include page="<%= cApp_edit%>"/>
             <% } else { %>
             <td>
                 <a title="Edit '<%=service.getName()%>' in the design view" href="#" onclick="editPS('<%=service.getName()%>');return false;">
@@ -523,8 +519,8 @@ padding:0 10px;
             </td>
             <td>
                 <a title="Edit '<%=service.getName()%>' in the source view editor"
-                                style="background-image: url(../proxyservices/images/source-view.gif);"
-                                class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
+                   style="background-image: url(../proxyservices/images/source-view.gif);"
+                   class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
             </td>
             <% } %>
 
