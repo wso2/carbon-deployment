@@ -191,7 +191,7 @@
 
         <%
             if (sessions != null) {
-                String parameters = "webappFileName=" + webappFileName;
+                String parameters = "webappFileName=" + webappFileName + "&hostName=" + hostname;
         %>
 
         <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
