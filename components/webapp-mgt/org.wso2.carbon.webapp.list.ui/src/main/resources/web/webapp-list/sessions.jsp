@@ -260,7 +260,7 @@
                         <%= dateFormatter.format(sessionMetadata.getLastAccessedTime()) %>
                     </td>
                     <td>
-                        <%= sessionMetadata.getMaxInactiveInterval() %>&nbsp;ms
+                        <%= sessionMetadata.getMaxInactiveInterval() %>&nbsp;s
                     </td>
                 </tr>
                 <% } %>
