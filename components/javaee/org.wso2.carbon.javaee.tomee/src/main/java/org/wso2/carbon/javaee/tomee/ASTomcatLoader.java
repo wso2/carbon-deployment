@@ -20,7 +20,10 @@ import org.apache.openejb.config.ConfigurationFactory;
 import org.apache.openejb.loader.SystemInstance;
 import org.apache.tomee.catalina.TomcatLoader;
 import org.apache.tomee.catalina.TomcatWebAppBuilder;
+import org.apache.openejb.config.sys.Tomee;
 
+import org.wso2.carbon.base.CarbonBaseUtils;
+import java.io.File;
 import java.util.Properties;
 
 public class ASTomcatLoader extends TomcatLoader {
@@ -28,8 +31,11 @@ public class ASTomcatLoader extends TomcatLoader {
     public void initialize(Properties properties) throws Exception {
 
         //Since we initialize TomcatWebAppBuilder early, we need to set the jdbc pool here.
-        //TWAB does some heavy operations which require the jdbc pool.
+        //TWAB does some heavy operations which require the jdbc pool. - KasunG
         setJdbcPool();
+
+        //over-ride tomee.xml location
+        setTomeeXml();
 
         //Set our own TWAB. Why we need this? To set our own Tomcat context LifeCycleListener
         TomcatWebAppBuilder tomcatWebAppBuilder = (TomcatWebAppBuilder)
@@ -53,8 +59,21 @@ public class ASTomcatLoader extends TomcatLoader {
         } catch (Throwable ignored) {
             // will use the defaul tone
         }
-
-
-
     }
+
+    /**
+     * Over-rides TomcatLoader#initialize method's tomee.xml find logic.
+     * In AS, the tomee.xml is placed at AS_HOME/repository/conf/tomee/tomee.xml
+     *
+     */
+    protected void setTomeeXml(){
+        String tomeeXmlLocation = CarbonBaseUtils.getCarbonConfigDirPath() + File.separator + "tomee" +
+                          File.separator + "tomee.xml";
+        final File tomeeXml = new File(tomeeXmlLocation);
+        if (tomeeXml.exists()) { // use tomee.xml instead of openejb.xml
+            SystemInstance.get().setProperty("openejb.configuration", tomeeXml.getAbsolutePath());
+            SystemInstance.get().setProperty("openejb.configuration.class", Tomee.class.getName());
+        }
+    }
+
 }

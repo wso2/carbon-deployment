@@ -294,12 +294,16 @@ public class TomcatGenericWebappsDeployer {
             } else {
                 if (manager instanceof CarbonTomcatSessionManager) {
                     ((CarbonTomcatSessionManager) manager).setOwnerTenantId(tenantId);
+                } else if (manager instanceof CarbonTomcatSessionPersistentManager){
+                    ((CarbonTomcatSessionPersistentManager) manager).setOwnerTenantId(tenantId);
+                    log.debug(manager.getInfo() +
+                             " enabled Tomcat HTTP Session Persistent mode using " +
+                             ((CarbonTomcatSessionPersistentManager) manager).getStore().getInfo());
                 } else {
                     context.setManager(new CarbonTomcatSessionManager(tenantId));
                 }
             }
 
-            context.setReloadable(false);
             WebApplication webapp = new WebApplication(this, context, webappFile);
             webapp.setServletContextParameters(webContextParams);
 

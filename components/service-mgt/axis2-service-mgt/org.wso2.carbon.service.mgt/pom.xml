@@ -128,7 +128,8 @@
                         <Export-Package>
                             org.wso2.carbon.service.mgt;version=${carbon.deployment.exp.pkg.version},
                             org.wso2.carbon.service.mgt.util;version=${carbon.deployment.exp.pkg.version},
-                            org.wso2.carbon.service.mgt.multitenancy;version=${carbon.deployment.exp.pkg.version}
+                            org.wso2.carbon.service.mgt.multitenancy;version=${carbon.deployment.exp.pkg.version},
+                            org.wso2.carbon.service.mgt.sync;version=${carbon.deployment.exp.pkg.version}
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Require-CarbonUIComponents>${project.artifactId}.ui-${project.parent.version}
