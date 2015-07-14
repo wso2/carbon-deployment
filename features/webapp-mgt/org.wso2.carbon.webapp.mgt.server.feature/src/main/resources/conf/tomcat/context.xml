@@ -34,6 +34,6 @@
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
     <!-- Listener for WS-Discovery -->
-    <Listener className="org.wso2.carbon.discovery.cxf.listeners.TomcatCxfDiscoveryListener" />
+    <!--<Listener className="org.wso2.carbon.discovery.cxf.listeners.TomcatCxfDiscoveryListener" />-->
 
 </Context>
