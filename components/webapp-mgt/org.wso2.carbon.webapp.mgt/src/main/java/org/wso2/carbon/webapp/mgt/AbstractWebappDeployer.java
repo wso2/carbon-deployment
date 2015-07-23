@@ -274,10 +274,11 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                 }
             } else {
                 if (isWatchedResourceChanged(fileName, unpackedFile)) {
-                    if (!warFile.exists()) {
-                        handleRedeployment(unpackedFile);
-                    } else {
-                        handleRedeployment(warFile);
+                    // if watchedResources are modified, reload the context
+                    Context context = getWebappContext(unpackedFile);
+                    if (context != null) {
+                        context.reload();
+                        log.info("Reloaded webapp: " + fileName);
                     }
                 }
             }
