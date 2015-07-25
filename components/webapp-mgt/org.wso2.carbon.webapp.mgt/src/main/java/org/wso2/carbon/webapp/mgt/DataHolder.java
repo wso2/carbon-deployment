@@ -23,6 +23,7 @@ import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationService;
 
 /**
  * Holds the some of the data required by the webapps component
@@ -35,6 +36,15 @@ public class DataHolder {
     protected static DeploymentSynchronizer deploymentSynchronizerService;
     private static RegistryService registryService;
     private static TenantRegistryLoader tenantRegistryLoader;
+    private static WebAppConfigurationService webAppConfigurationService;
+
+    public static WebAppConfigurationService getWebAppConfigurationService() {
+        return webAppConfigurationService;
+    }
+
+    public static void setWebAppConfigurationService(WebAppConfigurationService webAppConfigurationService) {
+        DataHolder.webAppConfigurationService = webAppConfigurationService;
+    }
 
     public static RealmService getRealmService() {
         return realmService;

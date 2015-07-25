@@ -35,6 +35,8 @@ import java.util.List;
  * of a web application
  */
 public class WebAppConfigurationListener implements LifecycleListener {
+    private static final Log log = LogFactory.getLog(WebAppConfigurationListener.class);
+
     /**
      * Overrides the lifecycleEvent method of the interface LifecycleListener
      * Catches lifecycle events of a web app and if the before_start event
@@ -44,22 +46,45 @@ public class WebAppConfigurationListener implements LifecycleListener {
      */
     public void lifecycleEvent(LifecycleEvent lifecycleEvent) {
         if (Lifecycle.BEFORE_START_EVENT.equals(lifecycleEvent.getType())) {
+            String webAppFilePath;
             Object source = lifecycleEvent.getSource();
             if (source instanceof StandardContext) {
                 StandardContext context = (StandardContext) source;
 
-                WebAppConfigurationData configData = WebAppConfigurationReader.retrieveWebConfigData(context);
+                try {
+                    webAppFilePath = WebAppConfigurationUtils.getWebAppFilePath(context);
 
-                //   TODO:Store config data somewhere
+                    WebAppConfigurationData configData = WebAppConfigurationReader.retrieveWebConfigData(context);
 
-                //1. Store in context - not possible as data gets cleared when the web app stops
-                //2. Store in WebApplication object - WebApplication gets created at deployment but config
-                //   data is needed in between. Therefore need to create the WebApplication here which doesnt look nice
-                //3. Create new Classes, Config data and holder
+                    WebAppConfigurationService service = DataHolder.getWebAppConfigurationService();
 
-                //Even though we go for the 3rd option still we've got a problem because
-                //ASGlobalLifecycleListener needs these config data at the before_init event,
-                //but before_init is not captured here
+                    if (service != null) {
+                        if (configData != null) {
+                            service.addConfig(webAppFilePath, configData);
+
+                            if (log.isDebugEnabled()) {
+                                log.debug("Configuration data stored for " + webAppFilePath);
+
+                                log.debug("single-sign-on:" + configData.isSingleSignOnEnabled());
+                                log.debug("streamID:" + configData.getStatisticsPublisher().getStreamId());
+                                log.debug("enabled:" + configData.getStatisticsPublisher().isEnabled());
+                                log.debug("parentFirst:" + configData.isParentFirst());
+                                List<String> environments = configData.getEnvironments();
+                                for (String env : environments) {
+                                    log.debug("environment:" + env);
+                                }
+                                log.debug("web-service-discovery:" + configData.isWebServiceDiscoveryEnabled());
+                                log.debug("is-managed-api:" + configData.getRestWebServices().isManagedApi());
+
+                            }
+                        } else {
+                            log.error("Could not store configuration data. Data object is null");
+                        }
+
+                    }
+                } catch (IOException e) {
+                    log.error("Error while reading configuration file", e);
+                }
             }
         }
     }
