@@ -18,10 +18,13 @@
 package org.wso2.carbon.webapp.mgt.utils;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -36,7 +39,8 @@ public class XMLUtils {
      * @return a Document object
      * @throws Exception if an error occurs
      */
-    public static Document buildDocumentFromFile(File xmlFile) throws Exception {
+    public static Document buildDocumentFromFile(File xmlFile)
+            throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile);
@@ -51,7 +55,8 @@ public class XMLUtils {
      * @return a Document object
      * @throws Exception if an error occurs
      */
-    public static Document buildDocumentFromInputStream(InputStream is) throws Exception {
+    public static Document buildDocumentFromInputStream(InputStream is)
+            throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(is);
