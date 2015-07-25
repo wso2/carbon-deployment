@@ -1,5 +1,5 @@
 /*
-* Copyright 2004,2013 The Apache Software Foundation.
+* Copyright 2015 The Apache Software Foundation.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomee.catalina.ContextListener;
 import org.apache.tomee.catalina.GlobalListenerSupport;
-import org.wso2.carbon.webapp.mgt.loader.ClassloadingContextBuilder;
-import org.wso2.carbon.webapp.mgt.loader.WebappClassloadingContext;
+import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationData;
+import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationReader;
+import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationService;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -61,7 +62,7 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
                 } else {
                     if (log.isDebugEnabled()) {
                         log.debug("JavaEE CRE was not found for this webapp - " + ((StandardContext) source).getName() +
-                                  ". Not continuing the OpenEJB container initialization.");
+                                ". Not continuing the OpenEJB container initialization.");
                     }
                 }
             }
@@ -72,41 +73,47 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
     }
 
     private boolean isJavaEEApp(StandardContext standardContext) throws Exception {
-        String webappFilePath = getWebappFilePath(standardContext);
-        if (!new File(webappFilePath).exists()) {
+        String webAppFilePath = getWebappFilePath(standardContext);
+        if (!new File(webAppFilePath).exists()) {
             //This happens when the webapp and its unpacked dir is deleted which triggers
             //undeployment events. The after_stop event do not contain the servlet context attributes we set.
             //Since all we have to do is cleanup, we are simply going let all the webapps go into the tomee stop events.
             return true;
         }
 
-        WebappClassloadingContext clContext =
-                ClassloadingContextBuilder.buildClassloadingContext(webappFilePath);
-        //check if the classloading environment is JavaEE
-        String[] webappCREs = clContext.getEnvironments();
-        if (webappCREs != null) {
-            Set<String> set=  new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-            set.addAll(
-                    Arrays.asList(webappCREs));
+        WebAppConfigurationService webAppConfigurationService = DataHolder.getWebAppConfigurationService();
+        WebAppConfigurationData webAppConfigurationData;
 
-            return set.contains(JAVA_EE_CRE) || set.contains(JAVA_EE_OLD_CRE);
+        //The service might not be up because the bundle org.wso2.carbon.webapp.mgt
+        //may get activated after the lifecycle event
+        if (webAppConfigurationService != null) {
+            webAppConfigurationData = webAppConfigurationService.getConfig(webAppFilePath);
+            if (webAppConfigurationData == null) {
+                webAppConfigurationData = WebAppConfigurationReader.retrieveWebConfigData(webAppFilePath);
+            }
         } else {
-            String[] defaultCREs = ClassloadingContextBuilder.buildSystemConfig().getEnvironments();
-            Set<String> set=  new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-            set.addAll(
-                    Arrays.asList(defaultCREs));
-
-            return set.contains(JAVA_EE_CRE) || set.contains(JAVA_EE_OLD_CRE);
+            webAppConfigurationData = WebAppConfigurationReader.retrieveWebConfigData(webAppFilePath);
         }
+        List<String> webappCREs = null;
+        if (webAppConfigurationData != null) {
+            webappCREs = webAppConfigurationData.getEnvironments();
+        }
+        Set<String> set = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        if(webappCREs!=null) {
+            set.addAll(webappCREs);
+        }
+
+        return set.contains(JAVA_EE_CRE) || set.contains(JAVA_EE_OLD_CRE);
     }
 
     /**
      * Borrowed from ClassloadingContextBuilder#getWebappFilePath private method
+     *
      * @return webapp file path
      * @throws IOException
      */
     private String getWebappFilePath(StandardContext ctx) throws IOException {
-        String webappFilePath = null;
+        String webappFilePath;
 
         //Value of the following variable depends on various conditions. Sometimes you get just the webapp directory
         //name. Sometime you get absolute path the webapp directory or war file.
@@ -132,7 +139,6 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
         }
         return webappFilePath;
     }
-
 
 
 }
