@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * 
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -21,27 +21,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global ClassloadingConfiguration. Contains information specified in the webapp-classloading-environments.xml and
- * webapp-classloading.xml. Individual webapps build their own Contexts based on this global configuration.
+ * Global ClassloadingConfiguration. Contains information specified in the webapp-classloading-environments.xml
+ * Individual webapps build their own Contexts based on this global configuration.
  */
 public class ClassloadingConfiguration {
-
-    private boolean parentFirst = false;
-    private String[] environments;
 
     private Map<String, CLEnvironment> delegatedEnvironments;
     private Map<String, CLEnvironment> exclusiveEnvironments;
 
-    public ClassloadingConfiguration(){
-        delegatedEnvironments = new HashMap<String, CLEnvironment>();
-        exclusiveEnvironments = new HashMap<String, CLEnvironment>();
+    public ClassloadingConfiguration() {
+        delegatedEnvironments = new HashMap<>();
+        exclusiveEnvironments = new HashMap<>();
     }
 
-    public void addDelegatedEnvironment(String name, CLEnvironment environment){
+    public void addDelegatedEnvironment(String name, CLEnvironment environment) {
         delegatedEnvironments.put(name, environment);
     }
 
-    public CLEnvironment getDelegatedEnvironment(String name){
+    public CLEnvironment getDelegatedEnvironment(String name) {
         return delegatedEnvironments.get(name);
     }
 
@@ -49,27 +46,7 @@ public class ClassloadingConfiguration {
         exclusiveEnvironments.put(name, environment);
     }
 
-    public CLEnvironment getExclusiveEnvironment(String name){
+    public CLEnvironment getExclusiveEnvironment(String name) {
         return exclusiveEnvironments.get(name);
-    }
-
-    public String[] getEnvironments(){
-        return environments;
-    }
-
-    public int getEnvironmentsCount(){
-        return environments.length;
-    }
-
-    public boolean isParentFirst(){
-        return parentFirst;
-    }
-
-    public void setParentFirstBehaviour(boolean parentFirst) {
-        this.parentFirst = parentFirst;
-    }
-
-    public void setEnvironments(String[] environmentNames){
-        this.environments = environmentNames;
     }
 }

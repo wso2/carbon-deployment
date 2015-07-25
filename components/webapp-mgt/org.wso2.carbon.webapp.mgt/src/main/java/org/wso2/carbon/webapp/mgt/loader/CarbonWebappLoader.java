@@ -40,22 +40,22 @@ public class CarbonWebappLoader extends WebappLoader {
 
     @Override
     protected void startInternal() throws LifecycleException {
-        WebappClassloadingContext webappClassloadingContext;
+        WebAppClassloadingContext webAppClassloadingContext;
         try {
-            webappClassloadingContext = ClassloadingContextBuilder.buildClassloadingContext(getWebappFilePath());
+            webAppClassloadingContext = ClassloadingContextBuilder.buildClassloadingContext(getWebappFilePath());
         } catch (Exception e) {
             throw new LifecycleException(e.getMessage(), e);
         }
 
         //Adding provided classpath entries, if any
-        for (String repository : webappClassloadingContext.getProvidedRepositories()) {
+        for (String repository : webAppClassloadingContext.getProvidedRepositories()) {
             addRepository(repository);
         }
 
         super.startInternal();
 
         //Adding the WebappClassloadingContext to the WebappClassloader
-        ((CarbonWebappClassLoader) getClassLoader()).setWebappCC(webappClassloadingContext);
+        ((CarbonWebappClassLoader) getClassLoader()).setWebappCC(webAppClassloadingContext);
     }
 
     @Override
