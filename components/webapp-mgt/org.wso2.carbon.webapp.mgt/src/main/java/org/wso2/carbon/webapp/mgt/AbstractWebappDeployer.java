@@ -278,7 +278,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                     Context context = getWebappContext(unpackedFile);
                     if (context != null) {
                         context.reload();
-                        log.info("Reloaded webapp: " + fileName);
+                        log.info("Reloaded Context with name: " + context.getName());
                     }
                 }
             }
