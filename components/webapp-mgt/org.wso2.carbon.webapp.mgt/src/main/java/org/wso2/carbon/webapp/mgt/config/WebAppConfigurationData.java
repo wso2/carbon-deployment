@@ -30,23 +30,30 @@ import java.util.List;
  * An instance of this class holds configuration information of a web application
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", namespace = "http://wso2as-web-config/xsd")
-@XmlRootElement(name = "wso2as-web", namespace = WebAppConfigurationConstants.NAMESPACE)
+@XmlType(name = "",
+        namespace = "http://wso2as-web-config/xsd")
+@XmlRootElement(name = "wso2as-web",
+        namespace = WebAppConfigurationConstants.NAMESPACE)
 public class WebAppConfigurationData {
 
-    @XmlElement(name = "single-sign-on", namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "single-sign-on",
+            namespace = WebAppConfigurationConstants.NAMESPACE)
     private boolean singleSignOn;
 
-    @XmlElement(name = "statistics-publisher", namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "statistics-publisher",
+            namespace = WebAppConfigurationConstants.NAMESPACE)
     private StatisticsPublisher statisticsPublisher;
 
-    @XmlElement(name = "classloading", namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "classloading",
+            namespace = WebAppConfigurationConstants.NAMESPACE)
     private Classloading classloading;
 
-    @XmlElement(name = "web-service-discovery", namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "web-service-discovery",
+            namespace = WebAppConfigurationConstants.NAMESPACE)
     private boolean webServiceDiscovery;
 
-    @XmlElement(name = "rest-web-services", namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "rest-web-services",
+            namespace = WebAppConfigurationConstants.NAMESPACE)
     private RestWebServices restWebServices;
 
     public boolean isSingleSignOnEnabled() {
@@ -86,35 +93,74 @@ public class WebAppConfigurationData {
     }
 
     public boolean isParentFirst() {
-        return getClassloading().isParentFirst();
-    }
-
-    public List<String> getEnvironments() {
-        return getClassloading().getEnvironments().getEnvironment();
-    }
-
-    public void setEnvironments(List<String> environments) {
-        classloading = new Classloading();
-        classloading.setEnvironments(new Classloading.Environments());
-
-        getClassloading().getEnvironments().setEnvironment(environments);
+        Classloading classloading = getClassloading();
+        if (classloading != null) {
+            return getClassloading().isParentFirst();
+        }
+        return false;
     }
 
     public void setParentFirst(boolean parentFirst) {
         getClassloading().setParentFirst(parentFirst);
     }
 
+    public List<String> getEnvironments() {
+        Classloading classloading = getClassloading();
+        List<String> envList =null;
+        if (classloading != null) {
+            Classloading.Environments environments = classloading.getEnvironments();
+            if (environments != null) {
+                envList = classloading.getEnvironments().getEnvironment();
+            }
+        }
+        return envList;
+    }
+
+    public void setEnvironments(List<String> environments) {
+        if(classloading!=null) {
+            if( classloading.getEnvironments()!=null){
+                classloading.getEnvironments().setEnvironment(environments);
+            }else {
+                classloading.setEnvironments(new Classloading.Environments());
+                classloading.getEnvironments().setEnvironment(environments);
+            }
+        }else{
+            classloading = new Classloading();
+            classloading.setEnvironments(new Classloading.Environments());
+            classloading.getEnvironments().setEnvironment(environments);
+        }
+    }
+
+    public boolean isManagedAPI() {
+        RestWebServices restWebServices = getRestWebServices();
+        if (restWebServices != null) {
+            return restWebServices.isManagedApi();
+        }
+        return false;
+    }
+
+    public void setIsManagedAPI(boolean value) {
+        RestWebServices restWebServices = getRestWebServices();
+        if (restWebServices != null) {
+            restWebServices.setIsManagedApi(value);
+        } else {
+            restWebServices = new RestWebServices();
+            restWebServices.setIsManagedApi(value);
+            this.restWebServices = restWebServices;
+        }
+    }
+
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "parentFirst",
-            "environments"
-    })
+    @XmlType(name = "",
+            propOrder = { "parentFirst", "environments" })
     public static class Classloading {
 
-        @XmlElement(name = "parent-first", namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "parent-first",
+                namespace = WebAppConfigurationConstants.NAMESPACE)
         private boolean parentFirst;
 
-        @XmlElement(name = "environments", namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "environments",
+                namespace = WebAppConfigurationConstants.NAMESPACE)
         private Environments environments;
 
         private boolean isParentFirst() {
@@ -130,16 +176,18 @@ public class WebAppConfigurationData {
         }
 
         private void setEnvironments(Environments env) {
-            environments = new Environments();
+            environments =env;
+            //environments = new Environments();
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "environment"
-        })
+        @XmlType(name = "",
+                propOrder = { "environment" })
         public static class Environments {
 
-            @XmlElement(name = "environment", required = true, namespace = WebAppConfigurationConstants.NAMESPACE)
+            @XmlElement(name = "environment",
+                    required = true,
+                    namespace = WebAppConfigurationConstants.NAMESPACE)
             private List<String> environment;
 
             private List<String> getEnvironment() {
@@ -157,14 +205,13 @@ public class WebAppConfigurationData {
 
     }
 
-
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "isManagedApi"
-    })
+    @XmlType(name = "",
+            propOrder = { "isManagedApi" })
     public static class RestWebServices {
 
-        @XmlElement(name = "is-managed-api", namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "is-managed-api",
+                namespace = WebAppConfigurationConstants.NAMESPACE)
         private boolean isManagedApi;
 
         public boolean isManagedApi() {
@@ -177,16 +224,17 @@ public class WebAppConfigurationData {
 
     }
 
-
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "enabled",
-            "streamId"
-    })
+    @XmlType(name = "",
+            propOrder = { "enabled", "streamId" })
     public static class StatisticsPublisher {
-        @XmlElement(name = "enabled", required = true, namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "enabled",
+                required = true,
+                namespace = WebAppConfigurationConstants.NAMESPACE)
         private boolean enabled;
-        @XmlElement(name = "stream-id", required = true, namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "stream-id",
+                required = true,
+                namespace = WebAppConfigurationConstants.NAMESPACE)
         private String streamId;
 
         public boolean isEnabled() {
@@ -200,7 +248,6 @@ public class WebAppConfigurationData {
         public String getStreamId() {
             return streamId;
         }
-
 
     }
 

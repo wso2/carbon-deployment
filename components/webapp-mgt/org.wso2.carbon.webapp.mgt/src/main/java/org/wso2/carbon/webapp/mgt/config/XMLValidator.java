@@ -27,8 +27,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class XMLValidator {
 
@@ -40,7 +40,7 @@ public class XMLValidator {
      * @throws IOException
      * @throws SAXException
      */
-    public static void validateXML(String schemaPath, FileInputStream inputStream) throws IOException, SAXException {
+    public static void validateXML(String schemaPath, InputStream inputStream) throws IOException, SAXException {
         Source schemaFile = new StreamSource(new File(schemaPath));
         Source xmlFile = new StreamSource(inputStream);
 

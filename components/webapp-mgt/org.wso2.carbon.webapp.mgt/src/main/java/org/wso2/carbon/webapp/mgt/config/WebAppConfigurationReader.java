@@ -142,7 +142,7 @@ public class WebAppConfigurationReader {
         } catch (IOException e) {
             log.error("Error while reading" + webappFilePath, e);
         } catch (JAXBException e) {
-            log.error("Error while unmarshalling the config file", e);
+            log.error("Error while unmarshalling " + WebAppConfigurationConstants.WEBAPP_DESCRIPTOR_NAME, e);
         }
         return configData;
     }
@@ -159,6 +159,10 @@ public class WebAppConfigurationReader {
         if (priority1obj != null && priority2obj != null) {
             if (priority1obj.getClassloading() == null) {
                 priority1obj.setClassloading(priority2obj.getClassloading());
+            } else if (priority1obj.getEnvironments() == null) {
+                //if classloading is not null but environments are null that means
+                //parentFirst must have been set.
+                priority1obj.setEnvironments(priority2obj.getEnvironments());
             }
             if (priority1obj.getRestWebServices() == null) {
                 priority1obj.setRestWebServices(priority2obj.getRestWebServices());
@@ -280,7 +284,8 @@ public class WebAppConfigurationReader {
 
     /**
      * Splits the passed string using the passed separator
-     * @param str The string to be split
+     *
+     * @param str       The string to be split
      * @param separator The specified separator
      * @return The array containing the parts of the split string
      */

@@ -45,9 +45,6 @@ public class WebAppClassloadingContext {
     private boolean delegateAllPackages = false;
     private boolean delegateAllResources = false;
 
-
-    private String[] environments;
-
     public boolean isDelegatedPackage(String name) {
         if (delegateAllPackages) {
             return true;
@@ -127,11 +124,23 @@ public class WebAppClassloadingContext {
 
 
     public String[] getProvidedRepositories() {
-        return repositories;
+        if(repositories!=null){
+            int length = repositories.length;
+            String[] repos = new String[length];
+            System.arraycopy(repositories,0,repos,0,length);
+            return repos;
+        }
+        return null;
+        //return repositories;
     }
 
     public void setProvidedRepositories(String[] repositories) {
-        this.repositories = repositories;
+        if(repositories!=null){
+            int length = repositories.length;
+            this.repositories = new String[length];
+            System.arraycopy(repositories,0,this.repositories,0,length);
+        }
+        //this.repositories = repositories;
     }
 
     public boolean isParentFirst() {
@@ -171,10 +180,6 @@ public class WebAppClassloadingContext {
             }
         }
         return false;
-    }
-
-    public void setEnvironments(String[] environments) {
-        this.environments = environments;
     }
 
     public boolean isExcludedResources(String name) {

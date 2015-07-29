@@ -36,9 +36,7 @@ public class JAXBUnmarshaller {
      */
     public static WebAppConfigurationData unmarshall(InputStream stream) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(WebAppConfigurationData.class);
-
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
         return (WebAppConfigurationData) jaxbUnmarshaller.unmarshal(stream);
     }
 

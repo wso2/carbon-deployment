@@ -24,14 +24,15 @@ import java.io.File;
  * This class keeps some constants related to web app configuration
  */
 public class WebAppConfigurationConstants {
-    public static final String WSO2_WEB_XML = "WEB-INF" + File.separator + "sample1.xml";
+    public static final String WSO2_WEB_XML = "WEB-INF" + File.separator + "wso2as-web.xml";
     public static final String DEFAULT_WSO2_WEB_XML =
             System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "conf" + File.separator
-                    + "tomcat" + File.separator + "sample1.xml";
-    public static final String WSO2_WEB_XML_SCHEMA =
+                    + "tomcat" + File.separator + "wso2as-web.xml";
+    public static final String WSO2AS_WEB_XML_SCHEMA =
             System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "conf" + File.separator
                     + "tomcat" + File.separator + "WSO2-web-schema.xsd";
-    public static final String NAMESPACE = "http://wso2-web-config/xsd";
+    public static final String NAMESPACE = "http://wso2as-web-config/xsd";
+    public static final String WEBAPP_DESCRIPTOR_NAME = "wso2as-web.xml";
 
     public final static String ENV_CONFIG_FILE = "webapp-classloading-environments.xml";
     public final static String CL_CONFIG_FILE = "webapp-classloading.xml";

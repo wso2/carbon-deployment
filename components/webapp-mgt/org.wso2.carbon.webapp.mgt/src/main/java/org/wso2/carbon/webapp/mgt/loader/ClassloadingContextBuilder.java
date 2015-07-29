@@ -91,7 +91,7 @@ public class ClassloadingContextBuilder {
         webAppClassloadingContext.setParentFirst(webAppConfigurationData.isParentFirst());
 
         List<String> environments = webAppConfigurationData.getEnvironments();
-        webAppClassloadingContext.setEnvironments(environments.toArray(new String[environments.size()]));
+        //webAppClassloadingContext.setEnvironments(environments.toArray(new String[environments.size()]));
 
         ClassloadingConfiguration classloadingConfig = buildClassloadingEnvironmentConfigStructure();
 
