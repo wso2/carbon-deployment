@@ -26,6 +26,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Contains XML utility methods based on DOM.
@@ -35,16 +38,24 @@ public class XMLUtils {
     /**
      * Build a Document from a file
      *
-     * @param xmlFile file
+     * @param xmlFilePath file
      * @return a Document object
      * @throws Exception if an error occurs
      */
-    public static Document buildDocumentFromFile(File xmlFile)
+    //public static Document buildDocumentFromFile(File xmlFile)
+    public static Document buildDocumentFromFile(Path xmlFilePath)
             throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        /*DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile);
+        doc.getDocumentElement().normalize();*/
+        InputStream inputStream =Files.newInputStream(xmlFilePath);
+
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(inputStream);
         doc.getDocumentElement().normalize();
+
         return doc;
     }
 

@@ -34,6 +34,10 @@ import org.wso2.carbon.webapp.mgt.utils.XMLUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,19 +57,18 @@ public class ClassloadingContextBuilder {
      * @throws Exception
      */
     private static ClassloadingConfiguration buildClassloadingEnvironmentConfigStructure() throws Exception {
+
         ClassloadingConfiguration classloadingConfig = new ClassloadingConfiguration();
 
         String carbonHome = System.getProperty(WebappsConstants.CARBON_HOME);
 
-        String envConfigPath = carbonHome + File.separator + "repository" + File.separator + "conf" +
-                File.separator + "tomcat" + File.separator + WebAppConfigurationConstants.ENV_CONFIG_FILE;
+        Path envConfigPath = Paths.get(carbonHome, "repository" ,"conf"
+                , "tomcat" , WebAppConfigurationConstants.ENV_CONFIG_FILE);
 
-        //Loading specified environment from the environment config file.
-        File envConfigFile = new File(envConfigPath);
-        if (!envConfigFile.exists()) {
-            throw new FileNotFoundException(envConfigPath);
+        if(!Files.exists(envConfigPath)) {
+            throw new FileNotFoundException(envConfigPath.toString());
         }
-        populateEnvironments(classloadingConfig, envConfigFile);
+        populateEnvironments(classloadingConfig, envConfigPath);
 
         return classloadingConfig;
     }
@@ -91,7 +94,6 @@ public class ClassloadingContextBuilder {
         webAppClassloadingContext.setParentFirst(webAppConfigurationData.isParentFirst());
 
         List<String> environments = webAppConfigurationData.getEnvironments();
-        //webAppClassloadingContext.setEnvironments(environments.toArray(new String[environments.size()]));
 
         ClassloadingConfiguration classloadingConfig = buildClassloadingEnvironmentConfigStructure();
 
@@ -129,6 +131,11 @@ public class ClassloadingContextBuilder {
         return webAppClassloadingContext;
     }
 
+    /**
+     * Populates the ClassloadingConfiguration instance with delegated environments
+     * @param classloadingConfig The instance of ClassloadingConfiguration to be populated
+     * @param doc the document built from webapp-classloading-environments.xml
+     */
     private static void populateDelegatedEnvironments(ClassloadingConfiguration classloadingConfig, Document doc) {
         NodeList envNodeList = doc.getElementsByTagName(WebappsConstants.ELE_DELEGATED_ENVIRONMENTS);
         for (int i = 0; i < envNodeList.getLength(); i++) {
@@ -153,12 +160,17 @@ public class ClassloadingContextBuilder {
         }
     }
 
-    //TODO Validate the schema.. works for the best case.
-    private static void populateEnvironments(ClassloadingConfiguration classloadingConfig, File envConfigFile)
+    /**
+     * Populates the ClassloadingConfiguration instance with environments reading webapp-classloading-environments.xml
+     * @param classloadingConfig The instance of ClassloadingConfiguration to be populated
+     * @param envConfigPath Path to webapp-classloading-environments.xml
+     * @throws Exception
+     */
+    private static void populateEnvironments(ClassloadingConfiguration classloadingConfig, Path envConfigPath)
             throws Exception {
         Document doc;
         try {
-            doc = XMLUtils.buildDocumentFromFile(envConfigFile);
+            doc = XMLUtils.buildDocumentFromFile(envConfigPath);
             populateDelegatedEnvironments(classloadingConfig, doc);
             populateExclusiveEnvironments(classloadingConfig, doc);
         } catch (Exception e) {
@@ -167,7 +179,12 @@ public class ClassloadingContextBuilder {
         }
     }
 
-    private static void populateExclusiveEnvironments(ClassloadingConfiguration classloadingConfig, Document doc) {
+    /**
+     * Populates the ClassloadingConfiguration instance with exclusive environments
+     * @param classloadingConfig The instance of ClassloadingConfiguration to be populated
+     * @param doc the document built from webapp-classloading-environments.xml
+     */
+    private static void populateExclusiveEnvironments(ClassloadingConfiguration classloadingConfig, Document doc) throws IOException{
         NodeList envNodeList = doc.getElementsByTagName(WebappsConstants.ELE_EXCLUSIVE_ENVIRONMENTS);
         for (int i = 0; i < envNodeList.getLength(); i++) {
             Node envNode = envNodeList.item(i);
@@ -183,6 +200,12 @@ public class ClassloadingContextBuilder {
         }
     }
 
+    /**
+     * Splits a string using the passed separator
+     * @param str The string to be split
+     * @param separator The separator to be used when splitting
+     * @return The String array of split components
+     */
     private static String[] splitStrings(String str, String separator) {
         if (str == null || str.trim().length() == 0)
             return new String[0];
@@ -196,54 +219,11 @@ public class ClassloadingContextBuilder {
         return list.toArray(new String[list.size()]);
     }
 
-    private static String[] generateClasspath(String classpathStr) {
-        StringTokenizer tkn = new StringTokenizer(classpathStr, ";");
-        List<String> entryList = new ArrayList<>();
-
-        while (tkn.hasMoreTokens()) {
-            String token = tkn.nextToken().trim();
-            if (token.isEmpty()) {
-                continue;
-            }
-
-            token = Utils.replaceSystemProperty(token);
-
-            if (token.endsWith("*.jar")) {
-                token = token.substring(0, token.length() - "*.jar".length());
-
-                File directory = new File(token);
-                if (!directory.isDirectory()) {
-                    continue;
-                }
-
-                List<String> fileList = new ArrayList<>();
-                getFileList(directory, fileList);
-                if (!fileList.isEmpty()) {
-                    entryList.addAll(fileList);
-                }
-
-            } else {
-                // single file or directory
-                File file = new File(token);
-                if (!file.exists()) {
-                    continue;
-                }
-                entryList.add(file.toURI().toString());
-            }
-        }
-
-        Collections.sort(entryList);
-
-        if (log.isDebugEnabled()) {
-            for (String s : entryList) {
-                log.debug("Classpath Entry : " + s);
-
-            }
-        }
-
-        return entryList.toArray(new String[entryList.size()]);
-    }
-
+    /**
+     * Adds all the jar files inside the passed directory to the passed List
+     * @param directory The directory from where the jars need to be collected
+     * @param fileList The list to which the jars should be added
+     */
     private static void getFileList(File directory, List fileList) {
         if (directory.exists()) {
             for (String fileName : directory.list()) {
@@ -263,5 +243,53 @@ public class ClassloadingContextBuilder {
             }
         }
 
+    }
+
+    private static String[] generateClasspath(String classpathStr) throws IOException{
+        StringTokenizer tkn = new StringTokenizer(classpathStr, ";");
+        List<String> entryList = new ArrayList<>();
+
+        while (tkn.hasMoreTokens()) {
+            String token = tkn.nextToken().trim();
+            if (token.isEmpty()) {
+                continue;
+            }
+
+            token = Utils.replaceSystemProperty(token);
+
+            if (token.endsWith("*.jar")) {
+                token = token.substring(0, token.length() - "*.jar".length());
+
+                Path path = Paths.get(token);
+                if(!Files.isDirectory(path)){
+                    continue;
+                }
+
+                List<String> fileList = new ArrayList<>();
+                getFileList(new File(token), fileList);
+                if (!fileList.isEmpty()) {
+                    entryList.addAll(fileList);
+                }
+
+            } else {
+                // single file or directory
+                Path path = Paths.get(token);
+                if(!Files.exists(path)){
+                    continue;
+                }
+                entryList.add(path.toUri().toString());
+            }
+        }
+
+        Collections.sort(entryList);
+
+        if (log.isDebugEnabled()) {
+            for (String s : entryList) {
+                log.debug("Classpath Entry : " + s);
+
+            }
+        }
+
+        return entryList.toArray(new String[entryList.size()]);
     }
 }
