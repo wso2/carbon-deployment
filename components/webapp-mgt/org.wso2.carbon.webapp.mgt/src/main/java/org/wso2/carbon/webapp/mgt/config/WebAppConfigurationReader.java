@@ -38,6 +38,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -107,14 +110,21 @@ public class WebAppConfigurationReader {
         return configData;
     }
 
+    /**
+     * Returns the URL of the configuration file for the passed config file name
+     * @param webappFilePath Path to web app
+     * @param configFilePrefix the config file name
+     * @return The URL of the configuration file
+     * @throws IOException
+     */
     private static URL getConfigFileURL(String webappFilePath, String configFilePrefix) throws IOException {
-        File f = new File(webappFilePath);
-        if (f.isDirectory()) {
-            File configFile = new File(webappFilePath + File.separator + configFilePrefix);
-            if (configFile.exists()) {
-                return configFile.toURI().toURL();
-
+        Path path = Paths.get(webappFilePath);
+        if (Files.isDirectory(path)) {
+            Path configFilePath= Paths.get(webappFilePath,configFilePrefix);
+            if(Files.exists(configFilePath)){
+                return configFilePath.toUri().toURL();
             }
+
         } else {
             JarEntry contextXmlFileEntry;
             try (JarFile webappJarFile = new JarFile(webappFilePath)) {

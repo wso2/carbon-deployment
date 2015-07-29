@@ -22,8 +22,9 @@ package org.wso2.carbon.webapp.mgt.utils;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardContext;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class WebAppConfigurationUtils {
 
@@ -31,21 +32,16 @@ public class WebAppConfigurationUtils {
         String docBase = context.getDocBase();
         Host host = (Host) context.getParent();
         String appBase = host.getAppBase();
-        File canonicalAppBase = new File(appBase);
-        String webAppFilePath;
-        if (canonicalAppBase.isAbsolute()) {
-            canonicalAppBase = canonicalAppBase.getCanonicalFile();
-        } else {
-            canonicalAppBase = new File(System.getProperty("carbon.home"), appBase).getCanonicalFile();
+
+        Path canonicalAppBase = Paths.get(appBase);
+        if(!canonicalAppBase.isAbsolute()){
+            canonicalAppBase = Paths.get(System.getProperty("carbon.home"),appBase);
         }
 
-        File webAppFile = new File(docBase);
-
-        if (webAppFile.isAbsolute()) {
-            webAppFilePath = webAppFile.getCanonicalPath();
-        } else {
-            webAppFilePath = (new File(canonicalAppBase, docBase)).getPath();
+        Path webAppFilePath = Paths.get(docBase);
+        if(!webAppFilePath.isAbsolute()){
+            webAppFilePath = Paths.get(canonicalAppBase.toString(),docBase);
         }
-        return webAppFilePath;
+        return webAppFilePath.toString();
     }
 }
