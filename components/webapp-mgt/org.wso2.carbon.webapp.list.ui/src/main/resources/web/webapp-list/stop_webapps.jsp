@@ -33,9 +33,11 @@
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
     }
+    String webappState = "stopped";
     String redirectPage = request.getParameter("redirectPage");
     if (redirectPage == null) {
         redirectPage = "index.jsp";
+        webappState="all";
     }
 
     String redirectName = webappKeySet[0].split(":")[1];
@@ -75,7 +77,7 @@
         }
 %>
 <script>
-    location.href = '<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&webappState=stopped'
+    location.href = '<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&webappState=<%= webappState %>'
                     <% if (hostName != null && httpPort != null) { %>
                     + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
                     <% } %> ;
@@ -86,7 +88,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8") %>&webappState=stopped"
+    location.href = "<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8") %>&webappState=<%= webappState %>"
                     <% if (hostName != null && httpPort != null) { %>
                     +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
                     <% } %> ;
