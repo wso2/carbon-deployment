@@ -1461,7 +1461,7 @@
         <javax.ws.rs-api.version>2.0-m10</javax.ws.rs-api.version>
 
         <tomee.version>1.7.2</tomee.version>
-        <tomee.orbit.version>${tomee.version}.wso2v1</tomee.orbit.version>
+        <tomee.orbit.version>${tomee.version}.wso2v2</tomee.orbit.version>
         <tomee.resources.orbit.version>${tomee.version}.wso2v1</tomee.resources.orbit.version>
         <openwebbeans.version>1.2.7</openwebbeans.version>
         <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
