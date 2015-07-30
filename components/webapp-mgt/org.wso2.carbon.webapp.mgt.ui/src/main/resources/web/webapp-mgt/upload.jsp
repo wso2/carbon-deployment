@@ -79,10 +79,6 @@
                         CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                         validFileNames = false;
                         break;
-                    } else if (jarinput.indexOf("#") != -1) {
-                        CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                        validFileNames = false;
-                        break;
                     } else if (validateName(jarinput, true)) {
                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
                         validFileNames = false;
@@ -99,9 +95,6 @@
 
                 if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
                     CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
-                    validFileNames = false;
-                } else if (jarinput.indexOf("#") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
                     validFileNames = false;
                 } else if (validateName(jarinput, true)) {
                     CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
@@ -165,9 +158,9 @@
         }
 
         function validateName(fileName, val){
-                var regex = ".*[\\]\\[!\"#$%&'()*+,/:;<=>?@~{|}^`].*";
+                var regex = ".*[\\]\\[!\"$%&'()*+,/:;<=>?@~{|}^`].*";
                 if(val == true){
-                    regex = ".*[\\]\\[!\"#$%&'()*+,;<=>?@~{|}^`].*";
+                    regex = ".*[\\]\\[!\"$%&'()*+,;<=>?@~{|}^`].*";
                 }
                 if(fileName.match(regex)){
                     return true;
