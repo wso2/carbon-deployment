@@ -17,8 +17,8 @@
  */
 package org.wso2.carbon.webapp.mgt.loader;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Global ClassloadingConfiguration. Contains information specified in the webapp-classloading-environments.xml and
@@ -33,8 +33,8 @@ public class ClassloadingConfiguration {
     private Map<String, CLEnvironment> exclusiveEnvironments;
 
     public ClassloadingConfiguration(){
-        delegatedEnvironments = new HashMap<String, CLEnvironment>();
-        exclusiveEnvironments = new HashMap<String, CLEnvironment>();
+        delegatedEnvironments = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        exclusiveEnvironments = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     public void addDelegatedEnvironment(String name, CLEnvironment environment){

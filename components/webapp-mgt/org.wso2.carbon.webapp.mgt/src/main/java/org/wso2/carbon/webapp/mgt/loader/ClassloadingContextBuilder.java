@@ -168,7 +168,7 @@ public class ClassloadingContextBuilder {
                 Collections.addAll(providedResources, classloadingConfig.getExclusiveEnvironment(env).getDelegatedPackageArray());
 
             } else {
-                throw new Exception("Undefined environment.");
+                throw new Exception("Undefined environment: " + env);
             }
         }
 
