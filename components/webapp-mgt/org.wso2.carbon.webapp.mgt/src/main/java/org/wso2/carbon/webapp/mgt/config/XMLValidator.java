@@ -35,7 +35,7 @@ public class XMLValidator {
     /**
      * Validates a given XML file against a given schema
      *
-     * @param schemaPath  Path to wso2-web schema
+     * @param schemaPath  Path to wso2as-web.xsd schema
      * @param inputStream FileInputStream of configuration file
      * @throws IOException
      * @throws SAXException

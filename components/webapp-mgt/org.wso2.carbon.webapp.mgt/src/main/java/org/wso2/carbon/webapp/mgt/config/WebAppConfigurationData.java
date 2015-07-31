@@ -106,7 +106,7 @@ public class WebAppConfigurationData {
 
     public List<String> getEnvironments() {
         Classloading classloading = getClassloading();
-        List<String> envList =null;
+        List<String> envList = null;
         if (classloading != null) {
             Classloading.Environments environments = classloading.getEnvironments();
             if (environments != null) {
@@ -117,14 +117,14 @@ public class WebAppConfigurationData {
     }
 
     public void setEnvironments(List<String> environments) {
-        if(classloading!=null) {
-            if( classloading.getEnvironments()!=null){
+        if (classloading != null) {
+            if (classloading.getEnvironments() != null) {
                 classloading.getEnvironments().setEnvironment(environments);
-            }else {
+            } else {
                 classloading.setEnvironments(new Classloading.Environments());
                 classloading.getEnvironments().setEnvironment(environments);
             }
-        }else{
+        } else {
             classloading = new Classloading();
             classloading.setEnvironments(new Classloading.Environments());
             classloading.getEnvironments().setEnvironment(environments);
@@ -176,8 +176,7 @@ public class WebAppConfigurationData {
         }
 
         private void setEnvironments(Environments env) {
-            environments =env;
-            //environments = new Environments();
+            environments = env;
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)

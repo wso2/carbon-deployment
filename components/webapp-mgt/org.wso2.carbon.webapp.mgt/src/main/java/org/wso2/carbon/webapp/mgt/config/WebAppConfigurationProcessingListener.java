@@ -31,16 +31,16 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This class listens to Lifecycle events of web apps and processes the wso2-web.xml config file
+ * This class listens to Lifecycle events of web apps and processes the wso2as-web.xml config file
  * of a web application
  */
-public class WebAppConfigurationListener implements LifecycleListener {
-    private static final Log log = LogFactory.getLog(WebAppConfigurationListener.class);
+public class WebAppConfigurationProcessingListener implements LifecycleListener {
+    private static final Log log = LogFactory.getLog(WebAppConfigurationProcessingListener.class);
 
     /**
      * Overrides the lifecycleEvent method of the interface LifecycleListener
      * Catches lifecycle events of a web app and if the before_start event
-     * is being fired, reads the wso2-web.xml config file and stores config data
+     * is being fired, reads the wso2as-web.xml config file and stores config data
      *
      * @param lifecycleEvent includes events starting from before_start
      */
@@ -60,7 +60,7 @@ public class WebAppConfigurationListener implements LifecycleListener {
 
                     if (service != null) {
                         if (configData != null) {
-                            service.addConfig(webAppFilePath, configData);
+                            service.addConfiguration(webAppFilePath, configData);
 
                             if (log.isDebugEnabled()) {
                                 log.debug("Configuration data stored for " + webAppFilePath);
@@ -83,7 +83,7 @@ public class WebAppConfigurationListener implements LifecycleListener {
 
                     }
                 } catch (IOException e) {
-                    log.error("Error while reading configuration file", e);
+                    log.error("Error while reading configuration file. " + e.getMessage(), e);
                 }
             }
         }

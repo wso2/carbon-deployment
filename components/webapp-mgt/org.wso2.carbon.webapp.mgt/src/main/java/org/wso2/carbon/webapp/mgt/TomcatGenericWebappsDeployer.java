@@ -403,7 +403,7 @@ import java.util.concurrent.ConcurrentHashMap;
         clearFaultyWebapp(webappFile.getAbsolutePath());
 
         //remove configuration data
-        DataHolder.getWebAppConfigurationService().removeConfig(webappFile.getAbsolutePath());
+        DataHolder.getWebAppConfigurationService().removeConfiguration(webappFile.getAbsolutePath());
 
     }
 

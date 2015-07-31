@@ -15,7 +15,6 @@
 */
 package org.wso2.carbon.javaee.tomee;
 
-import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardServer;
@@ -26,19 +25,19 @@ import org.apache.tomee.catalina.GlobalListenerSupport;
 import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationData;
 import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationReader;
 import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationService;
+import org.wso2.carbon.webapp.mgt.utils.WebAppConfigurationUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class ASGlobalListenerSupport extends GlobalListenerSupport {
-    private static final Log log = LogFactory.getLog(ASTomEEServerListener.class.getName());
-
     public static final String JAVA_EE_CRE = "JavaEE";
     public static final String JAVA_EE_OLD_CRE = "J2EE";
     public static final String IS_JAVA_EE_APP = "IS_JAVA_EE_APP";
+    private static final Log log = LogFactory.getLog(ASTomEEServerListener.class.getName());
 
     public ASGlobalListenerSupport(StandardServer standardServer, ContextListener contextListener) {
         super(standardServer, contextListener);
@@ -73,8 +72,8 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
     }
 
     private boolean isJavaEEApp(StandardContext standardContext) throws Exception {
-        String webAppFilePath = getWebappFilePath(standardContext);
-        if (!new File(webAppFilePath).exists()) {
+        String webAppFilePath = WebAppConfigurationUtils.getWebAppFilePath(standardContext);
+        if (!Files.exists(Paths.get(webAppFilePath))) {
             //This happens when the webapp and its unpacked dir is deleted which triggers
             //undeployment events. The after_stop event do not contain the servlet context attributes we set.
             //Since all we have to do is cleanup, we are simply going let all the webapps go into the tomee stop events.
@@ -87,7 +86,7 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
         //The service might not be up because the bundle org.wso2.carbon.webapp.mgt
         //may get activated after the lifecycle event
         if (webAppConfigurationService != null) {
-            webAppConfigurationData = webAppConfigurationService.getConfig(webAppFilePath);
+            webAppConfigurationData = webAppConfigurationService.getConfiguration(webAppFilePath);
             if (webAppConfigurationData == null) {
                 webAppConfigurationData = WebAppConfigurationReader.retrieveWebConfigData(webAppFilePath);
             }
@@ -99,46 +98,10 @@ public class ASGlobalListenerSupport extends GlobalListenerSupport {
             webappCREs = webAppConfigurationData.getEnvironments();
         }
         Set<String> set = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-        if(webappCREs!=null) {
+        if (webappCREs != null) {
             set.addAll(webappCREs);
         }
 
         return set.contains(JAVA_EE_CRE) || set.contains(JAVA_EE_OLD_CRE);
     }
-
-    /**
-     * Borrowed from ClassloadingContextBuilder#getWebappFilePath private method
-     *
-     * @return webapp file path
-     * @throws IOException
-     */
-    private String getWebappFilePath(StandardContext ctx) throws IOException {
-        String webappFilePath;
-
-        //Value of the following variable depends on various conditions. Sometimes you get just the webapp directory
-        //name. Sometime you get absolute path the webapp directory or war file.
-//        Context ctx = (Context) getContainer();
-        String docBase = ctx.getDocBase();
-
-        Host host = (Host) ctx.getParent();
-        String appBase = host.getAppBase();
-        File canonicalAppBase = new File(appBase);
-        if (canonicalAppBase.isAbsolute()) {
-            canonicalAppBase = canonicalAppBase.getCanonicalFile();
-        } else {
-            canonicalAppBase =
-                    new File(System.getProperty("carbon.home"), appBase)
-                            .getCanonicalFile();
-        }
-
-        File webappFile = new File(docBase);
-        if (webappFile.isAbsolute()) {
-            webappFilePath = webappFile.getCanonicalPath();
-        } else {
-            webappFilePath = (new File(canonicalAppBase, docBase)).getPath();
-        }
-        return webappFilePath;
-    }
-
-
 }

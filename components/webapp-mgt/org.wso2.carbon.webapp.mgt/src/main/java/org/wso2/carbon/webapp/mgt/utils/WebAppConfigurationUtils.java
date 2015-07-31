@@ -34,13 +34,13 @@ public class WebAppConfigurationUtils {
         String appBase = host.getAppBase();
 
         Path canonicalAppBase = Paths.get(appBase);
-        if(!canonicalAppBase.isAbsolute()){
-            canonicalAppBase = Paths.get(System.getProperty("carbon.home"),appBase);
+        if (!canonicalAppBase.isAbsolute()) {
+            canonicalAppBase = Paths.get(System.getProperty("carbon.home"), appBase);
         }
 
         Path webAppFilePath = Paths.get(docBase);
-        if(!webAppFilePath.isAbsolute()){
-            webAppFilePath = Paths.get(canonicalAppBase.toString(),docBase);
+        if (!webAppFilePath.isAbsolute()) {
+            webAppFilePath = Paths.get(canonicalAppBase.toString(), docBase);
         }
         return webAppFilePath.toString();
     }

@@ -39,24 +39,24 @@ public class WebAppConfigurationDataHolder implements WebAppConfigurationService
         configDataMap = new HashMap<>();
     }
 
-    public void addConfig(String ID, WebAppConfigurationData configData){
+    public void addConfiguration(String ID, WebAppConfigurationData configData) {
         if (configData != null) {
             ID = dropWarExtension(ID);
             configDataMap.put(ID, configData);
         }
     }
 
-    public void removeConfig(String ID){
+    public void removeConfiguration(String ID) {
         ID = dropWarExtension(ID);
         if (configDataMap.containsKey(ID)) {
             configDataMap.remove(ID);
-            log.info("Configuration data removed");
-        }else{
-            log.warn("There is no configuration data available for "+ID);
+            log.info("Configuration data for " + ID + " was removed");
+        } else {
+            log.warn("There is no configuration data available for " + ID);
         }
     }
 
-    public WebAppConfigurationData getConfig(String ID) {
+    public WebAppConfigurationData getConfiguration(String ID) {
         ID = dropWarExtension(ID);
         if (configDataMap.containsKey(ID)) {
             return configDataMap.get(ID);

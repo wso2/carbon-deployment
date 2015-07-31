@@ -32,7 +32,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,12 +50,12 @@ import java.util.jar.JarFile;
 
 /**
  * This class is responsible for reading configuration files.
- * If both wso2-web.xml and webapp-classloading.xml are present, priority is given
- * to wso2-web.xml. If only one of them is present that will be used.
+ * If both wso2as-web.xml and webapp-classloading.xml are present, priority is given
+ * to wso2as-web.xml. If only one of them is present that will be used.
  * If neither of them is present, default configuration is used.
  */
 public class WebAppConfigurationReader {
-    private static final Log log = LogFactory.getLog(WebAppConfigurationListener.class);
+    private static final Log log = LogFactory.getLog(WebAppConfigurationProcessingListener.class);
 
     public static WebAppConfigurationData retrieveWebConfigData(String webappFilePath) {
         return retrieveWebConfigData(webappFilePath, null);
@@ -76,17 +75,19 @@ public class WebAppConfigurationReader {
     private static WebAppConfigurationData retrieveWebConfigData(String webAppFilePath, StandardContext context) {
         WebAppConfigurationData configData = null;
         /*
-        This object contains default configuration information inside wso2-web.xml
+        This object contains default configuration information inside wso2as-web.xml
         inside AS
         */
-        WebAppConfigurationData defaultConfigData = readConfigFile(WebAppConfigurationConstants.DEFAULT_WSO2_WEB_XML);
+        WebAppConfigurationData defaultConfigData = readConfigFile(WebAppConfigurationConstants.DEFAULT_WSO2AS_WEB_XML);
         try {
             if (webAppFilePath == null) {
                 webAppFilePath = WebAppConfigurationUtils.getWebAppFilePath(context);
             }
-            URL configFileURL = getConfigFileURL(webAppFilePath, WebAppConfigurationConstants.WSO2_WEB_XML);
+            URL configFileURL = getConfigFileURL(webAppFilePath, WebAppConfigurationConstants.WSO2AS_WEB_XML);
             if (configFileURL != null) {
-                configData = JAXBUnmarshaller.unmarshall(configFileURL.openStream());
+                try(InputStream inputStream = configFileURL.openStream()) {
+                    configData = JAXBUnmarshaller.unmarshall(inputStream);
+                }
             } else {
                 configFileURL = getConfigFileURL(webAppFilePath, WebAppConfigurationConstants.APP_CL_CONFIG_FILE);
                 if (configFileURL != null) {
@@ -112,7 +113,8 @@ public class WebAppConfigurationReader {
 
     /**
      * Returns the URL of the configuration file for the passed config file name
-     * @param webappFilePath Path to web app
+     *
+     * @param webappFilePath   Path to web app
      * @param configFilePrefix the config file name
      * @return The URL of the configuration file
      * @throws IOException
@@ -120,8 +122,8 @@ public class WebAppConfigurationReader {
     private static URL getConfigFileURL(String webappFilePath, String configFilePrefix) throws IOException {
         Path path = Paths.get(webappFilePath);
         if (Files.isDirectory(path)) {
-            Path configFilePath= Paths.get(webappFilePath,configFilePrefix);
-            if(Files.exists(configFilePath)){
+            Path configFilePath = Paths.get(webappFilePath, configFilePrefix);
+            if (Files.exists(configFilePath)) {
                 return configFilePath.toUri().toURL();
             }
 
@@ -150,9 +152,10 @@ public class WebAppConfigurationReader {
         try (FileInputStream inputStream = new FileInputStream(webappFilePath)) {
             configData = JAXBUnmarshaller.unmarshall(inputStream);
         } catch (IOException e) {
-            log.error("Error while reading" + webappFilePath, e);
+            log.error("Error while reading" + webappFilePath + ". " + e.getMessage(), e);
         } catch (JAXBException e) {
-            log.error("Error while unmarshalling " + WebAppConfigurationConstants.WEBAPP_DESCRIPTOR_NAME, e);
+            log.error("Error while unmarshalling " + WebAppConfigurationConstants.WEBAPP_DESCRIPTOR_NAME + ". " + e
+                    .getMessage(), e);
         }
         return configData;
     }
@@ -204,7 +207,7 @@ public class WebAppConfigurationReader {
 
         addClassloadingConfiguration(appCLConfigFileURL, webAppConfigurationData);
         if (context != null) {
-            addSingeSignOnConfiguration(webAppConfigurationData, context);
+            addSingleSignOnConfiguration(webAppConfigurationData, context);
         }
 
         return webAppConfigurationData;
@@ -217,7 +220,7 @@ public class WebAppConfigurationReader {
      * @param context                 Web app context
      * @return returns the WebAppConfigData object
      */
-    private static WebAppConfigurationData addSingeSignOnConfiguration(WebAppConfigurationData webAppConfigurationData,
+    private static WebAppConfigurationData addSingleSignOnConfiguration(WebAppConfigurationData webAppConfigurationData,
             Context context) {
         String ssoEnabled = context.findParameter(WebappSSOConstants.ENABLE_SAML2_SSO);
         if (ssoEnabled != null) {

@@ -23,9 +23,9 @@ package org.wso2.carbon.webapp.mgt.config;
  */
 public interface WebAppConfigurationService {
 
-    void addConfig(String ID, WebAppConfigurationData configData);
+    void addConfiguration(String ID, WebAppConfigurationData configData);
 
-    void removeConfig(String ID);
+    void removeConfiguration(String ID);
 
-    WebAppConfigurationData getConfig(String ID);
+    WebAppConfigurationData getConfiguration(String ID);
 }
