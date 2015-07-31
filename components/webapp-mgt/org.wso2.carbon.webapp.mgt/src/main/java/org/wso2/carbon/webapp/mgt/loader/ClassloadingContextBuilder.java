@@ -32,9 +32,9 @@ import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationReader;
 import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationService;
 import org.wso2.carbon.webapp.mgt.utils.XMLUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -230,24 +230,15 @@ public class ClassloadingContextBuilder {
      * @param directory The directory from where the jars need to be collected
      * @param fileList  The list to which the jars should be added
      */
-    private static void getFileList(File directory, List<String> fileList) {
-        if (directory.exists()) {
-            String[] itemList = directory.list();
-            if (itemList != null) {
-                for (String fileName : itemList) {
-                    File file = new File(directory, fileName);
-                    if (file.exists()) {
-                        //If file is a single Jar file.
-                        if (file.isFile() && fileName.endsWith(".jar")) {
-                            fileList.add(file.toURI().toString());
-
-                        } else if (file.isDirectory()) {
-                            // If file is a directory.
-                            File nastedDir = new File(directory, fileName);
-                            getFileList(nastedDir, fileList);
-                        }
+    private static void getFileList(Path directory, List<String> fileList) throws IOException {
+        if (Files.exists(directory)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+                for (Path entry : stream) {
+                    if (Files.isDirectory(entry)) {
+                        getFileList(entry, fileList);
+                    } else if (Files.isRegularFile(entry) && entry.getFileName().toString().endsWith(".jar")) {
+                        fileList.add(entry.toUri().toString());
                     }
-
                 }
             }
         }
@@ -275,7 +266,7 @@ public class ClassloadingContextBuilder {
                 }
 
                 List<String> fileList = new ArrayList<>();
-                getFileList(new File(token), fileList);
+                getFileList(path, fileList);
                 if (!fileList.isEmpty()) {
                     entryList.addAll(fileList);
                 }
