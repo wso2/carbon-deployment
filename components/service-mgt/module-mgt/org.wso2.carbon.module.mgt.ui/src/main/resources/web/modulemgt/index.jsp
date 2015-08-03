@@ -87,8 +87,8 @@
                 <tr>
                     <th width="15%"><fmt:message key="name"/></th>
                     <th width="5%"><fmt:message key="version"/></th>
-                    <th width="50%"><fmt:message key="description"/></th>
-                    <th width="25%" colspan="2"><fmt:message key="actions"/></th>
+                    <th width="62.5%"><fmt:message key="description"/></th>
+                    <th width="12.5%"><fmt:message key="action"/></th>
                 </tr>
                 </thead>
                 <%
@@ -109,63 +109,13 @@
                         <%=aData.getDescription()%>
                     </td>
                     <%
-                        if (moduleName.equals("wso2throttle")) {
-                    %>
-                    <td>
-                        <a href="" class="icon-link" onclick="submitHiddenForm('../throttling/index.jsp');return false;"
-                           style="background-image:url(images/configure.gif);"><fmt:message key="configure"/></a>
-                    </td>
-                    <td/>
-                    <%
-                    } else if (moduleName.equals("wso2caching")) {
-                    %>
-                    <td>
-                        <a href="" class="icon-link" onclick="submitHiddenForm('../caching/index.jsp');return false;"
-                           style="background-image:url(images/configure.gif);"><fmt:message key="configure"/></a>
-
-
-                    </td>
-                    <td/>
-                    <%
-                    } else if (moduleName.equals("sandesha2")) {
-                    %>
-                    <td width="60">
-                        <a href="" class="icon-link" onclick="submitHiddenForm('../rm/global.jsp');return false;"
-                           style="background-image:url(images/configure.gif);"><fmt:message key="configure"/></a>
-
-                    </td>
-                    <td>
-                     <%
-                        if (aData.getEngagedGlobalLevel() == true) {
-                     %>
-                        <a href="#"
-                           onclick="disengage('<%=serverURL%>','<%=aData.getModuleId()%>');"
-                           class="icon-link" style="background-image:url(images/disengage.gif);"><fmt:message key="disengage"/></a>
-
-
-                        <%
-                        } else {
-                        %>
-                        <a href="#" onclick="engage('<%=serverURL%>','<%=aData.getModuleId()%>');"
-                           class="icon-link"
-                           style="background-image:url(images/engage.gif);"><fmt:message key="engage"/></a>
-
-
-                        <%
-                            }
-                        %>
-                    </td>
-                    <%
-                    } else if (moduleName.equals("addressing")) {
+                    if (moduleName.equals("addressing")) {
                     %>
                         <td width="12.5%">&nbsp;</td>
-                        <td width="12.5%">&nbsp;</td>
-
                     <%
                     } else {
                     %>
-
-                    <td>
+                        <td>
                         <%
                             if (aData.getEngagedGlobalLevel() == true) {
                         %>
@@ -183,26 +133,11 @@
 
 
                         <%
-                            }
+                        }
                         %>
-                    </td>
+                        </td>
                     <%
-                        if (!aData.getManagedModule()) {
-                    %>
-                    <td>
-                        <a href="#" onclick="removeModule('<%=aData.getModuleId()%>');"
-                           class="icon-link"
-                           style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
-
-
-                    </td>
-                   <%
-                        } else {
-                   %>
-                   <td/>     
-                   <%
-                           }
-                       }
+                    }
                     %>
                 </tr>
                 <%
