@@ -19,6 +19,7 @@
 package org.wso2.carbon.webapp.ext.cxf.interceptor;
 
 import org.apache.cxf.frontend.WSDLGetInterceptor;
+import org.apache.cxf.frontend.WSDLGetUtils;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.service.model.EndpointInfo;
@@ -47,9 +48,10 @@ public class HostNameSupportedWSDLGetInterceptor extends WSDLGetInterceptor {
         this.hostName = hostName;
     }
 
-    @Override
-    public Document getDocument(Message message, String base, Map<String, String> params, String ctxUri, EndpointInfo endpointInfo) {
-        Document document = super.getDocument(message, base, params, ctxUri, endpointInfo);
+    public Document getDocument(WSDLGetUtils utils, Message message, String base, Map<String, String> params,
+                                String ctxUri) {
+        Document document =
+                utils.getDocument(message, base, params, ctxUri, message.getExchange().getEndpoint().getEndpointInfo());
 
         Node rootNode = document.getFirstChild();
         if (rootNode != null && rootNode instanceof Element) {
@@ -62,7 +64,9 @@ public class HostNameSupportedWSDLGetInterceptor extends WSDLGetInterceptor {
                     if (portEles.getLength() > 0) {
                         for (int j = 0; j < portEles.getLength(); j++) {
                             Element port = (Element) portEles.item(j);
-                            Element address = (Element) port.getElementsByTagNameNS(Constants.NO_NS, Constants.WSDL_ADDRESS).item(0);
+                            Element address =
+                                    (Element) port.getElementsByTagNameNS(Constants.NO_NS, Constants.WSDL_ADDRESS)
+                                                  .item(0);
                             String location = getLocation(address.getAttribute(Constants.WSDL_LOCATION));
                             if (location != null && !"".equals(location)) {
                                 address.setAttribute(Constants.WSDL_LOCATION, location);
