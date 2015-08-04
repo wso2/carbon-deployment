@@ -18,10 +18,17 @@
 
 package org.wso2.carbon.webapp.mgt.config;
 
+import org.apache.commons.io.IOUtils;
+import org.xml.sax.SAXException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.util.Scanner;
 
 /**
  * This class unmarshals an XML input stream
@@ -34,10 +41,18 @@ public class JAXBUnmarshaller {
      * @param stream an xml input stream
      * @return The WebAppConfigData object created from the input stream
      */
-    public static WebAppConfigurationData unmarshall(InputStream stream) throws JAXBException {
+    public static WebAppConfigurationData unmarshall(InputStream stream)
+            throws JAXBException, IOException, SAXException {
+        //String xmlString = new Scanner(stream, "UTF-8").useDelimiter("\\A").next();
+        String xmlString = IOUtils.toString(stream, "UTF-8");
+
+        XMLValidator.validateXML(xmlString);
+
         JAXBContext jaxbContext = JAXBContext.newInstance(WebAppConfigurationData.class);
+
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (WebAppConfigurationData) jaxbUnmarshaller.unmarshal(stream);
+
+        return (WebAppConfigurationData) jaxbUnmarshaller.unmarshal(new StreamSource(new StringReader(xmlString)));
     }
 
 }

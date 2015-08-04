@@ -18,24 +18,25 @@
 
 package org.wso2.carbon.webapp.mgt.config;
 
-import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * This class keeps the some constants related to web app configuration
  */
 public class WebAppConfigurationConstants {
-    public static final String WSO2AS_WEB_XML = "WEB-INF" + File.separator + "wso2as-web.xml";
-    public static final String DEFAULT_WSO2AS_WEB_XML =
-            System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "conf" + File.separator
-                    + "tomcat" + File.separator + "wso2as-web.xml";
-    public static final String NAMESPACE = "http://wso2as-web-config/xsd";
     public static final String WEBAPP_DESCRIPTOR_NAME = "wso2as-web.xml";
+    public static final String WSO2AS_WEB_XML = Paths.get("WEB-INF", WEBAPP_DESCRIPTOR_NAME).toString();
+    public static final String CARBON_HOME = System.getProperty("carbon.home");
+    public static final String DEFAULT_WSO2AS_WEB_XML = Paths
+            .get(CARBON_HOME, "repository", "conf", "tomcat", WEBAPP_DESCRIPTOR_NAME).toString();
+    public static final String NAMESPACE = "http://wso2.org/2015/08/wso2as-web";
+    public static final String WSO2AS_WEB_XML_SCHEMA = Paths
+            .get(CARBON_HOME, "repository", "conf", "tomcat", "wso2as-web-schema.xsd").toString();
 
     public final static String ENV_CONFIG_FILE = "webapp-classloading-environments.xml";
     public final static String CL_CONFIG_FILE = "webapp-classloading.xml";
-    public final static String APP_CL_CONFIG_FILE = "META-INF/" + CL_CONFIG_FILE;
-    public final static String DEFAULT_EXT_DIR = "${carbon.home}/lib/runtimes/ext/";
-
+    public final static String APP_CL_CONFIG_FILE = Paths.get("META-INF", CL_CONFIG_FILE).toString();
+    public final static String DEFAULT_EXT_DIR = Paths.get(CARBON_HOME, "lib", "runtimes", "ext").toString();
     public final static String SYSTEM_ENV = "Carbon";
     public final static String TOMCAT_ENV = "Tomcat";
     public final static String CXF_ENV = "CXF";

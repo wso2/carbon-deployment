@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.webapp.mgt.config;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -30,30 +29,22 @@ import java.util.List;
  * An instance of this class holds configuration information of a web application
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "",
-        namespace = "http://wso2as-web-config/xsd")
-@XmlRootElement(name = "wso2as-web",
-        namespace = WebAppConfigurationConstants.NAMESPACE)
+@XmlRootElement(name = "wso2as-web")
 public class WebAppConfigurationData {
 
-    @XmlElement(name = "single-sign-on",
-            namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "single-sign-on")
     private boolean singleSignOn;
 
-    @XmlElement(name = "statistics-publisher",
-            namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "statistics-publisher")
     private StatisticsPublisher statisticsPublisher;
 
-    @XmlElement(name = "classloading",
-            namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "classloading")
     private Classloading classloading;
 
-    @XmlElement(name = "web-service-discovery",
-            namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "web-service-discovery")
     private boolean webServiceDiscovery;
 
-    @XmlElement(name = "rest-web-services",
-            namespace = WebAppConfigurationConstants.NAMESPACE)
+    @XmlElement(name = "rest-web-services")
     private RestWebServices restWebServices;
 
     public boolean isSingleSignOnEnabled() {
@@ -155,12 +146,10 @@ public class WebAppConfigurationData {
             propOrder = { "parentFirst", "environments" })
     public static class Classloading {
 
-        @XmlElement(name = "parent-first",
-                namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "parent-first")
         private boolean parentFirst;
 
-        @XmlElement(name = "environments",
-                namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "environments")
         private Environments environments;
 
         private boolean isParentFirst() {
@@ -185,8 +174,7 @@ public class WebAppConfigurationData {
         public static class Environments {
 
             @XmlElement(name = "environment",
-                    required = true,
-                    namespace = WebAppConfigurationConstants.NAMESPACE)
+                    required = true)
             private List<String> environment;
 
             private List<String> getEnvironment() {
@@ -209,8 +197,7 @@ public class WebAppConfigurationData {
             propOrder = { "isManagedApi" })
     public static class RestWebServices {
 
-        @XmlElement(name = "is-managed-api",
-                namespace = WebAppConfigurationConstants.NAMESPACE)
+        @XmlElement(name = "is-managed-api")
         private boolean isManagedApi;
 
         public boolean isManagedApi() {
@@ -228,12 +215,10 @@ public class WebAppConfigurationData {
             propOrder = { "enabled", "streamId" })
     public static class StatisticsPublisher {
         @XmlElement(name = "enabled",
-                required = true,
-                namespace = WebAppConfigurationConstants.NAMESPACE)
+                required = true)
         private boolean enabled;
         @XmlElement(name = "stream-id",
-                required = true,
-                namespace = WebAppConfigurationConstants.NAMESPACE)
+                required = true)
         private String streamId;
 
         public boolean isEnabled() {

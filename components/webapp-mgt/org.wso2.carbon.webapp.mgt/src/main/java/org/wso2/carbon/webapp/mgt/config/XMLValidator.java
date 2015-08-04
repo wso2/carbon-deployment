@@ -26,29 +26,31 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.file.Paths;
+
+import static java.nio.file.Files.newInputStream;
 
 public class XMLValidator {
 
     /**
-     * Validates a given XML file against a given schema
+     * Validates a given XML String against a given schema
      *
-     * @param schemaPath  Path to wso2as-web.xsd schema
-     * @param inputStream FileInputStream of configuration file
+     * @param xmlString an XML String
      * @throws IOException
      * @throws SAXException
      */
-    public static void validateXML(String schemaPath, InputStream inputStream) throws IOException, SAXException {
-        Source schemaFile = new StreamSource(new File(schemaPath));
-        Source xmlFile = new StreamSource(inputStream);
+    public static void validateXML(String xmlString) throws IOException, SAXException {
+        Source schemaSource = new StreamSource(
+                newInputStream(Paths.get(WebAppConfigurationConstants.WSO2AS_WEB_XML_SCHEMA)));
+
+        Source xmlInput = new StreamSource(new StringReader(xmlString));
 
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(schemaFile);
+        Schema schema = schemaFactory.newSchema(schemaSource);
 
         Validator validator = schema.newValidator();
-        validator.validate(xmlFile);
-
+        validator.validate(xmlInput);
     }
 }

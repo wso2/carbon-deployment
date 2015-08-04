@@ -156,6 +156,8 @@ public class WebAppConfigurationReader {
         } catch (JAXBException e) {
             log.error("Error while unmarshalling " + WebAppConfigurationConstants.WEBAPP_DESCRIPTOR_NAME + ". " + e
                     .getMessage(), e);
+        } catch (SAXException e) {
+            log.error("Error while validating wso2as-web.xml, "+e.getMessage(), e);
         }
         return configData;
     }
