@@ -58,15 +58,9 @@ public class SAMLSSOValve extends SingleSignOn {
 
         //Read generic SSO ServiceProvider details
         if (SSOUtils.isSSOSPConfigExists()) {
-            FileInputStream fileInputStream = null;
-            try {
-                fileInputStream = new FileInputStream(WebappSSOConstants.SSO_SP_CONFIG_PATH);
+            try ( FileInputStream fileInputStream = new FileInputStream(WebappSSOConstants.SSO_SP_CONFIG_PATH)) {
                 ssoSPConfigProperties.load(fileInputStream);
                 log.info("Successfully loaded SSO SP Config.");
-            } finally {
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
             }
         } else {
             throw new FileNotFoundException("Unable to find SSO SP config properties file in" +
