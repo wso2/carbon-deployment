@@ -32,6 +32,7 @@ public class WebAppConfigurationConstants {
     public static final String NAMESPACE = "http://wso2.org/2015/08/wso2as-web";
     public static final String WSO2AS_WEB_XML_SCHEMA = Paths
             .get(CARBON_HOME, "repository", "conf", "tomcat", "wso2as-web-schema.xsd").toString();
+    public static final String ENCODING = "UTF-8";
 
     public final static String ENV_CONFIG_FILE = "webapp-classloading-environments.xml";
     public final static String CL_CONFIG_FILE = "webapp-classloading.xml";

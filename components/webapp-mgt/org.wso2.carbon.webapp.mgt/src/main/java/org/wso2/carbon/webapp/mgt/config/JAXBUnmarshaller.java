@@ -28,7 +28,6 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Scanner;
 
 /**
  * This class unmarshals an XML input stream
@@ -43,8 +42,7 @@ public class JAXBUnmarshaller {
      */
     public static WebAppConfigurationData unmarshall(InputStream stream)
             throws JAXBException, IOException, SAXException {
-        //String xmlString = new Scanner(stream, "UTF-8").useDelimiter("\\A").next();
-        String xmlString = IOUtils.toString(stream, "UTF-8");
+        String xmlString = IOUtils.toString(stream, WebAppConfigurationConstants.ENCODING);
 
         XMLValidator.validateXML(xmlString);
 

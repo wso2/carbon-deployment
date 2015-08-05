@@ -132,7 +132,7 @@ public class WebAppConfigurationReader {
             try (JarFile webappJarFile = new JarFile(webappFilePath)) {
                 contextXmlFileEntry = webappJarFile.getJarEntry(configFilePrefix);
                 if (contextXmlFileEntry != null) {
-                    return new URL("jar:file:" + URLEncoder.encode(webappFilePath, "UTF-8").replace("+", "%20") + "!/" +
+                    return new URL("jar:file:" + URLEncoder.encode(webappFilePath, WebAppConfigurationConstants.ENCODING).replace("+", "%20") + "!/" +
                             configFilePrefix);
                 }
             }
