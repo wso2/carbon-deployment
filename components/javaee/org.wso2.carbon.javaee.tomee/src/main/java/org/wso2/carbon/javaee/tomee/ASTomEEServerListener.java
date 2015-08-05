@@ -60,6 +60,15 @@ public class ASTomEEServerListener extends ServerListener {
 	//static private boolean listenerInstalled;
 	private static final AtomicBoolean listenerInstalled = new AtomicBoolean(false);
 
+	// ###### WSO2 START PATCH ###### //
+	//Added the synchronization because of WSAS-2035. Remove when this is fixed properly in TomEE 1.7.3
+	static {
+		synchronized (System.getProperties()) {
+			SystemInstance.get();
+		}
+	}
+	// ###### WSO2 END PATCH ###### //
+
 	public void lifecycleEvent(LifecycleEvent event) {
 		// Bootstrap
 		install(event);
