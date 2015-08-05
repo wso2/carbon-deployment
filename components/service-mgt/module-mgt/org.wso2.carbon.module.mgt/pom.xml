@@ -36,6 +36,10 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
 
                 <extensions>true</extensions>
@@ -44,6 +48,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
+                            !org.wso2.carbon.module.mgt.internal,
                             org.wso2.carbon.module.mgt.service;version=${carbon.deployment.exp.pkg.version},
                             org.wso2.carbon.module.mgt;version=${carbon.deployment.exp.pkg.version},
                         </Export-Package>

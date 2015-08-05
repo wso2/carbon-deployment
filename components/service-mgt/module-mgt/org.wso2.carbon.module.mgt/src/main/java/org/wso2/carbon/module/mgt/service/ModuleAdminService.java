@@ -30,7 +30,9 @@ import org.apache.axis2.description.Version;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.util.ParameterUtil;
 import org.wso2.carbon.core.util.SystemFilter;
@@ -38,6 +40,10 @@ import org.wso2.carbon.module.mgt.ModuleMetaData;
 import org.wso2.carbon.module.mgt.ModuleMgtException;
 import org.wso2.carbon.module.mgt.ModuleMgtMessageKeys;
 import org.wso2.carbon.module.mgt.ModuleUploadData;
+import org.wso2.carbon.module.mgt.internal.DataHolder;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.security.config.SecurityConfigAdmin;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
@@ -73,15 +79,21 @@ public class ModuleAdminService extends AbstractAdmin {
     private static final String RAHAS_MODULE_NAME = "rahas";
     
     private PersistenceFactory pf;
+    
+    private Registry registry;
 
     public ModuleAdminService() throws Exception {
         this.axisConfig = getAxisConfig();
         pf = PersistenceFactory.getInstance(axisConfig);
+        registry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
     }
 
     public ModuleAdminService(AxisConfiguration ac) throws Exception {
         this.axisConfig = ac;
         pf = PersistenceFactory.getInstance(axisConfig);
+        registry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
     }
 
     /**
@@ -274,12 +286,13 @@ public class ModuleAdminService extends AbstractAdmin {
 
             try {
                 axisConfig.engageModule(axisModule);
+                persistGloballyEngagedStatus(axisModule, true);
             } catch (AxisFault axisFault) {
                 log.error("Error occured while globally engaging the module " + moduleId, axisFault);
                 throw new ModuleMgtException(axisFault, ModuleMgtException.ERROR, ModuleMgtMessageKeys.ERROR_GLOBAL_ENGAGE);
             }
 
-            pf.getModulePM().globallyEngageModule(axisModule);
+//            pf.getModulePM().globallyEngageModule(axisModule);
 
         } catch (Exception e) {
             log.error("Error occured while globally engaging the module " + moduleId, e);
@@ -288,6 +301,32 @@ public class ModuleAdminService extends AbstractAdmin {
 
         return true;
 
+    }
+
+    /**
+     * This method persists the globally engaged status of a module in  the registry
+     * @param axisModule
+     * @param globallyEngagedStatus
+     */
+    private void persistGloballyEngagedStatus(AxisModule axisModule, boolean globallyEngagedStatus) {
+        String moduleResourcePath = getModuleResourcePath(axisModule);
+        Resource moduleResource;
+        try {
+            if (registry.resourceExists(moduleResourcePath)) {
+                moduleResource = registry.get(moduleResourcePath);
+            } else {
+                moduleResource = registry.newResource();
+            }
+            moduleResource.setProperty(RegistryResources.ModuleProperties.GLOBALLY_ENGAGED,
+                                       Boolean.toString(globallyEngagedStatus));
+            registry.put(moduleResourcePath, moduleResource);
+        } catch (RegistryException e) {
+            log.error("Failed to persist globally engaged status of the module: " + axisModule.getName(), e);
+        }
+    }
+
+    private String getModuleResourcePath(AxisModule axisModule) {
+        return RegistryResources.MODULES + axisModule.getName() + "/" + axisModule.getVersion();
     }
 
     public boolean engageModuleForServiceGroup(String moduleID, String serviceGroupName)
@@ -617,6 +656,7 @@ public class ModuleAdminService extends AbstractAdmin {
 
         try {
             disengageModuleFromSystem(moduleId);
+            persistGloballyEngagedStatus(module, false);
         } catch (ModuleMgtException e) {
             throw e;
         } catch (Exception e) {
@@ -896,7 +936,7 @@ public class ModuleAdminService extends AbstractAdmin {
                 }
 
                 // store the global engagement status
-                pf.getModulePM().globallyDisengageModule(module);
+//                pf.getModulePM().globallyDisengageModule(module);
                 axisConfig.disengageModule(module);
                 Parameter param = new Parameter(GLOBALLY_ENGAGED_PARAM_NAME, Boolean.FALSE.toString());
                 module.addParameter(param);
