@@ -58,7 +58,7 @@
                 }
             }
 
-            if (document.aarUpload.aarFilename.value != null) {
+            if (document.aarUpload.aarFilename.value != null && document.aarUpload.aarFilename.length == undefined) {
                 var aarinput = document.aarUpload.aarFilename.value;
                 if (aarinput == '') {
                     CARBON.showWarningDialog('<fmt:message key="select.aar.service"/>');
