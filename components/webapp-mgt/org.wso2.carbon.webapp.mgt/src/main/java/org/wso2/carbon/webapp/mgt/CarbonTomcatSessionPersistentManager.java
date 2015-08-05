@@ -45,6 +45,7 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
     static {
         allowedClasses.add("org.apache.catalina.session.ManagerBase");
         allowedClasses.add("org.apache.catalina.connector.Request");
+        allowedClasses.add("org.apache.catalina.session.StandardManager");
     }
 
     public CarbonTomcatSessionPersistentManager() {
