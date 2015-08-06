@@ -142,7 +142,7 @@ public class WebAppUtils {
     /**
      * @return List of virtual hosts
      */
-    private static List<String> getVhostNames() {
+    public static List<String> getVhostNames() {
         List<String> vHosts = new ArrayList<String>();
         Container[] childHosts = findHostChildren();
         for (Container vHost : childHosts) {
@@ -263,7 +263,7 @@ public class WebAppUtils {
         return carbonTomcatService.getTomcat().getEngine().findChildren();
     }
 
-    private static List<String> getAppBases() {
+    public static List<String> getAppBases() {
         List<String> baseDirs = new ArrayList<String>();
         Container[] childHosts = findHostChildren();
         for (Container host : childHosts) {
