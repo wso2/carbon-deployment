@@ -1,71 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2428="http://mgt.webapp.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://mgt.webapp.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2430="http://metadata.persistence.core.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.webapp.carbon.wso2.org">
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax2423="http://mgt.webapp.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://mgt.webapp.carbon.wso2.org" xmlns:ax2421="http://metadata.persistence.core.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.webapp.carbon.wso2.org">
     <wsdl:documentation>WebappAdmin</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2429="http://mgt.webapp.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2431="http://metadata.persistence.core.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
-            <xs:import namespace="http://mgt.webapp.carbon.wso2.org/xsd"/>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2424="http://mgt.webapp.carbon.wso2.org/xsd" xmlns:ax2422="http://metadata.persistence.core.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://metadata.persistence.core.carbon.wso2.org/xsd"/>
-            <xs:element name="getPagedWebappsSummary">
+            <xs:import namespace="http://mgt.webapp.carbon.wso2.org/xsd"/>
+            <xs:element name="deleteStartedWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="webappSearchString" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="webappState" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="webappType" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getPagedWebappsSummaryResponse">
+            <xs:element name="deleteStoppedWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2428:WebappsWrapper"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getStartedWebapp">
+            <xs:element name="deleteFaultyWebapps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getStartedWebappResponse">
+            <xs:element name="deleteAllWebApps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2428:WebappMetadata"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getStoppedWebapp">
+            <xs:element name="deleteAllStartedWebapps">
                 <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
-                    </xs:sequence>
+                    <xs:sequence/>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getStoppedWebappResponse">
+            <xs:element name="deleteAllStoppedWebapps">
                 <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2428:WebappMetadata"/>
-                    </xs:sequence>
+                    <xs:sequence/>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getPagedFaultyWebappsSummary">
+            <xs:element name="deleteAllFaultyWebapps">
                 <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="webappSearchString" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="webappType" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getPagedFaultyWebappsSummaryResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2428:WebappsWrapper"/>
-                    </xs:sequence>
+                    <xs:sequence/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="reloadAllWebapps">
@@ -183,7 +164,7 @@
             <xs:element name="WebappAdminArtifactMetadataException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="ArtifactMetadataException" nillable="true" type="ax2430:ArtifactMetadataException"/>
+                        <xs:element minOccurs="0" name="ArtifactMetadataException" nillable="true" type="ax2421:ArtifactMetadataException"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -216,57 +197,14 @@
             <xs:element name="getVhostHolderResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2428:VhostHolder"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2423:VhostHolder"/>
                     </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteStartedWebapps">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteStoppedWebapps">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteFaultyWebapps">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteAllWebApps">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteAllStartedWebapps">
-                <xs:complexType>
-                    <xs:sequence/>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteAllStoppedWebapps">
-                <xs:complexType>
-                    <xs:sequence/>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteAllFaultyWebapps">
-                <xs:complexType>
-                    <xs:sequence/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="uploadWebapp">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappUploadDataList" nillable="true" type="ax2428:WebappUploadData"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="webappUploadDataList" nillable="true" type="ax2423:WebappUploadData"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -274,6 +212,69 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPagedWebappsSummary">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="webappSearchString" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="webappState" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="webappType" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPagedWebappsSummaryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2423:WebappsWrapper"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getStartedWebapp">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getStartedWebappResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2423:WebappMetadata"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getStoppedWebapp">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getStoppedWebappResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2423:WebappMetadata"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPagedFaultyWebappsSummary">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="webappSearchString" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="webappType" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPagedFaultyWebappsSummaryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2423:WebappsWrapper"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -301,7 +302,7 @@
             <xs:element name="getActiveSessionsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2428:SessionsWrapper"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2423:SessionsWrapper"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -312,6 +313,20 @@
             </xs:complexType>
         </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.webapp.carbon.wso2.org/xsd">
+            <xs:complexType name="VhostHolder">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="defaultHostName" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="vhosts" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="WebappUploadData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary"/>
+                    <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="version" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
             <xs:complexType name="WebappsWrapper">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
@@ -320,18 +335,19 @@
                     <xs:element minOccurs="0" name="numberOfCorrectWebapps" type="xs:int"/>
                     <xs:element minOccurs="0" name="numberOfFaultyWebapps" type="xs:int"/>
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="webapps" nillable="true" type="ax2428:VersionedWebappMetadata"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="webapps" nillable="true" type="ax2423:VersionedWebappMetadata"/>
                     <xs:element minOccurs="0" name="webappsDir" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="VersionedWebappMetadata">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="appVersionRoot" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="versionGroups" nillable="true" type="ax2428:WebappMetadata"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="versionGroups" nillable="true" type="ax2423:WebappMetadata"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="WebappMetadata">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="CAppArtifact" type="xs:boolean"/>
                     <xs:element minOccurs="0" name="appVersion" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="context" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="contextPath" nillable="true" type="xs:string"/>
@@ -345,7 +361,7 @@
                     <xs:element minOccurs="0" name="servletContext" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="started" type="xs:boolean"/>
                     <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="statistics" nillable="true" type="ax2428:WebappStatistics"/>
+                    <xs:element minOccurs="0" name="statistics" nillable="true" type="ax2423:WebappStatistics"/>
                     <xs:element minOccurs="0" name="webappFile" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="webappKey" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="webappType" nillable="true" type="xs:string"/>
@@ -362,25 +378,11 @@
                     <xs:element minOccurs="0" name="rejectedSessions" type="xs:int"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="VhostHolder">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="defaultHostName" nillable="true" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="vhosts" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="WebappUploadData">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary"/>
-                    <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="version" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
             <xs:complexType name="SessionsWrapper">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="numberOfActiveSessions" type="xs:int"/>
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="sessions" nillable="true" type="ax2428:SessionMetadata"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="sessions" nillable="true" type="ax2423:SessionMetadata"/>
                     <xs:element minOccurs="0" name="webappFileName" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>

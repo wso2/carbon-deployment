@@ -22,6 +22,7 @@ import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
@@ -169,7 +170,13 @@ public class WebappAdmin extends AbstractAdmin {
         } else if (appContext.endsWith("/*")) {
             appContext = appContext.substring(0, appContext.indexOf("/*"));
         }
-
+        String nCApp = FilenameUtils.normalize(File.separator + "repository" + File.separator +
+                                               "carbonapps" + File.separator + "work");
+        if (webApplication.getWebappFile() != null) {
+            if (FilenameUtils.normalize(webApplication.getWebappFile().getAbsolutePath()).contains(nCApp)) {
+                webappMetadata.setCAppArtifact(true);
+            }
+        }
         webappMetadata.setDisplayName(webApplication.getDisplayName());
         webappMetadata.setContext(webApplication.getContextName());
         webappMetadata.setHostName(webApplication.getHostName());
@@ -181,7 +188,6 @@ public class WebappAdmin extends AbstractAdmin {
         webappMetadata.setServiceListPath(webApplication.getServiceListPath());
         webappMetadata.setAppVersion(webApplication.getVersion());
         webappMetadata.setContextPath(webApplication.getContext().getPath());
-
         WebApplication.Statistics statistics = webApplication.getStatistics();
         WebappStatistics stats = new WebappStatistics();
         stats.setActiveSessions(statistics.getActiveSessions());
