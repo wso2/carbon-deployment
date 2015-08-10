@@ -80,20 +80,14 @@ public class ModuleAdminService extends AbstractAdmin {
     
     private PersistenceFactory pf;
     
-    private Registry registry;
-
     public ModuleAdminService() throws Exception {
         this.axisConfig = getAxisConfig();
         pf = PersistenceFactory.getInstance(axisConfig);
-        registry = DataHolder.getRegistryService().getConfigSystemRegistry(
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
     }
 
     public ModuleAdminService(AxisConfiguration ac) throws Exception {
         this.axisConfig = ac;
         pf = PersistenceFactory.getInstance(axisConfig);
-        registry = DataHolder.getRegistryService().getConfigSystemRegistry(
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
     }
 
     /**
@@ -309,19 +303,25 @@ public class ModuleAdminService extends AbstractAdmin {
      * @param globallyEngagedStatus
      */
     private void persistGloballyEngagedStatus(AxisModule axisModule, boolean globallyEngagedStatus) {
-        String moduleResourcePath = getModuleResourcePath(axisModule);
-        Resource moduleResource;
-        try {
-            if (registry.resourceExists(moduleResourcePath)) {
-                moduleResource = registry.get(moduleResourcePath);
-            } else {
-                moduleResource = registry.newResource();
+        if (DataHolder.getRegistryService() != null) {
+            try {
+                Registry configSystemRegistry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
+
+                String moduleResourcePath = getModuleResourcePath(axisModule);
+                Resource moduleResource;
+                if (configSystemRegistry.resourceExists(moduleResourcePath)) {
+                    moduleResource = configSystemRegistry.get(moduleResourcePath);
+                } else {
+                    moduleResource = configSystemRegistry.newCollection();
+                }
+                moduleResource.setProperty(RegistryResources.ModuleProperties.GLOBALLY_ENGAGED,
+                                           Boolean.toString(globallyEngagedStatus));
+                configSystemRegistry.put(moduleResourcePath, moduleResource);
+            } catch (RegistryException e) {
+                log.error("Failed to persist globally engaged status of the module: " + axisModule.getName(), e);
+
             }
-            moduleResource.setProperty(RegistryResources.ModuleProperties.GLOBALLY_ENGAGED,
-                                       Boolean.toString(globallyEngagedStatus));
-            registry.put(moduleResourcePath, moduleResource);
-        } catch (RegistryException e) {
-            log.error("Failed to persist globally engaged status of the module: " + axisModule.getName(), e);
         }
     }
 
