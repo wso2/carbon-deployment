@@ -581,7 +581,7 @@
         <%} else {%>
         <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
               urlEncodedWebappFile%>&webappState=<%= webappState %>&hostName=<%=
-              webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
+              hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
             <%=vWebapp.getContext()%> <img src="images/applications.gif"
                                            title='<fmt:message key="capp.web.artifact.text"/>'
                                            alt=''<fmt:message key="capp.web.artifact"/>'/> </a>
