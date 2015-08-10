@@ -53,6 +53,8 @@ import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.PolicyReference;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.RegistryResources;
@@ -92,7 +94,10 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -391,7 +396,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         // engage at persistence
 //        String moduleXPath = Resources.ModuleProperties.VERSION_XPATH+PersistenceUtils.
 //                getXPathAttrPredicate(Resources.ModuleProperties.VERSION_ID, version);
-        OMElement modElement = PersistenceUtils.createModule(moduleName, version, Resources.Associations.ENGAGED_MODULES);
+        OMElement modElement = PersistenceUtils.createModule(moduleName, version,
+                                                             Resources.Associations.ENGAGED_MODULES);
         if (!sfpm.elementExists(serviceGroupId,
                                 serviceXPath + "/" + Resources.ModuleProperties.MODULE_XML_TAG +
                                 PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
@@ -547,6 +553,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             ServiceMetaData service = new ServiceMetaData();
             String serviceName = axisService.getName();
             service.setName(serviceName);
+            service.setCAppArtifact(isAxisServiceCApp(axisService));
 
             // extract service type
             serviceTypeParam = axisService.getParameter(ServerConstants.SERVICE_TYPE);
@@ -585,8 +592,6 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             	serviceList.add(service);
             }
         }
-
-
         ServiceMetaDataWrapper wrapper;
         wrapper = new ServiceMetaDataWrapper();
         wrapper.setNumberOfCorrectServiceGroups(getNumberOfServiceGroups());
@@ -1048,6 +1053,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         serviceMetaData.setFoundWebResources(serviceGroup.isFoundWebResources());
         serviceMetaData.setScope(service.getScope());
         serviceMetaData.setWsdlPorts(service.getEndpoints());
+        serviceMetaData.setCAppArtifact(isAxisServiceCApp(service));
 
         Parameter deploymentTime =
                 service.getParameter(CarbonConstants.SERVICE_DEPLOYMENT_TIME_PARAM);
@@ -2533,5 +2539,26 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 }
             }
         }
+    }
+
+    private boolean isAxisServiceCApp(AxisService axisService) {
+        //Check if Service is deployed from a CApp
+        try {
+            Path axis2ServiceAppPath = Paths.get(axisService.getFileName().toURI());
+            if (axis2ServiceAppPath != null) {
+                String tenantId = AppDeployerUtils.getTenantIdString();
+                // Check whether there is an application in the system from the given name
+                ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
+                for (CarbonApplication application : appList) {
+                    Path cappPath = Paths.get(application.getExtractedPath());
+                    if (axis2ServiceAppPath.startsWith(cappPath)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (URISyntaxException e) {
+            log.error("Unable to retrieve CApp file path ", e);
+        }
+        return false;
     }
 }

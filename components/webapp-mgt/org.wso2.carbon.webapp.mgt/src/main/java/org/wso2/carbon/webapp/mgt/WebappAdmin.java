@@ -25,6 +25,8 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -43,6 +45,8 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import java.io.*;
 import java.net.SocketException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -170,6 +174,20 @@ public class WebappAdmin extends AbstractAdmin {
             appContext = appContext.substring(0, appContext.indexOf("/*"));
         }
 
+        //Check if webapp is deployed from a CApp
+        Path webAppPath = Paths.get(webApplication.getWebappFile().getAbsolutePath());
+        if (webAppPath != null) {
+            String tenantId = AppDeployerUtils.getTenantIdString();
+            // Check whether there is an application in the system from the given name
+            ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
+            for (CarbonApplication application : appList) {
+                Path cappPath = Paths.get(application.getExtractedPath());
+                if (webAppPath.startsWith(cappPath)) {
+                    webappMetadata.setCAppArtifact(true);
+                    break;
+                }
+            }
+        }
         webappMetadata.setDisplayName(webApplication.getDisplayName());
         webappMetadata.setContext(webApplication.getContextName());
         webappMetadata.setHostName(webApplication.getHostName());
@@ -181,7 +199,6 @@ public class WebappAdmin extends AbstractAdmin {
         webappMetadata.setServiceListPath(webApplication.getServiceListPath());
         webappMetadata.setAppVersion(webApplication.getVersion());
         webappMetadata.setContextPath(webApplication.getContext().getPath());
-
         WebApplication.Statistics statistics = webApplication.getStatistics();
         WebappStatistics stats = new WebappStatistics();
         stats.setActiveSessions(statistics.getActiveSessions());
@@ -1260,7 +1277,11 @@ public class WebappAdmin extends AbstractAdmin {
      * @return new VhostHolder instance
      */
     public VhostHolder getVhostHolder() {
-        return new VhostHolder().getInstance();
+        List<String> vhostNames = WebAppUtils.getVhostNames();
+        VhostHolder vhostHolder = new VhostHolder();
+        vhostHolder.setVhosts(vhostNames.toArray(new String[vhostNames.size()]));
+        vhostHolder.setDefaultHostName(WebAppUtils.getServerConfigHostName());
+        return vhostHolder;
     }
 
 }

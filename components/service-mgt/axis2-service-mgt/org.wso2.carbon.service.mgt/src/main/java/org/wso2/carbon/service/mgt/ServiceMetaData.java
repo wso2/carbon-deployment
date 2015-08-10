@@ -49,6 +49,7 @@ public class ServiceMetaData {
     private long deployedTime;
     private String[] wsdlPorts;
     private String[] wsdlPortTypes;
+    private boolean isCAppArtifact = false;
 
     private static final Log log = LogFactory.getLog(ServiceMetaData.class);
 
@@ -237,5 +238,23 @@ public class ServiceMetaData {
     public String getServiceDeployedTime(){
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
         return dateFormatter.format(new Date(deployedTime));
+    }
+
+    /**
+     * get isCAppArtifact property
+     *
+     * @return boolean
+     */
+    public boolean isCAppArtifact() {
+        return isCAppArtifact;
+    }
+
+    /**
+     * This will be the place to enable service as CApp artifact
+     *
+     * @param CAppArtifact
+     */
+    public void setCAppArtifact(boolean CAppArtifact) {
+        this.isCAppArtifact = CAppArtifact;
     }
 }

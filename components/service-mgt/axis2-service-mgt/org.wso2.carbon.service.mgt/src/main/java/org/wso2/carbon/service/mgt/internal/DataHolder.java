@@ -19,10 +19,12 @@
 package org.wso2.carbon.service.mgt.internal;
 
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.utils.CarbonUtils;
 
 public class DataHolder {
     private static ConfigurationContext serverConfigContext;
+    private static ApplicationManagerService applicationManager;
 
     public static void setServerConfigContext(ConfigurationContext serverConfigContext) {
         DataHolder.serverConfigContext = serverConfigContext;
@@ -31,5 +33,13 @@ public class DataHolder {
     public static ConfigurationContext getServerConfigContext() {
         CarbonUtils.checkSecurity();
         return serverConfigContext;
+    }
+
+    public static ApplicationManagerService getApplicationManager() {
+        return applicationManager;
+    }
+
+    public static void setApplicationManager(ApplicationManagerService applicationManager) {
+        DataHolder.applicationManager = applicationManager;
     }
 }
