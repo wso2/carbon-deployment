@@ -396,7 +396,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         // engage at persistence
 //        String moduleXPath = Resources.ModuleProperties.VERSION_XPATH+PersistenceUtils.
 //                getXPathAttrPredicate(Resources.ModuleProperties.VERSION_ID, version);
-        OMElement modElement = PersistenceUtils.createModule(moduleName, version, Resources.Associations.ENGAGED_MODULES);
+        OMElement modElement = PersistenceUtils.createModule(moduleName, version,
+                                                             Resources.Associations.ENGAGED_MODULES);
         if (!sfpm.elementExists(serviceGroupId,
                                 serviceXPath + "/" + Resources.ModuleProperties.MODULE_XML_TAG +
                                 PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
@@ -552,25 +553,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             ServiceMetaData service = new ServiceMetaData();
             String serviceName = axisService.getName();
             service.setName(serviceName);
-
-            //Check if Service is deployed from a CApp
-            try {
-                Path axis2ServiceAppPath = Paths.get(axisService.getFileName().toURI());
-                if (axis2ServiceAppPath != null) {
-                    String tenantId = AppDeployerUtils.getTenantIdString();
-                    // Check whether there is an application in the system from the given name
-                    ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
-                    for (CarbonApplication application : appList) {
-                        Path cappPath = Paths.get(application.getExtractedPath());
-                        if (axis2ServiceAppPath.startsWith(cappPath)) {
-                            service.setCAppArtifact(true);
-                            break;
-                        }
-                    }
-                }
-            } catch (URISyntaxException e) {
-                log.error("Unable to retrieve CApp file path ", e);
-            }
+            service.setCAppArtifact(isAxisServiceCApp(axisService));
 
             // extract service type
             serviceTypeParam = axisService.getParameter(ServerConstants.SERVICE_TYPE);
@@ -1070,6 +1053,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         serviceMetaData.setFoundWebResources(serviceGroup.isFoundWebResources());
         serviceMetaData.setScope(service.getScope());
         serviceMetaData.setWsdlPorts(service.getEndpoints());
+        serviceMetaData.setCAppArtifact(isAxisServiceCApp(service));
 
         Parameter deploymentTime =
                 service.getParameter(CarbonConstants.SERVICE_DEPLOYMENT_TIME_PARAM);
@@ -2555,5 +2539,26 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 }
             }
         }
+    }
+
+    private boolean isAxisServiceCApp(AxisService axisService) {
+        //Check if Service is deployed from a CApp
+        try {
+            Path axis2ServiceAppPath = Paths.get(axisService.getFileName().toURI());
+            if (axis2ServiceAppPath != null) {
+                String tenantId = AppDeployerUtils.getTenantIdString();
+                // Check whether there is an application in the system from the given name
+                ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
+                for (CarbonApplication application : appList) {
+                    Path cappPath = Paths.get(application.getExtractedPath());
+                    if (axis2ServiceAppPath.startsWith(cappPath)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (URISyntaxException e) {
+            log.error("Unable to retrieve CApp file path ", e);
+        }
+        return false;
     }
 }
