@@ -37,7 +37,7 @@
     String redirectPage = request.getParameter("redirectPage");
     if (redirectPage == null) {
         redirectPage = "index.jsp";
-        webappState="all";
+        webappState = "all";
     }
 
     String redirectName = webappKeySet[0].split(":")[1];
