@@ -583,8 +583,8 @@
               urlEncodedWebappFile%>&webappState=<%= webappState %>&hostName=<%=
               webappsWrapper.getHostName()%>&httpPort=<%= webappsWrapper.getHttpPort()%>&webappType=<%=currentWebappType%>">
             <%=vWebapp.getContext()%> <img src="images/applications.gif"
-                                           title="<fmt:message key="capp.web.artifact.text"/>"
-                                           alt="<fmt:message key="capp.web.artifact"/>"/> </a>
+                                           title='<fmt:message key="capp.web.artifact.text"/>'
+                                           alt=''<fmt:message key="capp.web.artifact"/>'/> </a>
         <%}%>
     </td>
 

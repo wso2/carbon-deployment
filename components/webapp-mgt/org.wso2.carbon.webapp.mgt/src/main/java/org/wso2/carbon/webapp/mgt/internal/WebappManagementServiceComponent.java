@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
@@ -67,9 +68,14 @@ import java.util.Map;
  * cardinality="1..1" policy="dynamic"
  * bind="setTenantRegistryLoader"
  * unbind="unsetTenantRegistryLoader"
+ * @scr.reference name="application.manager"
+ * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
+ * cardinality="0..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
  */
 public class WebappManagementServiceComponent {
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
+
+    private static ApplicationManagerService applicationManager;
 
     protected void activate(ComponentContext ctx) {
         try {
@@ -175,4 +181,14 @@ public class WebappManagementServiceComponent {
         }
 
     }
+
+    protected void setAppManager(ApplicationManagerService applicationManager) {
+        this.applicationManager = applicationManager;
+        DataHolder.setApplicationManager(applicationManager);
+    }
+
+    protected void unsetAppManager(ApplicationManagerService appManager) {
+        applicationManager = null;
+    }
+
 }

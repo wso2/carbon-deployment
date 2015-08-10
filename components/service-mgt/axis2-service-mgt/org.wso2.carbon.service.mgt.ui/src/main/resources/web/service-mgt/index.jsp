@@ -435,8 +435,8 @@ padding:0 10px;
                     <% } else { %>
                     <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
                         <img src="images/applications.gif"
-                             title="<fmt:message key="capp.service.artifact.text"/>"
-                             alt="<fmt:message key="capp.service.artifact"/>"/> </a>
+                             title='<fmt:message key="capp.service.artifact.text"/>'
+                             alt='<fmt:message key="capp.service.artifact"/>'/> </a>
                     <% } %>
                 </nobr>
             </td>

@@ -45,7 +45,6 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisEvent;
 import org.apache.axis2.util.PolicyLocator;
 import org.apache.axis2.wsdl.WSDLConstants;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Assertion;
@@ -54,6 +53,8 @@ import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.PolicyReference;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.RegistryResources;
@@ -95,6 +96,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -549,18 +552,26 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             ServiceMetaData service = new ServiceMetaData();
             String serviceName = axisService.getName();
             service.setName(serviceName);
-            String nCApp = FilenameUtils.normalize(File.separator + "repository" + File.separator +
-                                                   "carbonapps" + File.separator + "work");
-            if (axisService.getFileName() != null) {
-                try {
-                    if (FilenameUtils.normalize(new File(axisService.getFileName().toURI()).getAbsolutePath()).contains
-                            (nCApp)) {
-                        service.setCAppArtifact(true);
+
+            //Check if Service is deployed from a CApp
+            try {
+                Path axis2ServiceAppPath = Paths.get(axisService.getFileName().toURI());
+                if (axis2ServiceAppPath != null) {
+                    String tenantId = AppDeployerUtils.getTenantIdString();
+                    // Check whether there is an application in the system from the given name
+                    ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
+                    for (CarbonApplication application : appList) {
+                        Path cappPath = Paths.get(application.getExtractedPath());
+                        if (axis2ServiceAppPath.startsWith(cappPath)) {
+                            service.setCAppArtifact(true);
+                            break;
+                        }
                     }
-                } catch (URISyntaxException e) {
-                    log.error("Unable to retrieve CApp file path " ,e);
                 }
+            } catch (URISyntaxException e) {
+                log.error("Unable to retrieve CApp file path ", e);
             }
+
             // extract service type
             serviceTypeParam = axisService.getParameter(ServerConstants.SERVICE_TYPE);
             if (serviceTypeParam != null) {
