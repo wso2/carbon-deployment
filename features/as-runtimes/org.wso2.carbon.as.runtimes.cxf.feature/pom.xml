@@ -176,6 +176,11 @@
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.cxf.ext</artifactId>
         </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>3.3.1</version>
+        </dependency>
     </dependencies>
 
     <build>
