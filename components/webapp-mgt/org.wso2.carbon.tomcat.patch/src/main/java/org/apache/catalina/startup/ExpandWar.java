@@ -81,7 +81,7 @@ public class ExpandWar {
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
         File appBase;
         File docBase;
-        if ( tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if ( tenantId == MultitenantConstants.SUPER_TENANT_ID || tenantId == MultitenantConstants.INVALID_TENANT_ID) {
             appBase = new File(host.getAppBase());
             if (!appBase.isAbsolute()) {
                 appBase = new File(System.getProperty(Globals.CATALINA_BASE_PROP),
