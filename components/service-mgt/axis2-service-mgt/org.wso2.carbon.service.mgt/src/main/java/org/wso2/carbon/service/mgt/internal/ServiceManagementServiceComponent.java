@@ -118,13 +118,4 @@ public class ServiceManagementServiceComponent {
     protected void unsetAppManager(ApplicationManagerService applicationManager) {
         this.applicationManager = null;
     }
-//
-//    public static ApplicationManagerService getAppManager() {
-//        if (applicationManager == null) {
-//            String msg = "Before activating Service management service component, an instance of "
-//                         + "ApplicationManager should be in existance";
-//            log.error(msg);
-//        }
-//        return applicationManager;
-//    }
 }
