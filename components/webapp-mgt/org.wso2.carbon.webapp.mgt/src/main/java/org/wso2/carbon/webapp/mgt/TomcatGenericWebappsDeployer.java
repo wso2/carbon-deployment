@@ -445,6 +445,7 @@ public class TomcatGenericWebappsDeployer {
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
+        Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
         String fileName = webappFile.getName();
         if (deployedWebapps.containsKey(fileName)) {
             WebApplication deployWebapp = deployedWebapps.get(fileName);
@@ -452,9 +453,16 @@ public class TomcatGenericWebappsDeployer {
             privilegedCarbonContext.setApplicationName(
                     TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
             deployWebapp.lazyUnload();
+        } else if (stoppedWebapps.containsKey(fileName)) {
+            WebApplication stoppedWebapp = stoppedWebapps.get(fileName);
+            Context context = stoppedWebapp.getContext();
+            privilegedCarbonContext.setApplicationName(
+                    TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
+            stoppedWebapp.lazyUnload();
+        } else {
+            clearFaultyWebapp(webappFile.getAbsolutePath());
         }
 
-        clearFaultyWebapp(webappFile.getAbsolutePath());
     }
 
     private void clearFaultyWebapp(String filePath) {

@@ -35,6 +35,9 @@ import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.ArtifactType;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -222,6 +225,12 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
                 if (!CarbonUtils.isWorkerNode()) {
                     persistWebappMetadata(webApplication, axisConfig);
+                }
+
+                if (isWebappStopped(webApplication)) {
+                    WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(
+                            webApplication.getWebappFile().getAbsolutePath(), configContext);
+                    webApplicationsHolder.stopWebapp(webApplication);
                 }
 
             }
@@ -489,6 +498,30 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     protected void handleRedeployment(File file) throws DeploymentException {
         DeploymentFileData data = new DeploymentFileData(file, this);
         deploy(data);
+    }
+
+    /**
+     * Reads and returns the webapp stopped status from the registry
+     *
+     * @param webApplication WebApplication instance
+     * @return
+     */
+    private boolean isWebappStopped(WebApplication webApplication) {
+        if (DataHolder.getRegistryService() != null) {
+            try {
+                Registry configSystemRegistry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
+                String webappResourcePath = WebAppUtils.getWebappResourcePath(webApplication);
+
+                if (configSystemRegistry.resourceExists(webappResourcePath)) {
+                    Resource webappResource = configSystemRegistry.get(webappResourcePath);
+                    return Boolean.parseBoolean(webappResource.getProperty(WebappsConstants.WebappState.STOPPED));
+                }
+            } catch (RegistryException e) {
+                log.error("Failed to read persisted webapp stopped state for: " + webApplication.getContext());
+            }
+        }
+        return false;
     }
 
 }

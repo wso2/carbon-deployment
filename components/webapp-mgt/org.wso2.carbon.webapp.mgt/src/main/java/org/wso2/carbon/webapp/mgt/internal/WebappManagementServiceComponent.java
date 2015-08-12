@@ -24,11 +24,9 @@ import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
-import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
-//import org.wso2.carbon.url.mapper.UrlMapperValve;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -59,8 +57,6 @@ import java.util.Map;
  * unbind="unsetConfigurationContextService"
  * @scr.reference name="user.realmservice.default" interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService"  unbind="unsetRealmService"
- * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  * @scr.reference name="depsych.service" interface="org.wso2.carbon.core.deployment.DeploymentSynchronizer"
  * cardinality="0..1" policy="dynamic"  bind="setDeploymentSynchronizerService" unbind="unsetDeploymentSynchronizerService"
  * @scr.reference name="tenant.registryloader"
@@ -128,13 +124,6 @@ public class WebappManagementServiceComponent {
     }
 
     protected void unsetRealmService(RealmService realmService) {
-    }
-
-    protected void setRegistryService(RegistryService registryService) {
-        DataHolder.setRegistryService(registryService);
-    }
-
-    protected void unsetRegistryService(RegistryService registryService) {
     }
 
     protected void setTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
