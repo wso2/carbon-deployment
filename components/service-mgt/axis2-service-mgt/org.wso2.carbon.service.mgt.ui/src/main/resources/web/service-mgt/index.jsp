@@ -425,27 +425,28 @@ padding:0 10px;
             </td>
                     <% } %>
             <%
-              String serviceName = service.getName();
-              if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+            String serviceName = service.getName();
+            if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+            %>
             <nobr>
-             <%
-              if ("proxy".equalsIgnoreCase(service.getServiceType())) {
-                String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
-              %>
-               <jsp:include page="<%= cApp_proxy%>"/>
-              <% } else { %>
-                    <td width="200px">
-                          <nobr>
-                               <% if (loggedIn) { %>
-                                  <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
-                                  </a>
-                               <% } else { %>
-                                  <%=serviceName%>
-                               <% } %>
-                          </nobr>
-                    </td>
-              <% } %>
-              </nobr>
+                  <%
+                        if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+                           String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
+                  %>
+                  <jsp:include page="<%= cApp_proxy%>"/>
+                         <% } else { %>
+                             <td width="200px">
+                                  nobr>
+                                  <% if (loggedIn) { %>
+                                      <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
+                                      </a>
+                                  <% } else { %>
+                                      <%=serviceName%>
+                                  <% } %>
+                                  </nobr>
+                             </td>
+                         <% } %>
+            </nobr>
             <% } else { %>
             <td width="200px">
                 <nobr>
