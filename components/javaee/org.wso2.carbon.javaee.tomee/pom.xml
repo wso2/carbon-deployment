@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>javaee-parent</artifactId>
-        <version>4.4.0</version>
+        <version>4.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,15 +30,10 @@
     <name>WSO2 Carbon - JavaEE WSO2 Extensions</name>
     <url>http://wso2.org</url>
 
-<properties>
-   <tomee.version>1.6.0.1</tomee.version>
-</properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>tomee-catalina</artifactId>
-            <version>${tomee.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.tomcat</groupId>

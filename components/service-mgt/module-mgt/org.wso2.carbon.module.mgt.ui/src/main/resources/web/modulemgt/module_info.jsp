@@ -94,33 +94,6 @@
 	    </table>
 	   </td>
 	</tr>
-	<tr height="10"/>
-	<tr>
-	   <td>      
-            <table class="styledLeft" id="moduleConfig" width="100%">
-                <thead>
-                    <tr>
-                        <th><fmt:message key="module.configuration"/></th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td><a title="<fmt:message key="edit.parameters"/>" href="./parameters.jsp?moduleName=<%=moduleName%>&moduleVersion=<%=moduleVersion%>">
-                            <img src="images/edit.gif" alt="<fmt:message key="edit.parameters"/>"/>
-                                <fmt:message key="edit.parameters"/>
-                        </a>                    
-                    </td>
-                </tr>
-                <tr>
-                    <td><a title="<fmt:message key="edit.policies"/>"
-                                   href="../service-mgt/policy_editor_proxy.jsp?moduleName=<%=moduleName%>&moduleVersion=<%=moduleVersion%>&policyType=ModulePolicy&action=getpolicy">
-                                <img src="images/policies.gif" alt="<fmt:message key="edit.policies"/>"/>
-                                <fmt:message key="edit.policies"/>
-                            </a>                  
-                    </td>
-                </tr> 
-            </table>
-       </td>
-    </tr>        
     </table>
 </div>
 <script type="text/javascript">

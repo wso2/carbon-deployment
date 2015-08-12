@@ -18,24 +18,27 @@
 
 package org.wso2.carbon.webapp.mgt;
 
-import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
-
-import java.util.List;
-
 /**
  * This class is used to read virtual hostnames from webappAdmin service
  */
 public class VhostHolder {
 
-    private List<String> vhosts;
+    private String[] vhosts;
     private String defaultHostName;
 
-
-    public List<String> getVhosts() {
-        return WebAppUtils.vhostNames;
+    public String[] getVhosts() {
+        return vhosts;
     }
 
-    public String getDefaultHostName(){
-        return WebAppUtils.getServerConfigHostName();
+    public void setVhosts(String[] vhosts) {
+        this.vhosts = vhosts;
+    }
+
+    public String getDefaultHostName() {
+        return defaultHostName;
+    }
+
+    public void setDefaultHostName(String defaultHostName) {
+        this.defaultHostName = defaultHostName;
     }
 }

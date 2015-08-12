@@ -30,6 +30,8 @@
     String reloadAll = request.getParameter("reloadAll");
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
+    String webappType = request.getParameter("webappType");
+    String defaultHostName = request.getParameter("defaultHostName");
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
@@ -40,20 +42,22 @@
     }
 
     String redirectUrl = "";
-    if(redirectPage.startsWith("index.jsp")) {
+    if (redirectPage.startsWith("index.jsp")) {
         redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt;
     } else {
-        if(webappKeySet[0].split(":").length>1){
-           redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
-                                 URLEncoder.encode(webappKeySet[0].split(":")[1], "UTF-8");
-        }else{
-           redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
-                                 URLEncoder.encode(webappKeySet[0], "UTF-8");
+        if (webappKeySet[0].split(":").length > 1) {
+            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
+                    URLEncoder.encode(webappKeySet[0].split(":")[1], "UTF-8");
+        } else {
+            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
+                    URLEncoder.encode(webappKeySet[0], "UTF-8");
         }
 
         if (hostName != null && httpPort != null) {
             redirectUrl += "&hostName=" + hostName + "&httpPort=" + httpPort;
         }
+
+        redirectUrl += "&webappType=" + webappType + "&webappState=all" + "&defaultHostName=" + defaultHostName;
     }
 %>
 

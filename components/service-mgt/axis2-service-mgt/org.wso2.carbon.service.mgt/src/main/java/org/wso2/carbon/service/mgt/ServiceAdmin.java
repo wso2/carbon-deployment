@@ -25,6 +25,8 @@ import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.util.UIDGenerator;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
+import org.apache.axis2.clustering.ClusteringAgent;
+import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisBinding;
@@ -51,6 +53,8 @@ import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.PolicyReference;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.RegistryResources;
@@ -71,6 +75,8 @@ import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.config.SecurityConfigAdmin;
 import org.wso2.carbon.security.config.service.SecurityScenarioData;
+import org.wso2.carbon.service.mgt.internal.DataHolder;
+import org.wso2.carbon.service.mgt.sync.ServiceSynchronizeRequest;
 import org.wso2.carbon.service.mgt.util.Utils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.DataPaginator;
@@ -88,19 +94,11 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -398,7 +396,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         // engage at persistence
 //        String moduleXPath = Resources.ModuleProperties.VERSION_XPATH+PersistenceUtils.
 //                getXPathAttrPredicate(Resources.ModuleProperties.VERSION_ID, version);
-        OMElement modElement = PersistenceUtils.createModule(moduleName, version, Resources.Associations.ENGAGED_MODULES);
+        OMElement modElement = PersistenceUtils.createModule(moduleName, version,
+                                                             Resources.Associations.ENGAGED_MODULES);
         if (!sfpm.elementExists(serviceGroupId,
                                 serviceXPath + "/" + Resources.ModuleProperties.MODULE_XML_TAG +
                                 PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
@@ -554,6 +553,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             ServiceMetaData service = new ServiceMetaData();
             String serviceName = axisService.getName();
             service.setName(serviceName);
+            service.setCAppArtifact(isAxisServiceCApp(axisService));
 
             // extract service type
             serviceTypeParam = axisService.getParameter(ServerConstants.SERVICE_TYPE);
@@ -592,8 +592,6 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             	serviceList.add(service);
             }
         }
-
-
         ServiceMetaDataWrapper wrapper;
         wrapper = new ServiceMetaDataWrapper();
         wrapper.setNumberOfCorrectServiceGroups(getNumberOfServiceGroups());
@@ -1055,6 +1053,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         serviceMetaData.setFoundWebResources(serviceGroup.isFoundWebResources());
         serviceMetaData.setScope(service.getScope());
         serviceMetaData.setWsdlPorts(service.getEndpoints());
+        serviceMetaData.setCAppArtifact(isAxisServiceCApp(service));
 
         Parameter deploymentTime =
                 service.getParameter(CarbonConstants.SERVICE_DEPLOYMENT_TIME_PARAM);
@@ -1137,8 +1136,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (isActive) {
             getAxisConfig().startService(serviceName);
+            sendClusterSyncMessage(ServiceConstants.ServiceOperationType.ACTIVATE, serviceName);
         } else {
             getAxisConfig().stopService(serviceName);
+            sendClusterSyncMessage(ServiceConstants.ServiceOperationType.DEACTIVATE, serviceName);
         }
 
 
@@ -2500,5 +2501,64 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             return null;
         }
 
+    }
+
+    private void sendClusterSyncMessage(ServiceConstants.ServiceOperationType applicationOpType, String serviceName) {
+        // For sending clustering messages we need to use the super-tenant's AxisConfig (Main Server
+        // AxisConfiguration) because we are using the clustering facility offered by the ST in the
+        // tenants
+        int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
+        String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+
+        ClusteringAgent clusteringAgent =
+                DataHolder.getServerConfigContext().getAxisConfiguration().getClusteringAgent();
+        if (clusteringAgent != null) {
+            int numberOfRetries = 0;
+            UUID messageId = UUID.randomUUID();
+            ServiceSynchronizeRequest request =
+                    new ServiceSynchronizeRequest(tenantId, tenantDomain, messageId,
+                            applicationOpType, serviceName);
+            while (numberOfRetries < ServiceConstants.MAX_RETRY_COUNT) {
+                try {
+                    clusteringAgent.sendMessage(request, true);
+                    log.info("Sent [" + request + "]");
+                    break;
+                } catch (ClusteringFault e) {
+                    numberOfRetries++;
+                    if (numberOfRetries < ServiceConstants.MAX_RETRY_COUNT) {
+                        log.warn("Could not send SynchronizeRepositoryRequest for tenant " +
+                                tenantId + ". Retry will be attempted in 2s. Request: " + request, e);
+                    } else {
+                        log.error("Could not send SynchronizeRepositoryRequest for tenant " +
+                                tenantId + ". Several retries failed. Request:" + request, e);
+                    }
+                    try {
+                        Thread.sleep(ServiceConstants.RETRY_INTERVAL);
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isAxisServiceCApp(AxisService axisService) {
+        //Check if Service is deployed from a CApp
+        try {
+            Path axis2ServiceAppPath = Paths.get(axisService.getFileName().toURI());
+            if (axis2ServiceAppPath != null) {
+                String tenantId = AppDeployerUtils.getTenantIdString();
+                // Check whether there is an application in the system from the given name
+                ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
+                for (CarbonApplication application : appList) {
+                    Path cappPath = Paths.get(application.getExtractedPath());
+                    if (axis2ServiceAppPath.startsWith(cappPath)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (URISyntaxException e) {
+            log.error("Unable to retrieve CApp file path ", e);
+        }
+        return false;
     }
 }

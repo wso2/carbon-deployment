@@ -15,44 +15,51 @@
 */
 package org.wso2.carbon.discovery.cxf.listeners;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.OMNamespaceImpl;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.core.StandardContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.scannotation.AnnotationDB;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.discovery.DiscoveryConstants;
 import org.wso2.carbon.discovery.DiscoveryException;
+import org.wso2.carbon.discovery.config.Config;
 import org.wso2.carbon.discovery.cxf.CXFServiceInfo;
 import org.wso2.carbon.discovery.cxf.CxfMessageSender;
-import org.wso2.carbon.discovery.cxf.util.ClassAnnotationScanner;
-import org.xml.sax.SAXException;
+import org.wso2.carbon.discovery.cxf.internal.CxfDiscoveryDataHolder;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.jws.WebService;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class TomcatCxfDiscoveryListener implements org.apache.catalina.LifecycleListener {
+public class TomcatCxfDiscoveryListener implements LifecycleListener {
 
-    private static final String cxfServletClass = "org.apache.cxf.transport.servlet.CXFServlet";
+    private static final String CXF_SERVLET_CLASS = "org.apache.cxf.transport.servlet.CXFServlet";
+    private static final String HTTP_PORT = "http";
+    private static final String HTTPS_PORT = "https";
+    private static final String HOST_NAME_ = "HostName";
+    private static final String HOST_NAME_LOCAL = "carbon.local.ip";
+    private static final String JAX_WS_PREFIX = "jaxws";
+    private static final String JAX_RS_PREFIX = "jaxrs";
+    private static final String JAX_WS_NAMESPACE_URI = "http://cxf.apache.org/jaxws";
+    private static final String JAX_RS_NAMESPACE_URI = "http://cxf.apache.org/jaxrs";
 
-    private static final String httpPort = "mgt.transport.http.port";
-    private static final String httpsPort = "mgt.transport.https.port";
-    private static final String hostName = "carbon.local.ip";
     private CxfMessageSender cxfMessageSender = new CxfMessageSender();
+    private Config config = new Config();
 
     private static final Log log = LogFactory.getLog(TomcatCxfDiscoveryListener.class);
 
@@ -67,7 +74,7 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
                 boolean isJaxWebapp = false;
                 Map<String, ? extends ServletRegistration> servletRegs = context.getServletContext().getServletRegistrations();
                 for (ServletRegistration servletReg : servletRegs.values()) {
-                    if (cxfServletClass.equals(servletReg.getClassName())) {
+                    if (CXF_SERVLET_CLASS.equals(servletReg.getClassName())) {
                         Object[] mappings = servletReg.getMappings().toArray();
                         jaxServletMapping = mappings.length > 0 ? getServletContextPath((String)mappings[0]) : null;
                         isJaxWebapp = true;
@@ -76,25 +83,26 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
                 }
 
                 if (isJaxWebapp) {
-                    CXFServiceInfo serviceBean = getServiceInfo(context, jaxServletMapping);
-                    if (serviceBean == null) {
-                        return;
-                    }
+                    addConfigData(context.getServletContext());
+                    for (CXFServiceInfo serviceBean : getServiceInfo(context, jaxServletMapping)) {
+                        if (serviceBean == null) {
+                            return;
+                        }
+                        if (Lifecycle.AFTER_START_EVENT.equals(type)) {
+                            cxfMessageSender.sendHello(serviceBean, config);
 
-                    if(Lifecycle.AFTER_START_EVENT.equals(type)) {
-                        cxfMessageSender.sendHello(serviceBean, null);
-
-                    } else if (Lifecycle.BEFORE_STOP_EVENT.equals(type))  {
-                        cxfMessageSender.sendBye(serviceBean, null);
+                        } else if (Lifecycle.BEFORE_STOP_EVENT.equals(type)) {
+                            cxfMessageSender.sendBye(serviceBean, config);
+                        }
                     }
                 }
             }
 
         } catch (DiscoveryException e) {
-            log.warn("Error while publishing the services to the discovery service ", e);
+            log.error("Error while publishing the services to the discovery service ", e);
         } catch (Throwable e) {
             //Catching throwable since this listener's state shouldn't affect the webapp deployment.
-            log.warn("Error while publishing the services to the discovery service ", e);
+            log.error("Error while publishing the services to the discovery service ", e);
         }
     }
 
@@ -115,98 +123,129 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
     }
 
     /**
-     * Get JAX-WS service info needed to send the WS-Discovery message
-     * TODO: Read the service class from cxf-servlet.xml instead of traversing all the classes
-     * for @WebService annotation.
+     * Get JAX-WS,JAX-RS service info needed to send in the WS-Discovery message
+     *
      */
-    private CXFServiceInfo getServiceInfo(StandardContext context, String jaxServletMapping) throws DiscoveryException {
-        CXFServiceInfo serviceInfo = new CXFServiceInfo();
+    private List<CXFServiceInfo> getServiceInfo(StandardContext context, String jaxServletMapping)
+            throws DiscoveryException {
         String contextPath = context.getServletContext().getContextPath();
-        contextPath = contextPath.startsWith("/") ?
-                      contextPath.substring(1, contextPath.length()) :
-                      contextPath;
-
-        serviceInfo.setServiceName(contextPath);
-        serviceInfo.setType(getPortType(context));
-        serviceInfo.setTenantDomain(PrivilegedCarbonContext.getThreadLocalCarbonContext().
-                getTenantDomain(true));
-
-        List<String> endpoints = new ArrayList<String>(5);
+        contextPath = contextPath.startsWith("/") ? contextPath.substring(1, contextPath.length()) : contextPath;
         try {
             InputStream configStream = getConfigLocation(context.getServletContext());
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setNamespaceAware(true);
-            DocumentBuilder b = dbf.newDocumentBuilder();
-            org.w3c.dom.Document doc = b.parse(configStream); //doc.getDomConfig().setParameter();
-
-            NodeList endpointElements = doc.getElementsByTagNameNS("http://cxf.apache.org/jaxws", "endpoint");
-            NodeList serverElements = doc.getElementsByTagNameNS("http://cxf.apache.org/jaxws", "server");
-
-            for (int i = 0; i < endpointElements.getLength(); i++) {
-                Node node = endpointElements.item(i);
-                if (node instanceof Element) {
-                    Element endpointElement = (Element) node;
-                    String cxfEndpoint = endpointElement.getAttribute("address");
-                    endpoints.add(cxfEndpoint);
+            StAXOMBuilder stAXOMBuilder = new StAXOMBuilder(configStream);
+            OMElement documentElement = stAXOMBuilder.getDocumentElement(true);
+            for (Iterator declaredNamespaces = documentElement.getAllDeclaredNamespaces(); declaredNamespaces
+                    .hasNext(); ) {
+                OMNamespaceImpl nameSpace = (OMNamespaceImpl) declaredNamespaces.next();
+                if (JAX_WS_PREFIX.equals(nameSpace.getPrefix()) && JAX_WS_NAMESPACE_URI
+                        .equals(nameSpace.getNamespaceURI())) {
+                    return getJaxWsServiceInfo(documentElement, context, jaxServletMapping, contextPath);
+                } else if (JAX_RS_PREFIX.equals(nameSpace.getPrefix()) && JAX_RS_NAMESPACE_URI
+                        .equals(nameSpace.getNamespaceURI())) {
+                    return getJaxRsServiceInfo(documentElement, context, jaxServletMapping, contextPath);
                 }
+
             }
 
-            for (int i = 0; i < serverElements.getLength(); i++) {
-                Node node = serverElements.item(i);
-                if (node instanceof Element) {
-                    Element serverElement = (Element) node;
-                    String cxfEndpoint = serverElement.getAttribute("address");
-                    endpoints.add(cxfEndpoint);
+        } catch (XMLStreamException e) {
+            log.error("Error processing CXF config file of " + contextPath, e);
+        }
+        return new ArrayList<CXFServiceInfo>();
+    }
+
+    /**
+     * This method will add service information needed for the JAX-RS services
+     *
+     * @param documentElement Document element of configuration file
+     * @param context StandardContext of the service
+     * @param jaxServletMapping Servlet mapping define in the web.xml
+     * @param contextPath Context path of the web app
+     * @return List ow available service in the web app
+     */
+
+    private List<CXFServiceInfo> getJaxRsServiceInfo(OMElement documentElement, StandardContext context,
+            String jaxServletMapping, String contextPath) throws DiscoveryException {
+        List<CXFServiceInfo> serviceInfoList = new ArrayList<CXFServiceInfo>();
+        String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain(true);
+        QName serverQName = new QName(JAX_RS_NAMESPACE_URI, "server");
+
+        for (Iterator services = documentElement.getChildrenWithName(serverQName); services.hasNext(); ) {
+            OMElement server = (OMElement) services.next();
+            String endpoint = server.getAttributeValue(new QName("address"));
+            String serviceBean = (server.getFirstChildWithName(new QName(JAX_RS_NAMESPACE_URI, "serviceBeans")))
+                    .getFirstElement().getAttributeValue(new QName("bean"));
+            String endpointInterface = "";
+            for (Iterator beanList = documentElement.getChildrenWithName(new QName("bean")); beanList.hasNext(); ) {
+                OMElement bean = (OMElement) beanList.next();
+                if (serviceBean.equals(bean.getAttributeValue(new QName("id")))) {
+                    endpointInterface = bean.getAttributeValue(new QName("class"));
+                    break;
                 }
             }
-        } catch (ParserConfigurationException e) {
-            log.error("Error processing CXF config file of " + contextPath, e);
-        } catch (SAXException e) {
-            log.error("Error processing CXF config file of " + contextPath, e);
-        } catch (IOException e) {
-            log.error("Error processing CXF config file of " + contextPath, e);
+            CXFServiceInfo serviceInfo = new CXFServiceInfo();
+            serviceInfo.setServiceName(contextPath + "_" + endpoint.substring(1));
+            serviceInfo.setType(getType(endpointInterface));
+            serviceInfo.setTenantDomain(tenantDomain);
+            serviceInfo.setWsdlURI(getWadlUri(context, jaxServletMapping, endpoint));
+            serviceInfo.setxAddrs(getXAddrsList(context, jaxServletMapping, endpoint));
+            serviceInfoList.add(serviceInfo);
         }
+        return serviceInfoList;
+    }
 
-        if (endpoints.isEmpty()) {
-            return null;
+    /**
+     * This method will add service information needed for the JAX-WS services using @WebService annotation.
+     *
+     * @param documentElement Document element of configuration file
+     * @param context StandardContext of the service
+     * @param jaxServletMapping Servlet mapping define in the web.xml
+     * @param contextPath Context path of the web app
+     * @return List ow available service in the web app
+     */
+    private List<CXFServiceInfo> getJaxWsServiceInfo(OMElement documentElement, StandardContext context,
+            String jaxServletMapping, String contextPath) throws DiscoveryException {
+        List<CXFServiceInfo> serviceInfoList = new ArrayList<CXFServiceInfo>();
+        String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain(true);
+        QName serviceType = new QName(JAX_WS_NAMESPACE_URI, "server");
+        for (Iterator services = documentElement.getChildrenWithName(serviceType); services.hasNext(); ) {
+            OMElement server = (OMElement) services.next();
+            String endpoint = server.getAttributeValue(new QName("address"));
+            String endpointInterface = server.getFirstChildWithName(new QName(JAX_WS_NAMESPACE_URI, "serviceBean"))
+                    .getFirstElement().getAttributeValue(new QName("class"));
+            CXFServiceInfo serviceInfo = new CXFServiceInfo();
+            serviceInfo.setServiceName(contextPath + "_" + endpoint.substring(1));
+            serviceInfo.setType(getPortType(context, endpointInterface));
+            serviceInfo.setTenantDomain(tenantDomain);
+            serviceInfo.setWsdlURI(getWsdlUri(context, jaxServletMapping, endpoint));
+            serviceInfo.setxAddrs(getXAddrsList(context, jaxServletMapping, endpoint));
+            serviceInfoList.add(serviceInfo);
         }
+        return serviceInfoList;
+    }
 
-        serviceInfo.setWsdlURI(getWsdlUri(context, jaxServletMapping, endpoints));
-        serviceInfo.setxAddrs(getxAddrs(context, jaxServletMapping, endpoints));
+    /**
+     *  This method will get the qualified name from the service endpoint interface
+     *  by reversing the service end point interface
+     *
+     * @param serviceEndpointInterface Endpoint interface name
+     * @return the qualified name to use as the ws-discovery type,
+     */
+    private QName getType(String serviceEndpointInterface){
+        String targetNamespace = generateTargetNsFromInterfaceName(serviceEndpointInterface);
+        String name = serviceEndpointInterface.substring(serviceEndpointInterface.lastIndexOf('.') + 1);
 
-        return serviceInfo;
-
+        return new QName(targetNamespace, name);
     }
 
     /**
      * Get the JAX-WS service port type. A port type is identified by the targetNamespace
      * of the service and the port name.
-     * TODO: This needs to take care of scenarias where multiple jax-ws services exposed from the same webapp
      */
-    private QName getPortType(StandardContext context) throws DiscoveryException {
-        QName seiInfo = null;
+    private QName getPortType(StandardContext context, String serviceEndpoint) throws DiscoveryException {
+        QName seiInfo;
         try {
-//            String sei = null;        //service endpoint interface
-            AnnotationDB annotations = ClassAnnotationScanner.getAnnotatedClasses(context);
-            Set<String> set = annotations.getAnnotationIndex().get(javax.jws.WebService.class.getName());
-            annotations.crossReferenceImplementedInterfaces();
-            //map classes with its interface
-            if (set == null || set.isEmpty()) {
-                return null;
-            }
-
-            for (String clazzName : set) {
-                Class<?> clazz = context.getServletContext().getClassLoader().loadClass(clazzName);
-                //don't process if it's the sei interface. we can check sei interface through the sei class
-                if (clazz.isInterface()) {
-                    continue;
-                }
-
-                seiInfo = processClazz(clazz, context);
-                break;
-            }
-        } catch (AnnotationDB.CrossReferenceException e) {
-            throw new DiscoveryException(e.getMessage(), e);
+            Class<?> clazz = context.getServletContext().getClassLoader().loadClass(serviceEndpoint);
+            seiInfo = processClazz(clazz, context);
         } catch (ClassNotFoundException e) {
             throw new DiscoveryException(e.getMessage(), e);
         }
@@ -234,12 +273,20 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
             if (interfaces.length > 0) {
                 endpointInterface = interfaces[0];
             } else {
-            // A jax-ws resource class must have an implemented interface of should have the
-            // endpointInterfaceName element defined
-                String msg = "The endpointInterfaceName is not defined and the resource class " +
-                "does not implement one - " + clazz.getName();
-                log.error(msg);
-                throw new DiscoveryException(msg);
+
+                // Generate targetNamespace as per jax-ws 2.2 specification chapter 3.4
+                // where service classes doesn't have a customized endpointInterface, take the
+                // service endpointInterface and compute the target namespace according chapter 3.2
+                if (targetNamespace == null || targetNamespace.trim().isEmpty()) {
+                    targetNamespace = generateTargetNsFromInterfaceName(clazz.getName());
+                }
+
+                if (name == null || name.trim().isEmpty()) {
+                    String tmpInterfaceName = clazz.getName();
+                    name = tmpInterfaceName.substring(tmpInterfaceName.lastIndexOf('.') + 1);
+                }
+
+                return new QName(targetNamespace, name);
             }
         }
 
@@ -267,7 +314,7 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
     /**
      * Generate targetNamespace as per jax-ws 2.2 specification chapter 3.2.
      *
-     * 1. The package name is tokenized using the “.” character as a delimiter.
+     * 1. The package name is tokenize using the “.” character as a delimiter.
      * 2. The order of the tokens is reversed.
      * 3. The value of the targetNamespace attribute is obtained by concatenating "http://"
      * to the list of tokens separated by "." and "/".
@@ -286,24 +333,56 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
         sb.deleteCharAt(sb.length()-1);
         sb.append("/");
         return sb.toString();
-
     }
 
-    private String getWsdlUri(StandardContext context, String jaxServletMapping, List<String> endpoints) {
-        //todo get hostname and port using carbon apis.
-        String wsdlEndpoint =  "http://" + System.getProperty(hostName) + ":" + System.getProperty(httpPort) +
-                context.getServletContext().getContextPath()  + "/" + jaxServletMapping + endpoints.get(0) + "?wsdl";
-
-        return wsdlEndpoint;
+    private String getWsdlUri(StandardContext context, String jaxServletMapping, String endpoint) {
+        return "http://" + getHostname() + ":" + getPortForTransport(HTTP_PORT) +
+                context.getServletContext().getContextPath() + "/" + jaxServletMapping + endpoint + "?wsdl";
     }
 
-    private List getxAddrs(StandardContext context, String jaxServletMapping, List<String> endpoints) {
+    private String getWadlUri(StandardContext context, String jaxServletMapping, String endpoint) {
+        if (jaxServletMapping.isEmpty()) {
+            return "http://" + getHostname() + ":" + getPortForTransport(HTTP_PORT) +
+                    context.getServletContext().getContextPath() + endpoint + "?_wadl";
+        } else {
+            return "http://" + getHostname() + ":" + getPortForTransport(HTTP_PORT) +
+                    context.getServletContext().getContextPath() + "/" + jaxServletMapping + endpoint + "?_wadl";
+        }
+    }
+
+    /**
+     * This method will get the hostname if it is defined in the carbon.xml,
+     * if not it will return the local port
+     *
+     * @return host name
+     */
+
+    private String getHostname() {
+        ServerConfigurationService serverConfigurationService = CxfDiscoveryDataHolder.getInstance()
+                .getServerConfigurationService();
+        if (serverConfigurationService.getFirstProperty(HOST_NAME_) != null) {
+            return serverConfigurationService.getFirstProperty(HOST_NAME_);
+        } else {
+            return System.getProperty(HOST_NAME_LOCAL);
+        }
+    }
+
+    /**
+     * This method will calculate service endpoints which needs the service
+     *
+     * @param context StandardContext
+     * @param jaxServletMapping Servlet-Mapping defined in the web.xml
+     * @param endpoint Service endpoint
+     * @return List of endpoint addresses
+     */
+
+    private List getXAddrsList(StandardContext context, String jaxServletMapping, String endpoint) {
         List<String> xAddrs = new ArrayList<String>();
 
-        String httpEndpoint = "http://" + System.getProperty(hostName) + ":" + System.getProperty(httpPort) +
-                context.getServletContext().getContextPath() + "/" + jaxServletMapping + endpoints.get(0);
-        String httpsEndpoint = "https://" + System.getProperty(hostName) + ":" + System.getProperty(httpsPort) +
-                context.getServletContext().getContextPath() + "/" + jaxServletMapping + endpoints.get(0);
+        String httpEndpoint = "http://" + getHostname() + ":" + getPortForTransport(HTTP_PORT) +
+                context.getServletContext().getContextPath() + "/" + jaxServletMapping + endpoint;
+        String httpsEndpoint = "https://" + getHostname() + ":" + getPortForTransport(HTTPS_PORT) +
+                context.getServletContext().getContextPath() + "/" + jaxServletMapping + endpoint;
 
         xAddrs.add(httpEndpoint);
         xAddrs.add(httpsEndpoint);
@@ -311,21 +390,88 @@ public class TomcatCxfDiscoveryListener implements org.apache.catalina.Lifecycle
         return xAddrs;
     }
 
-    private InputStream getConfigLocation(ServletContext context) {
+    /**
+     * Get configuration location and load it as input stream, if configuration location not defined
+     * it will get it from the default location
+     *
+     * @param context ServletContext
+     * @return input stream of the configuration
+     */
 
+    private InputStream getConfigLocation(ServletContext context) {
         String configLocation = context.getInitParameter("config-location");
         if (configLocation == null) {
+            InputStream is = null;
             try {
-                InputStream is = context.getResourceAsStream("/WEB-INF/cxf-servlet.xml");
+                is = context.getResourceAsStream("/WEB-INF/cxf-servlet.xml");
                 if (is != null && is.available() > 0) {
-                    is.close();
                     configLocation = "/WEB-INF/cxf-servlet.xml";
                 }
-            } catch (Exception ex) {
-                //ignore
+            } catch (IOException ex) {
+                String message = "Configuration location not available for " + context.getContextPath();
+                log.error(message, ex);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
             }
         }
 
         return context.getResourceAsStream(configLocation);
+    }
+
+    /**
+     * Retrieve the added scopes in the <context-param> tag in the web.xml,
+     * if there is no context param defined for scope will set the default scope
+     *
+     * @param scopesString single string with all the available scopes defined in the <param-value>
+     */
+    private void addScopes(String scopesString) {
+        if (scopesString != null && !scopesString.isEmpty()) {
+            String[] scopeNames = scopesString.split(" ");
+            for (String scope : scopeNames) {
+                config.addScope(scope);
+            }
+        } else {
+            config.addScope(DiscoveryConstants.DISCOVERY_DEFAULT_SCOPE);
+        }
+    }
+
+    /**
+     * Retrieve the added Metadata version in the <context-param> tag in the web.xml,
+     * if there is no context param defined for MetadataVersion will set the default version
+     *
+     * @param metaDataVersion version defined in the <param-value>
+     */
+    private void addMetadataVersion(String metaDataVersion) {
+        if (metaDataVersion != null && !metaDataVersion.isEmpty()) {
+            config.setMetadataVersion(Integer.parseInt(metaDataVersion));
+        } else {
+            config.setMetadataVersion(DiscoveryConstants.DISCOVERY_DEFAULT_METADATA_VERSION);
+        }
+    }
+
+    /**
+     * Add the Scopes of the web app and the metadata version
+     *
+     * @param servletContext ServletContext of the service
+     */
+    private void addConfigData(ServletContext servletContext) {
+        addScopes(servletContext.getInitParameter(DiscoveryConstants.CONFIG_SCOPES));
+        addMetadataVersion(servletContext.getInitParameter(DiscoveryConstants.CONFIG_METADATA_VERSION));
+    }
+
+    /**
+     * This method will return the port of the each transport type
+     *
+     * @param transport transport type
+     * @return port of the transport
+     */
+    private int getPortForTransport(String transport){
+       return CarbonUtils.getTransportPort(CxfDiscoveryDataHolder.getInstance().getMainServerConfigContext(), transport);
     }
 }

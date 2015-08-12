@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
@@ -40,13 +41,17 @@ import org.wso2.carbon.utils.MBeanRegistrar;
  * cardinality="1..1" policy="dynamic"
  * bind="setServerConfiguration"
  * unbind="unsetServerConfiguration"
+ * @scr.reference name="application.manager"
+ * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
+ * cardinality="0..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
  */
 public class ServiceManagementServiceComponent {
 
-    private Log log = LogFactory.getLog(ServiceManagementServiceComponent.class);
+    private static Log log = LogFactory.getLog(ServiceManagementServiceComponent.class);
 
     private ConfigurationContext configCtx;
     private ServiceAdmin serviceAdmin;
+    private static ApplicationManagerService applicationManager;
 
     protected void activate(ComponentContext ctxt) {
         try {
@@ -103,5 +108,14 @@ public class ServiceManagementServiceComponent {
         } catch (Exception e) {
             log.error("Error initializing ServiceAdmin.");
         }
+    }
+
+    protected void setAppManager(ApplicationManagerService applicationManager) {
+        this.applicationManager = applicationManager;
+        DataHolder.setApplicationManager(applicationManager);
+    }
+
+    protected void unsetAppManager(ApplicationManagerService applicationManager) {
+        this.applicationManager = null;
     }
 }

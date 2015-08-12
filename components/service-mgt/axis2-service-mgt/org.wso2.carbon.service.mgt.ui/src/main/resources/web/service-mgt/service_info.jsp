@@ -327,6 +327,59 @@
     <td colspan="3">&nbsp;</td>
 </tr>
 <tr>
+    <td width="50%">
+            <table class="styledLeft" id="serviceInfoTable" style="margin-left: 0px;" width="100%">
+                <thead>
+                    <tr>
+                        <th colspan="2" align="left"><fmt:message key="operations"/></th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td colspan="2">
+                        <nobr>
+                            <%
+                                request.setAttribute("serviceName", serviceName);
+                                request.setAttribute("isActive", String.valueOf(service.getActive()));
+                                                request.setAttribute("serviceURL", service.getTryitURL().substring(0, service.getTryitURL().indexOf("?tryit")));
+                            %>
+                            <div id="serviceStateDiv">
+                                <%@ include file="service_state_include.jsp" %>
+                            </div>
+                        </nobr>
+                        <script type="text/javascript">
+                            jQuery.noConflict();
+                            function changeServiceState(active) {
+                                var url = 'change_service_state_ajaxprocessor.jsp?serviceName=<%= request.getAttribute("serviceName")%>&isActive=' + active;
+                                jQuery("#serviceStateDiv").load(url, null, function (responseText, status, XMLHttpRequest) {
+                                    if (status != "success") {
+                                        CARBON.showErrorDialog('<fmt:message key="could.not.change.service.state"/>');
+                                    } else {
+                                        if(active){
+                                            document.getElementById('serviceClientDiv').style.display = '';
+                                            document.getElementById('statsDiv').style.display = '';
+                                            refresh = setInterval("refreshStats()", 6000);
+                                        } else {
+                                            document.getElementById('serviceClientDiv').style.display = 'none';
+                                            stopRefreshStats();
+                                            document.getElementById('statsDiv').style.display = 'none';
+                                        }
+                                    }
+                                });
+                            }
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        </td>
+
+        <td width="10px">&nbsp;</td>
+
+        <td></td>
+</tr>
+<tr>
+    <td colspan="3">&nbsp;</td>
+</tr>
+<tr>
 <%
     List<String> items = null;
     boolean hasUIExtension = false;

@@ -4,7 +4,7 @@
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>carbon-deployment</artifactId>
     <packaging>pom</packaging>
-    <version>4.4.0</version>
+    <version>4.4.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Platform Aggregator Pom</name>
     <url>http://wso2.org</url>
 
@@ -32,7 +32,7 @@
         <url>https://github.com/wso2/carbon-deployment.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-deployment.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-deployment.git</connection>
-        <tag>v4.4.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencyManagement>
@@ -384,7 +384,7 @@
                     </exclusion>
                     <exclusion>
                         <groupId>commons-logging</groupId>
-                        <artifactId>ocommons-logging</artifactId>
+                        <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
                 <version>${carbon.commons.version}</version>
@@ -463,6 +463,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
+                <version>${carbon.deployment.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.discovery.cxf</artifactId>
                 <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
@@ -857,7 +862,7 @@
             <dependency>
                 <groupId>org.apache.cxf.xjcplugins</groupId>
                 <artifactId>cxf-xjc-dv</artifactId>
-                <version>${cxf.version}</version>
+                <version>${cxf.xjc.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -872,7 +877,7 @@
             <dependency>
                 <groupId>org.apache.cxf.xjc-utils</groupId>
                 <artifactId>cxf-xjc-runtime</artifactId>
-                <version>${cxf.version}</version>
+                <version>${cxf.xjc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.velocity</groupId>
@@ -882,17 +887,17 @@
             <dependency>
                 <groupId>org.apache.cxf.xjcplugins</groupId>
                 <artifactId>cxf-xjc-ts</artifactId>
-                <version>${cxf.version}</version>
+                <version>${cxf.xjc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf.xjcplugins</groupId>
                 <artifactId>cxf-xjc-boolean</artifactId>
-                <version>${cxf.version}</version>
+                <version>${cxf.xjc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf.xjcplugins</groupId>
                 <artifactId>cxf-xjc-bug671</artifactId>
-                <version>${cxf.version}</version>
+                <version>${cxf.xjc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -1021,28 +1026,38 @@
                 <version>${spring.version}</version>
             </dependency>
 
-            <!-- J2EE Tomee feature related dependencies-->
+            <!-- JavaEE Tomee feature related dependencies-->
             <dependency>
-                <groupId>org.wso2.tomee</groupId>
+                <groupId>org.wso2.orbit.org.apache.openejb</groupId>
                 <artifactId>tomee</artifactId>
                 <version>${tomee.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.tomee</groupId>
+                <groupId>org.wso2.orbit.org.apache.openejb</groupId>
                 <artifactId>tomee-resources</artifactId>
                 <version>${tomee.resources.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.openwebbeans</groupId>
+                <groupId>org.wso2.orbit.org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-jsf</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.openwebbeans</groupId>
+                <groupId>org.wso2.orbit.org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-el22</artifactId>
                 <version>${openwebbeans.orbit.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>tomee-catalina</artifactId>
+                <version>${tomee.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>org.wso2.orbit.com.sun.xml.messaging.saaj</groupId>
+                <artifactId>saaj-impl</artifactId>
+                <version>${saaj.impl.orbit.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.serp</groupId>
                 <artifactId>serp</artifactId>
@@ -1053,6 +1068,7 @@
                 <artifactId>tribes</artifactId>
                 <version>${tomcat.tribes.orbit.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -1064,69 +1080,24 @@
                 <version>${commons.beanutils.orbit.version}</version>
             </dependency>
 
-
-            <!-- Apache MyFaces dependancies-->
             <dependency>
                 <groupId>org.apache.myfaces.core</groupId>
                 <artifactId>myfaces-impl</artifactId>
                 <version>${myfaces.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.myfaces.core</groupId>
-                <artifactId>myfaces-api</artifactId>
-                <version>${myfaces.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${commons-codec.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-digester</groupId>
                 <artifactId>commons-digester</artifactId>
                 <version>${commons-digester.version}</version>
             </dependency>
+            <!-- end of JavaEE dependancies-->
+
+            <!-- common dependencies -->
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
                 <version>${commons-logging.version}</version>
             </dependency>
-            <!-- end of My-faces dependancies-->
-
-            <!-- Apache OpenJPA dependancies-->
-            <dependency>
-                <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa</artifactId>
-                <version>${openjpa.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-pool</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${jpa-commons-pool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.serp</groupId>
-                <artifactId>serp</artifactId>
-                <version>${serp.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jms_1.1_spec</artifactId>
-                <version>${geronimo-jms.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jpa_2.0_spec</artifactId>
-                <version>${geronimo-jpa.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jta_1.1_spec</artifactId>
-                <version>${geronimo-jta.version}</version>
-            </dependency>
-            <!-- end of OpenJPA dependancies-->
-
-            <!-- common dependencies -->
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
@@ -1348,20 +1319,22 @@
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
 
         <!-- Carbon Commons version-->
-        <carbon.commons.version>4.4.0</carbon.commons.version>
+        <carbon.commons.version>4.4.3</carbon.commons.version>
         <carbon.commons.imp.pkg.version>[4.4.0, 4.5.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>4.4.0</carbon.identity.version>
-        <carbon.identity.imp.pkg.version>[4.4.0, 4.5.0)</carbon.identity.imp.pkg.version>
+        <carbon.identity.version>4.5.2</carbon.identity.version>
+        <carbon.identity.imp.pkg.version>[4.5.0, 4.6.0)</carbon.identity.imp.pkg.version>
+
+        <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
 
         <!-- Carbon Deployment version-->
-        <carbon.deployment.version>4.4.0</carbon.deployment.version>
+        <carbon.deployment.version>4.4.2-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>${carbon.deployment.version}</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.4.0, 4.5.0)</carbon.deployment.imp.pkg.version>
 
         <version.tomcat>7.0.59</version.tomcat>
-        <orbit.version.tomcat>${version.tomcat}.wso2v1</orbit.version.tomcat>
+        <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>
 
         <eclipse.osgi.version>3.9.1.v20130814-1242</eclipse.osgi.version>
 
@@ -1394,11 +1367,9 @@
         <orbit.version.commons.httpclient>3.1.0.wso2v2</orbit.version.commons.httpclient>
         <commons-pool.version>1.5.0.wso2v1</commons-pool.version>
         <commons-logging.version>1.1.1</commons-logging.version>
-        <!--<orbit.version.commons.lang>2.6.0.wso2v1</orbit.version.commons.lang>-->
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-beanutils.version>1.8.3</commons-beanutils.version>
         <commons-digester.version>2.1</commons-digester.version>
-        <commons-codec.version>1.3</commons-codec.version>
 
         <!-- Equinox dependency versions -->
         <!--<version.equinox.osgi>3.8.1.v20120830-144521</version.equinox.osgi>-->
@@ -1453,34 +1424,31 @@
         <orbit.version.woden>1.0.0.M8-wso2v1</orbit.version.woden>
 
         <!-- CXF Runtime Bundles -->
+        <cxf.bundle.version>2.7.16</cxf.bundle.version>
+        <cxf.xjc.version>3.0.2</cxf.xjc.version>
         <spring.version>3.0.7.RELEASE</spring.version>
         <carbon.cxf.webapp.ext>1.0.1</carbon.cxf.webapp.ext>
         <aopalliance.version>1.0</aopalliance.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
-        <xmlsec.version>1.5.5</xmlsec.version>
-        <xmlschema.core.version>2.0.3</xmlschema.core.version>
+        <xmlsec.version>1.5.8</xmlsec.version>
+        <xmlschema.core.version>2.1.0</xmlschema.core.version>
         <xml.resolver.version>1.2</xml.resolver.version>
-        <neethi.version>3.0.2</neethi.version>
-        <stax2.version>3.1.1</stax2.version>
-        <woodstox.core.version>4.2.0</woodstox.core.version>
-        <jaxb.xjc.version>2.1.13</jaxb.xjc.version>
-        <jaxb.impl.version>2.1.13</jaxb.impl.version>
+        <neethi.version>3.0.3</neethi.version>
+        <stax2.version>3.1.4</stax2.version>
+        <woodstox.core.version>4.4.1</woodstox.core.version>
+        <jaxb.xjc.version>2.2.6</jaxb.xjc.version>
+        <jaxb.impl.version>2.2.6</jaxb.impl.version>
         <javax.ws.rs.version>2.0-m10</javax.ws.rs.version>
         <httpcore.nio.version>4.2.4</httpcore.nio.version>
         <httpcore.version>4.2.4</httpcore.version>
         <httpclient.version>4.2.5</httpclient.version>
         <httpasyncclient.version>4.0-beta3</httpasyncclient.version>
         <ehcache.core.version>2.5.1</ehcache.core.version>
-        <cxf.version>2.6.2</cxf.version>
         <velocity.version>1.7</velocity.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <cxf.bundle.version>2.7.6</cxf.bundle.version>
 
         <!-- J2EE Runtime Enviroment -->
-        <myfaces.version>2.1.11</myfaces.version>
-        <openjpa.version>2.2.2</openjpa.version>
-        <jpa-commons-pool.version>1.5.4</jpa-commons-pool.version>
-        <serp.version>1.13.1</serp.version>
+        <myfaces.version>2.1.17</myfaces.version>
         <geronimo-jms.version>1.1.1</geronimo-jms.version>
         <geronimo-jpa.version>1.1</geronimo-jpa.version>
         <geronimo-jta.version>1.1.1</geronimo-jta.version>
@@ -1492,13 +1460,14 @@
 
         <javax.ws.rs-api.version>2.0-m10</javax.ws.rs-api.version>
 
-        <tomee.version>1.6.0.1</tomee.version>
-        <tomee.orbit.version>${tomee.version}.wso2v3</tomee.orbit.version>
+        <tomee.version>1.7.2</tomee.version>
+        <tomee.orbit.version>${tomee.version}.wso2v2</tomee.orbit.version>
         <tomee.resources.orbit.version>${tomee.version}.wso2v1</tomee.resources.orbit.version>
-        <openwebbeans.version>1.2.1</openwebbeans.version>
+        <openwebbeans.version>1.2.7</openwebbeans.version>
         <openwebbeans.orbit.version>${openwebbeans.version}.wso2v1</openwebbeans.orbit.version>
+        <saaj.impl.orbit.version>1.3.18.wso2v1</saaj.impl.orbit.version>
         <tomcat.tribes.orbit.version>7.0.34.wso2v1</tomcat.tribes.orbit.version>
-        <commons.lang3.version>3.1</commons.lang3.version>
+        <commons.lang3.version>3.3.2</commons.lang3.version>
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 

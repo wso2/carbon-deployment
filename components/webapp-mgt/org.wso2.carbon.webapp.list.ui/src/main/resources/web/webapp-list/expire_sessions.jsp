@@ -30,6 +30,8 @@
     String expireAllSessions = request.getParameter("expireAll");
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
+    String webappType = request.getParameter("webappType");
+    String defaultHostName = request.getParameter("defaultHostName");
     int pageNumberInt = 0;
     if (pageNumber != null && pageNumber.trim().length() != 0) {
         pageNumberInt = Integer.parseInt(pageNumber);
@@ -86,9 +88,9 @@
 %>
 <script>
     location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappKeys[0].split(":")[1], "UTF-8") %>'
-            <% if (hostName != null && httpPort != null) { %>
-            + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
-            <% } %> ;
+    <% if (hostName != null && httpPort != null) { %>
+    + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>&webappState=all'
+    <% } %>;
 </script>
 
 <%
@@ -97,9 +99,9 @@
 %>
 <script type="text/javascript">
     location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappKeys[0].split(":")[1], "UTF-8") %>"
-                    <% if (hostName != null && httpPort != null) { %>
-                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
-                    <% } %> ;
+    <% if (hostName != null && httpPort != null) { %>
+    + "&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>&webappState=all"
+    <% } %>;
 
 </script>
 <%

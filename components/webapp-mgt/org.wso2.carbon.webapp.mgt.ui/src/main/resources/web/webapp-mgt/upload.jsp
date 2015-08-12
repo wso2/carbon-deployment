@@ -25,6 +25,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.ui.WebappAdminClient" %>
+<%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper" %>
 <%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
@@ -43,6 +44,7 @@
        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+       int superTenantId = MultitenantConstants.SUPER_TENANT_ID;
 
        WebappAdminClient client;
        VhostHolder vhostHolder = null;
@@ -77,10 +79,6 @@
                         CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                         validFileNames = false;
                         break;
-                    } else if (jarinput.indexOf("#") != -1) {
-                        CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
-                        validFileNames = false;
-                        break;
                     } else if (validateName(jarinput, true)) {
                         CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
                         validFileNames = false;
@@ -97,9 +95,6 @@
 
                 if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
                     CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
-                    validFileNames = false;
-                } else if (jarinput.indexOf("#") != -1) {
-                    CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
                     validFileNames = false;
                 } else if (validateName(jarinput, true)) {
                     CARBON.showWarningDialog('<fmt:message key="unsupported.characters.webapp"/>');
@@ -163,9 +158,9 @@
         }
 
         function validateName(fileName, val){
-                var regex = ".*[\\]\\[!\"#$%&'()*+,/:;<=>?@~{|}^`].*";
+                var regex = ".*[\\]\\[!\"$%&'()*+,/:;<=>?@~{|}^`].*";
                 if(val == true){
-                    regex = ".*[\\]\\[!\"#$%&'()*+,;<=>?@~{|}^`].*";
+                    regex = ".*[\\]\\[!\"$%&'()*+,;<=>?@~{|}^`].*";
                 }
                 if(fileName.match(regex)){
                     return true;
@@ -206,7 +201,7 @@
             oCell.innerHTML = "<input type='text' name='version' value=''>"
             oCell.className = "formRow";
 
-            if (tenantid == -1234) {
+            if (tenantid == <%=superTenantId%>) {
               oCell = newRow.insertCell(-1);
               oCell.innerHTML = ""+
                                 " <select name='hostName'><%for (String vhostName : vhostHolder.getVhosts()) {  %>"+
@@ -258,7 +253,7 @@
                         <td class="formRow">
                             <input type="text" name="version" value="">
                         </td>
-                        <%if (tenantId == -1234) { %>
+                        <%if (tenantId == superTenantId) { %>
                         <td class="formRow">
                             <select name="hostName">
                                <%    for (String vhostName : vhostHolder.getVhosts()) {  %>

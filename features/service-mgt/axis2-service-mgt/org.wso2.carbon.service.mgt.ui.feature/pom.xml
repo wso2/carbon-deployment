@@ -20,14 +20,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>axis2-service-mgt-feature</artifactId>
-        <version>4.4.0</version>
+        <version>4.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.service.mgt.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <version>4.4.0</version>
+    <version>4.4.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Service Management UI Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for Front-end Service Management functionality</description>
@@ -50,21 +50,8 @@
             <artifactId>org.wso2.carbon.operation.mgt.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.policyeditor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.policyeditor.ui</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.module.mgt.ui.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity</groupId>
-            <artifactId>org.wso2.carbon.security.mgt.ui.feature</artifactId>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -84,7 +71,7 @@
                         </goals>
                         <configuration>
                             <id>org.wso2.carbon.service.mgt.ui</id>
-                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
@@ -96,8 +83,6 @@
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.service.mgt.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.operation.mgt.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.operation.mgt.stub</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.policyeditor</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.policyeditor.ui</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>
@@ -105,9 +90,6 @@
                             <includedFeatures>
                                 <includedFeatureDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.ui.feature:${carbon.deployment.version}
-                                </includedFeatureDef>
-                                <includedFeatureDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.security.mgt.ui.feature:${carbon.identity.version}
                                 </includedFeatureDef>
                             </includedFeatures>
                         </configuration>

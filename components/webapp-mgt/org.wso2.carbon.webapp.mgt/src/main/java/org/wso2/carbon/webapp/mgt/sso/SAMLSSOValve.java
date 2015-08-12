@@ -58,8 +58,10 @@ public class SAMLSSOValve extends SingleSignOn {
 
         //Read generic SSO ServiceProvider details
         if (SSOUtils.isSSOSPConfigExists()) {
-            ssoSPConfigProperties.load(new FileInputStream(WebappSSOConstants.SSO_SP_CONFIG_PATH));
-            log.info("Successfully loaded SSO SP Config.");
+            try ( FileInputStream fileInputStream = new FileInputStream(WebappSSOConstants.SSO_SP_CONFIG_PATH)) {
+                ssoSPConfigProperties.load(fileInputStream);
+                log.info("Successfully loaded SSO SP Config.");
+            }
         } else {
             throw new FileNotFoundException("Unable to find SSO SP config properties file in" +
                     WebappSSOConstants.SSO_SP_CONFIG_PATH);
@@ -110,10 +112,6 @@ public class SAMLSSOValve extends SingleSignOn {
         }
 
         try {
-            /*if (ssoAgentConfig == null) {
-                throw new SSOAgentException("Cannot find " + SSOAgentConstants.CONFIG_BEAN_NAME +
-                        " set a request attribute. Unable to proceed further");
-            }*/
 
             SSOAgentRequestResolver resolver =
                     new SSOAgentRequestResolver(request, response, ssoAgentConfig);
@@ -164,6 +162,10 @@ public class SAMLSSOValve extends SingleSignOn {
                                         relayState.getRequestParameters());
                             }
                             response.sendRedirect(requestedURI);
+                            return;
+                        } else {
+                            response.sendRedirect(ssoSPConfigProperties.getProperty
+                                    (WebappSSOConstants.APP_SERVER_URL) + request.getContextPath());
                             return;
                         }
                     }
@@ -234,20 +236,7 @@ public class SAMLSSOValve extends SingleSignOn {
                 }
                 return;
 
-            } /*else if (ssoAgentConfig.isSAML2SSOLoginEnabled() &&
-                    (request.getSession(false) == null ||
-                            request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null)) {
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Sending  request.");
-                }
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                ssoAgentConfig.getSAML2().setPassiveAuthn(true);
-                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
-                return;
-
             }
-*/
             if (request.getSession(false) != null) {
                 LoggedInSessionBean loggedInSessionBean = (LoggedInSessionBean)
                         request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);

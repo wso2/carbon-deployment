@@ -16,6 +16,7 @@
 package org.wso2.carbon.discovery.cxf.internal;
 
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.discovery.cxf.CXFServiceInfo;
 
 import java.util.LinkedList;
@@ -30,6 +31,7 @@ public class CxfDiscoveryDataHolder {
 
     private ConfigurationContext clientCfgCtx;
     private ConfigurationContext serverCfgCtx;
+    private ServerConfigurationService serverConfigurationService;
 
 
     public static CxfDiscoveryDataHolder getInstance() {
@@ -75,4 +77,11 @@ public class CxfDiscoveryDataHolder {
         this.serverCfgCtx = serverCfgCtx;
     }
 
+    public void setServerConfigurationService(ServerConfigurationService serverConfiguration) {
+        this.serverConfigurationService = serverConfiguration;
+    }
+
+    public ServerConfigurationService getServerConfigurationService() {
+        return serverConfigurationService;
+    }
 }

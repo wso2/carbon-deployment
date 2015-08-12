@@ -20,14 +20,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>axis2-service-mgt</artifactId>
-        <version>4.4.0</version>
+        <version>4.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.service.mgt</artifactId>
     <packaging>bundle</packaging>
-    <version>4.4.0</version>
+    <version>4.4.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Service Management BE</name>
     <description>org.wso2.carbon.service.mgt provides the service mgt functionalities</description>
     <url>http://wso2.org</url>
@@ -97,6 +97,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.application.deployer</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -128,7 +132,8 @@
                         <Export-Package>
                             org.wso2.carbon.service.mgt;version=${carbon.deployment.exp.pkg.version},
                             org.wso2.carbon.service.mgt.util;version=${carbon.deployment.exp.pkg.version},
-                            org.wso2.carbon.service.mgt.multitenancy;version=${carbon.deployment.exp.pkg.version}
+                            org.wso2.carbon.service.mgt.multitenancy;version=${carbon.deployment.exp.pkg.version},
+                            org.wso2.carbon.service.mgt.sync;version=${carbon.deployment.exp.pkg.version}
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Require-CarbonUIComponents>${project.artifactId}.ui-${project.parent.version}

@@ -520,6 +520,7 @@
             /*if ("/0".equals(version)) {
                 version = "default";
             }*/
+            boolean isCAppArtifact = vWebapp.getCAppArtifact();
 
             String proxyContextPath = CarbonUtils.getProxyContextPath(false);
             String workerProxyContextPath = CarbonUtils.getProxyContextPath(true);
@@ -551,6 +552,7 @@
              } else {
                 webappURL = webappURL + "/";
              }
+            String urlEncodedWebappFile = URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8");
 %>
 
 <tr bgcolor="<%= bgColor%>">
@@ -570,11 +572,20 @@
             firstWebappFlag = false;
     %>
     <td <%= rowspanHtmlAtt %> >
-           <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
-              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
+        <%if (!isCAppArtifact) {%>
+        <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
+              urlEncodedWebappFile%>&webappState=<%= webappState %>&hostName=<%=
               hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
-              <%=vWebapp.getContext()%>
-           </a>
+            <%=vWebapp.getContext()%>
+        </a>
+        <%} else {%>
+        <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
+              urlEncodedWebappFile%>&webappState=<%= webappState %>&hostName=<%=
+              hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
+            <%=vWebapp.getContext()%> <img src="images/applications.gif"
+                                           title='<fmt:message key="capp.web.artifact.text"/>'
+                                           alt=''<fmt:message key="capp.web.artifact"/>'/> </a>
+        <%}%>
     </td>
 
     <%} %>
@@ -584,7 +595,7 @@
             <%=version%>
         <% } else { %>
         <a href="../webapp-list/webapp_info.jsp?webappFileName=<%=
-                    URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&webappState=<%= webappState %>&hostName=<%=
+                    urlEncodedWebappFile%>&webappState=<%= webappState %>&hostName=<%=
                      hostName%>&httpPort=<%= webappsWrapper.getHttpPort()%>&defaultHostName=<%= webappsWrapper.getHostName()%>&webappType=<%=currentWebappType%>">
             <%= version %>
         </a>
@@ -604,7 +615,7 @@
                 iconPath = "../webapp-mgt/images/webapps.gif";
                 webappDisplayType = "WebApp";
             } else if(currentWebappType.equalsIgnoreCase("JaxWebapp")) {
-                iconPath = "../jax-webapp-mgt/images/jax_type.gif";
+                iconPath = "../webapp-mgt/images/jax_type.gif";
                 webappDisplayType = "JAX-WS/RS Webapp";
             } else if(currentWebappType.equalsIgnoreCase("JaggeryWebapp")) {
                 iconPath = "../jaggeryapp-mgt/images/webapps.gif";
@@ -625,7 +636,7 @@
                 if (vWebapp.getStatistics().getActiveSessions() != 0) {
         %>
         <a href="sessions.jsp?webappFileName=<%=
-              URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8") %>&hostName=<%=vWebapp.getHostName()%>">
+              urlEncodedWebappFile %>&hostName=<%=vWebapp.getHostName()%>">
             <%= vWebapp.getStatistics().getActiveSessions() %>
         </a>
         <%
@@ -674,7 +685,7 @@
     <td>
         &nbsp;
         <% if (!"/default".equals(version) && !(webapp.getVersionGroups().length == 1)) { %>
-            <a href="set_default_version.jsp?appGroupName=<%=webapp.getAppVersionRoot()%>&appFileName=<%=URLEncoder.encode(vWebapp.getWebappFile(), "UTF-8")%>&hostName=<%=vWebapp.getHostName()%>"
+            <a href="set_default_version.jsp?appGroupName=<%=webapp.getAppVersionRoot()%>&appFileName=<%=urlEncodedWebappFile%>&hostName=<%=vWebapp.getHostName()%>"
                     style='background:url(images/default-icon.png) no-repeat;padding-left:20px;display:block;white-space: nowrap;height:16px;'>
                 <fmt:message key="make.default"/>
             </a>
@@ -682,14 +693,13 @@
     </td>
     <%}%>
     <td>  &nbsp;
-        <a href="download-ajaxprocessor.jsp?name=<%=vWebapp.getWebappFile()%>&hostName=<%=vWebapp.getHostName()%>&type=<%=vWebapp.getWebappType()%>"
+        <a href="download-ajaxprocessor.jsp?name=<%=urlEncodedWebappFile%>&hostName=<%=vWebapp.getHostName()%>&type=<%=vWebapp.getWebappType()%>"
            target="_self"
            style='background:url(images/download.gif) no-repeat;padding-left:20px;display:block;white-space: nowrap;height:16px;'>
             <fmt:message key="download"/>
         </a>
     </td>
 </tr>
-
 
 <% } %>      <% } %>
 

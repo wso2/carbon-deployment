@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -28,6 +29,10 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
  * unbind="unsetConfigurationContextService"
+ * @scr.reference name="server.configuration.service"
+ * interface="org.wso2.carbon.base.api.ServerConfigurationService"
+ * cardinality="1..1" policy="dynamic" bind="setServerConfigurationService"
+ * unbind="unsetServerConfigurationService"
  */
 public class CxfDiscoveryServiceComponent {
 
@@ -63,5 +68,11 @@ public class CxfDiscoveryServiceComponent {
         dataHolder.setMainServerConfigContext(null);
         dataHolder.setClientConfigurationContext(null);
     }
+    protected void setServerConfigurationService(ServerConfigurationService serverConfiguration) {
+        dataHolder.setServerConfigurationService(serverConfiguration);
+    }
 
+    protected void unsetServerConfigurationService(ServerConfigurationService serverConfiguration) {
+        dataHolder.setServerConfigurationService(null);
+    }
 }

@@ -2,3 +2,10 @@ instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.webapp.mgt.server_${feature.version}/conf/tomcat/webapp-classloading.xml,target:${installFolder}/../../conf/tomcat/webapp-classloading.xml,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.webapp.mgt.server_${feature.version}/conf/tomcat/webapp-classloading-environments.xml,target:${installFolder}/../../conf/tomcat/webapp-classloading-environments.xml,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.webapp.mgt.server_${feature.version}/conf/tomcat/context.xml,target:${installFolder}/../../conf/tomcat/context.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.webapp.mgt.server_${feature.version}/conf/security/sso-sp-config.properties,target:${installFolder}/../../conf/security/sso-sp-config.properties,overwrite:true);\
+
+instructions.uninstall = \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/tomcat/webapp-classloading.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/tomcat/webapp-classloading-environments.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/tomcat/context.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/security/sso-sp-config.properties,overwrite:true);\

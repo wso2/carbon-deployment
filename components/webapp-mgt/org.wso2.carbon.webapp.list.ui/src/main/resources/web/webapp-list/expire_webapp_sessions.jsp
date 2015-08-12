@@ -64,7 +64,8 @@
                     CarbonUIMessage.INFO, request);
 %>
 <script>
-    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>&pageNumber=<%= pageNumberInt %>'
+    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>' 
+                    + '&pageNumber=<%= pageNumberInt %>&hostName=<%= hostName %>'
 </script>
 <%
 } else {
@@ -79,7 +80,8 @@
     }
 %>
 <script>
-    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>&pageNumber=<%= pageNumberInt %>'
+    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>'
+                    + '&pageNumber=<%= pageNumberInt %>&hostName=<%= hostName %>'
 </script>
 
 <%

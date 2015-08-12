@@ -25,7 +25,7 @@
     <!-- Uncomment this to disable session persistence across Tomcat restarts -->
     <Manager
             className="org.wso2.carbon.webapp.mgt.CarbonTomcatSessionManager"
-            sessionIdLength="16">
+            sessionIdLength="128">
     </Manager>
 
     <!-- Uncomment this to enable Comet connection tacking (provides events
@@ -33,5 +33,7 @@
     <!--
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
+    <!-- Listener for WS-Discovery -->
+    <!--<Listener className="org.wso2.carbon.discovery.cxf.listeners.TomcatCxfDiscoveryListener" />-->
 
 </Context>

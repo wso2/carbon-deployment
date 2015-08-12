@@ -40,12 +40,13 @@ public class WebAppUtils {
 
     public static List<String> vhostNames = getVhostNames();
     public static List<String> appBases = getAppBases();
+
     /**
      * This util method is used to check if the given application is a Jax-RS/WS app
      *
      * @param webApplication application object
      * @return relevant servlet mapping of the cxf servlet if its a Jax-RS/WS application.
-     *         Null, if its not a Jax-RS/WS application.
+     * Null, if its not a Jax-RS/WS application.
      */
     public static String checkJaxApplication(WebApplication webApplication) {
         for (Container container : webApplication.getContext().findChildren()) {
@@ -71,16 +72,15 @@ public class WebAppUtils {
      * will return "/deployment/server/webapps"
      *
      * @param webappFilePath path to webapp
-     * @return  absolute path to base dir
+     * @return absolute path to base dir
      */
     public static String getWebappDirPath(String webappFilePath) {
         return webappFilePath.substring(0, webappFilePath.lastIndexOf(File.separator));
     }
 
     /**
-     *
      * @param filePath web app base dir path
-     * @return  virtual host name for web app dir
+     * @return virtual host name for web app dir
      */
     public static String getMatchingHostName(String filePath) {
         Container[] virtualHosts = findHostChildren();
@@ -90,14 +90,14 @@ public class WebAppUtils {
 
             if (appBase.endsWith(File.separator)) {
                 //append a file separator to make webAppFilePath equal to appBase
-                if (isEqualTo(filePath + File.separator, appBase)) {
+                if (isWebappUploadedToAppBase(filePath + File.separator, appBase)) {
                     if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
                     return childHost.getName();
                 }
             } else {
-                if (isEqualTo(filePath + File.separator, appBase + File.separator)) {
+                if (isWebappUploadedToAppBase(filePath + File.separator, appBase + File.separator)) {
                     if (childHost.getName().equals(getDefaultHost())) {
                         return getServerConfigHostName();
                     }
@@ -109,19 +109,18 @@ public class WebAppUtils {
     }
 
     /**
-     *
      * @param webAppFilePath web application path
      * @param baseName appBase value
      * @return true if values are equal, false otherwise
      */
-    private static boolean isEqualTo(String webAppFilePath, String baseName) {
+    private static boolean isWebappUploadedToAppBase(String webAppFilePath, String baseName) {
         if (webAppFilePath.equals(baseName)) {
             return true;
         } else {
             //if the webapp is uploaded to tenant-space (eg: <CARBON_HOME>/repository/tenants/1/webapps),
             //webAppFilePath will not be equal to any of appBase value in catalina-server.xml
             //Hence check for values "repository" and $baseDir
-            String baseDir = baseName.substring(0,baseName.lastIndexOf(File.separator));
+            String baseDir = baseName.substring(0, baseName.lastIndexOf(File.separator));
             baseDir = baseDir.substring(baseDir.lastIndexOf(File.separator) + 1, baseDir.length());
             return webAppFilePath.contains(File.separator + "repository" + File.separator) &&
                     webAppFilePath.contains(File.separator + baseDir + File.separator);
@@ -143,7 +142,7 @@ public class WebAppUtils {
     /**
      * @return List of virtual hosts
      */
-    private static List<String> getVhostNames() {
+    public static List<String> getVhostNames() {
         List<String> vHosts = new ArrayList<String>();
         Container[] childHosts = findHostChildren();
         for (Container vHost : childHosts) {
@@ -165,8 +164,8 @@ public class WebAppUtils {
      * @return relevant appBase for the host
      */
     public static String getAppbase(String hostName) {
-        if(ServerConfiguration.getInstance().getFirstProperty("HostName") !=null &&
-                ServerConfiguration.getInstance().getFirstProperty("HostName").equals(hostName)){
+        if (ServerConfiguration.getInstance().getFirstProperty("HostName") != null &&
+                ServerConfiguration.getInstance().getFirstProperty("HostName").equals(hostName)) {
             return getAppbase(getDefaultHost());
         } else {
             Container[] childHosts = findHostChildren();
@@ -184,7 +183,6 @@ public class WebAppUtils {
     }
 
     /**
-     *
      * @param configurationContext ConfigurationContext instance
      * @return list of web application holders
      */
@@ -196,7 +194,7 @@ public class WebAppUtils {
     /**
      * This util method will return the web application holder of the given web app file
      *
-     * @param webappFilePath  AbsolutePath of webapp
+     * @param webappFilePath AbsolutePath of webapp
      * @param configurationContext ConfigurationContext instance
      * @return relevant webapplication holder
      */
@@ -223,7 +221,6 @@ public class WebAppUtils {
     }
 
     /**
-     *
      * @param webappFilePath path to webapp
      * @return web application name
      */
@@ -231,16 +228,20 @@ public class WebAppUtils {
         return webappFilePath.substring(webappFilePath.lastIndexOf(File.separator) + 1, webappFilePath.length());
     }
 
-    public static WebApplicationsHolder getDefaultWebappHolder(ConfigurationContext configurationContext){
+    public static WebApplicationsHolder getDefaultWebappHolder(ConfigurationContext configurationContext) {
         return ((Map<String, WebApplicationsHolder>) configurationContext.
                 getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER_LIST)).get("webapps");
     }
+
     /**
      * @return default host of engine element
      */
     public static String getDefaultHost() {
         CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-        return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
+        if (carbonTomcatService != null) {
+            return carbonTomcatService.getTomcat().getEngine().getDefaultHost();
+        }
+        return null;
     }
 
     /**
@@ -262,7 +263,7 @@ public class WebAppUtils {
         return carbonTomcatService.getTomcat().getEngine().findChildren();
     }
 
-    private static List<String> getAppBases() {
+    public static List<String> getAppBases() {
         List<String> baseDirs = new ArrayList<String>();
         Container[] childHosts = findHostChildren();
         for (Container host : childHosts) {
@@ -275,6 +276,11 @@ public class WebAppUtils {
             baseDirs.add(appBase.substring(appBase.lastIndexOf(File.separator) + 1, appBase.length()));
         }
         return baseDirs;
+    }
+
+    public static String generateMetaFileDirName(String webappFilePath, ConfigurationContext configurationContext) {
+        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath, configurationContext);
+        return webApplicationsHolder.getWebappsDir().getName();
     }
 
 }

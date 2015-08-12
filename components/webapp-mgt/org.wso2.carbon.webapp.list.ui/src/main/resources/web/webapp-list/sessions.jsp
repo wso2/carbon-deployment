@@ -191,7 +191,7 @@
 
         <%
             if (sessions != null) {
-                String parameters = "webappFileName=" + webappFileName;
+                String parameters = "webappFileName=" + webappFileName + "&hostName=" + hostname;
         %>
 
         <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
@@ -260,7 +260,7 @@
                         <%= dateFormatter.format(sessionMetadata.getLastAccessedTime()) %>
                     </td>
                     <td>
-                        <%= sessionMetadata.getMaxInactiveInterval() %>&nbsp;ms
+                        <%= sessionMetadata.getMaxInactiveInterval() %>&nbsp;s
                     </td>
                 </tr>
                 <% } %>

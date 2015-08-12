@@ -168,7 +168,7 @@ public class ClassloadingContextBuilder {
                 Collections.addAll(providedResources, classloadingConfig.getExclusiveEnvironment(env).getDelegatedPackageArray());
 
             } else {
-                throw new Exception("Undefined environment.");
+                throw new Exception("Undefined environment: " + env);
             }
         }
 
@@ -339,7 +339,7 @@ public class ClassloadingContextBuilder {
                 webappJarFile = new JarFile(webappFilePath);
                 contextXmlFileEntry = webappJarFile.getJarEntry(LoaderConstants.APP_CL_CONFIG_FILE);
                 if (contextXmlFileEntry != null) {
-                    return new URL("jar:file:" + URLEncoder.encode(webappFilePath, "UTF-8") + "!/" +
+                    return new URL("jar:file:" + URLEncoder.encode(webappFilePath, "UTF-8").replace("+", "%20") + "!/" +
                             LoaderConstants.APP_CL_CONFIG_FILE);
                 }
             } catch (IOException e) {

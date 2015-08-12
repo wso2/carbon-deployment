@@ -274,10 +274,11 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                 }
             } else {
                 if (isWatchedResourceChanged(fileName, unpackedFile)) {
-                    if (!warFile.exists()) {
-                        handleRedeployment(unpackedFile);
-                    } else {
-                        handleRedeployment(warFile);
+                    // if watchedResources are modified, reload the context
+                    Context context = getWebappContext(unpackedFile);
+                    if (context != null) {
+                        context.reload();
+                        log.info("Reloaded Context with name: " + context.getName());
                     }
                 }
             }
@@ -363,7 +364,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             bamStatsEnabled = "false";
         }
 
-        String artifactDir = generateMetaFileDirName(webApplication.getWebappFile().getAbsolutePath());
+        String artifactDir = WebAppUtils.generateMetaFileDirName(webApplication.getWebappFile().getAbsolutePath(), this.configContext);
         ArtifactType type = new ArtifactType(WebappsConstants.WEBAPP_FILTER_PROP, WebappsConstants.WEBAPP_METADATA_BASE_DIR
                 + File.separator + artifactDir);
         ArtifactMetadataManager manager = DeploymentArtifactMetadataFactory.getInstance(axisConfig).
@@ -483,11 +484,6 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         }
 
         return false;
-    }
-
-    private String generateMetaFileDirName(String webappFilePath){
-        WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(webappFilePath,configContext);
-        return webApplicationsHolder.getWebappsDir().getName();
     }
 
     protected void handleRedeployment(File file) throws DeploymentException {
