@@ -34,6 +34,8 @@ import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.ArtifactType;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
 import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
@@ -445,6 +447,7 @@ public class TomcatGenericWebappsDeployer {
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         Map<String, WebApplication> deployedWebapps = webApplicationsHolder.getStartedWebapps();
+        Map<String, WebApplication> stoppedWebapps = webApplicationsHolder.getStoppedWebapps();
         String fileName = webappFile.getName();
         if (deployedWebapps.containsKey(fileName)) {
             WebApplication deployWebapp = deployedWebapps.get(fileName);
@@ -452,6 +455,12 @@ public class TomcatGenericWebappsDeployer {
             privilegedCarbonContext.setApplicationName(
                     TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
             deployWebapp.lazyUnload();
+        } else if (stoppedWebapps.containsKey(fileName)) {
+            WebApplication stoppedWebapp = stoppedWebapps.get(fileName);
+            Context context = stoppedWebapp.getContext();
+            privilegedCarbonContext.setApplicationName(
+                    TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
+            stoppedWebapp.lazyUnload();
         }
 
         clearFaultyWebapp(webappFile.getAbsolutePath());
@@ -567,6 +576,7 @@ public class TomcatGenericWebappsDeployer {
         privilegedCarbonContext.setApplicationName(
                 TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
         webApplicationsHolder.undeployWebapp(webapp);
+        removeWebappStoppedStatus(webapp);
         log.info("Undeployed webapp: " + webapp);
     }
 
@@ -603,6 +613,27 @@ public class TomcatGenericWebappsDeployer {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Removes the webapp stopped entry from the registry
+     *
+     * @param webApplication WebApplication instance
+     */
+    private void removeWebappStoppedStatus(WebApplication webApplication) {
+        if (DataHolder.getRegistryService() != null) {
+            try {
+                Registry configSystemRegistry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
+                String webappResourcePath = WebAppUtils.getWebappResourcePath(webApplication);
+
+                if (configSystemRegistry.resourceExists(webappResourcePath)) {
+                    configSystemRegistry.delete(webappResourcePath);
+                }
+            } catch (RegistryException e) {
+                log.error("Failed to remove persisted webapp stopped state for: " + webApplication.getContext());
+            }
+        }
     }
 
 }

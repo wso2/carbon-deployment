@@ -82,6 +82,9 @@ public final class WebappsConstants {
     public static final java.lang.String EXCLUDES_MERGE_POLICY_INTERSECT = "intersect";
     public static final java.lang.String ENVIRONMENTS_SPILIT_CHAR = ",";
 
+    // Webapp stopped state persistence related constants
+    public static final String WEBAPP_RESOURCE_PATH_ROOT = "/repository/webapps/";
+    public static final String WEBAPP_STATUS = "Status";
 
     public static final class WebappState {
         public static final String STARTED = "started";

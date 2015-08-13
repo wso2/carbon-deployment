@@ -31,6 +31,9 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.utils.ArchiveManipulator;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.DataPaginator;
@@ -43,11 +46,22 @@ import org.wso2.carbon.webapp.mgt.version.AppVersionGroupPersister;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.SocketException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -711,6 +725,7 @@ public class WebappAdmin extends AbstractAdmin {
                 webapplicationHelperList.add(new WebapplicationHelper(webapp.getHostName(), webapp.getWebappFile().getName()));
                 try {
                     webapp.stop();
+                    persistWebappStoppedState(webapp);
                 } catch (CarbonException e) {
                     handleException("Error occurred while undeploying all webapps", e);
                 }
@@ -743,6 +758,7 @@ public class WebappAdmin extends AbstractAdmin {
                     if ((webApplication != null && getProperty("HostName", key).equals(webApplication.getHostName())) ||
                             (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
                         webApplicationsHolder.stopWebapp(webApplication);
+                        persistWebappStoppedState(webApplication);
                         webapplicationHelperList.add(new WebapplicationHelper(webApplication.getHostName(), webApplication.getWebappFile().getName()));
                     }
                 } catch (CarbonException e) {
@@ -768,6 +784,7 @@ public class WebappAdmin extends AbstractAdmin {
                             webApplicationsHolder.getWebappsDir().getName(), WebappsConstants.WEBAPP_EXTENSION);
             for (WebApplication webapp : stoppedWebapps.values()) {
                 startWebapp(stoppedWebapps, webapp, webApplicationsHolder);
+                persistWebappStoppedState(webapp);
                 webapplicationHelperList.add(new WebapplicationHelper(webapp.getHostName(), webapp.getWebappFile().getName()));
             }
             stoppedWebapps.clear();
@@ -799,6 +816,7 @@ public class WebappAdmin extends AbstractAdmin {
                 if (webApplication != null && getProperty("HostName", key).equals(webApplication.getHostName()) ||
                         (webApplication != null && WebAppUtils.getServerConfigHostName().equals(webApplication.getHostName()))) {
                     startWebapp(stoppedWebapps, webApplication, webApplicationsHolder);
+                    persistWebappStoppedState(webApplication);
                     webapplicationHelperList.add(new WebapplicationHelper(webApplication.getHostName(), webApplication.getWebappFile().getName()));
                 }
             }
@@ -1282,6 +1300,35 @@ public class WebappAdmin extends AbstractAdmin {
         vhostHolder.setVhosts(vhostNames.toArray(new String[vhostNames.size()]));
         vhostHolder.setDefaultHostName(WebAppUtils.getServerConfigHostName());
         return vhostHolder;
+    }
+
+    /**
+     * Persists the webapp stopped state in the registry
+     *
+     * @param webApplication WebApplication instance
+     */
+    private void persistWebappStoppedState(WebApplication webApplication) {
+        if (DataHolder.getRegistryService() != null) {
+            try {
+                Registry configSystemRegistry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
+                String webappResourcePath = WebAppUtils.getWebappResourcePath(webApplication);
+                Resource webappResource;
+
+                String webappStatus = webApplication.getState();
+
+                if (configSystemRegistry.resourceExists(webappResourcePath)) {
+                    webappResource = configSystemRegistry.get(webappResourcePath);
+                } else {
+                    webappResource = configSystemRegistry.newCollection();
+                }
+
+                webappResource.setProperty(WebappsConstants.WEBAPP_STATUS, webappStatus);
+                configSystemRegistry.put(webappResourcePath, webappResource);
+            } catch (RegistryException e) {
+                log.error("Failed to persist webapp stopped state for: " + webApplication.getContext());
+            }
+        }
     }
 
 }
