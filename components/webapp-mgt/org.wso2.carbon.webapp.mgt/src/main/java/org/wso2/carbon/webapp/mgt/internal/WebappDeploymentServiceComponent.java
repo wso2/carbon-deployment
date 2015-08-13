@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.webapp.mgt.internal;
 
+import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 
@@ -25,18 +26,29 @@ import org.wso2.carbon.webapp.mgt.DataHolder;
  * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
  * cardinality="0..1" policy="dynamic" bind="setCarbonTomcatService"
  * unbind="unsetCarbonTomcatService"
+ * @scr.reference name="registry.service"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService"
+ * cardinality="1..1" policy="dynamic"  bind="setRegistryService"
+ * unbind="unsetRegistryService"*
  */
 public class WebappDeploymentServiceComponent {
 
 
     protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
-           DataHolder.setCarbonTomcatService(carbonTomcatService);
-       }
+        DataHolder.setCarbonTomcatService(carbonTomcatService);
+    }
 
 
-       protected void unsetCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
-           DataHolder.setCarbonTomcatService(null);
-       }
+    protected void unsetCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
+        DataHolder.setCarbonTomcatService(null);
+    }
+
+    protected void setRegistryService(RegistryService registryService) {
+        DataHolder.setRegistryService(registryService);
+    }
+
+    protected void unsetRegistryService(RegistryService registryService) {
+    }
 
 
 }
