@@ -18,7 +18,14 @@
 package org.wso2.carbon.webapp.mgt;
 
 import org.apache.axis2.AxisFault;
-import org.apache.catalina.*;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleState;
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
@@ -74,7 +81,7 @@ public class WebApplication {
         String versionString = context.getName();
         if (context.getName().startsWith("/t/")) {
             //remove tenant context
-            versionString = versionString.substring(context.getName().lastIndexOf("/webapps/") + 9);
+            versionString = versionString.substring(StringUtils.ordinalIndexOf(context.getName(), "/", 4) + 1);
         } else if(context.getName().startsWith("/")) {
             versionString = versionString.substring(1);
         }
