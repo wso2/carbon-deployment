@@ -19,11 +19,16 @@ package org.wso2.carbon.webapp.mgt;
 import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
+import org.apache.catalina.util.SessionConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.mapper.MappingData;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +41,7 @@ public class TomcatUtil {
     private static CarbonTomcatService carbonTomcatService;
     private static Map<String, TomcatGenericWebappsDeployer> webappsDeployers
         = new HashMap<String, TomcatGenericWebappsDeployer>();
-
+    private static Log log = LogFactory.getLog(TomcatUtil.class);
 
     /**
      *  check unpack wars property
@@ -94,6 +99,8 @@ public class TomcatUtil {
 
         connectorReq.setContext((Context) connectorReq.getMappingData().context);
         connectorReq.setWrapper((Wrapper) connectorReq.getMappingData().wrapper);
+
+        parseSessionCookiesId(connectorReq);
     }
     
     public static String getApplicationNameFromContext(String contextName) {
@@ -123,5 +130,46 @@ public class TomcatUtil {
             isVirtualHostRequest = true;
         }
         return isVirtualHostRequest;
+    }
+
+    private static void parseSessionCookiesId(Request request) {
+
+        // If session tracking via cookies has been disabled for the current context, don't go looking for a session ID
+        // in a cookie as a cookie from a parent context with a session ID may be present which would overwrite
+        // the valid session ID encoded in the URL
+        Context context = (Context) request.getMappingData().context;
+        if (context != null &&
+            !context.getServletContext().getEffectiveSessionTrackingModes().contains(SessionTrackingMode.COOKIE)) {
+            return;
+        }
+
+        // Parse session id from cookies
+        Cookie[] serverCookies = request.getCookies();
+        int count = serverCookies.length;
+        if (count <= 0) {
+            return;
+        }
+
+        String sessionCookieName = SessionConfig.getSessionCookieName(context);
+        for (int i = 0; i < count; i++) {
+            Cookie cookie = serverCookies[i];
+            if (cookie.getName().equals(sessionCookieName)) {
+                // Override anything requested in the URL
+                if (!request.isRequestedSessionIdFromCookie()) {
+                    // Accept only the first session id cookie
+                    request.setRequestedSessionId(cookie.getValue());
+                    request.setRequestedSessionCookie(true);
+                    request.setRequestedSessionURL(false);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Requested cookie session id is " + request.getRequestedSessionId());
+                    }
+                } else {
+                    if (!request.isRequestedSessionIdValid()) {
+                        // Replace the session id until one is valid
+                        request.setRequestedSessionId(cookie.getValue());
+                    }
+                }
+            }
+        }
     }
 }

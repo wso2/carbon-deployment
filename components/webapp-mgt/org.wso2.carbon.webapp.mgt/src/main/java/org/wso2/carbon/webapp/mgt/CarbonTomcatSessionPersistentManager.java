@@ -43,6 +43,7 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
     private int ownerTenantId;
 
     static {
+        allowedClasses.add("org.apache.catalina.session.PersistentManagerBase");
         allowedClasses.add("org.apache.catalina.session.ManagerBase");
         allowedClasses.add("org.apache.catalina.connector.Request");
         allowedClasses.add("org.apache.catalina.session.StandardManager");
