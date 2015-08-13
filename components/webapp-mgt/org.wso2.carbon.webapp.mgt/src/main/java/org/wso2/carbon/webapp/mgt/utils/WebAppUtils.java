@@ -28,6 +28,7 @@ import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
+import org.wso2.carbon.webapp.mgt.WebappsConstants;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -283,4 +284,21 @@ public class WebAppUtils {
         return webApplicationsHolder.getWebappsDir().getName();
     }
 
+    /**
+     * Returns the registry path for the webapp
+     *
+     * @param webApplication WebApplication instance
+     * @return
+     */
+    
+    public static String getWebappResourcePath(WebApplication webApplication) {
+        String fileName = webApplication.getWebappFile().getName();
+        String webappName = fileName.contains("#") ? fileName.substring(0, fileName.indexOf("#")) : fileName;
+        
+        // remove the extension from the webapp file
+        webappName = (webappName.contains(".war") || webappName.contains(".zip")) 
+                     ? webappName.substring(0, webappName.indexOf(".war")) : webappName;
+        return WebappsConstants.WEBAPP_RESOURCE_PATH_ROOT + webApplication.getHostName() + "/" + webappName
+               + webApplication.getVersion();
+    }
 }
