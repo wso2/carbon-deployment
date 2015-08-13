@@ -451,7 +451,6 @@ padding:0 10px;
             <td width="200px">
                 <nobr>
                     <%
-                        String serviceName = service.getName();
                         if (loggedIn && !isCAppArtifact) {
                     %>
                     <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
