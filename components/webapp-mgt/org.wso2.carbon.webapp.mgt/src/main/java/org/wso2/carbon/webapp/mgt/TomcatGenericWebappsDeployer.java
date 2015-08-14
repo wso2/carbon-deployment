@@ -33,7 +33,7 @@ import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.ArtifactType;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
-import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
+import org.wso2.carbon.webapp.mgt.session.CarbonTomcatClusterableSessionManager;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
@@ -61,8 +61,8 @@ public class TomcatGenericWebappsDeployer {
     protected String tenantDomain;
     protected ConfigurationContext configurationContext;
     protected Map<String, WebApplicationsHolder> webApplicationsHolderMap;
-    protected Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
-            new ConcurrentHashMap<String, CarbonTomcatClusterableSessionManager>();
+    protected Map<String, Manager> sessionManagerMap =
+            new ConcurrentHashMap<String, Manager>();
 
     /**
      * Constructor
@@ -274,11 +274,16 @@ public class TomcatGenericWebappsDeployer {
                     getService().getContainer().getCluster()) != null) {
 
                 // Using clusterable manager
-                CarbonTomcatClusterableSessionManager sessionManager;
+                Manager sessionManager;
 
                 if (manager instanceof CarbonTomcatClusterableSessionManager) {
-                    sessionManager = (CarbonTomcatClusterableSessionManager) manager;
-                    sessionManager.setOwnerTenantId(tenantId);
+                    sessionManager = manager;
+                    ((CarbonTomcatClusterableSessionManager) manager).setOwnerTenantId(tenantId);
+                } else if (manager instanceof org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager) {
+                    //kept for backward compatibility. Remove once the session managers in carbon core are removed.
+                    sessionManager = manager;
+                    ((org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager) manager).
+                            setOwnerTenantId(tenantId);
                 } else {
                     sessionManager = new CarbonTomcatClusterableSessionManager(tenantId);
                     context.setManager(sessionManager);
@@ -286,7 +291,7 @@ public class TomcatGenericWebappsDeployer {
 
                 Object alreadyinsertedSMMap = configurationContext.getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
                 if(alreadyinsertedSMMap != null){
-                    ((Map<String, CarbonTomcatClusterableSessionManager>) alreadyinsertedSMMap).put(context.getName(), sessionManager);
+                    ((Map<String, Manager>) alreadyinsertedSMMap).put(context.getName(), sessionManager);
                 }else{
                     sessionManagerMap.put(context.getName(), sessionManager);
                     configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,

@@ -31,7 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.core.internal.CarbonCoreDataHolder;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -158,7 +158,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         currentContext.startTenantFlow();
         ClusteringAgent clusteringAgent =
-                CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                DataHolder.getServerConfigContext().
                         getAxisConfiguration().getClusteringAgent();
         try {
             if (session != null) {
@@ -196,7 +196,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
         }
         try {
             ClusteringAgent clusteringAgent =
-                    CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                    DataHolder.getServerConfigContext().
                             getAxisConfiguration().getClusteringAgent();
             if (clusteringAgent != null) {
                 clusteringAgent.sendMessage(msg, true);
@@ -249,7 +249,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
 
         try {
             ClusteringAgent clusteringAgent =
-                    CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                    DataHolder.getServerConfigContext().
                             getAxisConfiguration().getClusteringAgent();
             if (clusteringAgent != null) {
                 clusteringAgent.sendMessage(newmsg, true);
@@ -277,7 +277,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
 
         try {
             ClusteringAgent clusteringAgent =
-                    CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                    DataHolder.getServerConfigContext().
                             getAxisConfiguration().getClusteringAgent();
             if (clusteringAgent != null) {
                 clusteringAgent.sendMessage(newmsg, true);
@@ -302,7 +302,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
         msg.setTimestamp(session.getCreationTime());
         try {
             ClusteringAgent clusteringAgent =
-                    CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                    DataHolder.getServerConfigContext().
                             getAxisConfiguration().getClusteringAgent();
             if (clusteringAgent != null) {
                 clusteringAgent.sendMessage(msg, true);
@@ -331,7 +331,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
                 msg.setTimestamp(System.currentTimeMillis());
 
                 ClusteringAgent clusteringAgent =
-                        CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                        DataHolder.getServerConfigContext().
                                 getAxisConfiguration().getClusteringAgent();
                 if (clusteringAgent != null) {
                     clusteringAgent.sendMessage(msg, true);
@@ -359,7 +359,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
         * More info : https://wso2.org/jira/browse/CARBON-15068
         */
         ClusteringAgent clusteringAgent =
-                CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                DataHolder.getServerConfigContext().
                         getAxisConfiguration().getClusteringAgent();
         if (clusteringAgent != null) {
             try {

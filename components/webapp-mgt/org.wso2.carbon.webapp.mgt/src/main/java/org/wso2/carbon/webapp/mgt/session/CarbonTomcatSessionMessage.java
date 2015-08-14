@@ -26,7 +26,6 @@ import org.apache.catalina.tribes.Member;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
 
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +38,7 @@ import java.util.Set;
 
 public class CarbonTomcatSessionMessage extends ClusteringMessage implements SessionMessage {
 
-    private static final Log log = LogFactory.getLog(org.wso2.carbon.core.session.CarbonTomcatSessionMessage.class);
+    private static final Log log = LogFactory.getLog(CarbonTomcatSessionMessage.class);
     private static final long serialVersionUID = 1L;
 
 
@@ -220,7 +219,7 @@ public class CarbonTomcatSessionMessage extends ClusteringMessage implements Ses
 
     @Override
     public ClusteringCommand getResponse() {
-        return new org.wso2.carbon.core.session.CarbonTomcatSessionMessage();
+        return new CarbonTomcatSessionMessage();
     }
 
     @Override
@@ -228,8 +227,8 @@ public class CarbonTomcatSessionMessage extends ClusteringMessage implements Ses
         if (log.isDebugEnabled()) {
             log.debug("Recived CarbonTomcatSessionMessage");
         }
-        Map<String, org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager> sessionManagerMap =
-                (Map<String, org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager>) configContext.
+        Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
+                (Map<String, CarbonTomcatClusterableSessionManager>) configContext.
                         getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
         if (sessionManagerMap != null && !sessionManagerMap.isEmpty() &&
             this.getContextName() != null) {

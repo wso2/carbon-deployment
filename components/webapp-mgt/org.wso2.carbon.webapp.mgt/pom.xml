@@ -95,7 +95,8 @@
                             org.wso2.carbon.webapp.mgt.multitenancy,
                             org.wso2.carbon.webapp.mgt.sync,
                             org.wso2.carbon.webapp.mgt.sso,
-                            org.wso2.carbon.webapp.mgt.version
+                            org.wso2.carbon.webapp.mgt.version,
+                            org.wso2.carbon.webapp.mgt.session
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Axis2Deployer>WebappMetadataDeployer</Axis2Deployer>
