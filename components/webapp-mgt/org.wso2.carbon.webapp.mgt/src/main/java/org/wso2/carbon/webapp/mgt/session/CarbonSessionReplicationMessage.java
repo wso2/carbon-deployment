@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -28,7 +27,6 @@ import org.apache.catalina.ha.session.SessionMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
 
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +39,7 @@ import java.util.Set;
  */
 
 public class CarbonSessionReplicationMessage extends ClusteringMessage {
-    private static final Log log = LogFactory.getLog(org.wso2.carbon.core.session.CarbonSessionReplicationMessage.class);
+    private static final Log log = LogFactory.getLog(CarbonSessionReplicationMessage.class);
     private ClusterMessage clusterMessage;
 
     public CarbonSessionReplicationMessage() {
@@ -53,7 +51,7 @@ public class CarbonSessionReplicationMessage extends ClusteringMessage {
 
     @Override
     public ClusteringCommand getResponse() {
-        return new org.wso2.carbon.core.session.CarbonSessionReplicationMessage();
+        return new CarbonSessionReplicationMessage();
     }
 
     @Override
@@ -63,8 +61,8 @@ public class CarbonSessionReplicationMessage extends ClusteringMessage {
         }
         if (clusterMessage != null) {
             //Process the received replication message
-            Map<String, org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager> sessionManagerMap =
-                    (Map<String, org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager>) configContext.
+            Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
+                    (Map<String, CarbonTomcatClusterableSessionManager>) configContext.
                             getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
             if (sessionManagerMap != null && !sessionManagerMap.isEmpty() &&
                 ((SessionMessage) clusterMessage).getContextName() != null) {

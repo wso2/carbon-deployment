@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -22,7 +21,6 @@ package org.wso2.carbon.webapp.mgt.session;
 import org.apache.catalina.Manager;
 import org.apache.catalina.ha.ClusterManager;
 import org.apache.catalina.ha.tcp.SimpleTcpCluster;
-import org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager;
 
 /**
  * The class extends tomcat's SimpleTcpCluster. The main use of this class is to have our

@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -33,8 +32,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.internal.CarbonCoreDataHolder;
-import org.wso2.carbon.core.session.CarbonSessionReplicationMessage;
-import org.wso2.carbon.core.session.CarbonTomcatSessionMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +47,7 @@ import java.util.Map;
 public class CarbonTomcatClusterableSessionManager extends DeltaManager {
 
     private static final List<String> allowedClasses = new ArrayList<String>();
-    private static final Log log = LogFactory.getLog(org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager.class);
+    private static final Log log = LogFactory.getLog(CarbonTomcatClusterableSessionManager.class);
     private Map<String, CarbonTomcatSessionMessage> messageMap = new HashMap();
 
     /**
@@ -377,7 +374,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
 
     @Override
     public ClusterManager cloneFromTemplate() {
-        org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager result = new org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager();
+        CarbonTomcatClusterableSessionManager result = new CarbonTomcatClusterableSessionManager();
         clone(result);
         result.expireSessionsOnShutdown = expireSessionsOnShutdown;
         result.notifySessionListenersOnReplication = notifySessionListenersOnReplication;
