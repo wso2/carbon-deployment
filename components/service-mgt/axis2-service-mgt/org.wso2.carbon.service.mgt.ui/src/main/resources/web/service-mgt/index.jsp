@@ -429,10 +429,10 @@ padding:0 10px;
             if ("proxy".equalsIgnoreCase(service.getServiceType())) {
             %>
             <nobr>
-                  <%
-                      String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
-                  %>
-                  <jsp:include page="<%= cApp_proxy%>"/>
+            <%
+                String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
+            %>
+            <jsp:include page="<%= cApp_proxy%>"/>
             </nobr>
             <% } else { %>
             <td width="200px">
@@ -515,8 +515,8 @@ padding:0 10px;
             <% if (service.getServiceType().equalsIgnoreCase("proxy")) { %>
             <% hasProxy = true; %>
             <% if ("proxy".equalsIgnoreCase(service.getServiceType())) {
-               String cApp_edit = "../" + service.getServiceType() + "/editCAppartifact.jsp?serviceName=" + serviceName;
-             %>
+                String cApp_edit = "../" + service.getServiceType() + "/editCAppartifact.jsp?serviceName=" + serviceName;
+            %>
                 <jsp:include page="<%= cApp_edit%>"/>
             <% } else { %>
             <td>
