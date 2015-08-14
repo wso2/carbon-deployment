@@ -73,7 +73,7 @@ public class WebApplicationsHolder {
     }
 
     /**
-     * Get started and stopped webappa
+     * Get started and stopped webapps
      * @return Map of started and stopped webapps
      */
     public Map<String, WebApplication> getAllWebapps() {
