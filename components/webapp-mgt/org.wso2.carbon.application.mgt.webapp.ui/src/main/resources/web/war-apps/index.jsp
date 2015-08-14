@@ -1,28 +1,28 @@
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- ~
- ~ WSO2 Inc. licenses this file to you under the Apache License,
- ~ Version 2.0 (the "License"); you may not use this file except
- ~ in compliance with the License.
- ~ You may obtain a copy of the License at
- ~
- ~    http://www.apache.org/licenses/LICENSE-2.0
- ~
- ~ Unless required by applicable law or agreed to in writing,
- ~ software distributed under the License is distributed on an
- ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- ~ KIND, either express or implied.  See the License for the
- ~ specific language governing permissions and limitations
- ~ under the License.
- -->
-<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
-<%@ page import="java.util.ResourceBundle" %>
-<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="org.wso2.carbon.CarbonConstants" %>
+~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.application.mgt.webapp.stub.types.carbon.WarCappMetadata" %>
 <%@ page import="org.wso2.carbon.application.mgt.webapp.ui.WarAppAdminClient" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="java.util.ResourceBundle" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -33,9 +33,8 @@
     String appName = (String) request.getAttribute("appName");
 
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    ConfigurationContext configContext =
-            (ConfigurationContext) config.getServletContext()
-                    .getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+    ConfigurationContext configContext = (ConfigurationContext) config.getServletContext()
+            .getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
@@ -45,8 +44,7 @@
     WarCappMetadata[] warMetadata = null;
 
     try {
-        WarAppAdminClient client = new WarAppAdminClient(cookie,
-                backendServerURL, configContext, request.getLocale());
+        WarAppAdminClient client = new WarAppAdminClient(cookie, backendServerURL, configContext, request.getLocale());
         warMetadata = client.getWarAppData(appName);
     } catch (Exception e) {
         response.setStatus(500);
@@ -64,7 +62,9 @@
     <table class="styledLeft" id="webappTable" width="60%">
         <thead>
         <tr>
-            <th width="35%"><img src="../webapp-list/images/webapps.gif" alt="" style="vertical-align:middle;">&nbsp;<fmt:message key="carbonapps.webapp.web.application"/></th>
+            <th width="35%"><img src="../webapp-list/images/webapps.gif" alt=""
+                                 style="vertical-align:middle;">&nbsp;<fmt:message
+                    key="carbonapps.webapp.web.application"/></th>
             <th width="35%"><fmt:message key="carbonapps.webapp.context"/></th>
             <th width="15%"><fmt:message key="carbonapps.webapp.state"/></th>
             <th width="15%"><fmt:message key="carbonapps.webapp.actions"/></th>
@@ -76,16 +76,24 @@
                 String state = ("Started".equals(data.getState())) ? "started" : "stopped";
         %>
         <tr>
-            <td><%= data.getWebappFileName()%></td>
+            <td><%= data.getWebappFileName()%>
+            </td>
             <% if ("Faulty".equals(data.getState())) { %>
-            <td><%= data.getContext()%></td>
+            <td><%= data.getContext()%>
+            </td>
             <% } else { %>
-            <td><a href="../webapp-list/webapp_info.jsp?webappFileName=<%= data.getWebappFileName()%>&webappState=<%= state%>&hostName=<%=data.getHostName()%>&httpPort=<%=data.getHttpPort()%>&webappType=webapp&defaultHostName=<%=data.getHostName()%>"><%= data.getContext()%></a></td>
+            <td>
+                <a href="../webapp-list/webapp_info.jsp?webappFileName=<%= data.getWebappFileName()%>
+                &webappState=<%= state%>&hostName=<%=data.getHostName()%>&httpPort=<%=data.getHttpPort()%>
+                &webappType=webapp&defaultHostName=<%=data.getHostName()%>"><%= data.getContext()%>
+                </a></td>
             <% } %>
-            <td><%= data.getState()%></td>
+            <td><%= data.getState()%>
+            </td>
             <td>
                 <% if ("Started".equals(data.getState())) { %>
-                <a href="<%= "http://" + data.getHostName() + ":" + data.getHttpPort() + data.getContext() %>" target="_blank" class="icon-link"
+                <a href="<%= "http://" + data.getHostName() + ":" + data.getHttpPort() + data.getContext() %>"
+                   target="_blank" class="icon-link"
                    style='background-image:url(../webapp-list/images/goto_url.gif)'>
                     <fmt:message key="carbonapps.webapp.go.to.url"/>
                 </a>
