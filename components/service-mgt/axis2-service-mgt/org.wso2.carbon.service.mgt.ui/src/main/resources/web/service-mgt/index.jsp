@@ -430,22 +430,9 @@ padding:0 10px;
             %>
             <nobr>
                   <%
-                        if ("proxy".equalsIgnoreCase(service.getServiceType())) {
-                           String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
+                      String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
                   %>
                   <jsp:include page="<%= cApp_proxy%>"/>
-                         <% } else { %>
-                             <td width="200px">
-                                  <nobr>
-                                  <% if (loggedIn) { %>
-                                      <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
-                                      </a>
-                                  <% } else { %>
-                                      <%=serviceName%>
-                                  <% } %>
-                                  </nobr>
-                             </td>
-                         <% } %>
             </nobr>
             <% } else { %>
             <td width="200px">
