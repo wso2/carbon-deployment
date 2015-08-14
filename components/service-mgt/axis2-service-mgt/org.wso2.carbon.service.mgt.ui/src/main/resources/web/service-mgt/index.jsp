@@ -436,7 +436,7 @@ padding:0 10px;
                   <jsp:include page="<%= cApp_proxy%>"/>
                          <% } else { %>
                              <td width="200px">
-                                  nobr>
+                                  <nobr>
                                   <% if (loggedIn) { %>
                                       <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
                                       </a>
