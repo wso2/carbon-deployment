@@ -80,9 +80,7 @@
             <% if ("Faulty".equals(data.getState())) { %>
             <td><%= data.getContext()%></td>
             <% } else { %>
-            <td><a href="../webapp-list/webapp_info.jsp?webappFileName=<%= data.getWebappFileName()%>
-            &webappState=<%= state%>&hostName=<%=data.getHostName()%>&httpPort=<%=data.getHttpPort()%>
-            &webappType=jaxWebapp&defaultHostName=<%=data.getHostName()%>"><%= data.getContext()%></a></td>
+            <td><a href="../webapp-list/webapp_info.jsp?webappFileName=<%= data.getWebappFileName()%>&webappState=<%= state%>&hostName=<%=data.getHostName()%>&httpPort=<%=data.getHttpPort()%>&webappType=jaxWebapp&defaultHostName=<%=data.getHostName()%>"><%= data.getContext()%></a></td>
             <% } %>
             <td><%= data.getState()%></td>
             <td>
