@@ -104,6 +104,14 @@
             }
             else if (webappState.equalsIgnoreCase("started")) {
                 webapp = client.getStartedWebapp(webappFileName,hostName);
+                if (webappType.equalsIgnoreCase("JaxWebapp")) {
+                    webAppDataExtractor.getServletXML(client.getWarFileInputStream
+                            (webapp.getWebappFile(), hostName, webappType));
+                    wsdlURLS= webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
+                    wadlURLS= webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
+                    serviceListPath = webAppDataExtractor.getServiceListPath();
+                }
+
             } else {
                 webapp = client.getStoppedWebapp(webappFileName,hostName);
             }
