@@ -424,10 +424,20 @@ padding:0 10px;
                 <% } %>
             </td>
                     <% } %>
+            <%
+            String serviceName = service.getName();
+            if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+            %>
+            <nobr>
+            <%
+                String cApp_proxy = "../" + service.getServiceType() + "/identifyCAppArtifact.jsp?serviceName=" + serviceName;
+            %>
+            <jsp:include page="<%= cApp_proxy%>"/>
+            </nobr>
+            <% } else { %>
             <td width="200px">
                 <nobr>
                     <%
-                        String serviceName = service.getName();
                         if (loggedIn && !isCAppArtifact) {
                     %>
                     <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
@@ -440,6 +450,7 @@ padding:0 10px;
                     <% } %>
                 </nobr>
             </td>
+            <% } %>
             <td width="20px" style="text-align:left;">
                 <nobr>
                 <img src="../<%= service.getServiceType()%>/images/type.gif"
@@ -503,15 +514,22 @@ padding:0 10px;
             <% } %>
             <% if (service.getServiceType().equalsIgnoreCase("proxy")) { %>
             <% hasProxy = true; %>
+            <% if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+                String cApp_edit = "../" + service.getServiceType() + "/editCAppartifact.jsp?serviceName=" + serviceName;
+            %>
+                <jsp:include page="<%= cApp_edit%>"/>
+            <% } else { %>
             <td>
                 <a title="Edit '<%=service.getName()%>' in the design view" href="#" onclick="editPS('<%=service.getName()%>');return false;">
                     <img src="../proxyservices/images/design-view.gif" alt="" border="0"> Design View</a>
             </td>
             <td>
-                <a title="Edit '<%=service.getName()%>' in the source view editor" 
-                    style="background-image: url(../proxyservices/images/source-view.gif);" 
-                    class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
+                <a title="Edit '<%=service.getName()%>' in the source view editor"
+                   style="background-image: url(../proxyservices/images/source-view.gif);"
+                   class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
             </td>
+            <% } %>
+
             <% } else {%>
             <td colspan="2"></td>
             <% } %>
