@@ -19,6 +19,7 @@ package org.wso2.carbon.webapp.mgt;
 import org.wso2.carbon.CarbonException;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,6 +70,17 @@ public class WebApplicationsHolder {
     public Map<String, WebApplication> getFaultyWebapps() {
         return faultyWebapps;
 
+    }
+
+    /**
+     * Get started and stopped webapps
+     * @return Map of started and stopped webapps
+     */
+    public Map<String, WebApplication> getAllWebapps() {
+        HashMap<String, WebApplication> allApps = new HashMap<>();
+        allApps.putAll(startedWebapps);
+        allApps.putAll(stoppedWebapps);
+        return allApps;
     }
 
     public Map<String, WebApplication> getStoppedWebapps() {

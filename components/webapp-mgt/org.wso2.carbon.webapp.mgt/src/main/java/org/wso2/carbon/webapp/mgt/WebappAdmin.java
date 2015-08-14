@@ -1080,9 +1080,9 @@ public class WebappAdmin extends AbstractAdmin {
         String webappFilepath = null;
         Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderMap.values()) {
-            WebApplication webApplication = webApplicationsHolder.getStartedWebapps().get(fileName);
+            WebApplication webApplication = webApplicationsHolder.getAllWebapps().get(fileName);
             if (webApplication != null && webApplication.getHostName().equals(hostName)) {
-                File webappFile = webApplicationsHolder.getStartedWebapps().get(fileName).getWebappFile();
+                File webappFile = webApplicationsHolder.getAllWebapps().get(fileName).getWebappFile();
                 // if webapp deployed using CApp this give the actual webapp file
                 // since its not inside repository/deployment/webapps directory
                 if (webappFile.getAbsolutePath().contains("carbonapps")) {
