@@ -21,18 +21,17 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
-<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.webapp.list.ui.WebAppDataExtractor" %>
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
+<%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata" %>
 <%@ page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappStatistics" %>
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="org.wso2.carbon.webapp.list.ui.WebAppDataExtractor" %>
-<%@page import="org.wso2.carbon.webapp.mgt.stub.types.carbon.VhostHolder"%>
 
 <fmt:bundle basename="org.wso2.carbon.webapp.list.ui.i18n.Resources">
 <carbon:breadcrumb
@@ -104,10 +103,11 @@
             }
             else if (webappState.equalsIgnoreCase("started")) {
                 webapp = client.getStartedWebapp(webappFileName,hostName);
-                if(webappType.equalsIgnoreCase("JaxWebapp")) {
-                    webAppDataExtractor.getServletXML(client.getWarFileInputStream(webapp.getWebappFile(), hostName, webappType));
-                    wsdlURLS= webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
-                    wadlURLS= webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
+                if (webappType.equalsIgnoreCase("JaxWebapp")) {
+                    webAppDataExtractor
+                            .getServletXML(client.getWarFileInputStream(webapp.getWebappFile(), hostName, webappType));
+                    wsdlURLS = webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
+                    wadlURLS = webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
                     serviceListPath = webAppDataExtractor.getServiceListPath();
                 }
             } else {
