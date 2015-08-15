@@ -145,8 +145,8 @@ public class TomcatUtil {
 
         // Parse session id from cookies
         Cookie[] serverCookies = request.getCookies();
-        int count = serverCookies.length;
-        if (count <= 0) {
+        int count = 0;
+        if (serverCookies != null && (count = serverCookies.length) == 0) {
             return;
         }
 
