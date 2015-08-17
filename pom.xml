@@ -1331,7 +1331,7 @@
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.4.2-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>${carbon.deployment.version}</carbon.deployment.exp.pkg.version>
-        <carbon.deployment.imp.pkg.version>[4.4.0, 4.5.0)</carbon.deployment.imp.pkg.version>
+        <carbon.deployment.imp.pkg.version>[4.5.0, 4.6.0)</carbon.deployment.imp.pkg.version>
 
         <version.tomcat>7.0.59</version.tomcat>
         <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>
