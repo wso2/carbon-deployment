@@ -27,6 +27,9 @@ import org.apache.catalina.ha.session.SessionMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 
 import java.util.Map;
 import java.util.Set;
@@ -39,10 +42,19 @@ import java.util.Set;
  */
 
 public class CarbonSessionReplicationMessage extends ClusteringMessage {
-    private static final Log log = LogFactory.getLog(CarbonSessionReplicationMessage.class);
+    private transient static final Log log = LogFactory.getLog(CarbonSessionReplicationMessage.class);
     private ClusterMessage clusterMessage;
+    private int tenantId;
 
     public CarbonSessionReplicationMessage() {
+    }
+
+    public CarbonSessionReplicationMessage(int tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
     }
 
     public void setSessionClusterMessage(ClusterMessage clusterMessage) {
@@ -55,27 +67,52 @@ public class CarbonSessionReplicationMessage extends ClusteringMessage {
     }
 
     @Override
-    public void execute(ConfigurationContext configContext) throws ClusteringFault {
+    public void execute(ConfigurationContext mainConfigContext) throws ClusteringFault {
         if (log.isDebugEnabled()) {
             log.debug("Recieved CarbonSessionReplicationMessage");
         }
-        if (clusterMessage != null) {
-            //Process the received replication message
-            Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
-                    (Map<String, CarbonTomcatClusterableSessionManager>) configContext.
-                            getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
-            if (sessionManagerMap != null && !sessionManagerMap.isEmpty() &&
-                ((SessionMessage) clusterMessage).getContextName() != null) {
-                String context = getWebappContext(((SessionMessage) clusterMessage).
-                        getContextName(), sessionManagerMap.keySet());
-                if (context != null) {
-                    CarbonTomcatClusterableSessionManager manager = sessionManagerMap.get(context);
-                    if (manager != null) {
-                        manager.clusterMessageReceived(clusterMessage);
+
+        try {
+            if (clusterMessage != null) {
+                //Process the received replication message
+                String tenantDomain = DataHolder.getRealmService().
+                        getTenantManager().getDomain(tenantId);
+
+                ConfigurationContext configContext = null;
+                if (tenantId == MultitenantConstants.SUPER_TENANT_ID ||
+                        tenantId == MultitenantConstants.INVALID_TENANT_ID) {
+                    configContext = mainConfigContext;
+                } else if (TenantAxisUtils.getTenantConfigurationContexts(mainConfigContext).
+                        get(tenantDomain) != null) {   // if tenant is loaded
+                    configContext = TenantAxisUtils.getTenantConfigurationContexts(mainConfigContext).
+                            get(tenantDomain);
+                }
+
+                if (configContext == null) {
+                    //This logic breaks if the tenant is not loaded yet.
+                    // Fixing it needs design changes, and is tracked via CARBON-15037
+                    return;
+                }
+
+                Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
+                        (Map<String, CarbonTomcatClusterableSessionManager>) configContext.
+                                getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
+                if (sessionManagerMap != null && !sessionManagerMap.isEmpty() &&
+                        ((SessionMessage) clusterMessage).getContextName() != null) {
+                    String context = getWebappContext(((SessionMessage) clusterMessage).
+                            getContextName(), sessionManagerMap.keySet());
+                    if (context != null) {
+                        CarbonTomcatClusterableSessionManager manager = sessionManagerMap.get(context);
+                        if (manager != null) {
+                            manager.clusterMessageReceived(clusterMessage);
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            throw new ClusteringFault(e.getMessage(), e);
         }
+
     }
 
     private String getWebappContext(String path, Set<String> contextSet) {

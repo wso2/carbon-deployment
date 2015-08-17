@@ -149,6 +149,8 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
                                                                         boolean expires) {
         CarbonSessionReplicationMessage message = new CarbonSessionReplicationMessage();
         message.setSessionClusterMessage(super.requestCompleted(sessionId, expires));
+        message.setTenantId(ownerTenantId);
+
         return message;
     }
 
@@ -188,8 +190,9 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
     protected void sessionExpired(String id) {
         // Send the expired session
         CarbonTomcatSessionMessage msg = new CarbonTomcatSessionMessage(getName(),
-                                                            SessionMessage.EVT_SESSION_EXPIRED,
-                                                            null, id, id + "-EXPIRED-MSG");
+                SessionMessage.EVT_SESSION_EXPIRED,
+                null, id, id + "-EXPIRED-MSG",
+                ownerTenantId);
         msg.setTimestamp(System.currentTimeMillis());
         if (log.isDebugEnabled()) {
             log.debug(sm.getString("deltaManager.createMessage.expire", getName(), id));
@@ -240,8 +243,8 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
         CarbonTomcatSessionMessage newmsg =
                 new CarbonTomcatSessionMessage(name, SessionMessage.
                         EVT_ALL_SESSION_TRANSFERCOMPLETE, null,
-                                         "SESSION-STATE-TRANSFERED",
-                                         "SESSION-STATE-TRANSFERED" + getName());
+                        "SESSION-STATE-TRANSFERED",
+                        "SESSION-STATE-TRANSFERED" + getName(), ownerTenantId);
         newmsg.setTimestamp(findSessionTimestamp);
         if (log.isDebugEnabled()) {
             log.debug(sm.getString("deltaManager.createMessage.allSessionTransfered", getName()));
@@ -269,7 +272,8 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
         }
         CarbonTomcatSessionMessage newmsg =
                 new CarbonTomcatSessionMessage(name, SessionMessage.EVT_ALL_SESSION_DATA, data,
-                                         "SESSION-STATE", "SESSION-STATE-" + getName());
+                        "SESSION-STATE", "SESSION-STATE-" + getName(),
+                        ownerTenantId);
         newmsg.setTimestamp(sendTimestamp);
         if (log.isDebugEnabled()) {
             log.debug(sm.getString("deltaManager.createMessage.allSessionData", getName()));
@@ -290,12 +294,12 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
     @Override
     protected void sendCreateSession(String sessionId, DeltaSession session) {
         // Send create session evt to all backup node
-        CarbonTomcatSessionMessage msg =
-                new CarbonTomcatSessionMessage(getName(),
-                                         SessionMessage.EVT_SESSION_CREATED,
-                                         null,
-                                         sessionId,
-                                         sessionId + "-" + System.currentTimeMillis());
+        CarbonTomcatSessionMessage msg = new CarbonTomcatSessionMessage(getName(),
+                        SessionMessage.EVT_SESSION_CREATED,
+                        null,
+                        sessionId,
+                        sessionId + "-" + System.currentTimeMillis(),
+                        ownerTenantId);
         if (log.isDebugEnabled()) {
             log.debug(sm.getString("deltaManager.sendMessage.newSession", name, sessionId));
         }
@@ -324,10 +328,11 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
                 // serialize sessionID
                 byte[] data = serializeSessionId(newSessionID);
                 // notify change sessionID
-                CarbonTomcatSessionMessage msg =
-                        new CarbonTomcatSessionMessage(getName(), SessionMessage.EVT_CHANGE_SESSION_ID,
-                                                 data, orgSessionID, orgSessionID + "-"+
-                                                                     System.currentTimeMillis());
+                CarbonTomcatSessionMessage msg = new CarbonTomcatSessionMessage(getName(),
+                        SessionMessage.EVT_CHANGE_SESSION_ID,
+                        data, orgSessionID, orgSessionID + "-" +
+                        System.currentTimeMillis(),
+                        ownerTenantId);
                 msg.setTimestamp(System.currentTimeMillis());
 
                 ClusteringAgent clusteringAgent =
@@ -345,9 +350,10 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
 
     @Override
     public synchronized void getAllClusterSessions() {
-        CarbonTomcatSessionMessage msg =
-                new CarbonTomcatSessionMessage(this.getName(), SessionMessage.EVT_GET_ALL_SESSIONS,
-                        null, "GET-ALL", "GET-ALL-" + getName());
+        CarbonTomcatSessionMessage msg = new CarbonTomcatSessionMessage(this.getName(),
+                SessionMessage.EVT_GET_ALL_SESSIONS,
+                null, "GET-ALL", "GET-ALL-" + getName(),
+                ownerTenantId);
 
         synchronized (receivedMessageQueue) {
             receiverQueue = true;

@@ -26,6 +26,10 @@ import org.apache.catalina.tribes.Member;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +64,18 @@ public class CarbonTomcatSessionMessage extends ClusteringMessage implements Ses
     private String uniqueId;
     protected transient Member address;
 
+    private int tenantId;
+
+    public CarbonTomcatSessionMessage(String contextName,
+                                      int eventtype,
+                                      byte[] session,
+                                      String sessionID,
+                                      String uniqueID,
+                                      int tenantId) {
+        this(contextName, eventtype, session, sessionID);
+        uniqueId = uniqueID;
+        this.tenantId = tenantId;
+    }
 
     private CarbonTomcatSessionMessage(String contextName,
                                        int eventtype,
@@ -103,6 +119,7 @@ public class CarbonTomcatSessionMessage extends ClusteringMessage implements Ses
      * @param sessionID   - the id that identifies this session
      * @param uniqueID    - the id that identifies this message
      */
+    @Deprecated
     public CarbonTomcatSessionMessage(String contextName,
                                       int eventtype,
                                       byte[] session,
@@ -222,23 +239,50 @@ public class CarbonTomcatSessionMessage extends ClusteringMessage implements Ses
         return new CarbonTomcatSessionMessage();
     }
 
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
+    }
+
     @Override
-    public void execute(ConfigurationContext configContext) throws ClusteringFault {
+    public void execute(ConfigurationContext mainConfigContext) throws ClusteringFault {
         if (log.isDebugEnabled()) {
-            log.debug("Recived CarbonTomcatSessionMessage");
+            log.debug("Received CarbonTomcatSessionMessage");
         }
-        Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
-                (Map<String, CarbonTomcatClusterableSessionManager>) configContext.
-                        getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
-        if (sessionManagerMap != null && !sessionManagerMap.isEmpty() &&
-            this.getContextName() != null) {
-            String context = getWebappContext(this.getContextName(), sessionManagerMap.keySet());
-            if (context != null) {
-                CarbonTomcatClusterableSessionManager manager = sessionManagerMap.get(context);
-                if (manager != null) {
-                    manager.clusterMessageReceived(this);
+        try {
+            String tenantDomain = DataHolder.getRealmService().
+                    getTenantManager().getDomain(tenantId);
+
+            ConfigurationContext configContext = null;
+            if (tenantId == MultitenantConstants.SUPER_TENANT_ID ||
+                    tenantId == MultitenantConstants.INVALID_TENANT_ID) {
+                configContext = mainConfigContext;
+            } else if (TenantAxisUtils.getTenantConfigurationContexts(mainConfigContext).
+                    get(tenantDomain) != null) {   // if tenant is loaded
+                configContext = TenantAxisUtils.getTenantConfigurationContexts(mainConfigContext).
+                        get(tenantDomain);
+            }
+
+            if (configContext == null) {
+                //This logic breaks if the tenant is not loaded yet.
+                // Fixing it needs design changes, and is tracked via CARBON-15037
+                return;
+            }
+
+            Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap =
+                    (Map<String, CarbonTomcatClusterableSessionManager>) configContext.
+                            getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
+            if (sessionManagerMap != null && !sessionManagerMap.isEmpty() &&
+                this.getContextName() != null) {
+                String context = getWebappContext(this.getContextName(), sessionManagerMap.keySet());
+                if (context != null) {
+                    CarbonTomcatClusterableSessionManager manager = sessionManagerMap.get(context);
+                    if (manager != null) {
+                        manager.clusterMessageReceived(this);
+                    }
                 }
             }
+        } catch (UserStoreException e) {
+            throw new ClusteringFault(e.getMessage(), e);
         }
     }
 
