@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt</artifactId>
-        <version>4.5.1-SNAPSHOT</version>
+        <version>4.5.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.jaxws.webapp.mgt</artifactId>
-    <version>4.5.1-SNAPSHOT</version>
+    <version>4.5.0</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - JAX-WS/JAX-RS Webapp Management backend</name>
     <description>JAX-WS/JAX-RS Webapp Manager</description>
