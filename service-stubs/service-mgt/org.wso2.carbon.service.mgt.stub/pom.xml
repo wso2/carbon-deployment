@@ -21,14 +21,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>service-mgt-stub</artifactId>
-        <version>4.5.1-SNAPSHOT</version>
+        <version>4.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
-    <version>4.5.1-SNAPSHOT</version>
+    <version>4.4.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Service Management Stub</name>
     <url>http://wso2.org</url>
