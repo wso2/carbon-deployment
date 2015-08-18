@@ -86,9 +86,8 @@
                 <thead>
                 <tr>
                     <th width="15%"><fmt:message key="name"/></th>
-                    <th width="5%"><fmt:message key="version"/></th>
-                    <th width="62.5%"><fmt:message key="description"/></th>
-                    <th width="12.5%"><fmt:message key="action"/></th>
+                    <th width="7.5%"><fmt:message key="version"/></th>
+                    <th width="77.5%"><fmt:message key="description"/></th>
                 </tr>
                 </thead>
                 <%
@@ -108,37 +107,6 @@
                     <td>
                         <%=aData.getDescription()%>
                     </td>
-                    <%
-                    if (moduleName.equals("addressing")) {
-                    %>
-                        <td width="12.5%">&nbsp;</td>
-                    <%
-                    } else {
-                    %>
-                        <td>
-                        <%
-                            if (aData.getEngagedGlobalLevel() == true) {
-                        %>
-                        <a href="#"
-                           onclick="disengage('<%=serverURL%>','<%=aData.getModuleId()%>');"
-                           class="icon-link" style="background-image:url(images/disengage.gif);"><fmt:message key="disengage"/></a>
-
-
-                        <%
-                        } else {
-                        %>
-                        <a href="#" onclick="engage('<%=serverURL%>','<%=aData.getModuleId()%>');"
-                           class="icon-link"
-                           style="background-image:url(images/engage.gif);"><fmt:message key="engage"/></a>
-
-
-                        <%
-                        }
-                        %>
-                        </td>
-                    <%
-                    }
-                    %>
                 </tr>
                 <%
                     }
