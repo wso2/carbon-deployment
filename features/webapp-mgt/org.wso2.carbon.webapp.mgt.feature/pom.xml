@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-feature</artifactId>
-        <version>4.5.1</version>
+        <version>4.5.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -28,7 +28,7 @@
     <artifactId>org.wso2.carbon.webapp.mgt.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Webapp Management Feature</name>
-    <version>4.5.1</version>
+    <version>4.5.2-SNAPSHOT</version>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for Webapp Management functionality
     </description>
