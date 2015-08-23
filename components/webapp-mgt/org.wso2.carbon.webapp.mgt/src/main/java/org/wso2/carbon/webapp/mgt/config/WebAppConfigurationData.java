@@ -92,7 +92,10 @@ public class WebAppConfigurationData {
     }
 
     public void setParentFirst(boolean parentFirst) {
-        getClassloading().setParentFirst(parentFirst);
+        if(getClassloading()==null){
+            classloading = new Classloading();
+        }
+        classloading.setParentFirst(parentFirst);
     }
 
     public List<String> getEnvironments() {
