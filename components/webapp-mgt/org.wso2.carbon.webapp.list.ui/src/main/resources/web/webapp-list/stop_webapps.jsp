@@ -29,6 +29,8 @@
     String undeployAll = request.getParameter("undeployAll");
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
+    String defaultHostName = request.getParameter("defaultHostName");
+
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
@@ -79,7 +81,7 @@
 <script>
     location.href = '<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&webappState=<%= webappState %>'
                     <% if (hostName != null && httpPort != null) { %>
-                    + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
+                    + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&defaultHostName=<%= defaultHostName %>'
                     <% } %> ;
 </script>
 
@@ -90,7 +92,7 @@
 <script type="text/javascript">
     location.href = "<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8") %>&webappState=<%= webappState %>"
                     <% if (hostName != null && httpPort != null) { %>
-                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
+                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>&defaultHostName=<%= defaultHostName %>"
                     <% } %> ;
 </script>
 <%
