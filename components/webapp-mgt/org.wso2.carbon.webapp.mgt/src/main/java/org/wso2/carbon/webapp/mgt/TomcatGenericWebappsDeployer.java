@@ -254,8 +254,9 @@ public class TomcatGenericWebappsDeployer {
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         String filename = webappFile.getName();
         try {
-            Context context =
-                    DataHolder.getCarbonTomcatService().addWebApp(contextStr, webappFile.getAbsolutePath());
+            Context context = DataHolder.getCarbonTomcatService()
+                                        .addWebApp(WebAppUtils.getHost(webappFile.getAbsolutePath()), contextStr,
+                                                   webappFile.getAbsolutePath());
             //deploying web app for url-mapper
             if (DataHolder.getHotUpdateService() != null) {
                 List<String> hostNames = DataHolder.getHotUpdateService().getMappigsPerWebapp(contextStr);
