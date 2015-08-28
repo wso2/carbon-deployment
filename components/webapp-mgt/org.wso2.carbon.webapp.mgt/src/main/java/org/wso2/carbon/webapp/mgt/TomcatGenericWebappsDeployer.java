@@ -20,6 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.JavaUtils;
+import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
 import org.apache.catalina.Manager;
@@ -33,6 +34,8 @@ import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.ArtifactType;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
+import org.wso2.carbon.tomcat.CarbonTomcatException;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.session.CarbonTomcatClusterableSessionManager;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -42,6 +45,7 @@ import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
 import java.lang.management.ManagementPermission;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -247,6 +251,59 @@ public class TomcatGenericWebappsDeployer {
                 webContextParams, applicationEventListeners);
     }
 
+
+    /**
+     *
+     * @param baseDir web application directory path
+     * @return host name that matches the directory path
+     */
+    private Host getMatchingVirtualHost(String baseDir) {
+        Host virtualHost = null;
+        Container[] virtualHosts = DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChildren();
+        for (Container vHost : virtualHosts) {
+            Host childHost = (Host) vHost;
+            String appBase = childHost.getAppBase().replace("/", File.separator);
+            if (appBase.endsWith(File.separator)) {
+                appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
+            }
+
+            if (isWebappUploadedToVirtualAppBase(baseDir, appBase)) {
+                virtualHost = childHost;
+                break;
+            }
+        }
+        return virtualHost;
+    }
+
+    /**
+     *
+     * @param webAppBaseDir web application base path
+     * @return true if webapp is uploaded to Virtual Host
+     */
+    private boolean isWebappUploadedToVirtualAppBase(String webAppBaseDir, String appBase) {
+        String axis2Repo = MultitenantUtils.getAxis2RepositoryPath(this.tenantId);
+        String defaultWebAppPath = Paths.get(axis2Repo, CarbonConstants.WEBAPP_DEPLOYMENT_FOLDER).toString();
+        if (webAppBaseDir.equals(defaultWebAppPath)) {
+            return false;
+        } else {
+            String baseDir = appBase.substring(appBase.lastIndexOf(File.separator), appBase.length());
+            return (webAppBaseDir.contains(axis2Repo) && webAppBaseDir.endsWith(baseDir));
+        }
+    }
+
+    private Host getHost(String webappFilePath) throws CarbonTomcatException {
+        String baseDir = webappFilePath.substring(0, webappFilePath.lastIndexOf(File.separator));
+        Host defaultHost = (Host) DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChild(
+                DataHolder.getCarbonTomcatService().getTomcat().getEngine().getDefaultHost());
+        Host virtualHost = getMatchingVirtualHost(baseDir);
+
+        if (virtualHost != null) {
+            return virtualHost;
+        } else {
+            return defaultHost;
+        }
+    }
+
     protected void handleWebappDeployment(File webappFile, String contextStr,
                                           List<WebContextParameter> webContextParams,
                                           List<Object> applicationEventListeners) throws CarbonException {
@@ -254,8 +311,9 @@ public class TomcatGenericWebappsDeployer {
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
         String filename = webappFile.getName();
         try {
-            Context context =
-                    DataHolder.getCarbonTomcatService().addWebApp(contextStr, webappFile.getAbsolutePath());
+            Context context = DataHolder.getCarbonTomcatService().addWebApp(getHost(webappFile.getAbsolutePath()),
+                                                                            contextStr, webappFile.getAbsolutePath());
+
             //deploying web app for url-mapper
             if (DataHolder.getHotUpdateService() != null) {
                 List<String> hostNames = DataHolder.getHotUpdateService().getMappigsPerWebapp(contextStr);
