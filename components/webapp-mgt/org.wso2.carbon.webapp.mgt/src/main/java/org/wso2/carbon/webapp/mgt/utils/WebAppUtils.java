@@ -90,7 +90,7 @@ public class WebAppUtils {
         Container[] virtualHosts = findHostChildren();
         for (Container vHost : virtualHosts) {
             Host childHost = (Host) vHost;
-            String   appBase = childHost.getAppBase().replace("/", File.separator);
+            String appBase = childHost.getAppBase().replace("/", File.separator);
             if (appBase.endsWith(File.separator)) {
                 appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
             }
