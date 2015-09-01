@@ -182,12 +182,12 @@ public class WebappAdmin extends AbstractAdmin {
         String serviceListPathParamName = "service-list-path";
         String serviceListPathParam =
                 webApplication.getContext().getServletContext().getInitParameter(serviceListPathParamName);
-        if ("".equals(serviceListPathParam) || serviceListPathParam == null) {
+        if (serviceListPathParam == null || "".equals(serviceListPathParam)) {
             Map<String, ? extends ServletRegistration> servletRegs =
                     webApplication.getContext().getServletContext().getServletRegistrations();
             for (ServletRegistration servletReg : servletRegs.values()) {
                 serviceListPathParam = servletReg.getInitParameter(serviceListPathParamName);
-                if (!"".equals(serviceListPathParam) || serviceListPathParam != null) {
+                if (serviceListPathParam != null || !"".equals(serviceListPathParam) ) {
                     break;
                 }
             }
