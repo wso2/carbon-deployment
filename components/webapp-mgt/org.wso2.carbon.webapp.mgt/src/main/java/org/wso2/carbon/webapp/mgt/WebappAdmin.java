@@ -192,7 +192,7 @@ public class WebappAdmin extends AbstractAdmin {
                 }
             }
         }
-        if ("".equals(serviceListPathParam) || serviceListPathParam == null) {
+        if (serviceListPathParam == null || "".equals(serviceListPathParam)) {
             serviceListPathParam = "/services";
         } else {
             serviceListPathParam = "";
@@ -205,7 +205,6 @@ public class WebappAdmin extends AbstractAdmin {
         webappMetadata = new WebappMetadata();
 
         String appContext = WebAppUtils.checkJaxApplication(webApplication);
-        //Fix WSAS-1981
         if(appContext != null){
             webApplication.setProperty(WebappsConstants.WEBAPP_FILTER, WebappsConstants.JAX_WEBAPP_FILTER_PROP);
             setServiceListPath(webApplication);
