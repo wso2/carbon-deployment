@@ -26,6 +26,7 @@
         <module>features/webapp-mgt</module>
         <module>features/javaee</module>
         <module>features/monitoring</module>
+        <module>features/categories</module>
     </modules>
 
     <scm>
