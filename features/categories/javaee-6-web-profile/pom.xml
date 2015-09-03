@@ -21,13 +21,13 @@
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>categories</artifactId>
+        <artifactId>feature-categories</artifactId>
         <version>4.5.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.deployment.javaee-6-web-profile.category.feature</artifactId>
+    <artifactId>org.wso2.carbon.javaee-6-web-profile.category.feature</artifactId>
     <packaging>pom</packaging>
     <name>JaveEE 6 Web Profile ${project.version}</name>
     <url>http://wso2.org</url>
@@ -46,7 +46,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.deployment.javaee-6-web-profile.category.feature.group</id>
+                            <id>org.wso2.carbon.javaee-6-web-profile.category</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -60,7 +60,7 @@
                                     org.wso2.carbon.javaee.tomee.server
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.deployment.webapp-hosting.category.feature.group
+                                    org.wso2.carbon.webapp-hosting.category
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>

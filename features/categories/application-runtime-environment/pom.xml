@@ -21,17 +21,17 @@
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>categories</artifactId>
+        <artifactId>feature-categories</artifactId>
         <version>4.5.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.deployment.application-runtime-environment.category.feature</artifactId>
+    <artifactId>org.wso2.carbon.webapp-runtime-environment.category.feature</artifactId>
     <packaging>pom</packaging>
-    <name>Application Runtime Environment ${project.version}</name>
+    <name>Webapp Runtime Environment ${project.version}</name>
     <url>http://wso2.org</url>
-    <description>This feature contains Application Runtime Environment</description>
+    <description>This feature contains Webapp Runtime Environment</description>
     <build>
         <plugins>
             <plugin>
@@ -46,9 +46,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>
-                                org.wso2.carbon.deployment.application-runtime-environment.category.feature.group
-                            </id>
+                            <id>org.wso2.carbon.webapp-runtime-environment.category</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>

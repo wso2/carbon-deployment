@@ -21,13 +21,13 @@
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>categories</artifactId>
+        <artifactId>feature-categories</artifactId>
         <version>4.5.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.deployment.webapp-hosting.category.feature</artifactId>
+    <artifactId>org.wso2.carbon.webapp-hosting.category.feature</artifactId>
     <packaging>pom</packaging>
     <name>Webapp Hosting ${project.version}</name>
     <url>http://wso2.org</url>
@@ -46,7 +46,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.deployment.webapp-hosting.category.feature.group</id>
+                            <id>org.wso2.carbon.webapp-hosting.category</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
