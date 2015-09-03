@@ -46,6 +46,7 @@ import org.wso2.carbon.webapp.mgt.version.AppVersionGroupPersister;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.servlet.ServletRegistration;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -177,11 +178,38 @@ public class WebappAdmin extends AbstractAdmin {
         return webappMetadata;
     }
 
+    //TODO WSAS-2125
+    private void setServiceListPath(WebApplication webApplication) {
+        String serviceListPathParamName = "service-list-path";
+        String serviceListPathParam =
+                webApplication.getContext().getServletContext().getInitParameter(serviceListPathParamName);
+        if (serviceListPathParam == null || "".equals(serviceListPathParam)) {
+            Map<String, ? extends ServletRegistration> servletRegs =
+                    webApplication.getContext().getServletContext().getServletRegistrations();
+            for (ServletRegistration servletReg : servletRegs.values()) {
+                serviceListPathParam = servletReg.getInitParameter(serviceListPathParamName);
+                if (serviceListPathParam != null || !"".equals(serviceListPathParam) ) {
+                    break;
+                }
+            }
+        }
+        if (serviceListPathParam == null || "".equals(serviceListPathParam)) {
+            serviceListPathParam = "/services";
+        } else {
+            serviceListPathParam = "";
+        }
+        webApplication.setServiceListPath(serviceListPathParam);
+    }
+
     private WebappMetadata getWebapp(WebApplication webApplication) {
         WebappMetadata webappMetadata;
         webappMetadata = new WebappMetadata();
 
         String appContext = WebAppUtils.checkJaxApplication(webApplication);
+        if(appContext != null){
+            webApplication.setProperty(WebappsConstants.WEBAPP_FILTER, WebappsConstants.JAX_WEBAPP_FILTER_PROP);
+            setServiceListPath(webApplication);
+        }
         if (appContext == null) {
             appContext = "/";
         } else if (appContext.endsWith("/*")) {
