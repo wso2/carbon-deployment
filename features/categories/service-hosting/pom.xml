@@ -74,9 +74,6 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.servicehosting.server
                                 </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.servicehosting.ui
-                                </importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
