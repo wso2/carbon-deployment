@@ -36,6 +36,7 @@
         <module>application-runtime-environment</module>
         <module>javaee-6-web-profile</module>
         <module>webapp-hosting</module>
+        <module>service-hosting</module>
     </modules>
 
 </project>
