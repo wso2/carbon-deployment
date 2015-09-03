@@ -195,6 +195,23 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
                 }
             }
+
+            // check whether the webapp should be stopped
+            WebApplicationsHolder webApplicationsHolder
+                    = WebAppUtils.getWebappHolder(deploymentFileData.getAbsolutePath(), configContext);
+            Map<String, WebApplication> startedWebapps = webApplicationsHolder.getStartedWebapps();
+            if (startedWebapps.containsKey(webappName)) {
+                WebApplication webApplication = startedWebapps.get(webappName);
+                if (isWebappStopped(webApplication)) {
+                    try {
+                        webApplicationsHolder.stopWebapp(webApplication);
+                    } catch (CarbonException e) {
+                        String msg = "Error while stopping the webapp (which was in stopped state): " + webappName;
+                        log.error(msg, e);
+                        throw new DeploymentException(msg, e);
+                    }
+                }
+            }
         }
     }
 
@@ -225,12 +242,6 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
                 if (!CarbonUtils.isWorkerNode()) {
                     persistWebappMetadata(webApplication, axisConfig);
-                }
-
-                if (isWebappStopped(webApplication)) {
-                    WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(
-                            webApplication.getWebappFile().getAbsolutePath(), configContext);
-                    webApplicationsHolder.stopWebapp(webApplication);
                 }
 
             }
@@ -515,8 +526,10 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
                 if (configSystemRegistry.resourceExists(webappResourcePath)) {
                     Resource webappResource = configSystemRegistry.get(webappResourcePath);
-                    String webappStatus = webappResource.getProperty(WebappsConstants.WEBAPP_STATUS);
-                    return webappStatus.equalsIgnoreCase(WebappsConstants.WebappState.STOPPED);
+                    String webappStatus;
+                    if ((webappStatus = webappResource.getProperty(WebappsConstants.WEBAPP_STATUS)) != null) {
+                        return webappStatus.equalsIgnoreCase(WebappsConstants.WebappState.STOPPED);
+                    }
                 }
             } catch (RegistryException e) {
                 log.error("Failed to read persisted webapp stopped state for: " + webApplication.getContext());
