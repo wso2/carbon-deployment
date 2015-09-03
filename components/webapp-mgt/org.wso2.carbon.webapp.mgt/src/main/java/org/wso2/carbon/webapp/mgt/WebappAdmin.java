@@ -178,6 +178,7 @@ public class WebappAdmin extends AbstractAdmin {
         return webappMetadata;
     }
 
+    //TODO WSAS-2125
     private void setServiceListPath(WebApplication webApplication) {
         String serviceListPathParamName = "service-list-path";
         String serviceListPathParam =
