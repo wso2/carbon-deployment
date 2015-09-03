@@ -193,7 +193,7 @@ public class EntitlementFilter implements Filter {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Exception while making the decision ", e);
                 throw new EntitlementFilterException("Exception while making the decision : " + e);
             }
         }
