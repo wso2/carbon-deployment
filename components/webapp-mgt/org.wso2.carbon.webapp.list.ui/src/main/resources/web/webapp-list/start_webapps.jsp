@@ -79,7 +79,7 @@
         }
 %>
 <script>
-    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>'
+    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&defaultHostName=<%= defaultHostName %>'
                      <% if (hostName != null && httpPort != null) { %>
             + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&webappState=all&defaultHostName=<%= defaultHostName %>'
             <% } %> ;
@@ -90,7 +90,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>"
+    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&defaultHostName=<%= defaultHostName %>"
                    <% if (hostName != null && httpPort != null) { %>
                     +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>&defaultHostName=<%= defaultHostName %>"
                     <% } %> ;

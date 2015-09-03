@@ -26,6 +26,7 @@
         <module>features/webapp-mgt</module>
         <module>features/javaee</module>
         <module>features/monitoring</module>
+        <module>features/categories</module>
     </modules>
 
     <scm>
@@ -1324,11 +1325,11 @@
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
 
         <!-- Carbon Commons version-->
-        <carbon.commons.version>4.4.4</carbon.commons.version>
+        <carbon.commons.version>4.4.6</carbon.commons.version>
         <carbon.commons.imp.pkg.version>[4.4.0, 4.5.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>4.5.4</carbon.identity.version>
+        <carbon.identity.version>4.5.5</carbon.identity.version>
         <carbon.identity.imp.pkg.version>[4.5.0, 4.6.0)</carbon.identity.imp.pkg.version>
 
         <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
