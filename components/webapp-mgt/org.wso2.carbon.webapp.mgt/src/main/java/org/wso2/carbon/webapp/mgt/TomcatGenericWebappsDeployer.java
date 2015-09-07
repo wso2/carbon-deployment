@@ -102,7 +102,7 @@ public class TomcatGenericWebappsDeployer {
                        List<WebContextParameter> webContextParams,
                        List<Object> applicationEventListeners) throws CarbonException {
         String webappName = webappFile.getName();
-        if(webappName.startsWith("#") || webappName.endsWith("#.war") || webappName.endsWith("#")) {
+        if (webappName.startsWith("#") || webappName.endsWith("#.war") || webappName.endsWith("#")) {
             throw new CarbonException("Invalid filename. Webapp name can't start or ends with '#'");
         }
         PrivilegedCarbonContext privilegedCarbonContext =
