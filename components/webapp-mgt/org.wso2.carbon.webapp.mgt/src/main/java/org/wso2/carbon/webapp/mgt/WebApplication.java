@@ -31,6 +31,9 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
@@ -424,6 +427,9 @@ public class WebApplication {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
         }
 
+        // remove webapp stopped state from the registry
+        removeWebappStoppedStatus(this);
+
     }
 
     /**
@@ -777,5 +783,30 @@ public class WebApplication {
     private String getWebappKey(){
         return hostName+":"+webappFile.getName();
     }
+
+    /**
+     * Removes webapp stopped entry from the registry
+     *
+     * @param webApplication WebApplication instance
+     */
+    private void removeWebappStoppedStatus(WebApplication webApplication) {
+        if (DataHolder.getRegistryService() != null) {
+            try {
+                Registry configSystemRegistry = DataHolder.getRegistryService().getConfigSystemRegistry(
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
+                String webappResourcePath = WebAppUtils.getWebappResourcePath(webApplication);
+                if (configSystemRegistry.resourceExists(webappResourcePath)) {
+                    Resource webappResource = configSystemRegistry.get(webappResourcePath);
+                    if (webappResource.getProperty(WebappsConstants.WEBAPP_STATUS) != null) {
+                        webappResource.removeProperty(WebappsConstants.WEBAPP_STATUS);
+                        configSystemRegistry.put(webappResourcePath, webappResource);
+                    }
+                }
+            } catch (RegistryException e) {
+                log.error("Failed to remove persisted webapp stopped state for: " + webApplication.getContext());
+            }
+        }
+    }
+
 }
 

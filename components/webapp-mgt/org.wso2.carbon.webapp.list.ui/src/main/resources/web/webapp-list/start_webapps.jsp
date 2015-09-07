@@ -81,7 +81,7 @@
 <script>
     location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&defaultHostName=<%= defaultHostName %>'
                      <% if (hostName != null && httpPort != null) { %>
-            + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&webappState=all'
+            + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&webappState=all&defaultHostName=<%= defaultHostName %>'
             <% } %> ;
 </script>
 
@@ -92,7 +92,7 @@
 <script type="text/javascript">
     location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&defaultHostName=<%= defaultHostName %>"
                    <% if (hostName != null && httpPort != null) { %>
-                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
+                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>&defaultHostName=<%= defaultHostName %>"
                     <% } %> ;
 </script>
 <%

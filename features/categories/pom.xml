@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -15,29 +15,28 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
-        <artifactId>service-mgt-feature</artifactId>
-        <relativePath>../pom.xml</relativePath>
+        <artifactId>carbon-deployment</artifactId>
         <version>4.5.2-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>service-hosting-feature</artifactId>
+    <artifactId>feature-categories</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Service Hosting Feature Aggregator Module</name>
+    <name>WSO2 - Feature Categories Module</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>aar-services</module>
-        <module>jar-services</module>
-        <module>spring-services</module>
-        <module>org.wso2.carbon.servicehosting.feature</module>
-        <module>org.wso2.carbon.servicehosting.server.feature</module>
-        <module>org.wso2.carbon.servicehosting.ui.feature</module>
+        <module>application-runtime-environment</module>
+        <module>javaee-6-web-profile</module>
+        <module>webapp-hosting</module>
+        <module>service-hosting</module>
     </modules>
 
 </project>
-
