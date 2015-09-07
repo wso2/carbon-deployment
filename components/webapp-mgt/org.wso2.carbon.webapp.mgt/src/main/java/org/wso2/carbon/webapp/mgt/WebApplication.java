@@ -32,6 +32,7 @@ import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -795,7 +796,11 @@ public class WebApplication {
                         PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
                 String webappResourcePath = WebAppUtils.getWebappResourcePath(webApplication);
                 if (configSystemRegistry.resourceExists(webappResourcePath)) {
-                    configSystemRegistry.get(webappResourcePath).removeProperty(WebappsConstants.WEBAPP_STATUS);
+                    Resource webappResource = configSystemRegistry.get(webappResourcePath);
+                    if (webappResource.getProperty(WebappsConstants.WEBAPP_STATUS) != null) {
+                        webappResource.removeProperty(WebappsConstants.WEBAPP_STATUS);
+                        configSystemRegistry.put(webappResourcePath, webappResource);
+                    }
                 }
             } catch (RegistryException e) {
                 log.error("Failed to remove persisted webapp stopped state for: " + webApplication.getContext());
