@@ -34,6 +34,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -184,10 +185,15 @@ public class EntitlementFilter implements Filter {
             try {
                 String decision = pepProxy.getDecision(userName, resource, action, env);
                 OMElement decisionElement = AXIOMUtil.stringToOM(decision);
-                simpleDecision = decisionElement.getFirstChildWithName(new QName("Result")).
-                        getFirstChildWithName(new QName("Decision")).getText();
+                Iterator results = decisionElement.getChildrenWithLocalName("Result");
+                if(results.hasNext()){
+                    results = ((OMElement)results.next()).getChildrenWithLocalName("Decision");
+                    if(results.hasNext()){
+                        simpleDecision = ((OMElement) results.next()).getText();
+                    }
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Exception while making the decision ", e);
                 throw new EntitlementFilterException("Exception while making the decision : " + e);
             }
         }
