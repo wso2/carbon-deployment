@@ -22,6 +22,7 @@ import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.catalina.Context;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
@@ -201,12 +202,18 @@ public class WebappAdmin extends AbstractAdmin {
         webApplication.setServiceListPath(serviceListPathParam);
     }
 
+    private boolean checkFaultyWebappParam(Context context) {
+        String param = context.findParameter(WebappsConstants.FAULTY_WEBAPP);
+        return param != null && !"".equals(param) && Boolean.parseBoolean(param);
+    }
+
     private WebappMetadata getWebapp(WebApplication webApplication) {
         WebappMetadata webappMetadata;
         webappMetadata = new WebappMetadata();
 
         String appContext = WebAppUtils.checkJaxApplication(webApplication);
-        if(appContext != null){
+        boolean isFaulty = checkFaultyWebappParam(webApplication.getContext());
+        if (appContext != null && !isFaulty && "STARTED".equalsIgnoreCase(webApplication.getContext().getStateName())) {
             webApplication.setProperty(WebappsConstants.WEBAPP_FILTER, WebappsConstants.JAX_WEBAPP_FILTER_PROP);
             setServiceListPath(webApplication);
         }
