@@ -1,4 +1,15 @@
 # carbon-deployment
+
+---
+
+|  Branch | Build Status |
+| :------------ |:-------------
+| master      | [![Build Status](https://wso2.org/jenkins/job/carbon-deployment/badge/icon)](https://wso2.org/jenkins/job/carbon-deployment) |
+| release-4.2.x | [![Build Status](https://wso2.org/jenkins/job/carbon-deployment_release-4.2.x/badge/icon)](https://wso2.org/jenkins/job/carbon-deployment_release-4.2.x/) |
+
+
+---
+
 Latest Released Version v4.5.3.
 
 #### carbon-deployment repo contains the the following deployment components.
