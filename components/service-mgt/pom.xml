@@ -38,7 +38,7 @@
         <module>operation-mgt</module>
         <module>axis2-service-mgt</module>
         <module>spring-services</module>
-        <module>bam-data-agents</module>
+        <!--<module>bam-data-agents</module>-->
     </modules>
 
 

@@ -73,9 +73,11 @@
             <groupId>ua.parser.wso2</groupId>
             <artifactId>ua-parser</artifactId>
         </dependency>
+<!--
         <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
+            <groupId>org.wso2.carbon.analytics-common</groupId>
             <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
         </dependency>
+-->
     </dependencies>
 </project>
