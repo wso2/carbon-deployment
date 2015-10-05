@@ -40,9 +40,9 @@
         <module>org.wso2.carbon.webapp.mgt.common.ui.feature</module>
         <module>org.wso2.carbon.webapp.mgt.ui.feature</module>
         <module>org.wso2.carbon.identity.xacml.filter.feature</module>
-        <module>org.wso2.carbon.bam.webapp.agent.server.feature</module>
-        <module>org.wso2.carbon.bam.webapp.agent.ui.feature</module>
-        <module>org.wso2.carbon.bam.webapp.agent.feature</module>
+        <!--<module>org.wso2.carbon.bam.webapp.agent.server.feature</module>-->
+        <!--<module>org.wso2.carbon.bam.webapp.agent.ui.feature</module>-->
+        <!--<module>org.wso2.carbon.bam.webapp.agent.feature</module>-->
     </modules>
 
     <dependencies>
