@@ -386,8 +386,7 @@ public class RegistryPersistenceManager {
      * Updates the Registry with given rest api config data.
      *
      * @param restAPIConfigData rest api config data
-     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException
-     *          thrown when updating the registry properties fails.
+     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException thrown when updating the registry properties fails.
      */
     public void update(RESTAPIConfigData restAPIConfigData) throws RegistryException {
         updateConfigurationProperty(CommonConstants.REST_API_URL, restAPIConfigData.getUrl(),
@@ -400,6 +399,7 @@ public class RegistryPersistenceManager {
 
     /**
      * Get the rest api config data
+     *
      * @return RESTAPIConfigData containing the rest api config data
      */
     public RESTAPIConfigData getRestAPIConfigData() {
