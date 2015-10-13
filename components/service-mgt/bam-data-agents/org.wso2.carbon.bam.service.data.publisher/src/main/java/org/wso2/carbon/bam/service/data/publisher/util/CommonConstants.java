@@ -49,5 +49,9 @@ public class CommonConstants {
 
     public static final String DEFAULT_BAM_SERVER_URL = "tcp://127.0.0.1:7611";
 
+    public static final String REST_API_URL = "RESTApiURL";
+    public static final String REST_API_USER_NAME = "RESTApiUserName";
+    public static final String REST_API_PASSWORD = "RESTApiPassword";
+
 
 }
