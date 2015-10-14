@@ -80,9 +80,9 @@ public class StatisticsServiceComponent {
         try {
             dataPublisherAdminService = new ServiceDataPublisherAdmin();
             BundleContext bundleContext = context.getBundleContext();
-            bundleContext.registerService(ServiceDataPublisherAdmin.class.getName(),
-                    dataPublisherAdminService, null);
+            bundleContext.registerService(ServiceDataPublisherAdmin.class.getName(), dataPublisherAdminService, null);
         } catch (Throwable e) {
+            //since component activation happen at startup log and ignore it.
             log.error("Error while registering service ", e);
         }
         checkPublishingEnabled();

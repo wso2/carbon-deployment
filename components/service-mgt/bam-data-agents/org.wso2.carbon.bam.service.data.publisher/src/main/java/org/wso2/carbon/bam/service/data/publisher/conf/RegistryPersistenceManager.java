@@ -282,8 +282,7 @@ public class RegistryPersistenceManager {
      * Updates the Registry with given analytic node config data.
      *
      * @param analyzingConfigData analyzer node configuration data
-     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException
-     *          thrown when updating the registry properties fails.
+     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException thrown when updating the registry properties fails.
      */
     public void update(AnalyzingConfigData analyzingConfigData) throws RegistryException {
 
@@ -351,6 +350,7 @@ public class RegistryPersistenceManager {
 
     /**
      * get analyzer config data
+     *
      * @return AnalyzingConfigData containing the analyzer config data
      */
     public AnalyzingConfigData getAnaEventingConfigData() {
