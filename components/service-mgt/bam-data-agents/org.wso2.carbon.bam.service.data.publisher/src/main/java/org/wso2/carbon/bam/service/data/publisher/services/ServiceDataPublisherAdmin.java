@@ -16,8 +16,7 @@
 package org.wso2.carbon.bam.service.data.publisher.services;
 
 
-import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
-import org.wso2.carbon.bam.service.data.publisher.conf.RegistryPersistenceManager;
+import org.wso2.carbon.bam.service.data.publisher.conf.*;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -37,6 +36,14 @@ public class ServiceDataPublisherAdmin extends AbstractAdmin {
         return registryPersistenceManager.getEventingConfigData();
     }
 
+    public void configureAnalyzing(AnalyzingConfigData analyzingConfigData) throws Exception {
+        registryPersistenceManager.update(analyzingConfigData);
+    }
+
+    public AnalyzingConfigData getAnalyzingConfigData() {
+        return registryPersistenceManager.getAnaEventingConfigData();
+    }
+
     public boolean isCloudDeployment(){
         String[] cloudDeploy = ServerConfiguration.getInstance().
                 getProperties(CommonConstants.CLOUD_DEPLOYMENT_PROP);
@@ -53,4 +60,13 @@ public class ServiceDataPublisherAdmin extends AbstractAdmin {
            return CommonConstants.DEFAULT_BAM_SERVER_URL;
         }
     }
+
+    public void configureRestAPI(RESTAPIConfigData restAPIConfigData) throws Exception {
+        registryPersistenceManager.update(restAPIConfigData);
+    }
+
+    public RESTAPIConfigData getRestAPIConfigData() {
+        return registryPersistenceManager.getRestAPIConfigData();
+    }
+
 }

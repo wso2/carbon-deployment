@@ -29,7 +29,10 @@ public class CommonConstants {
     public static final String BAM_USER_NAME = "BAMUserName";
     public static final String BAM_PASSWORD = "BAMPassword";
 
-
+    public static final String ANALYZER_URL = "AnalyzerURL";
+    public static final String ANALYZER_USER_NAME = "AnalyzerUserName";
+    public static final String ANALYZER_PASSWORD = "AnalyzerPassword";
+    
     public static final String SERVICE_COMMON_REG_PATH = RegistryResources.COMPONENTS
                                                    + "org.wso2.carbon.bam.service.data.publisher/common/";
 
@@ -45,6 +48,10 @@ public class CommonConstants {
     public static final String SERVER_CONFIG_BAM_URL = "BamServerURL";
 
     public static final String DEFAULT_BAM_SERVER_URL = "tcp://127.0.0.1:7611";
+
+    public static final String REST_API_URL = "RESTApiURL";
+    public static final String REST_API_USER_NAME = "RESTApiUserName";
+    public static final String REST_API_PASSWORD = "RESTApiPassword";
 
 
 }
