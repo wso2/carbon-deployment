@@ -1310,23 +1310,23 @@
 
         <!-- Carbon kernel version-->
         <carbon.kernel.version>4.4.1</carbon.kernel.version>
-        <carbon.kernel.imp.pkg.version>[4.4.0, 4.5.0)</carbon.kernel.imp.pkg.version>
+        <carbon.kernel.imp.pkg.version>[4.4.0, 5.0.0)</carbon.kernel.imp.pkg.version>
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
 
         <!-- Carbon Commons version-->
-        <carbon.commons.version>4.4.7</carbon.commons.version>
-        <carbon.commons.imp.pkg.version>[4.4.0, 4.5.0)</carbon.commons.imp.pkg.version>
+        <carbon.commons.version>4.4.8</carbon.commons.version>
+        <carbon.commons.imp.pkg.version>[4.4.0, 5.0.0)</carbon.commons.imp.pkg.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>4.5.6</carbon.identity.version>
-        <carbon.identity.imp.pkg.version>[4.5.0, 4.6.0)</carbon.identity.imp.pkg.version>
+        <carbon.identity.version>5.0.0</carbon.identity.version>
+        <carbon.identity.imp.pkg.version>[5.0.0, 6.0.0)</carbon.identity.imp.pkg.version>
 
         <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
 
         <!-- Carbon Deployment version-->
         <carbon.deployment.version>4.6.0-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>${carbon.deployment.version}</carbon.deployment.exp.pkg.version>
-        <carbon.deployment.imp.pkg.version>[4.5.0, 4.6.0)</carbon.deployment.imp.pkg.version>
+        <carbon.deployment.imp.pkg.version>[4.6.0, 5.0.0)</carbon.deployment.imp.pkg.version>
 
         <version.tomcat>7.0.59</version.tomcat>
         <orbit.version.tomcat>${version.tomcat}.wso2v3</orbit.version.tomcat>
