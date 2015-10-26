@@ -75,7 +75,11 @@
                     var jarinput = document.webappUploadForm.warFileName[i].value;
                     emptyFields = false;
 
-                    if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
+                    var warName = jarinput.substring(jarinput.lastIndexOf("\\") + 1);
+                    if (warName.indexOf("#") == 0 || warName.indexOf("#.war") != -1) {
+                        CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file.name"/>');
+                        validFileNames = false;
+                    } else if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
                         CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                         validFileNames = false;
                         break;
@@ -90,10 +94,12 @@
                 }
             } else if (document.webappUploadForm.warFileName.value) {
                 var jarinput = document.webappUploadForm.warFileName.value;
-
                 emptyFields = false;
-
-                if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
+                var warName = jarinput.substring(jarinput.lastIndexOf("\\") + 1);
+                if (warName.indexOf("#") == 0 || warName.indexOf("#.war") != -1) {
+                    CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file.name"/>');
+                    validFileNames = false;
+                } else if (jarinput != '' && jarinput.lastIndexOf(".war") == -1) {
                     CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                     validFileNames = false;
                 } else if (validateName(jarinput, true)) {

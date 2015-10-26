@@ -112,7 +112,6 @@ public class WebAppUtils {
             if (appBase.endsWith(File.separator)) {
                 appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
             }
-
             if (isWebappUploadedToVirtualAppBase(baseDir, appBase)) {
                 virtualHost = childHost;
                 break;
@@ -147,7 +146,7 @@ public class WebAppUtils {
         String baseDir = webappFilePath.substring(0, webappFilePath.lastIndexOf(File.separator));
         Host defaultHost = (Host) DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChild(
                 DataHolder.getCarbonTomcatService().getTomcat().getEngine().getDefaultHost());
-        Host virtualHost = WebAppUtils.getMatchingVirtualHost(baseDir);
+        Host virtualHost = getMatchingVirtualHost(baseDir);
 
         if (virtualHost != null) {
             return virtualHost;

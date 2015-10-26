@@ -22,6 +22,7 @@ import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.catalina.Context;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
@@ -46,6 +47,7 @@ import org.wso2.carbon.webapp.mgt.version.AppVersionGroupPersister;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.servlet.ServletRegistration;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -177,11 +179,44 @@ public class WebappAdmin extends AbstractAdmin {
         return webappMetadata;
     }
 
+    //TODO WSAS-2125
+    private void setServiceListPath(WebApplication webApplication) {
+        String serviceListPathParamName = "service-list-path";
+        String serviceListPathParam =
+                webApplication.getContext().getServletContext().getInitParameter(serviceListPathParamName);
+        if (serviceListPathParam == null || "".equals(serviceListPathParam)) {
+            Map<String, ? extends ServletRegistration> servletRegs =
+                    webApplication.getContext().getServletContext().getServletRegistrations();
+            for (ServletRegistration servletReg : servletRegs.values()) {
+                serviceListPathParam = servletReg.getInitParameter(serviceListPathParamName);
+                if (serviceListPathParam != null || !"".equals(serviceListPathParam) ) {
+                    break;
+                }
+            }
+        }
+        if (serviceListPathParam == null || "".equals(serviceListPathParam)) {
+            serviceListPathParam = "/services";
+        } else {
+            serviceListPathParam = "";
+        }
+        webApplication.setServiceListPath(serviceListPathParam);
+    }
+
+    private boolean checkFaultyWebappParam(Context context) {
+        String param = context.findParameter(WebappsConstants.FAULTY_WEBAPP);
+        return param != null && !"".equals(param) && Boolean.parseBoolean(param);
+    }
+
     private WebappMetadata getWebapp(WebApplication webApplication) {
         WebappMetadata webappMetadata;
         webappMetadata = new WebappMetadata();
 
         String appContext = WebAppUtils.checkJaxApplication(webApplication);
+        boolean isFaulty = checkFaultyWebappParam(webApplication.getContext());
+        if (appContext != null && !isFaulty && "STARTED".equalsIgnoreCase(webApplication.getContext().getStateName())) {
+            webApplication.setProperty(WebappsConstants.WEBAPP_FILTER, WebappsConstants.JAX_WEBAPP_FILTER_PROP);
+            setServiceListPath(webApplication);
+        }
         if (appContext == null) {
             appContext = "/";
         } else if (appContext.endsWith("/*")) {

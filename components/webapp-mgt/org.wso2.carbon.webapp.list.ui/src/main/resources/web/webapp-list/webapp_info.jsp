@@ -697,14 +697,14 @@
                                 <%--</a>--%>
                                 <%--</td>--%>
                         </tr>
-                        <tr>
+                        <%--<tr>
                             <td>  <% /*System.out.println(URLEncoder.encode(wadlURLS.get(i).toString().replace("?_wadl", ""), "UTF-8"));
                                 System.out.println(wadlURLS.get(i).toString().substring(0,wadlURLS.get(i).toString().indexOf("services")));
                                 System.out.println(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + " : "+ request.getContextPath());*/
                             %>
                                 <a href="<%=defaultPrefix%>/services?wadltryit&resourceurl=<%=URLEncoder.encode(wadlURLS.get(i).toString().replace("?_wadl", ""), "UTF-8")%>" class="icon-link" style="background-image:url(images/tryit.gif);" target="_blank">  Try this </a>
                             </td>
-                        </tr>
+                        </tr>--%>
                         <tr>
                             <td colspan="2" align="left">
                                 <strong><fmt:message key="endpoints"/></strong>

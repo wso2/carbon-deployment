@@ -27,7 +27,7 @@
             <order>2</order>
             <icon>../webapp-list/images/application.png</icon>
             <style-class>home</style-class>
-            <require-permission>/permission/admin/manage/manage/webapp</require-permission>
+            <require-permission>/permission/admin/manage/modify/webapp</require-permission>
         </menu>
         <menu>
             <id>webapps_list_menu</id>
@@ -39,7 +39,7 @@
             <order>1</order>
             <icon>../webapp-list/images/list.gif</icon>
             <style-class>home</style-class>
-            <require-permission>/permission/admin/manage/manage/webapp</require-permission>
+            <require-permission>/permission/admin/manage/modify/webapp</require-permission>
         </menu>
         <menu>
             <id>webapps_add_menu</id>

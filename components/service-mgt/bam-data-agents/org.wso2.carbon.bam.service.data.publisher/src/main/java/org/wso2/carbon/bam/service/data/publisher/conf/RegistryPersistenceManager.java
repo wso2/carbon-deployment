@@ -278,6 +278,21 @@ public class RegistryPersistenceManager {
 
     }
 
+    /**
+     * Updates the Registry with given analytic node config data.
+     *
+     * @param analyzingConfigData analyzer node configuration data
+     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException thrown when updating the registry properties fails.
+     */
+    public void update(AnalyzingConfigData analyzingConfigData) throws RegistryException {
+
+        updateConfigurationProperty(CommonConstants.ANALYZER_URL, analyzingConfigData.getUrl(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(CommonConstants.ANALYZER_USER_NAME, analyzingConfigData.getUserName(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(CommonConstants.ANALYZER_PASSWORD, analyzingConfigData.getPassword(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+    }
 
     /**
      * Fetches the value of the property with propertyName from registry. Returns null if no property
@@ -333,5 +348,87 @@ public class RegistryPersistenceManager {
         return load();
     }
 
+    /**
+     * get analyzer config data
+     *
+     * @return AnalyzingConfigData containing the analyzer config data
+     */
+    public AnalyzingConfigData getAnaEventingConfigData() {
+        AnalyzingConfigData analyzingConfigData = new AnalyzingConfigData();
+        // First set it to defaults, but do not persist
+        analyzingConfigData.setUrl(EMPTY_STRING);
+        analyzingConfigData.setPassword(EMPTY_STRING);
+        analyzingConfigData.setUserName(EMPTY_STRING);
+
+        // then load it from registry
+        try {
+            String analyzerURL = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.ANALYZER_URL);
+            String analyzerUsername = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.ANALYZER_USER_NAME);
+            String analyzerPassword = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.ANALYZER_PASSWORD);
+
+            if (analyzerURL != null && analyzerUsername != null && analyzerPassword != null) {
+                analyzingConfigData.setUrl(analyzerURL);
+                analyzingConfigData.setUserName(analyzerUsername);
+                analyzingConfigData.setPassword(analyzerPassword);
+            } else { // Registry does not have analyzer config. Set to defaults.
+                update(analyzingConfigData);
+            }
+        } catch (Exception ignored) {
+            // If something went wrong, then we have the default, or whatever loaded so far
+        }
+        return analyzingConfigData;
+    }
+
+    /**
+     * Updates the Registry with given rest api config data.
+     *
+     * @param restAPIConfigData rest api config data
+     * @throws org.wso2.carbon.registry.core.exceptions.RegistryException thrown when updating the registry properties fails.
+     */
+    public void update(RESTAPIConfigData restAPIConfigData) throws RegistryException {
+        updateConfigurationProperty(CommonConstants.REST_API_URL, restAPIConfigData.getUrl(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(CommonConstants.REST_API_USER_NAME, restAPIConfigData.getUserName(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(CommonConstants.REST_API_PASSWORD, restAPIConfigData.getPassword(),
+                CommonConstants.SERVICE_COMMON_REG_PATH);
+    }
+
+    /**
+     * Get the rest api config data
+     *
+     * @return RESTAPIConfigData containing the rest api config data
+     */
+    public RESTAPIConfigData getRestAPIConfigData() {
+        RESTAPIConfigData restAPIConfigData = new RESTAPIConfigData();
+        // First set it to defaults, but do not persist
+        restAPIConfigData.setUrl(EMPTY_STRING);
+        restAPIConfigData.setPassword(EMPTY_STRING);
+        restAPIConfigData.setUserName(EMPTY_STRING);
+
+        // then load it from registry
+        try {
+            String restApiURL = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.REST_API_URL);
+            String restApiUsername = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.REST_API_USER_NAME);
+            String restApiPassword = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                    CommonConstants.REST_API_PASSWORD);
+
+            if (restApiURL != null && restApiUsername != null && restApiPassword != null) {
+                restAPIConfigData.setUrl(restApiURL);
+                restAPIConfigData.setUserName(restApiUsername);
+                restAPIConfigData.setPassword(restApiPassword);
+            } else { // Registry does not have rest api config. Set to defaults.
+                update(restAPIConfigData);
+            }
+        } catch (Exception ignored) {
+            // If something went wrong, then we have the default, or whatever loaded so far
+        }
+        return restAPIConfigData;
+    }
 
 }

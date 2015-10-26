@@ -21,9 +21,8 @@
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>service-mgt-feature</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>4.5.2-SNAPSHOT</version>
+        <version>4.5.4-SNAPSHOT</version>
     </parent>
-
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>service-hosting-feature</artifactId>
@@ -38,9 +37,7 @@
         <module>org.wso2.carbon.servicehosting.feature</module>
         <module>org.wso2.carbon.servicehosting.server.feature</module>
         <module>org.wso2.carbon.servicehosting.ui.feature</module>
-
     </modules>
-
 
 </project>
 

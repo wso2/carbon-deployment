@@ -33,11 +33,9 @@ import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.ArtifactType;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
-import org.wso2.carbon.webapp.mgt.session.CarbonTomcatClusterableSessionManager;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
+import org.wso2.carbon.webapp.mgt.session.CarbonTomcatClusterableSessionManager;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
@@ -100,6 +98,9 @@ public class TomcatGenericWebappsDeployer {
                        List<WebContextParameter> webContextParams,
                        List<Object> applicationEventListeners) throws CarbonException {
         String webappName = webappFile.getName();
+        if (webappName.startsWith("#") || webappName.endsWith("#.war") || webappName.endsWith("#")) {
+            throw new CarbonException("Invalid filename. Webapp name can't start or ends with '#'");
+        }
         PrivilegedCarbonContext privilegedCarbonContext =
                 PrivilegedCarbonContext.getThreadLocalCarbonContext();
 
@@ -582,7 +583,6 @@ public class TomcatGenericWebappsDeployer {
         privilegedCarbonContext.setApplicationName(
                 TomcatUtil.getApplicationNameFromContext(context.getBaseName()));
         webApplicationsHolder.undeployWebapp(webapp);
-        removeWebappStoppedStatus(webapp);
         log.info("Undeployed webapp: " + webapp);
     }
 
@@ -619,27 +619,6 @@ public class TomcatGenericWebappsDeployer {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Removes the webapp stopped entry from the registry
-     *
-     * @param webApplication WebApplication instance
-     */
-    private void removeWebappStoppedStatus(WebApplication webApplication) {
-        if (DataHolder.getRegistryService() != null) {
-            try {
-                Registry configSystemRegistry = DataHolder.getRegistryService().getConfigSystemRegistry(
-                        PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
-                String webappResourcePath = WebAppUtils.getWebappResourcePath(webApplication);
-
-                if (configSystemRegistry.resourceExists(webappResourcePath)) {
-                    configSystemRegistry.delete(webappResourcePath);
-                }
-            } catch (RegistryException e) {
-                log.error("Failed to remove persisted webapp stopped state for: " + webApplication.getContext());
-            }
-        }
     }
 
 }
