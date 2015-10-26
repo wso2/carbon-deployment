@@ -161,7 +161,7 @@ public class WebAppUtils {
      * @param webappFile web application file
      * @return <hostname>:<webapp-name>
      */
-    public static String getWebappKey (File webappFile) {
+    public static String getWebappKey(File webappFile) {
         String baseDir = getWebappDirPath(webappFile.getAbsolutePath());
         String hostName = getMatchingHostName(baseDir);
         return hostName + ":" + webappFile.getName();
