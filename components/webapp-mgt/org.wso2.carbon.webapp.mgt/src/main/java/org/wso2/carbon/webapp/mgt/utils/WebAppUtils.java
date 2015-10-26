@@ -25,6 +25,7 @@ import org.apache.catalina.core.StandardWrapper;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.tomcat.CarbonTomcatException;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.DataHolder;
@@ -87,6 +88,23 @@ public class WebAppUtils {
      * @return virtual host name for web app dir
      */
     public static String getMatchingHostName(String filePath) {
+        Host virtualHost = getMatchingVirtualHost(filePath);
+        if (virtualHost != null) {
+            if (virtualHost.getName().equals(getDefaultHost())) {
+                return getServerConfigHostName();
+            }
+            return virtualHost.getName();
+        }
+
+        return getServerConfigHostName();
+    }
+
+    /**
+     * @param baseDir web application directory path
+     * @return host name that matches the directory path
+     */
+    public static Host getMatchingVirtualHost(String baseDir) {
+        Host virtualHost = null;
         Container[] virtualHosts = findHostChildren();
         for (Container vHost : virtualHosts) {
             Host childHost = (Host) vHost;
@@ -94,21 +112,20 @@ public class WebAppUtils {
             if (appBase.endsWith(File.separator)) {
                 appBase = appBase.substring(0, appBase.lastIndexOf(File.separator));
             }
-            if (isWebappUploadedToVirtualAppBase(filePath, appBase)) {
-                if (childHost.getName().equals(getDefaultHost())) {
-                    return getServerConfigHostName();
-                }
-                return childHost.getName();
+            if (isWebappUploadedToVirtualAppBase(baseDir, appBase)) {
+                virtualHost = childHost;
+                break;
             }
         }
-        return getServerConfigHostName();
+        return virtualHost;
     }
 
     /**
-     * @param webAppBaseDir web application base path
-     * @return true if webapp is uploaded to Virtual Host
+     * @param webAppBaseDir path to the webapp
+     * @param appBase       virtual host path
+     * @return true if Webapp is uploaded to Virtual Host, else false
      */
-    private static boolean isWebappUploadedToVirtualAppBase(String webAppBaseDir, String appBase) {
+    public static boolean isWebappUploadedToVirtualAppBase(String webAppBaseDir, String appBase) {
         int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
         String axis2Repo = MultitenantUtils.getAxis2RepositoryPath(tenantId);
         String defaultWebAppPath = Paths.get(axis2Repo, CarbonConstants.WEBAPP_DEPLOYMENT_FOLDER).toString();
@@ -117,6 +134,24 @@ public class WebAppUtils {
         } else {
             String baseDir = appBase.substring(appBase.lastIndexOf(File.separator), appBase.length());
             return (webAppBaseDir.contains(axis2Repo) && webAppBaseDir.endsWith(baseDir));
+        }
+    }
+
+    /**
+     * @param webappFilePath Webapp path
+     * @return virtualHost if webapp is uploaded to Virtual Host else defaultHost
+     * @throws CarbonTomcatException
+     */
+    public static Host getHost(String webappFilePath) throws CarbonTomcatException {
+        String baseDir = webappFilePath.substring(0, webappFilePath.lastIndexOf(File.separator));
+        Host defaultHost = (Host) DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChild(
+                DataHolder.getCarbonTomcatService().getTomcat().getEngine().getDefaultHost());
+        Host virtualHost = getMatchingVirtualHost(baseDir);
+
+        if (virtualHost != null) {
+            return virtualHost;
+        } else {
+            return defaultHost;
         }
     }
 
