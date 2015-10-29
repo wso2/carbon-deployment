@@ -1,4 +1,4 @@
 {
-  "gadgetsUrlBase": "http://localhost:9763/dashboard/gadgets",
+  "gadgetsUrlBase": "http://localhost:9763/monitoring/gadgets",
   "database": "WSO2AS_MONITORING_DB"
 }

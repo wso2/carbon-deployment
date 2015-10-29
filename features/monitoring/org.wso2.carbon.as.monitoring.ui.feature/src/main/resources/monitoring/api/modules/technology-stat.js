@@ -105,13 +105,19 @@ function getHttpStatusStat(conditions) {
         ticks.push([i, row['name']]);
     }
 
-    opt = require('/gadgets/bar-chart/config/chart-options.json');
-    opt.xaxis.ticks = ticks;
-    opt.xaxis.axisLabel = 'Top 5 HTTP Response codes';
-    opt.yaxis.axisLabel = 'Number of requests';
+    chartOptions = {
+        'xaxis': {
+            'ticks': ticks,
+            'axisLabel': 'Top 5 HTTP Response Codes'
+        },
+        'yaxis': {
+            'axisLabel': 'Number of requests'
+        }
+    };
+
     print([
         {'series1': {'label': 's', 'data': dataArray}},
-        opt
+        chartOptions
     ]);
 }
 
