@@ -10,7 +10,7 @@
 
 ---
 
-Latest Released Version v4.5.3.
+Latest Released Versions v4.6.0, v4.5.3.
 
 #### carbon-deployment repo contains the the following deployment components.
 
