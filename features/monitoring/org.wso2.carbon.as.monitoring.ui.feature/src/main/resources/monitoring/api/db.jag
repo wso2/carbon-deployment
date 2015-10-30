@@ -18,15 +18,11 @@
  */
 
 var log = new Log();
+var config = require('/config/config.json');
 
 function executeQuery(sql, params) {
     var results;
     var db = getDbConnection();
-
-    if (db == null) {
-        createDbConnection();
-        db = getDbConnection();
-    }
 
     if (params == null) {
         return db.query(sql);
@@ -44,16 +40,13 @@ function executeQuery(sql, params) {
         log.debug('Query parameters: ' + params);
     }
 
-    return db.query.apply(db, params);
-}
-
-function createDbConnection() {
-    var config = require('/config/config.json');
-    var db = new Database(config.database);
-    session.put('db', db);
+    result = db.query.apply(db, params);
+    db.close();
+    return result;
 }
 
 function getDbConnection() {
-    return session.get('db');
+    var db = new Database(config.database);
+    return db;
 }
 %>
