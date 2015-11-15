@@ -17,12 +17,10 @@
  */
 package org.wso2.carbon.identity.entitlement.filter;
 
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.wso2.carbon.identity.entitlement.filter.callback.BasicAuthCallBackHandler;
 import org.wso2.carbon.identity.entitlement.filter.callback.EntitlementFilterCallBackHandler;
 import org.wso2.carbon.identity.entitlement.filter.exception.EntitlementFilterException;
@@ -30,9 +28,12 @@ import org.wso2.carbon.identity.entitlement.proxy.PEPProxy;
 import org.wso2.carbon.identity.entitlement.proxy.PEPProxyConfig;
 import org.wso2.carbon.identity.entitlement.proxy.exception.EntitlementProxyException;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -186,15 +187,16 @@ public class EntitlementFilter implements Filter {
                 String decision = pepProxy.getDecision(userName, resource, action, env);
                 OMElement decisionElement = AXIOMUtil.stringToOM(decision);
                 Iterator results = decisionElement.getChildrenWithLocalName("Result");
-                if(results.hasNext()){
-                    results = ((OMElement)results.next()).getChildrenWithLocalName("Decision");
-                    if(results.hasNext()){
+                if (results.hasNext()) {
+                    results = ((OMElement) results.next()).getChildrenWithLocalName("Decision");
+                    if (results.hasNext()) {
                         simpleDecision = ((OMElement) results.next()).getText();
                     }
                 }
             } catch (Exception e) {
-                log.error("Exception while making the decision ", e);
-                throw new EntitlementFilterException("Exception while making the decision : " + e);
+                String msg = "Exception while making the decision ";
+                log.error(msg, e);
+                throw new EntitlementFilterException(msg + e);
             }
         }
         completeAuthorization(simpleDecision, servletRequest, servletResponse, filterConfig, filterChain);
