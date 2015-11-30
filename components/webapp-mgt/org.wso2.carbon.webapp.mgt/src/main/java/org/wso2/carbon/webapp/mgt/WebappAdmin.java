@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.application.deployer.CarbonApplication;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -277,9 +278,11 @@ public class WebappAdmin extends AbstractAdmin {
         return getPagedWebapps(pageNumber, getFaultyWebapps(webappSearchString), webappType);
     }
 
-    private WebappsWrapper getPagedWebapps(int pageNumber, Map<String, VersionedWebappMetadata> webapps, String webappType) {
+    private WebappsWrapper getPagedWebapps(int pageNumber, Map<String, VersionedWebappMetadata> webapps,
+            String webappType) {
         List<VersionedWebappMetadata> webappsList = new ArrayList<VersionedWebappMetadata>(webapps.values());
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils
+                .getAllWebappHolders(getConfigContext());
         WebappsWrapper webappsWrapper = getWebappsWrapper(webApplicationsHolderMap, webappsList, webappType);
         try {
             webappsWrapper.setHostName(NetworkUtils.getLocalHostname());
@@ -287,10 +290,19 @@ public class WebappAdmin extends AbstractAdmin {
             log.error("Error occurred while getting local hostname", e);
         }
 
-//        DataHolder.getCarbonTomcatService().getTomcat().getHost().
+        ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
 
         if (getConfigContext().getAxisConfiguration().getTransportIn("http") != null) {
-            int httpProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
+            String httpProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpProxyPort");
+            int httpProxyPort = -1;
+            if (httpProxyPortString != null) {
+                httpProxyPort = Integer.parseInt(httpProxyPortString);
+            }
+
+            if (httpProxyPort == -1) {
+                httpProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
+            }
+
             if (httpProxyPort != -1) {
                 webappsWrapper.setHttpPort(httpProxyPort);
             } else {
@@ -300,7 +312,17 @@ public class WebappAdmin extends AbstractAdmin {
         }
 
         if (getConfigContext().getAxisConfiguration().getTransportIn("https") != null) {
-            int httpsProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "https");
+            String httpsProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpsProxyPort");
+            int httpsProxyPort = -1;
+
+            if (httpsProxyPortString != null) {
+                httpsProxyPort = Integer.parseInt(httpsProxyPortString);
+            }
+
+            if (httpsProxyPort == -1) {
+                httpsProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "https");
+            }
+
             if (httpsProxyPort != -1) {
                 webappsWrapper.setHttpsPort(httpsProxyPort);
             } else {
