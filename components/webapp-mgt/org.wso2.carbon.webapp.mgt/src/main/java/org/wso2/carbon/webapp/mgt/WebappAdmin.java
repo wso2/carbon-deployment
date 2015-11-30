@@ -278,11 +278,9 @@ public class WebappAdmin extends AbstractAdmin {
         return getPagedWebapps(pageNumber, getFaultyWebapps(webappSearchString), webappType);
     }
 
-    private WebappsWrapper getPagedWebapps(int pageNumber, Map<String, VersionedWebappMetadata> webapps,
-            String webappType) {
+    private WebappsWrapper getPagedWebapps(int pageNumber, Map<String, VersionedWebappMetadata> webapps, String webappType) {
         List<VersionedWebappMetadata> webappsList = new ArrayList<VersionedWebappMetadata>(webapps.values());
-        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils
-                .getAllWebappHolders(getConfigContext());
+        Map<String, WebApplicationsHolder> webApplicationsHolderMap = WebAppUtils.getAllWebappHolders(getConfigContext());
         WebappsWrapper webappsWrapper = getWebappsWrapper(webApplicationsHolderMap, webappsList, webappType);
         try {
             webappsWrapper.setHostName(NetworkUtils.getLocalHostname());
@@ -290,44 +288,45 @@ public class WebappAdmin extends AbstractAdmin {
             log.error("Error occurred while getting local hostname", e);
         }
 
-        ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
+        ServerConfiguration serverConfiguration =  ServerConfiguration.getInstance();
 
-        if (getConfigContext().getAxisConfiguration().getTransportIn("http") != null) {
-            String httpProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpProxyPort");
-            int httpProxyPort = -1;
-            if (httpProxyPortString != null) {
-                httpProxyPort = Integer.parseInt(httpProxyPortString);
-            }
+        String httpProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpProxyPort");
+        int httpProxyPort = -1;
+        if(httpProxyPortString != null) {
+            httpProxyPort = Integer.parseInt(httpProxyPortString);
+            webappsWrapper.setHttpPort(httpProxyPort);
+        }
 
-            if (httpProxyPort == -1) {
+        if(httpProxyPort == -1) {
+            if (getConfigContext().getAxisConfiguration().getTransportIn("http") != null) {
                 httpProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
-            }
-
-            if (httpProxyPort != -1) {
-                webappsWrapper.setHttpPort(httpProxyPort);
-            } else {
-                int httpPort = CarbonUtils.getTransportPort(getConfigContext(), "http");
-                webappsWrapper.setHttpPort(httpPort);
+                if (httpProxyPort != -1) {
+                    webappsWrapper.setHttpPort(httpProxyPort);
+                } else {
+                    int httpPort = CarbonUtils.getTransportPort(getConfigContext(), "http");
+                    webappsWrapper.setHttpPort(httpPort);
+                }
             }
         }
 
-        if (getConfigContext().getAxisConfiguration().getTransportIn("https") != null) {
-            String httpsProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpsProxyPort");
-            int httpsProxyPort = -1;
+        String httpsProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpsProxyPort");
+        int httpsProxyPort = -1;
 
-            if (httpsProxyPortString != null) {
-                httpsProxyPort = Integer.parseInt(httpsProxyPortString);
-            }
+        if(httpsProxyPortString != null) {
+            httpsProxyPort = Integer.parseInt(httpsProxyPortString);
+            webappsWrapper.setHttpsPort(httpsProxyPort);
+        }
 
-            if (httpsProxyPort == -1) {
+        if(httpsProxyPort == -1) {
+            if (getConfigContext().getAxisConfiguration().getTransportIn("https") != null) {
                 httpsProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "https");
-            }
 
-            if (httpsProxyPort != -1) {
-                webappsWrapper.setHttpsPort(httpsProxyPort);
-            } else {
-                int httpsPort = CarbonUtils.getTransportPort(getConfigContext(), "https");
-                webappsWrapper.setHttpsPort(httpsPort);
+                if (httpsProxyPort != -1) {
+                    webappsWrapper.setHttpsPort(httpsProxyPort);
+                } else {
+                    int httpsPort = CarbonUtils.getTransportPort(getConfigContext(), "https");
+                    webappsWrapper.setHttpsPort(httpsPort);
+                }
             }
         }
 
