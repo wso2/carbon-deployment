@@ -288,16 +288,16 @@ public class WebappAdmin extends AbstractAdmin {
             log.error("Error occurred while getting local hostname", e);
         }
 
-        ServerConfiguration serverConfiguration =  ServerConfiguration.getInstance();
+        ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
 
         String httpProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpProxyPort");
         int httpProxyPort = -1;
-        if(httpProxyPortString != null) {
+        if (httpProxyPortString != null) {
             httpProxyPort = Integer.parseInt(httpProxyPortString);
             webappsWrapper.setHttpPort(httpProxyPort);
         }
 
-        if(httpProxyPort == -1) {
+        if (httpProxyPort == -1) {
             if (getConfigContext().getAxisConfiguration().getTransportIn("http") != null) {
                 httpProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
                 if (httpProxyPort != -1) {
@@ -312,12 +312,12 @@ public class WebappAdmin extends AbstractAdmin {
         String httpsProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpsProxyPort");
         int httpsProxyPort = -1;
 
-        if(httpsProxyPortString != null) {
+        if (httpsProxyPortString != null) {
             httpsProxyPort = Integer.parseInt(httpsProxyPortString);
             webappsWrapper.setHttpsPort(httpsProxyPort);
         }
 
-        if(httpsProxyPort == -1) {
+        if (httpsProxyPort == -1) {
             if (getConfigContext().getAxisConfiguration().getTransportIn("https") != null) {
                 httpsProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "https");
 

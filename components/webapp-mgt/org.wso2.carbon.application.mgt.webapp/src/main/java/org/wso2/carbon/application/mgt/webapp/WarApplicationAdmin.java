@@ -148,11 +148,11 @@ public class WarApplicationAdmin extends AbstractAdmin {
                 int httpPort = -1;
                 String workerHttpPortString = ServerConfiguration.getInstance().
                         getFirstProperty("Ports.WorkerHttpProxyPort");
-                if(workerHttpPortString != null) {
+                if (workerHttpPortString != null) {
                     httpPort = Integer.parseInt(workerHttpPortString);
                 }
 
-                if(httpPort == -1) {
+                if (httpPort == -1) {
                     httpPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
                 }
 
