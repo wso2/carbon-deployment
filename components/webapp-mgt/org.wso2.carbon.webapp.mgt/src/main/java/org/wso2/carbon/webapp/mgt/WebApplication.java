@@ -151,7 +151,7 @@ public class WebApplication {
     }
 
     public String getContextName() {
-        return context.getName();
+        return "".equals(context.getName()) ? "/" : context.getName();
     }
 
     public String getDisplayName() {
