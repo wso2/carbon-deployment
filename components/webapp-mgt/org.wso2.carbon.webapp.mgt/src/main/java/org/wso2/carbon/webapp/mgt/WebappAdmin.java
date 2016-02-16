@@ -179,7 +179,9 @@ public class WebappAdmin extends AbstractAdmin {
         return webappMetadata;
     }
 
-    //TODO WSAS-2125
+    //TODO WSAS-2125.
+    // Sometimes vhost are not in started state when trying to add webapp. At that time since context is null,
+    // can't find service classes. Temporary fix that here by duplicating the logic at WebApplication constructor
     private void setServiceListPath(WebApplication webApplication) {
         String serviceListPathParamName = "service-list-path";
         String serviceListPathParam =

@@ -423,7 +423,7 @@ public class Files {
 			} catch (IOException e) {
 				throw new IllegalStateException("Error opening connection for bundle url: " + url);
 			}
-		}else {
+		} else {
 			throw new IllegalArgumentException("Unsupported URL scheme: " + url.toExternalForm());
 		}
 	}
