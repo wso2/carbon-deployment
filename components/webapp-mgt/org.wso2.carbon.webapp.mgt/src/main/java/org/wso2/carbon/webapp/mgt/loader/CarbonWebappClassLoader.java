@@ -256,7 +256,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         from BootstrapClassPath.
 
          */
-        if (parent != null) {
+        if (parent != null && webappCC != null) {
             boolean delegatedRes = webappCC.isDelegatedResource(name);
             boolean excludedRes = webappCC.isExcludedResources(name);
             if (delegatedRes && !excludedRes) {
