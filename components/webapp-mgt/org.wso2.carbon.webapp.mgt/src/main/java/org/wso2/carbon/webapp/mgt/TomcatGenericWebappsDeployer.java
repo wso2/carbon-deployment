@@ -192,15 +192,13 @@ public class TomcatGenericWebappsDeployer {
             throws CarbonException {
         String filename = webappWAR.getName();
         String warContext = "";
-        if (filename.equals("ROOT.war")) {  // FIXME: This is not working for some reason!
-            if (webContextPrefix != null && !webContextPrefix.endsWith("/")) {
-                warContext = "/";
-            }
-        } else {
+        if (!filename.equals("ROOT.war")) {  // FIXME: This is not working for some reason!
             warContext = filename.substring(0, filename.indexOf(".war"));
         }
-        if (!warContext.equals("/") && webContextPrefix.length() == 0) {
+        if (!warContext.equals("") && webContextPrefix.length() == 0) {
             webContextPrefix = "/";
+        } else if (warContext.equals("")) {
+            webContextPrefix = "";
         }
 
         String contextPath = handleAppVersion(webContextPrefix + warContext);
@@ -231,15 +229,13 @@ public class TomcatGenericWebappsDeployer {
             throws CarbonException {
         String filename = webappDir.getName();
         String warContext = "";
-        if (filename.equals("ROOT")) {
-            if (webContextPrefix != null && !webContextPrefix.endsWith("/")) {
-                warContext = "/";
-            }
-        } else {
+        if (!filename.equals("ROOT")) {
             warContext = filename;
         }
-        if (!warContext.equals("/") && webContextPrefix.length() == 0) {
+        if (!warContext.equals("") && webContextPrefix.length() == 0) {
             webContextPrefix = "/";
+        } else if (warContext.equals("")) {
+            webContextPrefix = "";
         }
 
         String contextPath = handleAppVersion(webContextPrefix + warContext);
