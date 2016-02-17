@@ -314,7 +314,7 @@ public class TomcatCxfDiscoveryListener implements LifecycleListener {
     /**
      * Generate targetNamespace as per jax-ws 2.2 specification chapter 3.2.
      *
-     * 1. The package name is tokenize using the “.” character as a delimiter.
+     * 1. The package name is tokenize using the "." character as a delimiter.
      * 2. The order of the tokens is reversed.
      * 3. The value of the targetNamespace attribute is obtained by concatenating "http://"
      * to the list of tokens separated by "." and "/".
