@@ -28,6 +28,7 @@ import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.application.deployer.webapp.WARCappDeployer;
 import org.wso2.carbon.application.mgt.webapp.internal.WarAppServiceComponent;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -144,7 +145,16 @@ public class WarApplicationAdmin extends AbstractAdmin {
                 warCappMetadata.setWebappFileName(webApplication.getWebappFile().getName());
                 warCappMetadata.setHostName(webApplication.getHostName());
 
-                int httpPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
+                int httpPort = -1;
+                String workerHttpPortString = ServerConfiguration.getInstance().
+                        getFirstProperty("Ports.WorkerHttpProxyPort");
+                if (workerHttpPortString != null) {
+                    httpPort = Integer.parseInt(workerHttpPortString);
+                }
+
+                if (httpPort == -1) {
+                    httpPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
+                }
                 if (httpPort == -1) {
                     httpPort = CarbonUtils.getTransportPort(getConfigContext(), "http");
                 }
