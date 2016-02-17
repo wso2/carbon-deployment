@@ -413,12 +413,21 @@ padding:0 10px;
                 <%
                     String serviceType = service.getServiceType();
                     if (!serviceType.equals("bpel") && !serviceType.equals("bpelmgt") && !service.getDisableDeletion()) {
-                %>
-                <input type="checkbox" name="serviceGroups"
-                       value="<%=service.getServiceGroupName()%>"
-                       onclick="resetVars()" class="chkBox"/>
-                <%
-                } else {
+                                    if ("proxy".equalsIgnoreCase(service.getServiceType())) {
+                                           %>
+                                           <nobr>
+                                           <%
+                                               String deletable_artifacts = "../" + service.getServiceType() + "/getDeletableArtifacts.jsp?serviceName=" + service.getName() + "&serviceGroupName=" + service.getServiceGroupName();
+                                           %>
+                                           <jsp:include page="<%= deletable_artifacts%>"/>
+                                           </nobr>
+                                           <% } else { %>
+                                               <input type="checkbox" name="serviceGroups"
+                                                   value="<%=service.getServiceGroupName()%>"
+                                                   onclick="resetVars()" class="chkBox"/>
+                                           <% } %>
+                               <%
+                               } else {
                 %>
                 &nbsp;
                 <% } %>
