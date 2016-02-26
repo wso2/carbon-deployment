@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-feature</artifactId>
-        <version>4.6.1-SNAPSHOT</version>
+        <version>4.6.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -28,7 +28,7 @@
     <artifactId>org.wso2.carbon.webapp.mgt.server.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Webapp Management Core Feature</name>
-    <version>4.6.1-SNAPSHOT</version>
+    <version>4.6.1</version>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Back-end Webapp Management functionality
     </description>
