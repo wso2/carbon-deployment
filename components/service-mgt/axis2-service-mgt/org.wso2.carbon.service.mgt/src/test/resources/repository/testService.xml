@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<serviceGroup>
-    <parameter name="param1" type="1">parameter1</parameter>
-    <parameter name="testParam1" type="1">testParameter1</parameter>
-    <parameter name="testParam2" type="1">testParameter2</parameter>
-    <parameter name="testParam3" type="1">testParameter3</parameter>
-</serviceGroup>

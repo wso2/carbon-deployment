@@ -1,3 +1,0 @@
-instructions.configure = \
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../conf/tomee/); \
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.javaee.tomee.server_${feature.version}/conf/tomee/,target:${installFolder}/../../conf/tomee/,overwrite:true); \

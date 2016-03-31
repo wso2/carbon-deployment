@@ -1,8 +1,0 @@
-<featureSets>
-    <featureSet artifactType="web/application">
-        <feature id="org.wso2.carbon.webapp.mgt.server.feature.group" version="${carbon.deployment.imp.pkg.version}"/>
-    </featureSet>
-    <!--<featureSet artifactType="webapp/jaxws">
-        <feature id="org.wso2.carbon.jaxws.webapp.mgt.server.feature.group" version="[4.4.0, 4.5.0)"/>
-    </featureSet>-->
-</featureSets>
