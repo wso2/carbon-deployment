@@ -18,7 +18,7 @@ User level API for consuming `DeploymentEngine` functionality. An implementation
 
 * `org.wso2.carbon.deployment.Deployer` - 
 
-This interface is used to provide the deployment mechanism in carbon for custom artifacts, where you can write your own Deployer to process a particular ArtifactType. Developers need to develop implementations based on this interface, and register it as an OSGi service (using tLifecycleListenere org.wso2.carbon.deployment.Deployer as the interface) for the DeploymentEngine to find and add to the configuration.
+This interface is used to provide the deployment mechanism in carbon for custom artifacts, where you can write your own Deployer to process a particular ArtifactType. Developers need to develop implementations based on this interface, and register it as an OSGi service (using the org.wso2.carbon.deployment.Deployer as the interface) for the DeploymentEngine to find.
 
 * `org.wso2.carbon.deployment.LifecycleListener` -
 
