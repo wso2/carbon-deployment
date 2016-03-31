@@ -38,13 +38,13 @@ Use Maven snippet:
 <dependency>
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>org.wso2.carbon.deployment.engine</artifactId>
-    <version>${carbon.jndi.version}</version>
+    <version>${carbon.deployment.version}</version>
 </dependency>
 
 <dependency>
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
-    <version>${carbon.jndi.version}</version>
+    <version>${carbon.deployment.version}</version>
 </dependency>
 ````
 
@@ -69,7 +69,7 @@ Use following Maven repository for snapshot versions of Carbon Deployment.
 
 ### Released Versions
 
-Use following Maven repository for released stable versions of Carbon JNDI.
+Use following Maven repository for released stable versions of Carbon Deployment.
 
 ````xml
 <repository>
