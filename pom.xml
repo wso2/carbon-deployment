@@ -162,6 +162,32 @@
                 <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${geronimo.jms.spec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.andes.wso2</groupId>
+                <artifactId>andes-client</artifactId>
+                <version>${wso2.andes.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-io.wso2</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${org.snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.osgi</groupId>
+                <artifactId>org.eclipse.osgi</artifactId>
+                <version>${equinox.osgi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -171,16 +197,21 @@
 
         <carbon.kernel.version>5.1.0-SNAPSHOT</carbon.kernel.version>
         <carbon.feature.plugin.version>2.0.0</carbon.feature.plugin.version>
+        <org.snakeyaml.version>1.16.0.wso2v1</org.snakeyaml.version>
+        <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
+        <geronimo.jms.spec.version>1.1</geronimo.jms.spec.version>
+        <wso2.andes.version>3.1.1</wso2.andes.version>
+        <commons.io.version>2.4.0.wso2v1</commons.io.version>
 
         <!-- OSGi API dependency versions -->
         <osgi.core.api.version>6.0.0</osgi.core.api.version>
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
 
         <!-- Export versions -->
-        <org.osgi.service.jndi.export.version>1.0.0</org.osgi.service.jndi.export.version>
+        <org.osgi.service.deployment.export.version>1.0.0</org.osgi.service.deployment.export.version>
 
         <!-- Import version ranges -->
-        <org.osgi.service.jndi.import.version.range>[1.0.0, 2.0.0)</org.osgi.service.jndi.import.version.range>
+        <org.osgi.service.deployment.import.version.range>[1.0.0, 2.0.0)</org.osgi.service.deployment.import.version.range>
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <slf4j.logging.import.version.range>[1.7.1, 2.0.0)</slf4j.logging.import.version.range>
 
