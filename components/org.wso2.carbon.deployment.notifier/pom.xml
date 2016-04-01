@@ -130,10 +130,10 @@
     </build>
 
     <properties>
-        <private.package>org.wso2.carbon.deployment.internal.*,</private.package>
+        <private.package>org.wso2.carbon.deployment.notifier.internal.*,</private.package>
         <export.package>
-            !org.wso2.carbon.deployment.internal.*,
-            org.wso2.carbon.deployment.*; version="${carbon.deployment.pkg.export.version}",
+            !org.wso2.carbon.deployment.notifier.internal.*,
+            org.wso2.carbon.deployment.notifier.*; version="${carbon.deployment.pkg.export.version}"
         </export.package>
         <import.package>
             org.slf4j.*;version="${slf4j.logging.import.version.range}",
