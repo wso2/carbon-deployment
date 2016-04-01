@@ -25,12 +25,12 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+    <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon Deployment Engine</name>
+    <name>WSO2 Carbon Deployment Notifier</name>
     <description>
-        The core bundle which includes the Deployment Framework 
+        The bundle which provides the Deployment Notifier
     </description>
     <url>http://wso2.com</url>
 
@@ -82,6 +82,10 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
         </dependency>
     </dependencies>
 

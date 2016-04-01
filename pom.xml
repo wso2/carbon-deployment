@@ -34,7 +34,7 @@
 
     <modules>
         <module>components/org.wso2.carbon.deployment.engine</module>
-        <!-- <module>components/org.wso2.carbon.deployment.notifier</module> -->
+        <module>components/org.wso2.carbon.deployment.notifier</module>
         <module>features/org.wso2.carbon.deployment.feature</module>
     </modules>
 
@@ -221,6 +221,7 @@
         <org.osgi.service.deployment.import.version.range>[1.0.0, 2.0.0)</org.osgi.service.deployment.import.version.range>
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <slf4j.logging.import.version.range>[1.7.1, 2.0.0)</slf4j.logging.import.version.range>
+        <org.snakeyaml.import.version.range>[1.16.0,2.0.0)</org.snakeyaml.import.version.range>
 
         <!-- OSGi Tests -->
         <testng.version>6.9.4</testng.version>
