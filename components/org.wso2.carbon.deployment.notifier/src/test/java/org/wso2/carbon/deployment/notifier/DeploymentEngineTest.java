@@ -15,25 +15,40 @@
  */
 package org.wso2.carbon.deployment.notifier;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.command.ActiveMQTopic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.deployment.Artifact;
 import org.wso2.carbon.deployment.ArtifactType;
-import org.wso2.carbon.deployment.DeploymentNotifierLifecycleListener;
 import org.wso2.carbon.deployment.LifecycleListener;
-import org.wso2.carbon.deployment.exception.CarbonDeploymentException;
 import org.wso2.carbon.deployment.exception.DeployerRegistrationException;
 import org.wso2.carbon.deployment.exception.DeploymentEngineException;
+import org.wso2.carbon.deployment.internal.DataHolder;
 import org.wso2.carbon.deployment.internal.DeploymentEngine;
 import org.wso2.carbon.deployment.internal.RepositoryScanner;
 import org.wso2.carbon.deployment.notifier.deployers.CustomDeployer;
 import org.wso2.carbon.deployment.notifier.deployers.FaultyDeployer1;
 import org.wso2.carbon.deployment.notifier.deployers.FaultyDeployer2;
 import org.wso2.carbon.deployment.notifier.listeners.CustomLifecycleListener;
+import org.wso2.carbon.kernel.CarbonRuntime;
+import org.wso2.carbon.kernel.internal.config.YAMLBasedConfigProvider;
+import org.wso2.carbon.kernel.internal.context.CarbonRuntimeFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicSubscriber;
 
 /**
  * Deployment Engine Test class.
@@ -41,6 +56,9 @@ import java.util.ArrayList;
  * @since 5.0.0
  */
 public class DeploymentEngineTest extends BaseTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeploymentEngineTest.class);
+
     private static final String CARBON_REPO = "carbon-repo";
     private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
     private DeploymentEngine deploymentEngine;
@@ -51,6 +69,9 @@ public class DeploymentEngineTest extends BaseTest {
     private RepositoryScanner repositoryScanner;
     private Artifact artifact;
 
+    private BrokerService brokerService;
+    private TopicSubscriber topicSubscriber;
+
     /**
      * @param testName name of the test case
      */
@@ -60,7 +81,7 @@ public class DeploymentEngineTest extends BaseTest {
     }
 
     @BeforeTest
-    public void setup() throws CarbonDeploymentException {
+    public void setup() throws Exception {
         customDeployer = new CustomDeployer();
         artifactsList = new ArrayList<>();
         artifact = new Artifact(new File(getTestResourceFile(DEPLOYER_REPO).getAbsolutePath()
@@ -69,6 +90,25 @@ public class DeploymentEngineTest extends BaseTest {
         artifactsList.add(artifact);
 
         System.setProperty(org.wso2.carbon.kernel.Constants.CARBON_HOME, getTestResourceFile("yaml").getAbsolutePath());
+
+        CarbonRuntime carbonRuntime = CarbonRuntimeFactory.createCarbonRuntime(new YAMLBasedConfigProvider());
+        DataHolder.getInstance().setCarbonRuntime(carbonRuntime);
+
+        //start a test message broker
+        brokerService = new BrokerService();
+        brokerService.setUseJmx(false);
+        brokerService.setBrokerName("carbon");
+        brokerService.setDataDirectory("target/activemq-data");
+        brokerService.start();
+
+        Topic topic = new ActiveMQTopic("topic0");
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://carbon?create=false");
+        Connection connection = connectionFactory.createConnection();
+        connection.setClientID("carbon");
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        topicSubscriber = session.createDurableSubscriber(topic, "durable");
+        connection.start();
+
     }
 
     @Test(expectedExceptions = DeploymentEngineException.class,
@@ -130,9 +170,14 @@ public class DeploymentEngineTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = {"testAddLifecycleListener"})
-    public void testDeployArtifacts() {
+    public void testDeployArtifacts() throws JMSException {
         deploymentEngine.deployArtifacts(artifactsList);
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+
+        //wait 10 seconds max
+        TextMessage message = (TextMessage) topicSubscriber.receive(10000);
+        Assert.assertNotNull(message, "The deployment status has not been published to the JMS topic.");
+        logger.info("message received - " + message.getText());
     }
 
     @Test(dependsOnMethods = {"testDeployArtifacts"})
@@ -165,11 +210,16 @@ public class DeploymentEngineTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = {"testRemoveDeployer"})
-    public void testDeployWithoutDeployerInstance() {
+    public void testDeployWithoutDeployerInstance() throws JMSException {
         deploymentEngine.deployArtifacts(artifactsList);
         deploymentEngine.updateArtifacts(artifactsList);
         deploymentEngine.undeployArtifacts(artifactsList);
         Assert.assertTrue(deploymentEngine.getFaultyArtifacts().containsValue(artifact));
+
+        //wait 10 seconds max
+        TextMessage message = (TextMessage) topicSubscriber.receive(10000);
+        Assert.assertNotNull(message, "The deployment status has not been published to the JMS topic.");
+        logger.info("message received - " + message.getText());
     }
 
     @Test(dependsOnMethods = {"testDeployWithoutDeployerInstance"})
@@ -247,4 +297,8 @@ public class DeploymentEngineTest extends BaseTest {
         Assert.assertNull(deploymentEngine.getDeployer(faultyDeployer2.getArtifactType()));
     }
 
+    @AfterTest
+    public void cleanup() throws Exception {
+        brokerService.stop();
+    }
 }

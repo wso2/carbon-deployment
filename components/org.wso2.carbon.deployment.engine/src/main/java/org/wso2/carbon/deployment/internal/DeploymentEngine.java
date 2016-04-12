@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.Artifact;
 import org.wso2.carbon.deployment.ArtifactType;
 import org.wso2.carbon.deployment.Deployer;
-import org.wso2.carbon.deployment.Lifecycle;
 import org.wso2.carbon.deployment.LifecycleEvent;
 import org.wso2.carbon.deployment.LifecycleListener;
 import org.wso2.carbon.deployment.exception.CarbonDeploymentException;
@@ -256,9 +255,10 @@ public class DeploymentEngine {
      */
     public void deployArtifacts(List<Artifact> artifactsToDeploy) {
         artifactsToDeploy.forEach(artifactToDeploy -> {
-            Lifecycle lifecycle = new Lifecycle(artifactToDeploy, new Date());
-            fireLifecycleEvent(lifecycle, LifecycleEvent.BEFORE_START_EVENT);
+            LifecycleEvent lifecycleEvent = new LifecycleEvent(artifactToDeploy, new Date(),
+                    LifecycleEvent.STATE.BEFORE_START_EVENT);
             try {
+                fireLifecycleEvent(lifecycleEvent);
                 Deployer deployer = getDeployer(artifactToDeploy.getType());
                 if (deployer != null) {
                     logger.debug("Deploying artifact {} using {} deployer", artifactToDeploy.getName(),
@@ -282,19 +282,21 @@ public class DeploymentEngine {
 
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
-                lifecycle.setTraceContent("Error while deploying artifact. \n" + sw.toString());
-                lifecycle.setDeploymentState(Lifecycle.STATE.FAILED);
+                lifecycleEvent.setTraceContent("Error while deploying artifact. \n" + sw.toString());
+                lifecycleEvent.setDeploymentResult(LifecycleEvent.RESULT.FAILED);
             }
 
-            fireLifecycleEvent(lifecycle, LifecycleEvent.AFTER_START_EVENT);
+            //reuse the previously created object
+            lifecycleEvent.setState(LifecycleEvent.STATE.AFTER_START_EVENT);
+            fireLifecycleEvent(lifecycleEvent);
         });
     }
 
-    private void fireLifecycleEvent(Lifecycle lifecycle, String lcState) {
+    private void fireLifecycleEvent(LifecycleEvent lifecycleEvent) {
 
-        logger.debug("Triggering lifecycle event {} for artifact - {}", lcState, lifecycle.getArtifact().getName());
-        LifecycleEvent event = new LifecycleEvent(lifecycle, lcState);
-        lifecycleListeners.forEach(lifecycleListener -> lifecycleListener.lifecycleEvent(event));
+        logger.debug("Triggering lifecycle event {} for artifact - {}", lifecycleEvent.getState(),
+                lifecycleEvent.getArtifact().getName());
+        lifecycleListeners.forEach(lifecycleListener -> lifecycleListener.lifecycleEvent(lifecycleEvent));
     }
 
     /**
@@ -304,7 +306,10 @@ public class DeploymentEngine {
      */
     public void updateArtifacts(List<Artifact> artifactsToUpdate) {
         artifactsToUpdate.forEach(artifactToUpdate -> {
+            LifecycleEvent lifecycleEvent = new LifecycleEvent(artifactToUpdate, new Date(),
+                    LifecycleEvent.STATE.BEFORE_UPDATE_EVENT);
             try {
+                fireLifecycleEvent(lifecycleEvent);
                 Deployer deployer = getDeployer(artifactToUpdate.getType());
                 if (deployer != null) {
                     logger.debug("Updating artifact {} using {} deployer", artifactToUpdate.getName(),
@@ -322,9 +327,18 @@ public class DeploymentEngine {
                             artifactToUpdate.getType());
                 }
             } catch (CarbonDeploymentException e) {
-                logger.error("Error while updating artifacts", e);
+                logger.error("Error while updating artifact", e);
                 addToFaultyArtifacts(artifactToUpdate);
+
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                lifecycleEvent.setTraceContent("Error while updating artifact. \n" + sw.toString());
+                lifecycleEvent.setDeploymentResult(LifecycleEvent.RESULT.FAILED);
             }
+
+            //reuse the previously created object
+            lifecycleEvent.setState(LifecycleEvent.STATE.AFTER_UPDATE_EVENT);
+            fireLifecycleEvent(lifecycleEvent);
         });
     }
 
@@ -352,10 +366,10 @@ public class DeploymentEngine {
      */
     public void undeployArtifacts(List<Artifact> artifactsToUndeploy) {
         artifactsToUndeploy.forEach(artifactToUnDeploy -> {
-            Lifecycle lifecycle = new Lifecycle(artifactToUnDeploy, new Date());
-            fireLifecycleEvent(lifecycle, LifecycleEvent.BEFORE_STOP_EVENT);
-
+            LifecycleEvent lifecycleEvent = new LifecycleEvent(artifactToUnDeploy, new Date(),
+                    LifecycleEvent.STATE.BEFORE_STOP_EVENT);
             try {
+                fireLifecycleEvent(lifecycleEvent);
                 Deployer deployer = getDeployer(artifactToUnDeploy.getType());
                 if (deployer != null) {
                     logger.debug("Undeploying artifact {} using {} deployer", artifactToUnDeploy.getName(),
@@ -372,11 +386,13 @@ public class DeploymentEngine {
 
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
-                lifecycle.setTraceContent("Error while undeploying artifact. \n" + sw.toString());
-                lifecycle.setDeploymentState(Lifecycle.STATE.FAILED);
+                lifecycleEvent.setTraceContent("Error while undeploying artifact. \n" + sw.toString());
+                lifecycleEvent.setDeploymentResult(LifecycleEvent.RESULT.FAILED);
             }
 
-            fireLifecycleEvent(lifecycle, LifecycleEvent.AFTER_STOP_EVENT);
+            //reuse the previously created object
+            lifecycleEvent.setState(LifecycleEvent.STATE.AFTER_STOP_EVENT);
+            fireLifecycleEvent(lifecycleEvent);
         });
     }
 

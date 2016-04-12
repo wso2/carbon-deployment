@@ -17,39 +17,108 @@
 */
 package org.wso2.carbon.deployment;
 
+import java.util.Date;
+import java.util.Optional;
+import java.util.Properties;
+
 /**
- * The deployment lifecycle event. An instance of this is used
- * to fire lifecycle events to deployment lifecycle listeners.
- *
- * This includes the current artifact metadata as well as the
- * currently triggered event.
+ * The deployment lifecycle of artifacts. An instance of this is passed
+ * as part of the lifecycle event into the lifecycle listeners.
  *
  * @since 5.1.0
+ *
+ * todo merge this class with LifecycleEvent
  */
 public class LifecycleEvent {
 
-    public static final String BEFORE_START_EVENT = "before_start";
-
-    public static final String AFTER_START_EVENT = "after_start";
-
-    public static final String BEFORE_STOP_EVENT = "before_stop";
-
-    public static final String AFTER_STOP_EVENT = "after_stop";
-
-    private String eventType;
-
-    private Lifecycle lifecycle;
-
-    public LifecycleEvent(Lifecycle lifecycle, String eventType) {
-        this.eventType = eventType;
-        this.lifecycle = lifecycle;
+    /**
+     * Represents the lifecycle state of the artifacts.
+     *
+     */
+    public enum STATE {
+        BEFORE_START_EVENT,
+        AFTER_START_EVENT,
+        BEFORE_UPDATE_EVENT,
+        AFTER_UPDATE_EVENT,
+        BEFORE_STOP_EVENT,
+        AFTER_STOP_EVENT
     }
 
-    public String getEventType() {
-        return eventType;
+    /**
+     * The current artifact deployment/undeployment result.
+     * If the artifact deployed/undeployed without any errors,
+     * then the state will be successful denoting a successful artifact
+     * deployment.
+     *
+     */
+    public enum RESULT {
+        SUCCESSFUL,
+        FAILED
     }
 
-    public Lifecycle getLifecycle() {
-        return lifecycle;
+    private STATE state;
+
+    private Artifact artifact;
+
+    private Date timestamp;
+    private RESULT deploymentResult;
+    private String traceContent;
+
+    public Properties properties = new Properties();
+
+    public LifecycleEvent(Artifact artifact, Date date, STATE state) {
+        this.artifact = artifact;
+        //assume a successful deployment initially.
+        this.deploymentResult = RESULT.SUCCESSFUL;
+        this.timestamp = Optional.ofNullable(date).map(tstamp -> new Date(date.getTime())).orElse(new Date());
+        this.state = state;
+    }
+
+    public STATE getState() {
+        return state;
+    }
+
+    public void setState(STATE state) {
+        this.state = state;
+    }
+
+    public Artifact getArtifact() {
+        return artifact;
+    }
+
+    public void setArtifact(Artifact artifact) {
+        this.artifact = artifact;
+    }
+
+    public Date getTimestamp() {
+        return new Date(Optional.of(timestamp).get().getTime());
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = new Date(timestamp.getTime());
+    }
+
+    public RESULT getDeploymentResult() {
+        return deploymentResult;
+    }
+
+    public void setDeploymentResult(RESULT deploymentResult) {
+        this.deploymentResult = deploymentResult;
+    }
+
+    public String getTraceContent() {
+        return traceContent;
+    }
+
+    public void setTraceContent(String traceContent) {
+        this.traceContent = traceContent;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

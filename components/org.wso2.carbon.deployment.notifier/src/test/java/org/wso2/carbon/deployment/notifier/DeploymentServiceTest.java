@@ -20,8 +20,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.deployment.exception.CarbonDeploymentException;
-import org.wso2.carbon.deployment.exception.DeployerRegistrationException;
-import org.wso2.carbon.deployment.exception.DeploymentEngineException;
 import org.wso2.carbon.deployment.internal.DeploymentEngine;
 import org.wso2.carbon.deployment.notifier.deployers.CustomDeployer;
 import org.wso2.carbon.deployment.notifier.service.CustomDeploymentService;
@@ -44,6 +42,7 @@ public class DeploymentServiceTest extends BaseTest {
     private CustomDeployer customDeployer;
     private String artifactPath;
 
+
     /**
      * @param testName
      */
@@ -52,7 +51,7 @@ public class DeploymentServiceTest extends BaseTest {
     }
 
     @BeforeTest
-    public void setup() throws DeploymentEngineException, DeployerRegistrationException {
+    public void setup() throws Exception {
         customDeployer = new CustomDeployer();
         artifactPath = getTestResourceFile(DEPLOYER_REPO).getAbsolutePath()
                 + File.separator + "sample1.txt";

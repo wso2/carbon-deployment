@@ -39,15 +39,16 @@ updateInterval: 15
 # Specify any static message content to be published as key-value pairs 
 # under staticMessageContent.
 deploymentNotifier:
- jmsPublishingEnabled: false 
- javaNamingFactoryInitial: org.wso2.andes.jndi.PropertiesFileInitialContextFactory
-# javaNamingProviderURL: tcp://localhost:61616
- javaNamingProviderURL: src/test/resources/jndi.properties
- jmsUsername: admin
- jmsPassword: admin
+ jmsPublishingEnabled: true
+ javaNamingFactoryInitial: org.apache.activemq.jndi.ActiveMQInitialContextFactory
+ javaNamingProviderURL: vm://carbon?create=false
+# javaNamingProviderURL: conf/jndi.properties
+# jmsUsername: admin
+# jmsPassword: admin
  connectionFactoryJNDIName: TopicConnectionFactory
  destinationJNDIName: topic0
  destinationType: topic
  staticMessageContent:
-#  key: key-value
+#  key: value
+
 

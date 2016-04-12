@@ -24,6 +24,7 @@ import org.wso2.carbon.deployment.DeploymentConfigurationProvider;
 import org.wso2.carbon.deployment.LifecycleEvent;
 import org.wso2.carbon.deployment.LifecycleListener;
 import org.wso2.carbon.deployment.config.DeploymentNotifierConfig;
+import org.wso2.carbon.deployment.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.internal.DeploymentNotificationMessage;
 
 import java.io.StringWriter;
@@ -60,16 +61,15 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
 
     private DeploymentNotifierConfig config;
 
-    private Connection connection; //todo discuss where to maintain this
     private Session session;
     private MessageProducer producer;
 
-    private Destination destination;
-
+    String serverId;
 
     public DeploymentNotifierLifecycleListener() {
         config = DeploymentConfigurationProvider.
                 getDeploymentConfiguration().getDeploymentNotifier();
+        serverId = DataHolder.getInstance().getCarbonRuntime().getConfiguration().getId();
     }
 
     /**
@@ -85,7 +85,8 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
             }
 
             logger.debug("Invoked DeploymentNotifierLifecycleListener");
-            if (LifecycleEvent.AFTER_START_EVENT.equals(event.getEventType())) {
+            if (LifecycleEvent.STATE.AFTER_START_EVENT.equals(event.getState()) ||
+                    LifecycleEvent.STATE.AFTER_UPDATE_EVENT.equals(event.getState())) {
                 String deploymentStatusMessage = createDeploymentStatusMessage(event);
                 initConnectionFactory(); //todo
 
@@ -99,19 +100,20 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
     }
 
     private String createDeploymentStatusMessage(LifecycleEvent event) throws JAXBException {
-        Artifact artifact = event.getLifecycle().getArtifact();
+        Artifact artifact = event.getArtifact();
 
         DeploymentNotificationMessage message = new DeploymentNotificationMessage(artifact,
-                event.getLifecycle().getTimestamp());
+                event.getTimestamp());
         message.setArtifactKey(artifact.getKey());
         //deployer writers are expected to over-ride #toString method as specified in javadocs.
         message.setArtifactType(artifact.getType().get().toString());
-        message.setDeploymentState(event.getLifecycle().getDeploymentState());
-        message.setHost("EXAMPLE.com"); //todo set correct host. also set server id
-        message.setTraceContent(event.getLifecycle().getTraceContent());
+        message.setLifecycleState(event.getState());
+        message.setCurrentDeploymentResult(event.getDeploymentResult());
+        message.setServerId(serverId);
+        message.setTraceContent(event.getTraceContent());
 
-        event.getLifecycle().getProperties().putAll(config.getStaticMessageContent());
-        message.setProperties(event.getLifecycle().getProperties());
+        event.getProperties().putAll(config.getStaticMessageContent());
+        message.setProperties(event.getProperties());
 
         return convertToXml(message, DeploymentNotificationMessage.class);
     }
@@ -135,10 +137,11 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
 
         InitialContext context = new InitialContext(properties);
         ConnectionFactory connectionFactory = lookup(context, ConnectionFactory.class, connectionFactoryJNDIName);
-        destination = lookupDestination(context, destinationJNDIName, destinationType);
+        Destination destination = lookupDestination(context, destinationJNDIName, destinationType);
 
+        Connection connection;
         if (username.isPresent() && password.isPresent()) {
-            //todo check the affect of doing this for each deployment.
+            //todo check the affect of doing this for each deployment. close after message is sent
             connection = connectionFactory.createConnection(username.get(), password.get());
         } else {
             connection = connectionFactory.createConnection();

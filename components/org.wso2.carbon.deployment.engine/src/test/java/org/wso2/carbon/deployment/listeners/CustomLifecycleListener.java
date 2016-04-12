@@ -20,7 +20,6 @@ package org.wso2.carbon.deployment.listeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.Lifecycle;
 import org.wso2.carbon.deployment.LifecycleEvent;
 import org.wso2.carbon.deployment.LifecycleListener;
 
@@ -30,12 +29,12 @@ public class CustomLifecycleListener implements LifecycleListener {
 
     @Override
     public void lifecycleEvent(LifecycleEvent event) {
-        Artifact artifact = event.getLifecycle().getArtifact();
+        Artifact artifact = event.getArtifact();
         String artifactName = artifact.getName();
 
-        Lifecycle.STATE deploymentState = event.getLifecycle().getDeploymentState();
+        LifecycleEvent.RESULT deploymentResult = event.getDeploymentResult();
 
-        logger.info("{} event triggered for artifact: {}, with deployment state: {} ", event.getEventType(),
-                artifactName, deploymentState);
+        logger.info("{} event triggered for artifact: {}, with current deployment result: {} ", event.getState(),
+                artifactName, deploymentResult);
     }
 }

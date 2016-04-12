@@ -16,14 +16,14 @@
 
 id: carbon-kernel
 name: WSO2 Carbon Kernel
-version: ${carbon.version}
+version: 5.0.0
 
 # Ports used by this server
 ports:
 # Ports offset. This entry will set the value of the ports defined below to
 # the define value + Offset.
 # e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445
- offset: ${carbon.offset}
+ offset: 0
 # Deployment Engine related configurations
 deployment:
 # Currently there can be two modes

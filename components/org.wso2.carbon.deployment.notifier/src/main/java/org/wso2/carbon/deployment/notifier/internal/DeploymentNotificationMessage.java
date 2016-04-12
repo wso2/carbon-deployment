@@ -18,7 +18,7 @@
 package org.wso2.carbon.deployment.notifier.internal;
 
 import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.Lifecycle;
+import org.wso2.carbon.deployment.LifecycleEvent;
 
 import java.util.Date;
 import java.util.Optional;
@@ -44,13 +44,16 @@ public class DeploymentNotificationMessage {
     private String artifactType;
 
     @XmlElement
-    private String host; //todo set host
+    private String serverId;
 
     @XmlElement
     private Date timestamp;
 
     @XmlElement
-    private Lifecycle.STATE deploymentState;
+    private LifecycleEvent.RESULT currentDeploymentResult;
+
+    @XmlElement
+    private LifecycleEvent.STATE lifecycleState;
 
     @XmlElement
     private String message;
@@ -96,12 +99,12 @@ public class DeploymentNotificationMessage {
         this.artifactType = artifactType;
     }
 
-    public String getHost() {
-        return host;
+    public String getServerId() {
+        return serverId;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setServerId(String host) {
+        this.serverId = host;
     }
 
     public Date getTimestamp() {
@@ -112,12 +115,20 @@ public class DeploymentNotificationMessage {
         this.timestamp = new Date(timestamp.getTime());
     }
 
-    public Lifecycle.STATE getDeploymentState() {
-        return deploymentState;
+    public LifecycleEvent.STATE getLifecycleState() {
+        return lifecycleState;
     }
 
-    public void setDeploymentState(Lifecycle.STATE deploymentState) {
-        this.deploymentState = deploymentState;
+    public void setLifecycleState(LifecycleEvent.STATE lifecycleState) {
+        this.lifecycleState = lifecycleState;
+    }
+
+    public LifecycleEvent.RESULT getCurrentDeploymentResult() {
+        return currentDeploymentResult;
+    }
+
+    public void setCurrentDeploymentResult(LifecycleEvent.RESULT currentDeploymentResult) {
+        this.currentDeploymentResult = currentDeploymentResult;
     }
 
     public String getMessage() {
@@ -138,7 +149,7 @@ public class DeploymentNotificationMessage {
 
     @Override
     public String toString() {
-        return String.format("%1$s - %2$s - %3$s ", artifactKey, artifactType, deploymentState);
+        return String.format("%1$s - %2$s - %3$s ", artifactKey, artifactType, lifecycleState);
     }
 
 }

@@ -26,7 +26,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.Deployer;
-import org.wso2.carbon.deployment.DeploymentNotifierLifecycleListener;
 import org.wso2.carbon.deployment.DeploymentService;
 import org.wso2.carbon.deployment.LifecycleListener;
 import org.wso2.carbon.deployment.exception.DeployerRegistrationException;
@@ -69,9 +68,6 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
 
     @Activate
     public void start(BundleContext bundleContext) throws Exception {
-        LifecycleListener deploymentCoordinationLifecycleListener = new DeploymentNotifierLifecycleListener();
-        bundleContext.registerService(LifecycleListener.class, deploymentCoordinationLifecycleListener, null);
-        logger.debug("Registered DeploymentNotifierLifecycleListener.");
     }
 
     /**
