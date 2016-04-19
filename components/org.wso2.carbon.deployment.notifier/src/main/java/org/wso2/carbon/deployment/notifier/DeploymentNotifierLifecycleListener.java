@@ -19,12 +19,12 @@ package org.wso2.carbon.deployment.notifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.DeploymentConfigurationProvider;
-import org.wso2.carbon.deployment.LifecycleEvent;
-import org.wso2.carbon.deployment.LifecycleListener;
-import org.wso2.carbon.deployment.config.DeploymentNotifierConfig;
-import org.wso2.carbon.deployment.internal.DataHolder;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.DeploymentConfigurationProvider;
+import org.wso2.carbon.deployment.engine.LifecycleEvent;
+import org.wso2.carbon.deployment.engine.LifecycleListener;
+import org.wso2.carbon.deployment.engine.config.DeploymentNotifierConfig;
+import org.wso2.carbon.deployment.notifier.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.internal.DeploymentNotificationMessage;
 
 import java.io.StringWriter;

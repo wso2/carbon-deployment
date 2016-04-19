@@ -106,7 +106,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <excludePackageNames>org.wso2.carbon.deployment.internal</excludePackageNames>
+                            <excludePackageNames>org.wso2.carbon.deployment.engine.internal</excludePackageNames>
                             <additionalparam>-Xdoclint:none</additionalparam>
                             <show>public</show>
                             <nohelp>true</nohelp>
@@ -118,21 +118,25 @@
     </build>
 
     <properties>
-        <private.package>org.wso2.carbon.deployment.internal.*,</private.package>
+        <private.package>org.wso2.carbon.deployment.engine.internal.*,</private.package>
         <export.package>
-            !org.wso2.carbon.deployment.internal.*,
-            org.wso2.carbon.deployment.*; version="${carbon.deployment.pkg.export.version}",
+            !org.wso2.carbon.deployment.engine.internal.*,
+            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.pkg.export.version}",
         </export.package>
         <import.package>
             org.slf4j.*;version="${slf4j.logging.import.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}"
+            org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}",
+            org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}"
         </import.package>
         <provide.capability>
             osgi.service;effective:=active;
-            objectClass="org.wso2.carbon.kernel.deployment.DeploymentService";
-            dependent-component-key="carbon-transport-mgt",
+            objectClass="org.wso2.carbon.deployment.engine.internal.DeploymentEngineListenerComponent";
+            dependent-component-key="carbon-transport-mgt"
         </provide.capability>
+        <startup.component>
+            carbon-deployment-service;required-service="org.wso2.carbon.deployment.engine.Deployer"
+        </startup.component>
     </properties>
 
 </project>

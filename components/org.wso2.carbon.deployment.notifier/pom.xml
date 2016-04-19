@@ -138,13 +138,10 @@
         <import.package>
             org.slf4j.*;version="${slf4j.logging.import.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}"
+            org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}",
+            org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}",
+            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.import.version.range}"
         </import.package>
-        <provide.capability>
-            osgi.service;effective:=active;
-            objectClass="org.wso2.carbon.kernel.deployment.DeploymentService";
-            dependent-component-key="carbon-transport-mgt",
-        </provide.capability>
     </properties>
 
 </project>

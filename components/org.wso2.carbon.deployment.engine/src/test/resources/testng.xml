@@ -20,11 +20,11 @@ limitations under the License.
 <suite name="Carbon-Deployment_Test-Suite">
     <test name="carbon-deployment-unit-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.carbon.deployment.ArtifactTest" />
-            <class name="org.wso2.carbon.deployment.BaseTest" />
-            <class name="org.wso2.carbon.deployment.DeployerTest" />
-            <class name="org.wso2.carbon.deployment.DeploymentEngineTest" />
-            <class name="org.wso2.carbon.deployment.DeploymentServiceTest" />
+            <class name="org.wso2.carbon.deployment.engine.ArtifactTest" />
+            <class name="org.wso2.carbon.deployment.engine.BaseTest" />
+            <class name="org.wso2.carbon.deployment.engine.DeployerTest" />
+            <class name="org.wso2.carbon.deployment.engine.DeploymentEngineTest" />
+            <class name="org.wso2.carbon.deployment.engine.DeploymentServiceTest" />
         </classes>
     </test>
 </suite>

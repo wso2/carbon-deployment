@@ -19,9 +19,9 @@ package org.wso2.carbon.deployment.notifier.listeners;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.LifecycleEvent;
-import org.wso2.carbon.deployment.LifecycleListener;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.LifecycleEvent;
+import org.wso2.carbon.deployment.engine.LifecycleListener;
 
 public class CustomLifecycleListener implements LifecycleListener {
 

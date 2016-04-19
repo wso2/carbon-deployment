@@ -24,17 +24,17 @@ import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.ArtifactType;
-import org.wso2.carbon.deployment.LifecycleListener;
-import org.wso2.carbon.deployment.exception.DeployerRegistrationException;
-import org.wso2.carbon.deployment.exception.DeploymentEngineException;
-import org.wso2.carbon.deployment.internal.DataHolder;
-import org.wso2.carbon.deployment.internal.DeploymentEngine;
-import org.wso2.carbon.deployment.internal.RepositoryScanner;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.ArtifactType;
+import org.wso2.carbon.deployment.engine.LifecycleListener;
+import org.wso2.carbon.deployment.engine.exception.DeployerRegistrationException;
+import org.wso2.carbon.deployment.engine.exception.DeploymentEngineException;
+import org.wso2.carbon.deployment.engine.internal.DeploymentEngine;
+import org.wso2.carbon.deployment.engine.internal.RepositoryScanner;
 import org.wso2.carbon.deployment.notifier.deployers.CustomDeployer;
 import org.wso2.carbon.deployment.notifier.deployers.FaultyDeployer1;
 import org.wso2.carbon.deployment.notifier.deployers.FaultyDeployer2;
+import org.wso2.carbon.deployment.notifier.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.listeners.CustomLifecycleListener;
 import org.wso2.carbon.kernel.CarbonRuntime;
 import org.wso2.carbon.kernel.internal.config.YAMLBasedConfigProvider;
@@ -216,10 +216,11 @@ public class DeploymentEngineTest extends BaseTest {
         deploymentEngine.undeployArtifacts(artifactsList);
         Assert.assertTrue(deploymentEngine.getFaultyArtifacts().containsValue(artifact));
 
-        //wait 10 seconds max
-        TextMessage message = (TextMessage) topicSubscriber.receive(10000);
+        //wait 20 seconds max
+        TextMessage message = (TextMessage) topicSubscriber.receive(20000);
         Assert.assertNotNull(message, "The deployment status has not been published to the JMS topic.");
-        logger.info("message received - " + message.getText());
+        Assert.assertTrue(message.getText().contains("sample1.txt"));
+        logger.info("Message received - " + message.getText());
     }
 
     @Test(dependsOnMethods = {"testDeployWithoutDeployerInstance"})

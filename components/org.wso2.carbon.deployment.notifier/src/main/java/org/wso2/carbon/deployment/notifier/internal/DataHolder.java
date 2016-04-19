@@ -17,7 +17,6 @@ package org.wso2.carbon.deployment.notifier.internal;
 
 import org.osgi.framework.BundleContext;
 import org.wso2.carbon.kernel.CarbonRuntime;
-import org.wso2.carbon.kernel.internal.runtime.RuntimeManager;
 
 /**
  * Carbon kernel DataHolder.
@@ -27,8 +26,6 @@ import org.wso2.carbon.kernel.internal.runtime.RuntimeManager;
 public class DataHolder {
     private static DataHolder instance = new DataHolder();
     private BundleContext bundleContext;
-
-    private RuntimeManager runtimeManager = null;
 
     private CarbonRuntime carbonRuntime;
 
@@ -42,24 +39,6 @@ public class DataHolder {
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
-    }
-
-    /**
-     * Getter method of RuntimeManager instance.
-     *
-     * @return RuntimeManager   returns runtime manager instance
-     */
-    public RuntimeManager getRuntimeManager() {
-        return runtimeManager;
-    }
-
-    /**
-     * setter method of RuntimeManager.
-     *
-     * @param runtimeManager - RuntimeManager instance to be set
-     */
-    public void setRuntimeManager(RuntimeManager runtimeManager) {
-        this.runtimeManager = runtimeManager;
     }
 
     /**

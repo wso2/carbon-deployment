@@ -15,12 +15,12 @@
  */
 package org.wso2.carbon.deployment.notifier.service;
 
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.ArtifactType;
-import org.wso2.carbon.deployment.Deployer;
-import org.wso2.carbon.deployment.exception.CarbonDeploymentException;
-import org.wso2.carbon.deployment.internal.CarbonDeploymentService;
-import org.wso2.carbon.deployment.internal.DeploymentEngine;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.ArtifactType;
+import org.wso2.carbon.deployment.engine.Deployer;
+import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
+import org.wso2.carbon.deployment.engine.internal.CarbonDeploymentService;
+import org.wso2.carbon.deployment.engine.internal.DeploymentEngine;
 
 import java.io.File;
 import java.util.ArrayList;

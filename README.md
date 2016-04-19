@@ -12,17 +12,17 @@
 Carbon 5.x artifact deployment framework - This is an extensible framework where Carbon developers get to incorporate and write their own artifact deployers to deploy its artifacts into a Carbon 5 based product.
 
 This provides following interfaces -
-* `org.wso2.carbon.deployment.DeploymentService` - 
+* `DeploymentService` -
 
 User level API for consuming `DeploymentEngine` functionality. An implementation of this is registered as an OSGI service which can be used by developers to deploy/undeploy/redeploy their artifacts.
 
-* `org.wso2.carbon.deployment.Deployer` - 
+* `Deployer` -
 
-This interface is used to provide the deployment mechanism in carbon for custom artifacts, where you can write your own Deployer to process a particular ArtifactType. Developers need to develop implementations based on this interface, and register it as an OSGi service (using the org.wso2.carbon.deployment.Deployer as the interface) for the DeploymentEngine to find.
+This interface is used to provide the deployment mechanism in carbon for custom artifacts, where you can write your own Deployer to process a particular ArtifactType. Developers need to develop implementations based on this interface, and register it as an OSGi service (using the Deployer as the interface) for the DeploymentEngine to find.
 
-* `org.wso2.carbon.deployment.LifecycleListener` -
+* `LifecycleListener` -
 
-This interface can be used to write your own lifecycle listeners to listen on artifact deployment events. The implementation should be registered as an OSGi service with org.wso2.carbon.deployment.LifecycleListener as the interface. This interface receives following events.
+This interface can be used to write your own lifecycle listeners to listen on artifact deployment events. The implementation should be registered as an OSGi service with LifecycleListener as the interface. This interface receives following events.
 
 ```bash
 BEFORE_START_EVENT

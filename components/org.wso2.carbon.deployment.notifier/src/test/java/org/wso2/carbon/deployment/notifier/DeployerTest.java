@@ -18,8 +18,8 @@ package org.wso2.carbon.deployment.notifier;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.exception.CarbonDeploymentException;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
 import org.wso2.carbon.deployment.notifier.deployers.CustomDeployer;
 
 import java.io.File;

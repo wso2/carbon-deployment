@@ -17,10 +17,10 @@ package org.wso2.carbon.deployment.notifier.deployers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.ArtifactType;
-import org.wso2.carbon.deployment.Deployer;
-import org.wso2.carbon.deployment.exception.CarbonDeploymentException;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.ArtifactType;
+import org.wso2.carbon.deployment.engine.Deployer;
+import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
 
 import java.io.File;
 import java.io.FileInputStream;

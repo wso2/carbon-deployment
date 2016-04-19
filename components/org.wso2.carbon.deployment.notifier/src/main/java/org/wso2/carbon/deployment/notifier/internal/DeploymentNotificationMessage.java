@@ -17,8 +17,8 @@
 */
 package org.wso2.carbon.deployment.notifier.internal;
 
-import org.wso2.carbon.deployment.Artifact;
-import org.wso2.carbon.deployment.LifecycleEvent;
+import org.wso2.carbon.deployment.engine.Artifact;
+import org.wso2.carbon.deployment.engine.LifecycleEvent;
 
 import java.util.Date;
 import java.util.Optional;
