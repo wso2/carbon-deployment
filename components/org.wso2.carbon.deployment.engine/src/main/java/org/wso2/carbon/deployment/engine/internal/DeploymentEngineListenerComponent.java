@@ -42,11 +42,10 @@ import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
         name = "org.wso2.carbon.deployment.engine.internal.DeploymentEngineListenerComponent",
         immediate = true,
         property = {
-                "capability-name=org.wso2.carbon.deployment.engine.Deployer",
                 "component-key=carbon-deployment-service"
         }
 )
-
+@SuppressWarnings("unused")
 public class DeploymentEngineListenerComponent implements RequiredCapabilityListener {
     private static final Logger logger = LoggerFactory.getLogger(DeploymentEngineListenerComponent.class);
 

@@ -54,9 +54,9 @@ public class CarbonDeploymentEngineOSGiTest {
         OSGiTestUtils.setEnv();
 
         Option[] options = CoreOptions.options(mavenBundle().artifactId("org.wso2.carbon.deployment.engine").
+                        groupId("org.wso2.carbon.deployment").versionAsInProject(),
+                mavenBundle().artifactId("org.wso2.carbon.deployment.notifier").
                         groupId("org.wso2.carbon.deployment").versionAsInProject()
-//                mavenBundle().artifactId("org.wso2.carbon.deployment.notifier").
-//                        groupId("org.wso2.carbon.deployment").versionAsInProject()
                 );
         return OSGiTestUtils.getDefaultPaxOptions(options);
     }
