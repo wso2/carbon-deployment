@@ -305,7 +305,7 @@
         <carbon.deployment.version>5.0.0-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.pkg.export.version>5.0.0</carbon.deployment.pkg.export.version>
 
-        <carbon.kernel.version>5.1.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.kernel.version>5.1.0-alpha</carbon.kernel.version>
         <carbon.feature.plugin.version>2.0.0</carbon.feature.plugin.version>
         <org.snakeyaml.version>1.16.0.wso2v1</org.snakeyaml.version>
         <geronimo.jms.spec.version>1.1</geronimo.jms.spec.version>
