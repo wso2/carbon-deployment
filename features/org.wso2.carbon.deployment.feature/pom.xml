@@ -42,9 +42,21 @@
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.wso2.carbon.maven</groupId>
@@ -76,6 +88,10 @@
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.deployment.notifier</symbolicName>
                                     <version>${carbon.deployment.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.apache.geronimo.specs.geronimo-jms_1.1_spec</symbolicName>
+                                    <version>${geronimo.jms.spec.version}</version>
                                 </bundle>
                             </bundles>
                         </configuration>

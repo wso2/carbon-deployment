@@ -140,7 +140,8 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}",
             org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}",
-            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.import.version.range}"
+            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.import.version.range}",
+            javax.jms.*
         </import.package>
     </properties>
 
