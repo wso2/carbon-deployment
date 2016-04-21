@@ -49,8 +49,8 @@ public class ASOpenEJBContextConfig extends OpenEJBContextConfig {
     }
 
     @Override
-    protected void processServletContainerInitializers(ServletContext ctx) {
-        super.processServletContainerInitializers(ctx);
+    protected void processServletContainerInitializers() {
+        super.processServletContainerInitializers();
     }
 
     @Override
