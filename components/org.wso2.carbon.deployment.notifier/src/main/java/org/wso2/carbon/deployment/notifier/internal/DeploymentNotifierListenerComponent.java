@@ -37,6 +37,7 @@ import org.wso2.carbon.kernel.CarbonRuntime;
         name = "DeploymentNotifierListenerComponent",
         immediate = true
 )
+@SuppressWarnings("unused")
 public class DeploymentNotifierListenerComponent {
     private static final Logger logger = LoggerFactory.getLogger(DeploymentNotifierListenerComponent.class);
 

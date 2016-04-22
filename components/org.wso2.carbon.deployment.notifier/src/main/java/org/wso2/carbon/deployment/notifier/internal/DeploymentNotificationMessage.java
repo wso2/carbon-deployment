@@ -32,6 +32,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * The JAXB POJO that is used to send the artifact deployment
  * status, usually to a JMS topic.
  *
+ * @since 5.0.0
+ *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -61,12 +63,7 @@ public class DeploymentNotificationMessage {
     @XmlElement
     public Properties properties;
 
-    /**
-     * Extracts info from the Artifact object.
-     *
-     * @param artifact The artifact that we need to extract info from
-     */
-    public DeploymentNotificationMessage(Artifact artifact) {
+        public DeploymentNotificationMessage(Artifact artifact) {
         this(artifact, null);
     }
 
@@ -77,6 +74,11 @@ public class DeploymentNotificationMessage {
     public DeploymentNotificationMessage() {
     }
 
+    /**
+     * Extracts info from the Artifact object.
+     *
+     * @param artifact The artifact that we need to extract info from
+     */
     public DeploymentNotificationMessage(Artifact artifact, Date timestamp) {
         this.artifactKey = artifact.getKey();
         this.artifactType = artifact.getType().get().toString();

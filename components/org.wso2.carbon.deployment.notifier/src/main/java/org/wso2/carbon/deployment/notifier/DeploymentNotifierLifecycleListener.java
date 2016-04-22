@@ -54,6 +54,7 @@ import javax.xml.bind.Marshaller;
  * This sends a serialized {@link DeploymentNotificationMessage}
  * object instance as the message.
  *
+ * @since 5.0.0
  */
 public class DeploymentNotifierLifecycleListener implements LifecycleListener {
 

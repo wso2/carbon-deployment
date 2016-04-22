@@ -19,31 +19,17 @@
 package org.wso2.carbon.deployment.notifier;
 
 /**
- * Constants for deployment framework.
+ * Constants for deployment notifier.
  *
  * @since 5.1.0
  *
  */
 public final class Constants {
 
-    public static final String DEPLOYMENT_YAML_CONFIGURATION_FILE = "deployment.yml";
-
-    public static final String DEPLOYMENT_NOTIFIER_CONNECTION_FACTORY_JNDI_NAME = "TopicConnectionFactory";
-
-    public static final String DEPLOYMENT_NOTIFIER_CONNECTION_STRING = "connectionfactory.TopicConnectionFactory";
-
-    public static final String DEPLOYMENT_NOTIFIER_TOPIC_JNDI_NAME = "deploymentTopic";
-
-    public static final String DESTINATION_TYPE_QUEUE = "queue";
-
     public static final String DESTINATION_TYPE_TOPIC = "topic";
 
     public static final String QUEUE_PREFIX = "queue.";
 
     public static final String TOPIC_PREFIX = "topic.";
-
-    public static final String JMS_USERNAME_PROPERTY = "jmsUsername";
-
-    public static final String JMS_PASSWORD_PROPERTY = "jmsPassword";
 
 }

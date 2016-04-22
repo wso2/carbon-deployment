@@ -15,30 +15,20 @@
  */
 package org.wso2.carbon.deployment.notifier.internal;
 
-import org.osgi.framework.BundleContext;
 import org.wso2.carbon.kernel.CarbonRuntime;
 
 /**
- * Carbon kernel DataHolder.
+ * Deployment notifier DataHolder.
  *
  * @since 5.0.0
  */
 public class DataHolder {
     private static DataHolder instance = new DataHolder();
-    private BundleContext bundleContext;
 
     private CarbonRuntime carbonRuntime;
 
     public static DataHolder getInstance() {
         return instance;
-    }
-
-    public BundleContext getBundleContext() {
-        return bundleContext;
-    }
-
-    public void setBundleContext(BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
     }
 
     /**
