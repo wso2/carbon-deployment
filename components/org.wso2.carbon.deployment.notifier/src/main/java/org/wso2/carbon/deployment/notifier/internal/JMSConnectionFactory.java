@@ -1,10 +1,10 @@
 /*
-*  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
+* WSO2 Inc. licenses this file to you under the Apache License,
+* Version 2.0 (the "License"); you may not use this file except
+* in compliance with the License.
+* You may obtain a copy of the License at
 *
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
@@ -17,35 +17,44 @@
 */
 package org.wso2.carbon.deployment.notifier.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.deployment.notifier.Constants;
+import org.wso2.carbon.deployment.notifier.DeploymentNotifierException;
 
-import javax.jms.*;
+import java.util.Hashtable;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Hashtable;
 
 /**
- * Encapsulate a JMS Connection factory definition within an Axis2.xml
- * <p/>
+ * Encapsulate a JMS Connection factory.
+ * <p>
  * JMS Connection Factory definitions, allows JNDI properties as well as other service
  * level parameters to be defined, and re-used by each service that binds to it
- * <p/>
+ * <p>
  * When used for sending messages out, the JMSConnectionFactory'ies are able to cache
  * a Connection, Session or Producer
+ * <p>
+ *
+ * Borrowed generously from Apache Axi2 JMS implementation.
  */
 public class JMSConnectionFactory {
 
-    private static final Log log = LogFactory.getLog(JMSConnectionFactory.class);
+    private static final Logger log = LoggerFactory.getLogger(JMSConnectionFactory.class);
 
     /**
-     * The list of parameters from the axis2.xml definition
+     * The list of parameters from the deployment.yml
      */
-    private Hashtable<String, String> parameters = new Hashtable<String, String>();
+    private Hashtable<String, String> parameters = new Hashtable<>();
     private String name;
 
     /**
@@ -69,11 +78,20 @@ public class JMSConnectionFactory {
     private String destinationName;
 
     /**
-     * Digest a JMS CF definition from an axis2.xml 'Parameter' and construct
+     * Digest a JMS CF definition and construct.
+     * Set max concurrent connections to be 5 if unspecified.
      */
+    public JMSConnectionFactory(Hashtable<String, String> parameters, String name, String destination) {
+        this(parameters, name, destination, 5);
+    }
+
+    /**
+     * Digest a JMS CF definition  'Parameter' and construct
+     */
+    @SuppressWarnings("unchecked")
     public JMSConnectionFactory(Hashtable<String, String> parameters, String name, String destination,
             int maxConcurrentConnections) {
-        this.parameters = parameters;
+        this.parameters = (Hashtable<String, String>) parameters.clone();
         this.name = name;
         this.destinationName = destination;
 
@@ -83,15 +101,15 @@ public class JMSConnectionFactory {
 
         try {
             context = new InitialContext(parameters);
-            conFactory = JMSUtils.lookup(context, ConnectionFactory.class,
-                    parameters.get(JMSConstants.PARAM_CONFAC_JNDI_NAME));
+            conFactory = JMSUtils
+                    .lookup(context, ConnectionFactory.class, parameters.get(Constants.PARAM_CONFAC_JNDI_NAME));
             log.info("JMS ConnectionFactory : " + name + " initialized");
 
         } catch (NamingException e) {
-            throw new OutputEventAdapterRuntimeException("Cannot acquire JNDI context, JMS Connection factory : " +
-                    parameters.get(JMSConstants.PARAM_CONFAC_JNDI_NAME) +
+            throw new DeploymentNotifierException("Cannot acquire JNDI context, JMS Connection factory : " +
+                    parameters.get(Constants.PARAM_CONFAC_JNDI_NAME) +
                     " or default destinationName : " +
-                    parameters.get(JMSConstants.PARAM_DESTINATION) +
+                    parameters.get(Constants.PARAM_DESTINATION) +
                     " for JMS CF : " + name + " using : " + parameters, e);
         }
 
@@ -111,7 +129,6 @@ public class JMSConnectionFactory {
         this.connectionPool = new GenericObjectPool(new PoolableJMSConnectionFactory(), poolConfig);
 
     }
-
 
     public void returnPooledConnection(JMSPooledConnectionHolder pooledConnection) {
         try {
@@ -134,8 +151,7 @@ public class JMSConnectionFactory {
                 log.debug("Creating a new JMS MessageProducer from JMS CF : " + name);
             }
 
-            return JMSUtils.createProducer(
-                    session, destination, isQueue(), isJmsSpec11());
+            return JMSUtils.createProducer(session, destination, isQueue(), isJmsSpec11());
 
         } catch (JMSException e) {
             handleException("Error creating JMS producer from JMS CF : " + name, e);
@@ -143,12 +159,12 @@ public class JMSConnectionFactory {
         return null;
     }
 
-
     /**
      * Get cached InitialContext
      *
      * @return cache InitialContext
      */
+    @SuppressWarnings("unused")
     public Context getContext() {
         return context;
     }
@@ -161,41 +177,23 @@ public class JMSConnectionFactory {
     public synchronized Destination getDestination() {
         try {
             if (sharedDestination == null) {
-                sharedDestination = JMSUtils.lookupDestination(context, destinationName, parameters.get(JMSConstants.PARAM_DEST_TYPE));
+                sharedDestination = JMSUtils
+                        .lookupDestination(context, destinationName, parameters.get(Constants.PARAM_DEST_TYPE));
             }
             return sharedDestination;
         } catch (NamingException e) {
-            handleException("Error looking up the JMS destinationName with name " + destinationName
-                    + " of type " + parameters.get(JMSConstants.PARAM_DEST_TYPE), e);
+            handleException(
+                    "Error looking up the JMS destinationName with name " + destinationName + " of type " + parameters
+                            .get(Constants.PARAM_DEST_TYPE), e);
         }
 
         // never executes but keeps the compiler happy
         return null;
     }
 
-    /**
-     * Get the reply Destination from the PARAM_REPLY_DESTINATION parameter
-     *
-     * @return reply destinationName defined in the JMS CF
-     */
-    public String getReplyToDestination() {
-        return parameters.get(JMSConstants.PARAM_REPLY_DESTINATION);
-    }
-
-    /**
-     * Get the reply destinationName type from the PARAM_REPLY_DEST_TYPE parameter
-     *
-     * @return reply destinationName defined in the JMS CF
-     */
-    public String getReplyDestinationType() {
-        return parameters.get(JMSConstants.PARAM_REPLY_DEST_TYPE) != null ?
-                parameters.get(JMSConstants.PARAM_REPLY_DEST_TYPE) :
-                JMSConstants.DESTINATION_TYPE_GENERIC;
-    }
-
     private void handleException(String msg, Exception e) {
         log.error(msg, e);
-        throw new OutputEventAdapterRuntimeException(msg, e);
+        throw new DeploymentNotifierException(msg, e);
     }
 
     /**
@@ -204,8 +202,8 @@ public class JMSConnectionFactory {
      * @return true, if JMS 1.1 api should  be used
      */
     public boolean isJmsSpec11() {
-        return parameters.get(JMSConstants.PARAM_JMS_SPEC_VER) == null ||
-                "1.1".equals(parameters.get(JMSConstants.PARAM_JMS_SPEC_VER));
+        return parameters.get(Constants.PARAM_JMS_SPEC_VER) == null || "1.1"
+                .equals(parameters.get(Constants.PARAM_JMS_SPEC_VER));
     }
 
     /**
@@ -214,63 +212,22 @@ public class JMSConnectionFactory {
      * @return TRUE if a Queue, FALSE for a Topic and NULL for a JMS 1.1 Generic Destination
      */
     public Boolean isQueue() {
-        if (parameters.get(JMSConstants.PARAM_CONFAC_TYPE) == null &&
-                parameters.get(JMSConstants.PARAM_DEST_TYPE) == null) {
-            return null;
-        }
-
-        if (parameters.get(JMSConstants.PARAM_CONFAC_TYPE) != null) {
-            if ("queue".equalsIgnoreCase(parameters.get(JMSConstants.PARAM_CONFAC_TYPE))) {
-                return true;
-            } else if ("topic".equalsIgnoreCase(parameters.get(JMSConstants.PARAM_CONFAC_TYPE))) {
-                return false;
-            } else {
-                throw new OutputEventAdapterRuntimeException("Invalid " + JMSConstants.PARAM_CONFAC_TYPE + " : " +
-                        parameters.get(JMSConstants.PARAM_CONFAC_TYPE) + " for JMS CF : " + name);
-            }
+        if ("queue".equalsIgnoreCase(parameters.get(Constants.PARAM_DEST_TYPE))) {
+            return true;
+        } else if ("topic".equalsIgnoreCase(parameters.get(Constants.PARAM_DEST_TYPE))) {
+            return false;
         } else {
-            if ("queue".equalsIgnoreCase(parameters.get(JMSConstants.PARAM_DEST_TYPE))) {
-                return true;
-            } else if ("topic".equalsIgnoreCase(parameters.get(JMSConstants.PARAM_DEST_TYPE))) {
-                return false;
-            } else {
-                throw new OutputEventAdapterRuntimeException("Invalid " + JMSConstants.PARAM_DEST_TYPE + " : " +
-                        parameters.get(JMSConstants.PARAM_DEST_TYPE) + " for JMS CF : " + name);
-            }
+            throw new DeploymentNotifierException("Invalid " + Constants.PARAM_DEST_TYPE + " : " +
+                    parameters.get(Constants.PARAM_DEST_TYPE) + " for JMS CF : " + name);
         }
     }
-
-    /**
-     * Is a session transaction requested from users of this JMS CF?
-     *
-     * @return session transaction required by the clients of this?
-     */
-    private boolean isSessionTransacted() {
-        return parameters.get(JMSConstants.PARAM_SESSION_TRANSACTED) != null &&
-                Boolean.valueOf(parameters.get(JMSConstants.PARAM_SESSION_TRANSACTED));
-    }
-
-    private boolean isDurable() {
-        if (parameters.get(JMSConstants.PARAM_SUB_DURABLE) != null) {
-            return Boolean.valueOf(parameters.get(JMSConstants.PARAM_SUB_DURABLE));
-        }
-        return false;
-    }
-
-    private String getClientId() {
-        return parameters.get(JMSConstants.PARAM_DURABLE_SUB_CLIENT_ID);
-    }
-
 
     public Connection createConnection() {
 
         Connection connection = null;
         try {
-            connection = JMSUtils.createConnection(
-                    conFactory,
-                    parameters.get(JMSConstants.PARAM_JMS_USERNAME),
-                    parameters.get(JMSConstants.PARAM_JMS_PASSWORD),
-                    isJmsSpec11(), isQueue(), isDurable(), getClientId());
+            connection = JMSUtils.createConnection(conFactory, parameters.get(Constants.PARAM_JMS_USERNAME),
+                    parameters.get(Constants.PARAM_JMS_PASSWORD), isJmsSpec11(), isQueue(), false, null);
 
             if (log.isDebugEnabled()) {
                 log.debug("New JMS Connection from JMS CF : " + name + " created");
@@ -291,7 +248,7 @@ public class JMSConnectionFactory {
         return null;
     }
 
-
+    @SuppressWarnings("unused")
     public synchronized void close() {
 
         try {
@@ -341,23 +298,19 @@ public class JMSConnectionFactory {
             this.producer = producer;
         }
 
-
     }
-
 
     /**
      * JMSConnectionFactory used by the connection pool.
      */
     private class PoolableJMSConnectionFactory implements PoolableObjectFactory {
 
-        int count = 0;
-
         @Override
         public Object makeObject() throws Exception {
             Connection con = createConnection();
             try {
-                Session session = JMSUtils.createSession(
-                        con, isSessionTransacted(), Session.AUTO_ACKNOWLEDGE, isJmsSpec11(), isQueue());
+                Session session = JMSUtils
+                        .createSession(con, false, Session.AUTO_ACKNOWLEDGE, isJmsSpec11(), isQueue());
 
                 MessageProducer producer = createProducer(session, getDestination());
 
@@ -399,6 +352,5 @@ public class JMSConnectionFactory {
         }
 
     }
-
 
 }

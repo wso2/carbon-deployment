@@ -17,5 +17,29 @@
 */
 package org.wso2.carbon.deployment.notifier;
 
-public class DeploymentNotifierException {
+/**
+ * The exception class for all deployment notifier related the exception that
+ * can be thrown from deployment notifier.
+ *
+ * @since 5.0.0
+ */
+public class DeploymentNotifierException extends RuntimeException {
+    /**
+     * This will construct the DeploymentNotifierException with the detailed exception message.
+     * @param message the detailed exception message to be included with DeploymentNotifierException
+     */
+    public DeploymentNotifierException(String message) {
+        super(message);
+    }
+
+    /**
+     * This will construct a new DeploymentNotifierException with the specified detail message and
+     * cause.
+     *
+     * @param message the exception message to be included with DeploymentNotifierException
+     * @param cause the cause exception to be included with DeploymentNotifierException
+     */
+    public DeploymentNotifierException(String message, Exception cause) {
+        super(message, cause);
+    }
 }

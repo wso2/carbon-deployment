@@ -32,4 +32,36 @@ public final class Constants {
 
     public static final String TOPIC_PREFIX = "topic.";
 
+    /**
+     * The Parameter name indicating the JMS connection factory JNDI name
+     */
+    public static final String PARAM_CONFAC_JNDI_NAME = "connectionFactoryJNDIName";
+
+    /**
+     * The parameter indicating the JMS API specification to be used - if this is "1.1" the JMS
+     * 1.1 API would be used, else the JMS 1.0.2B
+     */
+    public static final String PARAM_JMS_SPEC_VER = "jmsSpecVersion";
+
+    /**
+     * The username to use when obtaining a JMS Connection
+     */
+    public static final String PARAM_JMS_USERNAME = "jmsUserName";
+    /**
+     * The password to use when obtaining a JMS Connection
+     */
+    public static final String PARAM_JMS_PASSWORD = "jmsPassword";
+
+    /**
+     * The Service level Parameter name indicating the JMS destination for requests of a service
+     */
+    public static final String PARAM_DESTINATION = "destinationJNDIName";
+
+    /**
+     * The Service level Parameter name indicating the destination type for requests.
+     */
+    public static final String PARAM_DEST_TYPE = "destinationType";
+
+
+
 }

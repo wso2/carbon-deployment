@@ -27,7 +27,6 @@ import java.util.Properties;
  *
  * @since 5.1.0
  *
- * todo merge this class with LifecycleEvent
  */
 public class LifecycleEvent {
 

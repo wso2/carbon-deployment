@@ -102,6 +102,7 @@ public class DeploymentEngineTest extends BaseTest {
         brokerService.start();
 
         Topic topic = new ActiveMQTopic("topic0");
+//        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://carbon?create=false");
         Connection connection = connectionFactory.createConnection();
         connection.setClientID("carbon");
@@ -174,10 +175,12 @@ public class DeploymentEngineTest extends BaseTest {
         deploymentEngine.deployArtifacts(artifactsList);
         Assert.assertTrue(CustomDeployer.sample1Deployed);
 
-        //wait 10 seconds max
+        //wait 20 seconds max
         TextMessage message = (TextMessage) topicSubscriber.receive(10000);
         Assert.assertNotNull(message, "The deployment status has not been published to the JMS topic.");
-        logger.info("message received - " + message.getText());
+        Assert.assertTrue(message.getText().contains("<currentDeploymentResult>SUCCESSFUL</currentDeploymentResult>"));
+        Assert.assertTrue(message.getText().contains("<lifecycleState>AFTER_START_EVENT</lifecycleState>"));
+        logger.info("Message received - " + message.getText());
     }
 
     @Test(dependsOnMethods = {"testDeployArtifacts"})
