@@ -39,7 +39,7 @@ updateInterval: 15
 # Specify any static message content to be published as key-value pairs 
 # under staticMessageContent.
 deploymentNotifier:
- jmsPublishingEnabled: true
+ jmsPublishingEnabled: false
  javaNamingFactoryInitial: org.apache.activemq.jndi.ActiveMQInitialContextFactory
  javaNamingProviderURL: vm://carbon?create=false
 # javaNamingProviderURL: conf/jndi.properties
