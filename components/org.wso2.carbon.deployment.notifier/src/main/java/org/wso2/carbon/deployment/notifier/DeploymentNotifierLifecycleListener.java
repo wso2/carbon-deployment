@@ -52,7 +52,7 @@ import javax.xml.bind.Marshaller;
 public class DeploymentNotifierLifecycleListener implements LifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(DeploymentNotifierLifecycleListener.class);
-    private final JMSConnectionFactory jmsConnectionFactory;
+    private Optional<JMSConnectionFactory> jmsConnectionFactory = Optional.empty();
 
     private DeploymentNotifierConfig config;
 
@@ -62,7 +62,10 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
         config = DeploymentConfigurationProvider.
                 getDeploymentConfiguration().getDeploymentNotifier();
         serverId = DataHolder.getInstance().getCarbonRuntime().getConfiguration().getId();
-        jmsConnectionFactory = getConnectionFactory();
+
+        if (config.isJmsPublishingEnabled()) {
+            jmsConnectionFactory = Optional.of(getConnectionFactory());
+        }
     }
 
     /**
@@ -85,7 +88,7 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
             if (LifecycleEvent.STATE.AFTER_START_EVENT.equals(event.getState()) ||
                     LifecycleEvent.STATE.AFTER_UPDATE_EVENT.equals(event.getState())) {
                 String deploymentStatusMessage = createDeploymentStatusMessage(event);
-                pooledConnectionHolder = jmsConnectionFactory.getConnectionFromPool();
+                pooledConnectionHolder = jmsConnectionFactory.get().getConnectionFromPool();
 
                 MessageProducer producer = pooledConnectionHolder.getProducer();
                 Session session = pooledConnectionHolder.getSession();
@@ -98,7 +101,7 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
             logger.error("Error while publishing deployment status via JMS.", e);
         } finally {
             if (pooledConnectionHolder != null) {
-                jmsConnectionFactory.returnPooledConnection(pooledConnectionHolder);
+                jmsConnectionFactory.get().returnPooledConnection(pooledConnectionHolder);
             }
 
         }

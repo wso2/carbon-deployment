@@ -1,5 +1,5 @@
 ################################################################################
-#   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ repositoryLocation: ${carbon.home}/deployment/
 updateInterval: 15
 
 # Notify deployment status via JMS to a topic
-# In a cluster, all nodes should publish the status to the same topic which may be 
-# listened on to take deployment decisions such as reverting artifacts. 
+# In a cluster, all nodes should publish the status to the same topic which may be
+# listened on to take deployment decisions such as reverting artifacts.
 # This is disabled by default.
-# 
-# Specify any static message content to be published as key-value pairs 
+#
+# Specify any static message content to be published as key-value pairs
 # under staticMessageContent.
 deploymentNotifier:
  jmsPublishingEnabled: false
@@ -50,5 +50,4 @@ deploymentNotifier:
  destinationType: topic
  staticMessageContent:
 #  key: value
-
 

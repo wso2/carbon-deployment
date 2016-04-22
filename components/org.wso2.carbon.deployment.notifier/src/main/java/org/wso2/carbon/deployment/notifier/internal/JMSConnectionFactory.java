@@ -328,7 +328,6 @@ public class JMSConnectionFactory {
 
         @Override
         public void destroyObject(Object o) throws Exception {
-
             JMSPooledConnectionHolder entry = (JMSPooledConnectionHolder) o;
             entry.getProducer().close();
             entry.getSession().close();

@@ -88,9 +88,8 @@
             <artifactId>activemq-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-pool</groupId>
+            <groupId>commons-pool.wso2</groupId>
             <artifactId>commons-pool</artifactId>
-            <version>1.5.4</version>
         </dependency>
     </dependencies>
 
@@ -146,8 +145,13 @@
             org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}",
             org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}",
             org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.import.version.range}",
-            javax.jms.*
+            org.apache.commons.pool.*,
+            javax.jms.*,
+            javax.xml.bind,
+            javax.naming
         </import.package>
+        <!-- Given that jms implementation is coming from different bundles, we need to add dynamic imports -->
+        <dynamic.import.package>*</dynamic.import.package>
     </properties>
 
 </project>

@@ -35,7 +35,8 @@
     <modules>
         <module>components/org.wso2.carbon.deployment.engine</module>
         <module>components/org.wso2.carbon.deployment.notifier</module>
-        <module>features/org.wso2.carbon.deployment.feature</module>
+        <module>features/org.wso2.carbon.deployment.engine.feature</module>
+        <module>features/org.wso2.carbon.deployment.notifier.feature</module>
         <module>tests</module>
     </modules>
 
@@ -107,6 +108,12 @@
                 <artifactId>org.eclipse.osgi</artifactId>
                 <version>${equinox.osgi.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-pool.wso2</groupId>
+                <artifactId>commons-pool</artifactId>
+                <version>${commons.pool.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -287,16 +294,6 @@
                 <artifactId>org.eclipse.equinox.cm</artifactId>
                 <version>${org.eclipse.equinox.cm.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi.services</artifactId>
-                <version>${org.wso2.eclipse.osgi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi</artifactId>
-                <version>${equinox.osgi.version}</version>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -311,6 +308,7 @@
         <geronimo.jms.spec.version>1.1.1</geronimo.jms.spec.version>
         <apache.activemq.version>5.7.0</apache.activemq.version>
         <commons.io.version>2.4.0.wso2v1</commons.io.version>
+        <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
 
         <slf4j.api.version>1.7.12</slf4j.api.version>
 
