@@ -15,9 +15,7 @@
   ~ limitations under the License.
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -29,7 +27,7 @@
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>org.wso2.carbon.deployment.parent</artifactId>
     <packaging>pom</packaging>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0-alpha</version>
     <name>WSO2 Carbon Deployment - Parent</name>
 
     <modules>
@@ -44,7 +42,7 @@
         <url>https://github.com/wso2/carbon-deployment.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-deployment.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-deployment.git</connection>
-        <tag>HEAD</tag>
+        <tag>v5.0.0-alpha</tag>
     </scm>
 
     <build>
@@ -317,7 +315,7 @@
     </dependencyManagement>
 
     <properties>
-        <carbon.deployment.version>5.0.0-SNAPSHOT</carbon.deployment.version>
+        <carbon.deployment.version>5.0.0-alpha</carbon.deployment.version>
         <carbon.deployment.pkg.export.version>5.0.0</carbon.deployment.pkg.export.version>
 
         <carbon.kernel.version>5.1.0-alpha</carbon.kernel.version>
