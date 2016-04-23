@@ -40,6 +40,13 @@
         <module>tests</module>
     </modules>
 
+    <scm>
+        <url>https://github.com/wso2/carbon-deployment.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/carbon-deployment.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/carbon-deployment.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
     <build>
         <extensions>
             <extension>
@@ -57,6 +64,20 @@
             </plugins>
         </pluginManagement>
 
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencyManagement>
@@ -114,7 +135,6 @@
                 <version>${commons.pool.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.deployment.engine</artifactId>
@@ -131,7 +151,6 @@
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
             </dependency>
-
 
             <!-- OSGi test -->
             <dependency>
@@ -203,7 +222,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- tests -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
