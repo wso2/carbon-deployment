@@ -276,11 +276,6 @@ public class SAMLSSOValve extends SingleSignOn {
         getNext().invoke(request, response);
     }
 
-    public void sessionEvent(SessionEvent event) {
-        //let default tomcat logic to continue
-        super.sessionEvent(event);
-    }
-
     public void backgroundProcess() {
         super.backgroundProcess();
     }
