@@ -71,7 +71,7 @@
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.jaxwsservices.stub</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.service.mgt.ui:${service.mgt.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.service.mgt.ui:compatible:${service.mgt.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
