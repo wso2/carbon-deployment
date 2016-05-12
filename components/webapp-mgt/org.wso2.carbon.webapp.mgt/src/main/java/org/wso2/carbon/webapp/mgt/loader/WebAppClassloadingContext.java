@@ -135,12 +135,11 @@ public class WebAppClassloadingContext {
     }
 
     public void setProvidedRepositories(String[] repositories) {
-        if(repositories!=null){
+        if (repositories != null) {
             int length = repositories.length;
             this.repositories = new String[length];
-            System.arraycopy(repositories,0,this.repositories,0,length);
+            System.arraycopy(repositories, 0, this.repositories, 0, length);
         }
-        //this.repositories = repositories;
     }
 
     public boolean isParentFirst() {
