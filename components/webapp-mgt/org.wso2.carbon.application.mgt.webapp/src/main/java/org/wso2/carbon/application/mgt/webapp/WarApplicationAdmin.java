@@ -154,11 +154,11 @@ public class WarApplicationAdmin extends AbstractAdmin {
 
                 if (httpPort == -1) {
                     httpPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
+                    if (httpPort == -1) {
+                        httpPort = CarbonUtils.getTransportPort(getConfigContext(), "http");
+                    }
                 }
 
-                if (httpPort == -1) {
-                    httpPort = CarbonUtils.getTransportPort(getConfigContext(), "http");
-                }
                 warCappMetadata.setHttpPort(httpPort);
             }
         }
