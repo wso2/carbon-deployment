@@ -107,8 +107,8 @@
                 if (webappType.equalsIgnoreCase("JaxWebapp")) {
                     webAppDataExtractor.getServletXML(client.getWarFileInputStream
                             (webapp.getWebappFile(), hostName, webappType));
-                    wsdlURLS= webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
-                    wadlURLS= webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
+                    wsdlURLS = webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
+                    wadlURLS = webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
                     serviceListPath = webAppDataExtractor.getServiceListPath();
                 }
 
