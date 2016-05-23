@@ -124,14 +124,13 @@ public class WebAppClassloadingContext {
 
 
     public String[] getProvidedRepositories() {
-        if(repositories!=null){
+        if (repositories != null) {
             int length = repositories.length;
             String[] repos = new String[length];
-            System.arraycopy(repositories,0,repos,0,length);
+            System.arraycopy(repositories, 0, repos, 0, length);
             return repos;
         }
         return null;
-        //return repositories;
     }
 
     public void setProvidedRepositories(String[] repositories) {

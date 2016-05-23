@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 /**
- * This class unmarshals an XML input stream
+ * This class unmarshals an XML input stream.
  */
 public class JAXBUnmarshaller {
 

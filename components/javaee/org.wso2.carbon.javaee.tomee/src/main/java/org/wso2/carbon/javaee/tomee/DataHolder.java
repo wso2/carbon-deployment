@@ -24,7 +24,7 @@ import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationService;
 
 /**
  * This class is to keep the WebappConfigService which provides an interface to
- * org.wso2.carbon.webapp.mgt.config.WebappConfigDataHolder
+ * org.wso2.carbon.webapp.mgt.config.WebappConfigDataHolder.
  */
 public class DataHolder {
     private static WebAppConfigurationService webAppConfigurationService;

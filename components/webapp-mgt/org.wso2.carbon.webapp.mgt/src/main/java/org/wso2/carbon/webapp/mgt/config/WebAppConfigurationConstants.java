@@ -21,7 +21,7 @@ package org.wso2.carbon.webapp.mgt.config;
 import java.nio.file.Paths;
 
 /**
- * This class keeps the some constants related to web app configuration
+ * This class keeps the some constants related to web app configuration.
  */
 public class WebAppConfigurationConstants {
     public static final String WEBAPP_DESCRIPTOR_NAME = "wso2as-web.xml";

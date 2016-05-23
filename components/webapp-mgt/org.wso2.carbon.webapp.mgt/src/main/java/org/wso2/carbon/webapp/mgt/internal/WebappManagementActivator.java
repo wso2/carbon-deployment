@@ -36,7 +36,9 @@ public class WebappManagementActivator implements BundleActivator {
         //Register the WebConfigDataHolder
         WebAppConfigurationService webAppConfigurationService = new WebAppConfigurationDataHolder();
         bundleContext.registerService(WebAppConfigurationService.class.getName(), webAppConfigurationService, null);
-        log.debug("WebappConfigService was registered!");
+        if (log.isDebugEnabled()) {
+            log.debug("WebappConfigService was registered!");
+        }
 
         // If Carbon is running as a webapp within some other servlet container, then we should
         // uninstall this component

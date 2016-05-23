@@ -49,7 +49,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @see org.wso2.carbon.tomcat
  */
-@SuppressWarnings("unused") public class TomcatGenericWebappsDeployer {
+@SuppressWarnings("unused")
+public class TomcatGenericWebappsDeployer {
 
     private static Log log = LogFactory.getLog(TomcatGenericWebappsDeployer.class);
 
@@ -58,7 +59,7 @@ import java.util.concurrent.ConcurrentHashMap;
     protected String tenantDomain;
     protected ConfigurationContext configurationContext;
     protected Map<String, WebApplicationsHolder> webApplicationsHolderMap;
-    protected Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap = new ConcurrentHashMap<String, CarbonTomcatClusterableSessionManager>();
+    protected Map<String, CarbonTomcatClusterableSessionManager> sessionManagerMap = new ConcurrentHashMap<>();
 
     /**
      * Constructor

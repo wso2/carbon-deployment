@@ -132,8 +132,9 @@ public class WebAppConfigurationReader {
             try (JarFile webappJarFile = new JarFile(webappFilePath)) {
                 contextXmlFileEntry = webappJarFile.getJarEntry(configFilePrefix);
                 if (contextXmlFileEntry != null) {
-                    return new URL("jar:file:" + URLEncoder.encode(webappFilePath, WebAppConfigurationConstants.ENCODING).replace("+", "%20") + "!/" +
-                            configFilePrefix);
+                    return new URL("jar:file:" + URLEncoder
+                            .encode(webappFilePath, WebAppConfigurationConstants.ENCODING)
+                            .replace("+", "%20") + "!/" + configFilePrefix);
                 }
             }
 
@@ -265,9 +266,9 @@ public class WebAppConfigurationReader {
     }
 
     /**
-     * Adds the system envorimnet to the passed array
+     * Adds the system environment to the passed array
      *
-     * @param existingClassLoadingEnvironments The array of environments to which the system environemnt needs to be added
+     * @param existingClassLoadingEnvironments Array of environments to which the system environment needs to be added
      * @return array with system environment
      */
     private static String[] addSystemEnvironment(String[] existingClassLoadingEnvironments) {

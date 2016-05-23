@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * This class listens to Lifecycle events of web apps and processes the wso2as-web.xml config file
- * of a web application
+ * of a web application.
  */
 public class WebAppConfigurationProcessingListener implements LifecycleListener {
     private static final Log log = LogFactory.getLog(WebAppConfigurationProcessingListener.class);

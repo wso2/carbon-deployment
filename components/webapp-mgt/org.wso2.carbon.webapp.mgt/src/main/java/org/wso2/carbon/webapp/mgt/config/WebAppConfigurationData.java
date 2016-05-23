@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An instance of this class holds configuration information of a web application
+ * An instance of this class holds configuration information of a web application.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "wso2as-web")

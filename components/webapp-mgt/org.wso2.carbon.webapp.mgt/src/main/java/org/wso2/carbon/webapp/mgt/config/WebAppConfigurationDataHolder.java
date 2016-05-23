@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class holds the web application configuration information for each web app
+ * This class holds the web application configuration information for each web app.
  */
 public class WebAppConfigurationDataHolder implements WebAppConfigurationService {
     private static final Log log = LogFactory.getLog(WebAppConfigurationDataHolder.class.getName());
