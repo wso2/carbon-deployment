@@ -124,6 +124,7 @@ public class OSGiTestUtils {
         copyCarbonYAML();
         copyLog4jXMLFile();
         copyLaunchPropertiesFile();
+        copyDeploymentYmlFile();
         copyDeploymentFile();
     }
 
@@ -168,6 +169,14 @@ public class OSGiTestUtils {
     private static void copyLaunchPropertiesFile() {
         copy(Paths.get("src", "test", "resources", "conf", "osgi", "launch.properties"),
                 Paths.get("conf", "osgi", "launch.properties"));
+    }
+
+    /**
+     * Copy deployment.yaml file
+     */
+    private static void copyDeploymentYmlFile() {
+        copy(Paths.get("src", "test", "resources", "conf", "deployment.yml"),
+                Paths.get("conf", "deployment.yml"));
     }
 
     /**

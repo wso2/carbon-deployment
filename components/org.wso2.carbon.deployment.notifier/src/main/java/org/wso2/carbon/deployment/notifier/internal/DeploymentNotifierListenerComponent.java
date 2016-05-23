@@ -61,7 +61,6 @@ public class DeploymentNotifierListenerComponent {
      *
      * @throws Exception this will be thrown if an issue occurs while executing the de-activate method
      */
-
     @Deactivate
     public void stop() throws Exception {
     }

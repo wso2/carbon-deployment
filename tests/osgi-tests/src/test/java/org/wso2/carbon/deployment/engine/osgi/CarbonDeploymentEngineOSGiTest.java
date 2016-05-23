@@ -22,6 +22,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.testng.Assert;
@@ -36,6 +37,8 @@ import org.wso2.carbon.deployment.engine.osgi.utils.OSGiTestUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
@@ -56,7 +59,11 @@ public class CarbonDeploymentEngineOSGiTest {
         Option[] options = CoreOptions.options(mavenBundle().artifactId("org.wso2.carbon.deployment.engine").
                         groupId("org.wso2.carbon.deployment").versionAsInProject(),
                 mavenBundle().artifactId("org.wso2.carbon.deployment.notifier").
-                        groupId("org.wso2.carbon.deployment").versionAsInProject()
+                        groupId("org.wso2.carbon.deployment").versionAsInProject(),
+                mavenBundle().artifactId("geronimo-jms_1.1_spec").
+                        groupId("org.apache.geronimo.specs").versionAsInProject(),
+                mavenBundle().artifactId("commons-pool").
+                        groupId("commons-pool.wso2").versionAsInProject()
                 );
         return OSGiTestUtils.getDefaultPaxOptions(options);
     }
@@ -104,18 +111,29 @@ public class CarbonDeploymentEngineOSGiTest {
     }
 
     @Test
-    public void testRegisterLifecycleListener() {
+    public void testRegisterLifecycleListener() throws InvalidSyntaxException {
         ServiceRegistration serviceRegistration = bundleContext.registerService(LifecycleListener.class.getName(),
                 new CustomLifecycleListener(), null);
-        ServiceReference reference = bundleContext.getServiceReference(LifecycleListener.class.getName());
-        Assert.assertNotNull(reference, "The CustomLifecycleListener service reference cannot be found.");
+        ServiceReference[] references = bundleContext.getServiceReferences(LifecycleListener.class.getName(), null);
+        Assert.assertNotNull(references, "The CustomLifecycleListener service reference cannot be found.");
 
-        LifecycleListener listener = (LifecycleListener) bundleContext.getService(reference);
+        Optional<ServiceReference> reference = Stream.of(references).filter(this::isCustomLC).findFirst();
+
+
+        Assert.assertTrue(reference.isPresent(), "The CustomLifecycleListener is not registered.");
+
+        LifecycleListener listener = (LifecycleListener) bundleContext.getService(reference.get());
         Assert.assertNotNull(listener, "The CustomLifecycleListener is not registered.");
 
         serviceRegistration.unregister();
-        reference = bundleContext.getServiceReference(LifecycleListener.class.getName());
-        Assert.assertNull(reference, "The CustomLifecycleListener service un-registration failed.");
+        references = bundleContext.getServiceReferences(LifecycleListener.class.getName(), null);
+        reference = Stream.of(references).filter(this::isCustomLC).findFirst();
+        Assert.assertFalse(reference.isPresent(), "The CustomLifecycleListener service un-registration failed.");
+    }
+
+    private boolean isCustomLC(ServiceReference serviceReference) {
+        String listenerClass = bundleContext.getService(serviceReference).getClass().getName();
+        return listenerClass.equals("org.wso2.carbon.deployment.engine.osgi.CustomLifecycleListener");
     }
 
     @Test(dependsOnMethods = {"testRegisterDeployer"})

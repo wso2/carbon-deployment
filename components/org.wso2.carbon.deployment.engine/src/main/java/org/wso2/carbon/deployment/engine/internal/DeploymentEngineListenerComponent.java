@@ -42,7 +42,7 @@ import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
         name = "org.wso2.carbon.deployment.engine.internal.DeploymentEngineListenerComponent",
         immediate = true,
         property = {
-                "component-key=carbon-deployment-service"
+                "componentName=carbon-deployment-service"
         }
 )
 @SuppressWarnings("unused")
@@ -132,7 +132,7 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
             unbind = "unregisterDeploymentListener"
     )
     protected void registerDeploymentListener(LifecycleListener listener) {
-        logger.debug("Received LifecycleListener {} " + listener.getClass().getName());
+        logger.debug("Received LifecycleListener {} ", listener.getClass().getName());
         deploymentEngine.registerDeploymentLifecycleListener(listener);
     }
 

@@ -129,10 +129,14 @@
             org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}",
             org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}"
         </import.package>
-        <startup.component>
-            carbon-deployment-service;required-service="org.wso2.carbon.deployment.engine.Deployer,
-            org.wso2.carbon.deployment.engine.LifecycleListener"
-        </startup.component>
+        <carbon.component>
+            startup.listener;componentName="carbon-deployment-service";
+            requiredService="org.wso2.carbon.deployment.engine.Deployer,
+            org.wso2.carbon.deployment.engine.LifecycleListener",
+
+            osgi.service;objectClass="org.wso2.carbon.deployment.engine.DeploymentService";
+            dependentComponentName="carbon-transport-mgt"
+        </carbon.component>
     </properties>
 
 </project>

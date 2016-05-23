@@ -150,6 +150,10 @@
             javax.xml.bind,
             javax.naming
         </import.package>
+        <carbon.component>
+            osgi.service;objectClass="org.wso2.carbon.deployment.engine.LifecycleListener"
+        </carbon.component>
+<!--todo remove-->
         <!-- Given that jms implementation is coming from different bundles, we need to add dynamic imports -->
         <dynamic.import.package>*</dynamic.import.package>
     </properties>
