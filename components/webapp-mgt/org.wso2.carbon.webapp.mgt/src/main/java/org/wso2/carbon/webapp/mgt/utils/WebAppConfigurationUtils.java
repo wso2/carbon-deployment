@@ -26,8 +26,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * This class is for utils methods related to web app configuration.
+ */
 public class WebAppConfigurationUtils {
 
+    /**
+     * This method returns the file path of a web app provided the context object of the web app.
+     *
+     * @param context StandardContext instance of the webapp
+     * @return File path to the web app
+     * @throws IOException
+     */
     public static String getWebAppFilePath(StandardContext context) throws IOException {
         String docBase = context.getDocBase();
         Host host = (Host) context.getParent();

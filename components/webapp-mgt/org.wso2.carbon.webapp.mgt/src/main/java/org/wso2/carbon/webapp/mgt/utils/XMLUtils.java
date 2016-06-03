@@ -45,7 +45,7 @@ public class XMLUtils {
     //public static Document buildDocumentFromFile(File xmlFile)
     public static Document buildDocumentFromFile(Path xmlFilePath)
             throws ParserConfigurationException, IOException, SAXException {
-        InputStream inputStream =Files.newInputStream(xmlFilePath);
+        InputStream inputStream = Files.newInputStream(xmlFilePath);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

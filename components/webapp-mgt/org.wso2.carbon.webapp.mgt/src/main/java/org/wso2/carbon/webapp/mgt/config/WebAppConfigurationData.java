@@ -92,7 +92,7 @@ public class WebAppConfigurationData {
     }
 
     public void setParentFirst(boolean parentFirst) {
-        if(getClassloading()==null){
+        if (getClassloading() == null) {
             classloading = new Classloading();
         }
         classloading.setParentFirst(parentFirst);
