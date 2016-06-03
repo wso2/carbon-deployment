@@ -18,11 +18,17 @@
 package org.wso2.carbon.webapp.mgt.utils;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Contains XML utility methods based on DOM.
@@ -32,15 +38,20 @@ public class XMLUtils {
     /**
      * Build a Document from a file
      *
-     * @param xmlFile file
+     * @param xmlFilePath file
      * @return a Document object
      * @throws Exception if an error occurs
      */
-    public static Document buildDocumentFromFile(File xmlFile) throws Exception {
+    //public static Document buildDocumentFromFile(File xmlFile)
+    public static Document buildDocumentFromFile(Path xmlFilePath)
+            throws ParserConfigurationException, IOException, SAXException {
+        InputStream inputStream = Files.newInputStream(xmlFilePath);
+
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(xmlFile);
+        Document doc = dBuilder.parse(inputStream);
         doc.getDocumentElement().normalize();
+
         return doc;
     }
 
@@ -51,7 +62,8 @@ public class XMLUtils {
      * @return a Document object
      * @throws Exception if an error occurs
      */
-    public static Document buildDocumentFromInputStream(InputStream is) throws Exception {
+    public static Document buildDocumentFromInputStream(InputStream is)
+            throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(is);

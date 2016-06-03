@@ -17,9 +17,6 @@
  */
 package org.wso2.carbon.webapp.mgt.loader;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,8 +24,7 @@ import java.util.List;
 /**
  * Contains information about the class loading behaviour of a webapp.
  */
-public class WebappClassloadingContext {
-    private static final Log log = LogFactory.getLog(WebappClassloadingContext.class);
+public class WebAppClassloadingContext {
 
     private boolean parentFirst = false;
 
@@ -46,25 +42,8 @@ public class WebappClassloadingContext {
 
     private String[] repositories;
 
-    private static ClassloadingConfiguration classloadingConfig;
     private boolean delegateAllPackages = false;
     private boolean delegateAllResources = false;
-
-
-    static {
-        try {
-            classloadingConfig = ClassloadingContextBuilder.buildSystemConfig();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private String[] environments;
-
-    public static ClassloadingConfiguration getClassloadingConfig() {
-        return classloadingConfig;
-    }
 
     public boolean isDelegatedPackage(String name) {
         if (delegateAllPackages) {
@@ -98,10 +77,10 @@ public class WebappClassloadingContext {
     }
 
     public void setDelegatedPackages(String[] delegatedPkgList) {
-        List<String> delegatedPackageList = new ArrayList<String>();
-        List<String> delegatedPackageStemList = new ArrayList<String>();
-        List<String> excludedPackageList = new ArrayList<String>();
-        List<String> excludedPackageStemList = new ArrayList<String>();
+        List<String> delegatedPackageList = new ArrayList<>();
+        List<String> delegatedPackageStemList = new ArrayList<>();
+        List<String> excludedPackageList = new ArrayList<>();
+        List<String> excludedPackageStemList = new ArrayList<>();
 
         for (String packageName : delegatedPkgList) {
             // Detect excluded package or delegated package.
@@ -127,12 +106,12 @@ public class WebappClassloadingContext {
             }
         }
 
-        if(excludedPackageList.size() > 0 || excludedPackageStemList.size() > 0){
+        if (excludedPackageList.size() > 0 || excludedPackageStemList.size() > 0) {
             noExcludedPackages = false;
         }
 
-        if(!noExcludedPackages){
-            excludeedPackages = excludedPackageList.toArray(new  String[excludedPackageList.size()]);
+        if (!noExcludedPackages) {
+            excludeedPackages = excludedPackageList.toArray(new String[excludedPackageList.size()]);
             excludeedPackageStems = excludedPackageStemList.toArray(new String[excludedPackageStemList.size()]);
 
         }
@@ -145,11 +124,21 @@ public class WebappClassloadingContext {
 
 
     public String[] getProvidedRepositories() {
-        return repositories;
+        if (repositories != null) {
+            int length = repositories.length;
+            String[] repos = new String[length];
+            System.arraycopy(repositories, 0, repos, 0, length);
+            return repos;
+        }
+        return null;
     }
 
     public void setProvidedRepositories(String[] repositories) {
-        this.repositories = repositories;
+        if (repositories != null) {
+            int length = repositories.length;
+            this.repositories = new String[length];
+            System.arraycopy(repositories, 0, this.repositories, 0, length);
+        }
     }
 
     public boolean isParentFirst() {
@@ -189,14 +178,6 @@ public class WebappClassloadingContext {
             }
         }
         return false;
-    }
-
-    public void setEnvironments(String[] environments) {
-        this.environments = environments;
-    }
-
-    public String[] getEnvironments() {
-        return environments;
     }
 
     public boolean isExcludedResources(String name) {
@@ -244,10 +225,10 @@ public class WebappClassloadingContext {
     }
 
     public void setDelegatedResources(String[] delegatedResourceList) {
-        List<String> delegatedResList = new ArrayList<String>();
-        List<String> delegatedResStemList = new ArrayList<String>();
-        Collection<String> excludedResList = new ArrayList<String>();
-        Collection<String>  excludedResStemList = new ArrayList<String>();
+        List<String> delegatedResList = new ArrayList<>();
+        List<String> delegatedResStemList = new ArrayList<>();
+        Collection<String> excludedResList = new ArrayList<>();
+        Collection<String> excludedResStemList = new ArrayList<>();
 
         for (String resourceName : delegatedResourceList) {
             // Detect excluded package or delegated package.
@@ -273,18 +254,18 @@ public class WebappClassloadingContext {
             }
         }
 
-        if(excludedResList.size() > 0 || excludedResStemList.size() > 0){
+        if (excludedResList.size() > 0 || excludedResStemList.size() > 0) {
             noExcludedResources = false;
         }
 
-        if(!noExcludedResources){
-            excludeedResources = excludedResList.toArray(new  String[excludedResList.size()]);
+        if (!noExcludedResources) {
+            excludeedResources = excludedResList.toArray(new String[excludedResList.size()]);
             excludeedResourceStems = excludedResStemList.toArray(new String[excludedResStemList.size()]);
 
         }
 
         if (!delegateAllResources) {
-            delegatedResources= delegatedResList.toArray(new String[delegatedResList.size()]);
+            delegatedResources = delegatedResList.toArray(new String[delegatedResList.size()]);
             delegatedResourceStems = delegatedResStemList.toArray(new String[delegatedResStemList.size()]);
         }
 

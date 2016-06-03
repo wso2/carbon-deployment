@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * 
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,11 +18,11 @@
 package org.wso2.carbon.webapp.mgt.loader;
 
 import org.apache.catalina.Context;
-import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.loader.WebappLoader;
+import org.wso2.carbon.webapp.mgt.utils.WebAppConfigurationUtils;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -40,56 +40,37 @@ public class CarbonWebappLoader extends WebappLoader {
 
     @Override
     protected void startInternal() throws LifecycleException {
-        WebappClassloadingContext webappClassloadingContext;
+        WebAppClassloadingContext webAppClassloadingContext;
         try {
-            webappClassloadingContext = ClassloadingContextBuilder.buildClassloadingContext(getWebappFilePath());
+            webAppClassloadingContext = ClassloadingContextBuilder.buildClassloadingContext(getWebappFilePath());
         } catch (Exception e) {
             throw new LifecycleException(e.getMessage(), e);
         }
 
         //Adding provided classpath entries, if any
-        for (String repository : webappClassloadingContext.getProvidedRepositories()) {
+        for (String repository : webAppClassloadingContext.getProvidedRepositories()) {
             addRepository(repository);
         }
 
         super.startInternal();
 
         //Adding the WebappClassloadingContext to the WebappClassloader
-        ((CarbonWebappClassLoader) getClassLoader()).setWebappCC(webappClassloadingContext);
+        ((CarbonWebappClassLoader) getClassLoader()).setWebappCC(webAppClassloadingContext);
     }
 
     @Override
     protected void stopInternal() throws LifecycleException {
-
         super.stopInternal();
     }
 
-    //TODO Refactor
     private String getWebappFilePath() throws IOException {
         String webappFilePath = null;
         if (getContainer() instanceof Context) {
-
             //Value of the following variable depends on various conditions. Sometimes you get just the webapp directory
             //name. Sometime you get absolute path the webapp directory or war file.
             Context ctx = (Context) getContainer();
-            String docBase = ctx.getDocBase();
-
-            Host host = (Host) ctx.getParent();
-            String appBase = host.getAppBase();
-            File canonicalAppBase = new File(appBase);
-            if (canonicalAppBase.isAbsolute()) {
-                canonicalAppBase = canonicalAppBase.getCanonicalFile();
-            } else {
-                canonicalAppBase =
-                        new File(System.getProperty("carbon.home"), appBase)
-                                .getCanonicalFile();
-            }
-
-            File webappFile = new File(docBase);
-            if (webappFile.isAbsolute()) {
-                webappFilePath = webappFile.getCanonicalPath();
-            } else {
-                webappFilePath = (new File(canonicalAppBase, docBase)).getPath();
+            if (ctx instanceof StandardContext) {
+                webappFilePath = WebAppConfigurationUtils.getWebAppFilePath((StandardContext) ctx);
             }
         }
         return webappFilePath;

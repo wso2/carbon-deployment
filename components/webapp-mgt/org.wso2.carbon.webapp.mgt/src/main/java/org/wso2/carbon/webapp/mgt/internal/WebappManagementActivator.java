@@ -1,5 +1,5 @@
 /*                                                                             
- * Copyright 2004,2005 The Apache Software Foundation.                         
+ * Copyright 2015 The Apache Software Foundation.
  *                                                                             
  * Licensed under the Apache License, Version 2.0 (the "License");             
  * you may not use this file except in compliance with the License.            
@@ -21,6 +21,8 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationDataHolder;
+import org.wso2.carbon.webapp.mgt.config.WebAppConfigurationService;
 
 /**
  * Activator for the Webapp Management Bundle
@@ -31,12 +33,13 @@ public class WebappManagementActivator implements BundleActivator {
     private ServiceRegistration serviceRegistration;
 
     public void start(final BundleContext bundleContext) {
+        //Register the WebConfigDataHolder
+        WebAppConfigurationService webAppConfigurationService = new WebAppConfigurationDataHolder();
+        bundleContext.registerService(WebAppConfigurationService.class.getName(), webAppConfigurationService, null);
+        if (log.isDebugEnabled()) {
+            log.debug("WebappConfigService was registered!");
+        }
 
-//        serviceRegistration = bundleContext.registerService(AppVersionHandler.class.getName(), new AppVersionHandlerImpl(), null);
-//        System.out.println("Registering the AppVersionHandlerImpl...");
-//        if (log.isDebugEnabled()) {
-//            log.debug("Registering the AppVersionHandlerImpl...");
-//        }
         // If Carbon is running as a webapp within some other servlet container, then we should
         // uninstall this component
         if (!CarbonUtils.isRunningInStandaloneMode()) {
@@ -55,6 +58,7 @@ public class WebappManagementActivator implements BundleActivator {
             }
             th.start();
         }
+
     }
 
     public void stop(BundleContext bundleContext) {

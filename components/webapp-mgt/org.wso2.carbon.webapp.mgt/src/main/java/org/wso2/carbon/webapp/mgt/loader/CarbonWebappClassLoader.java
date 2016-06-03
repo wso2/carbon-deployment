@@ -40,7 +40,7 @@ import java.util.Properties;
 public class CarbonWebappClassLoader extends WebappClassLoader {
     private static final Log log = LogFactory.getLog(CarbonWebappClassLoader.class);
 
-    private WebappClassloadingContext webappCC;
+    private WebAppClassloadingContext webappCC;
 
     private static List<String> systemPackages;
 
@@ -52,7 +52,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         readSystemPackagesList(launchIniPath);
     }
 
-    public void setWebappCC(WebappClassloadingContext classloadingContext) {
+    public void setWebappCC(WebAppClassloadingContext classloadingContext) {
         this.webappCC = classloadingContext;
     }
 
