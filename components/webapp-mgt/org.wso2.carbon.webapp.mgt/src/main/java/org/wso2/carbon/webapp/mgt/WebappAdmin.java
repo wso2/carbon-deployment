@@ -298,7 +298,6 @@ public class WebappAdmin extends AbstractAdmin {
             httpProxyPort = Integer.parseInt(httpProxyPortString);
             webappsWrapper.setHttpPort(httpProxyPort);
         }
-
         if (httpProxyPort == -1) {
             if (getConfigContext().getAxisConfiguration().getTransportIn("http") != null) {
                 httpProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "http");
@@ -313,12 +312,10 @@ public class WebappAdmin extends AbstractAdmin {
 
         String httpsProxyPortString = serverConfiguration.getFirstProperty("Ports.WorkerHttpsProxyPort");
         int httpsProxyPort = -1;
-
         if (httpsProxyPortString != null) {
             httpsProxyPort = Integer.parseInt(httpsProxyPortString);
             webappsWrapper.setHttpsPort(httpsProxyPort);
         }
-
         if (httpsProxyPort == -1) {
             if (getConfigContext().getAxisConfiguration().getTransportIn("https") != null) {
                 httpsProxyPort = CarbonUtils.getTransportProxyPort(getConfigContext(), "https");
