@@ -17,6 +17,7 @@
  -->
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+<%@ taglib uri="http://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project/Owasp.CsrfGuard.tld" prefix="csrf" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
 
 <script type="text/javascript" src="js/modulemgt.js"></script>
@@ -32,7 +33,8 @@
 
         <div id="workArea">
             <div id="formset">
-                <form method="post" name="marUpload" action="../../fileupload/module" enctype="multipart/form-data"
+                <form method="post" name="marUpload" action="../../fileupload/module?<csrf:tokenname/>=<csrf:tokenvalue/>"
+                      enctype="multipart/form-data"
                       target="_self">
                     <input type="hidden" name="errorRedirectionPage"
                                 value="../carbon/modulemgt/add_modules.jsp?region=region1&item=modules_add_menu"/>
