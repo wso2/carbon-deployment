@@ -20,6 +20,12 @@
 
 
 <%
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String cookie = (String) session.getAttribute(org.wso2.carbon.utils.ServerConstants.ADMIN_SERVICE_COOKIE);
     Axis2RepoManagerClient client = new Axis2RepoManagerClient(cookie, config, session);
     out.println(client.restartAxis2Server());

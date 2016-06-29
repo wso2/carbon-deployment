@@ -20,6 +20,12 @@
 <%@ page import="org.wso2.carbon.repomanager.axis2.ui.Axis2RepoManagerUIConstants" %>
 
 <%
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     if (request.getParameter(Axis2RepoManagerUIConstants.DELETE_LIB_PATH) != null) {
         String cookie = (String)session.getAttribute(org.wso2.carbon.utils.ServerConstants.ADMIN_SERVICE_COOKIE);
         Axis2RepoManagerClient client = new Axis2RepoManagerClient(cookie, config, session);
