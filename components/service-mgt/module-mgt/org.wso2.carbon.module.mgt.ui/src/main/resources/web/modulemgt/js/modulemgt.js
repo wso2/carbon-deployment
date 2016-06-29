@@ -29,39 +29,6 @@ function validate() {
     }
 }
 
-function engage(backendURL, moduleId) {
-    location.href = "./global_eng_ajaxprocessor.jsp?action=engage&moduleId=" + moduleId;
-}
-
-function disengage(backendURL, moduleId) {
-    disengage.moduleId = moduleId;
-    if (moduleId.indexOf("addressing") != -1) {
-        CARBON.showErrorDialog(jsi18n["cant.disengage"]);
-        return;
-    }
-    CARBON.showConfirmationDialog(jsi18n["do.you.want.to.globally.disengage"] + " " + moduleId +
-                                  " " + jsi18n["module"] + " ?", disengageCallback, null);
-}
-
-function removeModule(moduleId) {
-    removeModule.moduleId = moduleId;
-    if (moduleId.indexOf("addressing") != -1) {
-        CARBON.showErrorDialog(jsi18n["addressing.cant.be.removed"]);
-        return;
-    }
-    CARBON.showConfirmationDialog(jsi18n["do.you.want.to.delete"] + " " + moduleId + " " +
-                                  jsi18n["module"] + " ?", removeModuleCallback, null);
-}
-
-function removeModuleCallback() {
-    location.href = "./remove_modules_ajaxprocessor.jsp?moduleId=" + removeModule.moduleId;
-}
-
-function disengageCallback() {
-    location.href =
-    "./global_eng_ajaxprocessor.jsp?action=disengage&moduleId=" + disengage.moduleId;
-}
-
 function restartServerCallback() {
     var url = "../server-admin/proxy_ajaxprocessor.jsp?action=restart";
     jQuery.noConflict();

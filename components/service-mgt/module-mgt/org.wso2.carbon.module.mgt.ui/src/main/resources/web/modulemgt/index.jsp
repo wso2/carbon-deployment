@@ -136,10 +136,6 @@
         </div>
     </div>
 
-    <form name="dataForm" method="post" action="">
-        <input name="backURL" type="hidden" id="hiddenField" value="">
-    </form>
-
     <script type="text/javascript">
         alternateTableRows('moduleTable', 'tableEvenRow', 'tableOddRow');
         alternateTableRows('globalModules', 'tableEvenRow', 'tableOddRow');
