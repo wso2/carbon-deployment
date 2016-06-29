@@ -133,7 +133,24 @@
         }
         if (allServiceGroupsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="delete.all.service.groups.prompt"><fmt:param value="<%= correctServiceGroups%>"/></fmt:message>", function() {
-                location.href = 'delete_service_groups.jsp?deleteAllServiceGroups=true';
+
+                jQuery.ajax({
+                    type: "POST",
+                    url: "delete_service_groups_ajaxprocessor.jsp",
+                    headers: {
+                        Accept: "text/html"
+                    },
+                    data: {
+                        "deleteAllServiceGroups": "true"
+                    },
+                    async: false,
+                    success: function(responseText, status, XMLHttpRequest) {
+                        if (status == "success") {
+                            location.assign("service_groups.jsp");
+                        }
+                    }
+                });
+
             });
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="delete.service.groups.on.page.prompt"/>", function() {
@@ -309,7 +326,7 @@
 <% } %>
 <p>&nbsp;</p>
 
-<form action="delete_service_groups.jsp" name="serviceGroupForm" method="post">
+<form action="delete_service_groups_ajaxprocessor.jsp" name="serviceGroupForm" method="post">
     <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
     <table class="styledLeft" id="sgTable" width="100%">
         <thead>

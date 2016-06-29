@@ -123,7 +123,22 @@
                 if (allServiceGroupsSelected) {
                     CARBON.showConfirmationDialog("<fmt:message key="delete.selected.faulty.service.groups.prompt"><fmt:param value="<%= faultyServicesWrapper.getNumberOfFaultyServiceGroups() %>"/></fmt:message>",
                             function() {
-                                location.href = 'delete_faulty_service_groups.jsp?deleteAllServiceGroups=true';
+                                jQuery.ajax({
+                                    type: "POST",
+                                    url: "delete_faulty_service_groups_ajaxprocessor.jsp",
+                                    headers: {
+                                        Accept: "text/html"
+                                    },
+                                    data: {
+                                        "deleteAllServiceGroups": "true"
+                                    },
+                                    async: false,
+                                    success: function(responseText, status, XMLHttpRequest) {
+                                        if (status == "success") {
+                                            location.assign("faulty_services.jsp");
+                                        }
+                                    }
+                                });
                     });
                 } else {
                     CARBON.showConfirmationDialog("<fmt:message key="delete.all.faulty.service.groups.prompt"/>", function() {
@@ -181,7 +196,7 @@
                           page="faulty_services.jsp" pageNumberParameterName="pageNumber"/>
         <p>&nbsp;</p>
 
-        <form action="delete_faulty_service_groups.jsp" name="faultyServiceForm">
+        <form action="delete_faulty_service_groups_ajaxprocessor.jsp" name="faultyServiceForm" method="post">
             <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
             <table class="styledLeft">
                 <thead>

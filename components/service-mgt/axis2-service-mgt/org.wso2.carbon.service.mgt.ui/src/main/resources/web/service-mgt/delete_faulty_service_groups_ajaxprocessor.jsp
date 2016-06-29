@@ -21,9 +21,14 @@
 <%@ page import="org.wso2.carbon.service.mgt.ui.ServiceAdminClient" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
-<%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String[] serviceGroups = request.getParameterValues("serviceGroups");
     String pageNumber = CharacterEncoder.getSafeText(request.getParameter("pageNumber"));
     String deleteAllServiceGroups = CharacterEncoder.getSafeText(request.getParameter("deleteAllServiceGroups"));
@@ -38,9 +43,6 @@
     ConfigurationContext configContext =
             (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
-    ResourceBundle bundle = ResourceBundle
-            .getBundle("org.wso2.carbon.service.mgt.ui.i18n.Resources", request.getLocale());
-
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     ServiceAdminClient client;
     try {
@@ -49,34 +51,27 @@
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
         session.setAttribute(CarbonUIMessage.ID, uiMsg);
 %>
-<jsp:include page="../admin/error.jsp"/>
+        <jsp:include page="../admin/error.jsp"/>
 <%
         return;
     }
 
     try {
         if (deleteAllServiceGroups != null) {
-            client.deleteAllNonAdminServiceGroups();
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.non.admin.service.groups"),
-                    CarbonUIMessage.INFO, request);
+            client.deleteAllFaultyServiceGroups();
         } else {
-            client.deleteServiceGroups(serviceGroups);  //TODO handle the returned boolean value
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.service.groups"),
-                    CarbonUIMessage.INFO, request);
+            client.deleteFaultyServiceGroups(serviceGroups);  //TODO handle the returned boolean value
         }
-                %>
-                <script>
-                    location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
-                </script>
+%>
+<script>
+    location.href = 'faulty_services.jsp?pageNumber=<%=pageNumberInt%>'
+</script>
 
-                <%
-    } catch (Exception e) {
-                CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
-                %>
-                        <script type="text/javascript">
-                               location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
-                        </script>
-                <%
-                return;
+<%
+} catch (Exception e) {
+%>
+<jsp:forward page="../admin/error.jsp?<%=e.getMessage()%>"/>
+<%
+        return;
     }
 %>
