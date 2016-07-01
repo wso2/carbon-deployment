@@ -54,6 +54,7 @@ public class SAMLSSOValve extends SingleSignOn {
 
     private static Log log = LogFactory.getLog(SAMLSSOValve.class);
     private static final String MEDIA_TYPE_TEXT_HTML = "text/html";
+    private static final String ENABLE_SAML2_SSO_WITH_TENANT = "enable.saml2.sso.with.tenant";
     private Properties ssoSPConfigProperties = new Properties();
 
     public SAMLSSOValve() throws IOException {
@@ -106,7 +107,17 @@ public class SAMLSSOValve extends SingleSignOn {
                         ssoSPConfigProperties));
 
                 ssoAgentConfig.verifyConfig();
-                ssoAgentConfig.getQueryParams().put(MultitenantConstants.TENANT_DOMAIN, new String[] {tenantDomain});
+
+                String ssoTenantDomain = request.getContext().findParameter(ENABLE_SAML2_SSO_WITH_TENANT);
+                if (ssoTenantDomain != null && !ssoTenantDomain.isEmpty()) {
+                    ssoAgentConfig.getQueryParams().put(MultitenantConstants.TENANT_DOMAIN,
+                            new String[]{ssoTenantDomain});
+                }
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Creating SSOAgentConfig, IssuerId=" + ssoAgentConfig.getSAML2().getSPEntityId()
+                            + ", CurrentTenant=" + tenantDomain + ", SSOTenant=" + ssoTenantDomain);
+                }
 
                 request.getSessionInternal().setNote(WebappSSOConstants.SSO_AGENT_CONFIG, ssoAgentConfig);
             } catch (Exception e) {
