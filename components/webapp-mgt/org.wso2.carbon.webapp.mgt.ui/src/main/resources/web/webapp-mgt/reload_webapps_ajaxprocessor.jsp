@@ -23,23 +23,33 @@
 <%@ page import="org.wso2.carbon.webapp.mgt.ui.WebappAdminClient" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String[] webappFileNames = request.getParameterValues("webappFileName");
     String pageNumber = request.getParameter("pageNumber");
-    String deleteAllWebapps = request.getParameter("deleteAllWebapps");
-    String webappState = request.getParameter("webappState");
-    if (webappState == null) {
-        webappState = "started";
-    }
+    String reloadAll = request.getParameter("reloadAll");
+    String hostName = request.getParameter("hostName");
+    String httpPort = request.getParameter("httpPort");
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
+    }
+    String redirectPage = request.getParameter("redirectPage");
+    if (redirectPage == null) {
+        redirectPage = "index.jsp";
     }
 %>
 
 <%
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext =
-            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+            (ConfigurationContext) config.getServletContext().
+                    getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
     ResourceBundle bundle = ResourceBundle
             .getBundle(WebappAdminClient.BUNDLE, request.getLocale());
@@ -58,34 +68,21 @@
     }
 
     try {
-        if (deleteAllWebapps != null) {
-            if (webappState.equalsIgnoreCase("started")) {
-                client.deleteAllStartedWebapps();
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.started.webapps"),
-                        CarbonUIMessage.INFO, request);
-            } else if (webappState.equalsIgnoreCase("stopped")) {
-                client.deleteAllStoppedWebapps();
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.stopped.webapps"),
-                        CarbonUIMessage.INFO, request);
-            } else {
-                throw new ServletException("Unknown webappstate " + webappState);
-            }
+        if (reloadAll != null) {
+            client.reloadAllWebapps();
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.all.webapps"),
+                                                CarbonUIMessage.INFO, request);
         } else {
-            if (webappState.equalsIgnoreCase("started")) {
-                client.deleteStartedWebapps(webappFileNames);
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
-                        CarbonUIMessage.INFO, request);
-            } else if (webappState.equalsIgnoreCase("stopped")) {
-                client.deleteStoppedWebapps(webappFileNames);
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
-                        CarbonUIMessage.INFO, request);
-            } else {
-                throw new ServletException("Unknown webappstate " + webappState);
-            }
+            client.reloadWebapps(webappFileNames);
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.selected.webapps"),
+                                                CarbonUIMessage.INFO, request);
         }
 %>
 <script>
-    location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
+    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= webappFileNames[0]%>'
+            <% if (hostName != null && httpPort != null) { %>
+            + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
+            <% } %> ;
 </script>
 
 <%
@@ -93,7 +90,10 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
+    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= webappFileNames[0]%>"
+                    <% if (hostName != null && httpPort != null) { %>
+                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
+                    <% } %> ;
 </script>
 <%
         return;

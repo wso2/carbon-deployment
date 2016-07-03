@@ -23,26 +23,30 @@
 <%@ page import="org.wso2.carbon.webapp.mgt.ui.WebappAdminClient" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%
-    String[] webappFileNames = request.getParameterValues("webappFileName");
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
+    String[] webappkeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
-    String reloadAll = request.getParameter("reloadAll");
-    String hostName = request.getParameter("hostName");
-    String httpPort = request.getParameter("httpPort");
+    String deleteAllWebapps = request.getParameter("deleteAllWebapps");
+    String webappState = request.getParameter("webappState");
+    if (webappState == null) {
+        webappState = "started";
+    }
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
-    }
-    String redirectPage = request.getParameter("redirectPage");
-    if (redirectPage == null) {
-        redirectPage = "index.jsp";
     }
 %>
 
 <%
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext =
-            (ConfigurationContext) config.getServletContext().
-                    getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
     ResourceBundle bundle = ResourceBundle
             .getBundle(WebappAdminClient.BUNDLE, request.getLocale());
@@ -61,21 +65,34 @@
     }
 
     try {
-        if (reloadAll != null) {
-            client.reloadAllWebapps();
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.all.webapps"),
-                                                CarbonUIMessage.INFO, request);
+        if (deleteAllWebapps != null) {
+            if (webappState.equalsIgnoreCase("started")) {
+                client.deleteAllStartedWebapps();
+                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.started.webapps"),
+                        CarbonUIMessage.INFO, request);
+            } else if (webappState.equalsIgnoreCase("stopped")) {
+                client.deleteAllStoppedWebapps();
+                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.stopped.webapps"),
+                        CarbonUIMessage.INFO, request);
+            } else {
+                throw new ServletException("Unknown webappstate " + webappState);
+            }
         } else {
-            client.reloadWebapps(webappFileNames);
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.selected.webapps"),
-                                                CarbonUIMessage.INFO, request);
+            if (webappState.equalsIgnoreCase("started")) {
+                client.deleteStartedWebapps(webappFileNames);
+                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
+                        CarbonUIMessage.INFO, request);
+            } else if (webappState.equalsIgnoreCase("stopped")) {
+                client.deleteStoppedWebapps(webappFileNames);
+                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
+                        CarbonUIMessage.INFO, request);
+            } else {
+                throw new ServletException("Unknown webappstate " + webappState);
+            }
         }
 %>
 <script>
-    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= webappFileNames[0]%>'
-            <% if (hostName != null && httpPort != null) { %>
-            + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
-            <% } %> ;
+    location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
 </script>
 
 <%
@@ -83,10 +100,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= webappFileNames[0]%>"
-                    <% if (hostName != null && httpPort != null) { %>
-                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
-                    <% } %> ;
+    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
 </script>
 <%
         return;
