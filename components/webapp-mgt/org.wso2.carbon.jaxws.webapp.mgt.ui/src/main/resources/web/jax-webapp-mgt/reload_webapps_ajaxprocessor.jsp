@@ -23,6 +23,13 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.jaxws.webapp.mgt.ui.JaxwsWebappAdminClient" %>
 <%
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String[] webappFileNames = request.getParameterValues("webappFileName");
     String pageNumber = request.getParameter("pageNumber");
     String reloadAll = request.getParameter("reloadAll");

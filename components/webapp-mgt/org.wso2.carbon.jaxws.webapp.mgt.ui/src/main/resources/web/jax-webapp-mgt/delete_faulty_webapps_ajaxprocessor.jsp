@@ -20,16 +20,18 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.jaxws.webapp.mgt.ui.JaxwsWebappAdminClient" %>
 <%
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String[] webappFileNames = request.getParameterValues("webappFileName");
     String pageNumber = request.getParameter("pageNumber");
-    String deleteAllWebapps = request.getParameter("deleteAllWebapps");
-    String webappState = request.getParameter("webappState");
-    if (webappState == null) {
-        webappState = "started";
-    }
+    String deleteAllServiceGroups = request.getParameter("deleteAllWebapps");
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
@@ -40,9 +42,6 @@
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext =
             (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-
-    ResourceBundle bundle = ResourceBundle
-            .getBundle(JaxwsWebappAdminClient.BUNDLE, request.getLocale());
 
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
     JaxwsWebappAdminClient client;
@@ -58,43 +57,20 @@
     }
 
     try {
-        if (deleteAllWebapps != null) {
-            if (webappState.equalsIgnoreCase("started")) {
-                client.deleteAllStartedWebapps();
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.started.webapps"),
-                                                    CarbonUIMessage.INFO, request);
-            } else if (webappState.equalsIgnoreCase("stopped")) {
-                client.deleteAllStoppedWebapps();
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.stopped.webapps"),
-                                                    CarbonUIMessage.INFO, request);
-            } else {
-                throw new ServletException("Unknown webappstate " + webappState);
-            }
+        if (deleteAllServiceGroups != null) {
+            client.deleteAllFaultyWebapps();
         } else {
-            if (webappState.equalsIgnoreCase("started")) {
-                client.deleteStartedWebapps(webappFileNames);
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
-                                                    CarbonUIMessage.INFO, request);
-            } else if (webappState.equalsIgnoreCase("stopped")) {
-                client.deleteStoppedWebapps(webappFileNames);
-                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.webapps"),
-                                                    CarbonUIMessage.INFO, request);
-            } else {
-                throw new ServletException("Unknown webappstate " + webappState);
-            }
+            client.deleteFaultyWebapps(webappFileNames);
         }
 %>
 <script>
-    location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
+    location.href = 'faulty_webapps.jsp?pageNumber=<%=pageNumberInt%>'
 </script>
 
 <%
 } catch (Exception e) {
-    CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
-<script type="text/javascript">
-    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
-</script>
+<jsp:forward page="../admin/error.jsp?<%=e.getMessage()%>"/>
 <%
         return;
     }
