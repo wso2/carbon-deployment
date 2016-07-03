@@ -25,6 +25,13 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 
 <%
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String webappFileName = request.getParameter("webappFileName");
     String hostName = request.getParameter("hostName");
     String value = request.getParameter("value");

@@ -22,6 +22,13 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
     String[] webappFileNames = request.getParameterValues("webappFileName");
     String pageNumber = request.getParameter("pageNumber");
     String deleteAllServiceGroups = request.getParameter("deleteAllWebapps");

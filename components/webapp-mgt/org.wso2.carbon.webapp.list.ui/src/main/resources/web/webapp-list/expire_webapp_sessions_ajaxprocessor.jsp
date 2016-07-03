@@ -23,41 +23,22 @@
 <%@ page import="org.wso2.carbon.webapp.list.ui.WebappAdminClient" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="java.net.URLEncoder" %>
-
 <%
-    String[] webappKeySet = request.getParameterValues("webappKey");
-    String pageNumber = request.getParameter("pageNumber");
-    String reloadAll = request.getParameter("reloadAll");
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
+    String[] sessionIDs = request.getParameterValues("sessionId");
     String hostName = request.getParameter("hostName");
-    String httpPort = request.getParameter("httpPort");
-    String webappType = request.getParameter("webappType");
-    String defaultHostName = request.getParameter("defaultHostName");
+    String webappFileName = request.getParameter("webappFileName");
+    String pageNumber = request.getParameter("pageNumber");
+    String expireAllSessions = request.getParameter("expireAll");
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
-    }
-    String redirectPage = request.getParameter("redirectPage");
-    if (redirectPage == null) {
-        redirectPage = "index.jsp";
-    }
-
-    String redirectUrl = "";
-    if (redirectPage.startsWith("index.jsp")) {
-        redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt;
-    } else {
-        if (webappKeySet[0].split(":").length > 1) {
-            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
-                    URLEncoder.encode(webappKeySet[0].split(":")[1], "UTF-8");
-        } else {
-            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
-                    URLEncoder.encode(webappKeySet[0], "UTF-8");
-        }
-
-        if (hostName != null && httpPort != null) {
-            redirectUrl += "&hostName=" + hostName + "&httpPort=" + httpPort;
-        }
-
-        redirectUrl += "&webappType=" + webappType + "&webappState=all" + "&defaultHostName=" + defaultHostName;
     }
 %>
 
@@ -84,19 +65,30 @@
     }
 
     try {
-        if (reloadAll != null) {
-            client.reloadAllWebapps();
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.all.webapps"),
-                                                CarbonUIMessage.INFO, request);
-        } else {
-            client.reloadWebapps(webappKeySet);
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.selected.webapps"),
-                                                CarbonUIMessage.INFO, request);
-        }
+        if (expireAllSessions == null) {
+            client.expireSessionsInWebapp(webappFileName, sessionIDs, hostName);
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.selected.sessions"),
+                    CarbonUIMessage.INFO, request);
 %>
 <script>
-    debugger;
-    location.href = '<%=redirectUrl%>';
+    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>' 
+                    + '&pageNumber=<%= pageNumberInt %>&hostName=<%= hostName %>'
+</script>
+<%
+} else {
+    client.expireAllSessionsInWebapp(hostName + ":" + webappFileName);
+    CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
+            CarbonUIMessage.INFO, request);
+%>
+<script>
+    location.href = 'index.jsp'
+</script>
+<%
+    }
+%>
+<script>
+    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>'
+                    + '&pageNumber=<%= pageNumberInt %>&hostName=<%= hostName %>'
 </script>
 
 <%
@@ -104,8 +96,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    debugger;
-    location.href = '<%=redirectUrl%>';
+    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
 </script>
 <%
         return;

@@ -24,15 +24,31 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="java.net.URLEncoder" %>
 <%
-    String[] sessionIDs = request.getParameterValues("sessionId");
-    String hostName = request.getParameter("hostName");
-    String webappFileName = request.getParameter("webappFileName");
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
+    String[] webappKeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
-    String expireAllSessions = request.getParameter("expireAll");
+    String undeployAll = request.getParameter("undeployAll");
+    String hostName = request.getParameter("hostName");
+    String httpPort = request.getParameter("httpPort");
+    String defaultHostName = request.getParameter("defaultHostName");
     int pageNumberInt = 0;
     if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
     }
+    String webappState = "stopped";
+    String redirectPage = request.getParameter("redirectPage");
+    if (redirectPage == null) {
+        redirectPage = "index.jsp";
+        webappState = "all";
+    }
+
+    String redirectName = webappKeySet[0].split(":")[1];
 %>
 
 <%
@@ -58,30 +74,21 @@
     }
 
     try {
-        if (expireAllSessions == null) {
-            client.expireSessionsInWebapp(webappFileName, sessionIDs, hostName);
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.selected.sessions"),
-                    CarbonUIMessage.INFO, request);
+        if (undeployAll != null) {
+            client.stopAllWebapps();
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.stopped.all.webapps"),
+                                                CarbonUIMessage.INFO, request);
+        } else {
+            client.stopWebapps(webappKeySet);
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.stopped.selected.webapps"),
+                                                CarbonUIMessage.INFO, request);
+        }
 %>
 <script>
-    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>' 
-                    + '&pageNumber=<%= pageNumberInt %>&hostName=<%= hostName %>'
-</script>
-<%
-} else {
-    client.expireAllSessionsInWebapp(hostName + ":" + webappFileName);
-    CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
-            CarbonUIMessage.INFO, request);
-%>
-<script>
-    location.href = 'index.jsp'
-</script>
-<%
-    }
-%>
-<script>
-    location.href = 'sessions.jsp?webappFileName=<%= URLEncoder.encode(webappFileName, "UTF-8") %>'
-                    + '&pageNumber=<%= pageNumberInt %>&hostName=<%= hostName %>'
+    location.href = '<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8")%>&webappState=<%= webappState %>&defaultHostName=<%= defaultHostName %>'
+                    <% if (hostName != null && httpPort != null) { %>
+                    + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>'
+                    <% } %> ;
 </script>
 
 <%
@@ -89,7 +96,10 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
+    location.href = "<%= redirectPage%>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(redirectName, "UTF-8") %>&webappState=<%= webappState %>&defaultHostName=<%= defaultHostName %>"
+                    <% if (hostName != null && httpPort != null) { %>
+                    +"&hostName=<%= hostName %>&httpPort=<%= httpPort %>"
+                    <% } %> ;
 </script>
 <%
         return;

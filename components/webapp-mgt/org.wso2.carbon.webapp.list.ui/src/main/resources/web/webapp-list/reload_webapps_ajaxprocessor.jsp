@@ -25,27 +25,46 @@
 <%@ page import="java.net.URLEncoder" %>
 
 <%
-    String[] webappKeys = request.getParameterValues("webappKey");
+
+    String httpMethod = request.getMethod().toLowerCase();
+    if (!"post".equals(httpMethod)) {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return;
+    }
+
+    String[] webappKeySet = request.getParameterValues("webappKey");
     String pageNumber = request.getParameter("pageNumber");
-    String expireAllSessions = request.getParameter("expireAll");
+    String reloadAll = request.getParameter("reloadAll");
     String hostName = request.getParameter("hostName");
     String httpPort = request.getParameter("httpPort");
     String webappType = request.getParameter("webappType");
     String defaultHostName = request.getParameter("defaultHostName");
     int pageNumberInt = 0;
-    if (pageNumber != null && pageNumber.trim().length() != 0) {
+    if (pageNumber != null) {
         pageNumberInt = Integer.parseInt(pageNumber);
     }
-
-    String sessionExpTimeStr = request.getParameter("sessionExpiryTime");
-    float sessionExpTime = -1;
-    if (sessionExpTimeStr != null) {
-        sessionExpTime = Float.parseFloat(sessionExpTimeStr);
-    }
-
     String redirectPage = request.getParameter("redirectPage");
     if (redirectPage == null) {
         redirectPage = "index.jsp";
+    }
+
+    String redirectUrl = "";
+    if (redirectPage.startsWith("index.jsp")) {
+        redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt;
+    } else {
+        if (webappKeySet[0].split(":").length > 1) {
+            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
+                    URLEncoder.encode(webappKeySet[0].split(":")[1], "UTF-8");
+        } else {
+            redirectUrl = redirectPage + "?pageNumber=" + pageNumberInt + "&webappFileName=" +
+                    URLEncoder.encode(webappKeySet[0], "UTF-8");
+        }
+
+        if (hostName != null && httpPort != null) {
+            redirectUrl += "&hostName=" + hostName + "&httpPort=" + httpPort;
+        }
+
+        redirectUrl += "&webappType=" + webappType + "&webappState=all" + "&defaultHostName=" + defaultHostName;
     }
 %>
 
@@ -72,25 +91,19 @@
     }
 
     try {
-        if (expireAllSessions != null) {
-            client.expireSessionsInAllWebapps();
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
-                                                CarbonUIMessage.INFO, request);
-        } else if (sessionExpTime != -1) {
-            client.expireSessionsInWebapp(webappKeys[0], sessionExpTime);
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
+        if (reloadAll != null) {
+            client.reloadAllWebapps();
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.all.webapps"),
                                                 CarbonUIMessage.INFO, request);
         } else {
-            client.expireSessionsInWebapps(webappKeys);
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.expired.all.sessions"),
+            client.reloadWebapps(webappKeySet);
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.reloaded.selected.webapps"),
                                                 CarbonUIMessage.INFO, request);
         }
 %>
 <script>
-    location.href = '<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappKeys[0].split(":")[1], "UTF-8") %>'
-    <% if (hostName != null && httpPort != null) { %>
-    + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>&webappState=all'
-    <% } %>;
+    debugger;
+    location.href = '<%=redirectUrl%>';
 </script>
 
 <%
@@ -98,11 +111,8 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "<%= redirectPage %>?pageNumber=<%=pageNumberInt%>&webappFileName=<%= URLEncoder.encode(webappKeys[0].split(":")[1], "UTF-8") %>"
-    <% if (hostName != null && httpPort != null) { %>
-    + "&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>&webappState=all"
-    <% } %>;
-
+    debugger;
+    location.href = '<%=redirectUrl%>';
 </script>
 <%
         return;
