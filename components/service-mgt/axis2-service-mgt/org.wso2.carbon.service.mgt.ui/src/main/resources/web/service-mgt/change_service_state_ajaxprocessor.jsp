@@ -26,6 +26,13 @@
 
 <fmt:bundle basename="org.wso2.carbon.service.mgt.ui.i18n.Resources">
     <%
+
+        String httpMethod = request.getMethod().toLowerCase();
+        if (!"post".equals(httpMethod)) {
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            return;
+        }
+
         String serviceName =  CharacterEncoder.getSafeText(request.getParameter("serviceName"));
         String isActive =  CharacterEncoder.getSafeText(request.getParameter("isActive"));
         if (serviceName == null || serviceName.trim().length() == 0) {

@@ -163,7 +163,24 @@ padding:0 10px;
         }
         if (allServicesSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="delete.all.services.prompt"><fmt:param value="<%= servicesInfo.getNumberOfActiveServices()%>"/></fmt:message>", function() {
-                location.href = 'delete_service_groups.jsp?deleteAllServiceGroups=true';
+
+                jQuery.ajax({
+                    type: "POST",
+                    url: "delete_service_groups_ajaxprocessor.jsp",
+                    headers: {
+                        Accept: "text/html"
+                    },
+                    data: {
+                        "deleteAllServiceGroups": "true"
+                    },
+                    async: false,
+                    success: function(responseText, status, XMLHttpRequest) {
+                        if (status == "success") {
+                            location.assign("service_groups.jsp");
+                        }
+                    }
+                });
+
             });
         } else {
 
@@ -374,7 +391,7 @@ padding:0 10px;
 </div>	<!-- paginator-ie7-fix -->
 <p>&nbsp;</p>
 
-<form action="delete_service_groups.jsp" name="servicesForm" method="post">
+<form action="delete_service_groups_ajaxprocessor.jsp" name="servicesForm" method="post">
     <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
     <table class="styledLeft" id="sgTable" width="100%">
         <thead>

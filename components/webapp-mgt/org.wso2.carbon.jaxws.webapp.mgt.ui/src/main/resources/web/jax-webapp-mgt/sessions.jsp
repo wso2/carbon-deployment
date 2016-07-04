@@ -90,7 +90,23 @@
         if (allSessionsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="expire.all.sessions.prompt"><fmt:param value="<%= activeSessions%>"/></fmt:message>",
                                           function() {
-                                              location.href = 'expire_webapp_sessions.jsp?expireAll=true&webappFileName=<%= webappFileName %>';
+                                            jQuery.ajax({
+                                            	type: "POST",
+                                            	url: "expire_webapp_sessions_ajaxprocessor.jsp",
+                                            	headers: {
+                                            		Accept: "text/html"
+                                            	},
+                                            	data: {
+                                            	    "expireAll": "true",
+                                            	    "webappFileName": "<%= webappFileName %>"
+                                            	},
+                                            	async: false,
+                                            	success: function (responseText, status, XMLHttpRequest) {
+                                            		if (status == "success") {
+                                            			eval(jQuery(responseText).text());
+                                            		}
+                                            	}
+                                            });
                                           }
                     );
         } else {
@@ -211,7 +227,7 @@
                                   numberOfPages="<%=numberOfPages%>"/>
         <p>&nbsp;</p>
 
-        <form action="expire_webapp_sessions.jsp" name="sessionsForm" method="post">
+        <form action="expire_webapp_sessions_ajaxprocessor.jsp" name="sessionsForm" method="post">
             <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
             <input type="hidden" name="webappFileName" value="<%= webappFileName%>"/>
             <table class="styledLeft" id="webappsTable" width="100%">

@@ -120,7 +120,22 @@
                     if (allWebappsSelected) {
                         CARBON.showConfirmationDialog("<fmt:message key="delete.selected.faulty.webapps.prompt"><fmt:param value="<%= faultyWebappsWrapper.getNumberOfFaultyWebapps() %>"/></fmt:message>",
                                                       function() {
-                                                          location.href = 'delete_faulty_webapps.jsp?deleteAllWebapps=true';
+                                                        jQuery.ajax({
+                                                            type: "POST",
+                                                            url: "delete_faulty_webapps_ajaxprocessor.jsp",
+                                                            headers: {
+                                                                Accept: "text/html"
+                                                            },
+                                                            data: {
+                                                                "deleteAllWebapps": "true"
+                                                            },
+                                                            async: false,
+                                                            success: function(responseText, status, XMLHttpRequest) {
+                                                                if (status == "success") {
+                                                                    eval(jQuery(responseText).text());
+                                                                }
+                                                            }
+                                                        });
                                                       });
                     } else {
                         CARBON.showConfirmationDialog("<fmt:message key="delete.all.faulty.webapps.prompt"/>", function() {
@@ -177,7 +192,7 @@
                               page="faulty_services.jsp" pageNumberParameterName="pageNumber"/>
             <p>&nbsp;</p>
 
-            <form action="delete_faulty_webapps.jsp" name="faultyWebappsForm">
+            <form action="delete_faulty_webapps_ajaxprocessor.jsp" name="faultyWebappsForm" method="post">
                 <table class="styledLeft" id="faultyWebappsTable">
                     <thead>
                     <tr>
