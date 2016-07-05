@@ -16,8 +16,6 @@ public class EventConfigNStreamDef {
 
     private StreamDefinition streamDefinition;
 
-    private boolean isLoadBalancingConfig = false;
-
     private Property[] properties;
 
     public StreamDefinition getStreamDefinition() {
@@ -82,7 +80,6 @@ public class EventConfigNStreamDef {
 
     public void setUrl(String url) {
         this.url = url;
-        setLoadBalancingConfig();
     }
 
     public String getUserName() {
@@ -99,14 +96,6 @@ public class EventConfigNStreamDef {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    private void setLoadBalancingConfig() {
-        this.isLoadBalancingConfig = this.url.split(",").length > 1;
-    }
-
-    public boolean isLoadBalancingConfig() {
-        return isLoadBalancingConfig;
     }
 
 }
