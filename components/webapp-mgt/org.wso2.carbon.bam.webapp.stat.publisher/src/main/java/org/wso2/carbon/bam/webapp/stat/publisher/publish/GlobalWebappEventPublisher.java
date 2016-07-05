@@ -24,15 +24,16 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.webapp.stat.publisher.data.WebappStatEvent;
 import org.wso2.carbon.bam.webapp.stat.publisher.util.WebappStatisticsPublisherConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.databridge.agent.thrift.AsyncDataPublisher;
-import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.databridge.commons.Attribute;
-import org.wso2.carbon.databridge.commons.StreamDefinition;
+import org.wso2.carbon.databridge.agent.DataPublisher;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointAgentConfigurationException;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointAuthenticationException;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointConfigurationException;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,55 +50,39 @@ public class GlobalWebappEventPublisher {
 
     private static final String UsageEventStreamVersion = "1.0.0";
 
-    private static AsyncDataPublisher asyncDataPublisher;
+    private static DataPublisher dataPublisher;
 
     private static final String BamAgentPasswordAlias = "Bam.Agent.ConnectionPassword";
 
     private static final String GlobalPublisherEl = "GlobalPublisher";
-    private static final String BamAgentUsernameEl= "username";
+    private static final String BamAgentUsernameEl = "username";
 
     public static void createGlobalEventStream(OMElement bamConfig) {
         SecretResolver secretResolver = SecretResolverFactory.create(bamConfig, false);
         String username = "";
         String password = "";
         String url = ServerConfiguration.getInstance().
-                        getProperties(WebappStatisticsPublisherConstants.SERVER_CONFIG_BAM_URL)[0];
+                getProperties(WebappStatisticsPublisherConstants.SERVER_CONFIG_BAM_URL)[0];
 
-        for (Iterator childElements = bamConfig.getChildElements(); childElements.hasNext();) {
+        for (Iterator childElements = bamConfig.getChildElements(); childElements.hasNext(); ) {
             OMElement element = (OMElement) childElements.next();
             if (element.getLocalName().equals(GlobalPublisherEl)) {
                 username = element.getFirstChildWithName(new QName(BamAgentUsernameEl)).getText().trim();
                 break;
             }
         }
-        
+
         if (secretResolver != null && secretResolver.isInitialized() && secretResolver.isTokenProtected(BamAgentPasswordAlias)) {
             password = secretResolver.resolve(BamAgentPasswordAlias);
         }
 
-        StreamDefinition streamDef = null;
         try {
-            streamDef = new StreamDefinition(UsageEventStream, UsageEventStreamVersion);
-            streamDef.setDescription("All tenant webapp statistics");
-            streamDef.setNickName("appserver.webapp.stats");
-            List<Attribute> metaDataAttributeList = new ArrayList<Attribute>();
-            metaDataAttributeList = StreamDefinitionCreatorUtil.setUserAgentMetadata(metaDataAttributeList);
-            //metaDataAttributeList = setPropertiesAsMetaData(metaDataAttributeList, configData);
-            streamDef.setMetaData(metaDataAttributeList);
-
-            List<Attribute> payLoadData = new ArrayList<Attribute>();
-            payLoadData = StreamDefinitionCreatorUtil.addCommonPayLoadData(payLoadData);
-            streamDef.setPayloadData(payLoadData);
-
-            asyncDataPublisher = new AsyncDataPublisher(url, username, password);
-            asyncDataPublisher.addStreamDefinition(streamDef);
-        } catch (Exception e) {
-            String errorMsg = "Malformed Stream Definition";
-            log.error(errorMsg, e);
-        } catch (Error e) {
-            e.printStackTrace();
+            dataPublisher = new DataPublisher(url, username, password);
+        } catch (DataEndpointAgentConfigurationException | DataEndpointException | DataEndpointAuthenticationException |
+                DataEndpointConfigurationException | TransportException e) {
+            log.error("Error occurred while sending the event", e);
         }
-        
+
     }
 
     public static void publish(WebappStatEvent webappStatEvent) {
@@ -105,13 +90,10 @@ public class GlobalWebappEventPublisher {
         List<Object> metaData = webappStatEvent.getMetaData();
         List<Object> payLoadData = webappStatEvent.getEventData();
 
-        try {
-            asyncDataPublisher.publish(UsageEventStream, UsageEventStreamVersion, getObjectArray(metaData),
-                            getObjectArray(correlationData),
-                            getObjectArray(payLoadData));
-        } catch (AgentException e) {
-            e.printStackTrace();  
-        }
+        dataPublisher.tryPublish(UsageEventStream, System.currentTimeMillis(), getObjectArray(metaData),
+                getObjectArray(correlationData),
+                getObjectArray(payLoadData));
+
     }
 
     private static Object[] getObjectArray(List<Object> list) {

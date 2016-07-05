@@ -23,11 +23,15 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.as.monitoring.config.BAMPublisherConfigurationException;
 import org.wso2.carbon.as.monitoring.config.StreamConfigContext;
 import org.wso2.carbon.as.monitoring.config.StreamConfigurationReader;
-import org.wso2.carbon.databridge.agent.thrift.AsyncDataPublisher;
-import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.agent.DataPublisher;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointAgentConfigurationException;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointAuthenticationException;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointConfigurationException;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
 
 
 /**
@@ -39,7 +43,7 @@ public abstract class PublisherBase {
 
     protected StreamConfigContext configContext;
 
-    protected volatile AsyncDataPublisher publisher;
+    protected volatile DataPublisher publisher;
 
     public PublisherBase() throws BAMPublisherConfigurationException {
         final String streamName = getDataStreamName();
@@ -107,10 +111,11 @@ public abstract class PublisherBase {
 
         try {
             loadPublisher();
-            publisher.publish(configContext.getStreamName(), configContext.getStreamVersion(), event);
-        } catch (AgentException exception) {
-            throw new MonitoringPublisherException("Exception occurred while publishing Connector Monitoring Event to BAM", exception);
-        } catch (BAMPublisherConfigurationException e) {
+            publisher.tryPublish(event.getStreamId(), System.currentTimeMillis(), event.getMetaData(),
+                    event.getCorrelationData(), event.getPayloadData());
+
+        } catch (BAMPublisherConfigurationException | DataEndpointConfigurationException | DataEndpointException |
+                DataEndpointAgentConfigurationException | DataEndpointAuthenticationException | TransportException e) {
             throw new MonitoringPublisherException("Exception occurred while connecting to BAM.", e);
         }
     }
@@ -147,7 +152,9 @@ public abstract class PublisherBase {
 
 
     // lazily load the publisher
-    private void loadPublisher() throws BAMPublisherConfigurationException {
+    private void loadPublisher() throws BAMPublisherConfigurationException, DataEndpointAuthenticationException,
+            DataEndpointAgentConfigurationException, DataEndpointException, DataEndpointConfigurationException,
+            TransportException {
         if (publisher == null) {
             synchronized (this) {
                 if (publisher == null) {
@@ -157,10 +164,12 @@ public abstract class PublisherBase {
         }
     }
 
-    private AsyncDataPublisher createPublisher() throws BAMPublisherConfigurationException {
-        AsyncDataPublisher asyncPublisher = new AsyncDataPublisher(configContext.getReceiverUrl(), configContext.getUsername(), configContext.getPassword());
-        asyncPublisher.addStreamDefinition(createStreamDefinition());
-        return asyncPublisher;
+    private DataPublisher createPublisher() throws DataEndpointAuthenticationException,
+            DataEndpointAgentConfigurationException, TransportException, DataEndpointException,
+            DataEndpointConfigurationException {
+        DataPublisher dataPublisher = new DataPublisher(
+                configContext.getReceiverUrl(), configContext.getUsername(), configContext.getPassword());
+        return dataPublisher;
     }
 
 }

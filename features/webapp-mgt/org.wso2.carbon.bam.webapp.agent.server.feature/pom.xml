@@ -73,7 +73,7 @@
                                     org.wso2.carbon.system.statistics.server:compatible:${carbon.commons.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.databridge.datapublisher:compatible:${carbon.commons.version}
+                                    org.wso2.carbon.databridge.datapublisher:compatible:${carbon.analytics-commons.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>

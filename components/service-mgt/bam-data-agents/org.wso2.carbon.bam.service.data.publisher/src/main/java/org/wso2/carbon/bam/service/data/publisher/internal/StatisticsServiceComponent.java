@@ -32,6 +32,7 @@ import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.TenantEventConfigData;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
@@ -111,7 +112,7 @@ public class StatisticsServiceComponent {
         }
     }
 
-    protected void deactivate(ComponentContext context) {
+    protected void deactivate(ComponentContext context) throws DataEndpointException {
         if (log.isDebugEnabled()) {
             log.debug("BAM service statistics data publisher bundle is deactivated");
             Map<Integer, EventConfigNStreamDef> tenantSpecificEventConfig =
@@ -121,9 +122,9 @@ public class StatisticsServiceComponent {
                 String key = configData.getUrl() + "_" + configData.getUserName() + "_" + configData.getPassword();
                 EventPublisherConfig eventPublisherConfig = ServiceAgentUtil.getEventPublisherConfig(key);
                 if (null != eventPublisherConfig) {
-                    if (null != eventPublisherConfig.getDataPublisher()) eventPublisherConfig.getDataPublisher().stop();
-                    if (null != eventPublisherConfig.getLoadBalancingDataPublisher())
-                        eventPublisherConfig.getLoadBalancingDataPublisher().stop();
+                    if (null != eventPublisherConfig.getDataPublisher()) {
+                        eventPublisherConfig.getDataPublisher().shutdownWithAgent();
+                    }
                 }
             }
         }

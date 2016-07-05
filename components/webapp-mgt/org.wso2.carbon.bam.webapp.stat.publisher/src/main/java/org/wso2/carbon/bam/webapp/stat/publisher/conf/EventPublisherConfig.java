@@ -15,9 +15,7 @@
 */
 package org.wso2.carbon.bam.webapp.stat.publisher.conf;
 
-import org.wso2.carbon.databridge.agent.thrift.Agent;
-import org.wso2.carbon.databridge.agent.thrift.AsyncDataPublisher;
-import org.wso2.carbon.databridge.agent.thrift.lb.LoadBalancingDataPublisher;
+import org.wso2.carbon.databridge.agent.DataPublisher;
 
   /*
   * Purpose of this class is keep the configurations of BAM data publisher.
@@ -25,28 +23,14 @@ import org.wso2.carbon.databridge.agent.thrift.lb.LoadBalancingDataPublisher;
 
 public class EventPublisherConfig {
 
-    private AsyncDataPublisher dataPublisher;
-    private LoadBalancingDataPublisher loadBalancingDataPublisher;
-    private static Agent agent = new Agent();
+    private DataPublisher dataPublisher;
 
-    public AsyncDataPublisher getDataPublisher() {
+    public DataPublisher getDataPublisher() {
         return dataPublisher;
     }
 
-    public void setDataPublisher(AsyncDataPublisher dataPublisher) {
+    public void setDataPublisher(DataPublisher dataPublisher) {
         this.dataPublisher = dataPublisher;
-    }
-
-    public void setLoadBalancingPublisher(LoadBalancingDataPublisher loadBalancingPublisher){
-        this.loadBalancingDataPublisher =  loadBalancingPublisher;
-    }
-
-    public LoadBalancingDataPublisher getLoadBalancingDataPublisher(){
-        return loadBalancingDataPublisher;
-    }
-
-    public static Agent getAgent(){
-        return agent;
     }
 
 }

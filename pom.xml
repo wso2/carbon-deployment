@@ -320,32 +320,12 @@
             <!-- Carbon-Commons Dependency -->
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.user.mgt</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.statistics</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.bam.data.publisher.util</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
@@ -391,7 +371,29 @@
                 <version>${carbon.commons.version}</version>
             </dependency>
 
+            <!-- Carbon Analytics Commons Dependency-->
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <version>${carbon.analytics-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
+                <version>${carbon.analytics-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.agent</artifactId>
+                <version>${carbon.analytics-commons.version}</version>
+            </dependency>
+
             <!-- Carbon-Identity Dependency -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.user.mgt</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.entitlement.proxy</artifactId>
@@ -1314,8 +1316,11 @@
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
 
         <!-- Carbon Commons version-->
-        <carbon.commons.version>4.4.9</carbon.commons.version>
+        <carbon.commons.version>4.5.4</carbon.commons.version>
         <carbon.commons.imp.pkg.version>[4.4.0, 5.0.0)</carbon.commons.imp.pkg.version>
+
+        <!-- Carbon Analytics Commons version -->
+        <carbon.analytics-commons.version>5.0.11</carbon.analytics-commons.version>
 
         <!-- Carbon Identity version-->
         <carbon.identity.version>5.1.0</carbon.identity.version>
