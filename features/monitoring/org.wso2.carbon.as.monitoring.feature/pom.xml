@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>monitoring-feature</artifactId>
-        <version>4.6.2-SNAPSHOT</version>
+        <version>4.7.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -107,7 +107,7 @@
                                     org.wso2.carbon:org.wso2.carbon.core.server:${carbon.kernel.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.databridge.datapublisher:compatible:${carbon.analytics-commons.version}
+                                    org.wso2.carbon.databridge.datapublisher:compatible:${carbon.analytics-common.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>
