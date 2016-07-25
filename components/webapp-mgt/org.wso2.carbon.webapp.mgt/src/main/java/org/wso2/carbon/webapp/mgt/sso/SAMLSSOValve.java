@@ -25,6 +25,7 @@ import org.apache.catalina.connector.Response;
 import org.apache.catalina.realm.GenericPrincipal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHeaders;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
@@ -35,6 +36,7 @@ import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentCarbonX509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.ServletException;
@@ -51,6 +53,8 @@ import java.util.Properties;
 public class SAMLSSOValve extends SingleSignOn {
 
     private static Log log = LogFactory.getLog(SAMLSSOValve.class);
+    private static final String MEDIA_TYPE_TEXT_HTML = "text/html";
+    private static final String ENABLE_SAML2_SSO_WITH_TENANT = "enable.saml2.sso.with.tenant";
     private Properties ssoSPConfigProperties = new Properties();
 
     public SAMLSSOValve() throws IOException {
@@ -103,6 +107,17 @@ public class SAMLSSOValve extends SingleSignOn {
                         ssoSPConfigProperties));
 
                 ssoAgentConfig.verifyConfig();
+
+                String ssoTenantDomain = request.getContext().findParameter(ENABLE_SAML2_SSO_WITH_TENANT);
+                if (ssoTenantDomain != null && !ssoTenantDomain.isEmpty()) {
+                    ssoAgentConfig.getQueryParams().put(MultitenantConstants.TENANT_DOMAIN,
+                            new String[]{ssoTenantDomain});
+                }
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Creating SSOAgentConfig, IssuerId=" + ssoAgentConfig.getSAML2().getSPEntityId()
+                            + ", CurrentTenant=" + tenantDomain + ", SSOTenant=" + ssoTenantDomain);
+                }
 
                 request.getSessionInternal().setNote(WebappSSOConstants.SSO_AGENT_CONFIG, ssoAgentConfig);
             } catch (Exception e) {
@@ -193,6 +208,7 @@ public class SAMLSSOValve extends SingleSignOn {
                     if (request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) != null) {
                         ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                         String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        response.addHeader(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE_TEXT_HTML);
                         SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     } else {
                         log.warn("Attempt to logout from a already logout session.");
@@ -227,6 +243,7 @@ public class SAMLSSOValve extends SingleSignOn {
                 if (resolver.isHttpPostBinding()) {
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                     String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
+                    response.addHeader(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE_TEXT_HTML);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     return;
 
@@ -274,11 +291,6 @@ public class SAMLSSOValve extends SingleSignOn {
         }
 
         getNext().invoke(request, response);
-    }
-
-    public void sessionEvent(SessionEvent event) {
-        //let default tomcat logic to continue
-        super.sessionEvent(event);
     }
 
     public void backgroundProcess() {

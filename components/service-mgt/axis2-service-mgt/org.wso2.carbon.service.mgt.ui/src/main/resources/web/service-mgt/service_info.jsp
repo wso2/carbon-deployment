@@ -349,22 +349,34 @@
                         <script type="text/javascript">
                             jQuery.noConflict();
                             function changeServiceState(active) {
-                                var url = 'change_service_state_ajaxprocessor.jsp?serviceName=<%= request.getAttribute("serviceName")%>&isActive=' + active;
-                                jQuery("#serviceStateDiv").load(url, null, function (responseText, status, XMLHttpRequest) {
-                                    if (status != "success") {
-                                        CARBON.showErrorDialog('<fmt:message key="could.not.change.service.state"/>');
-                                    } else {
-                                        if(active){
-                                            document.getElementById('serviceClientDiv').style.display = '';
-                                            document.getElementById('statsDiv').style.display = '';
-                                            refresh = setInterval("refreshStats()", 6000);
-                                        } else {
-                                            document.getElementById('serviceClientDiv').style.display = 'none';
-                                            stopRefreshStats();
-                                            document.getElementById('statsDiv').style.display = 'none';
+                                jQuery.ajax({
+                                        type: "POST",
+                                        url: "change_service_state_ajaxprocessor.jsp",
+                                        headers: {
+                                            Accept: "text/html"
+                                        },
+                                        data: {
+                                            "serviceName": '<%= request.getAttribute("serviceName")%>',
+                                            "isActive": active
+                                        },
+                                        async: false,
+                                        success: function(responseText, status, XMLHttpRequest) {
+                                            if (status != "success") {
+                                                CARBON.showErrorDialog('<fmt:message key="could.not.change.service.state"/>');
+                                            } else {
+                                                if (active) {
+                                                    document.getElementById('serviceClientDiv').style.display = '';
+                                                    document.getElementById('statsDiv').style.display = '';
+                                                    refresh = setInterval("refreshStats()", 6000);
+                                                } else {
+                                                    document.getElementById('serviceClientDiv').style.display = 'none';
+                                                    stopRefreshStats();
+                                                    document.getElementById('statsDiv').style.display = 'none';
+                                                }
+                                                jQuery("#serviceStateDiv").html(responseText);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
                             }
                         </script>
                     </td>

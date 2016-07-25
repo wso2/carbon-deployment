@@ -17,6 +17,7 @@
  -->
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+<%@ taglib uri="http://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project/Owasp.CsrfGuard.tld" prefix="csrf" %>
 
 <!-- This page is included to display messages which are set to request scope or session scope -->
 <jsp:include page="../dialog/display_messages.jsp"/>
@@ -124,7 +125,7 @@
         <h2><fmt:message key="add.service.archive"/></h2>
 
         <div id="workArea">
-            <form method="post" name="aarUpload" action="../../fileupload/service"
+            <form method="post" name="aarUpload" action="../../fileupload/service?<csrf:tokenname/>=<csrf:tokenvalue/>"
                   enctype="multipart/form-data" target="_self">
 
                 <input type="hidden" name="errorRedirectionPage"

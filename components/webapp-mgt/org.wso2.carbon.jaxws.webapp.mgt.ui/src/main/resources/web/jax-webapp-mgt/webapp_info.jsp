@@ -89,7 +89,7 @@
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="session.expiry.webapp.prompt"/>",
                                           function() {
-                                              document.sessionExpiryForm.setAttribute("action", "expire_sessions.jsp");
+                                              document.sessionExpiryForm.setAttribute("action", "expire_sessions_ajaxprocessor.jsp");
                                               document.sessionExpiryForm.submit();
                                           }
             );
@@ -100,8 +100,25 @@
     function expireAllSessions() {
         CARBON.showConfirmationDialog("<fmt:message key="session.expiry.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'expire_sessions.jsp?webappFileName=<%= webappFileName %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
+                                        jQuery.ajax({
+                                        	type: "POST",
+                                        	url: "expire_sessions_ajaxprocessor.jsp",
+                                        	headers: {
+                                        		Accept: "text/html"
+                                        	},
+                                        	data: {
+                                        	    "webappFileName": "<%= webappFileName %>",
+                                                "redirectPage": "webapp_info.jsp",
+                                                "hostName": "<%= hostName %>",
+                                                "httpPort": "<%= httpPort %>"
+                                        	},
+                                        	async: false,
+                                        	success: function (responseText, status, XMLHttpRequest) {
+                                        		if (status == "success") {
+                                        			eval(jQuery(responseText).text());
+                                        		}
+                                        	}
+                                        });
                                       }
                 );
     }
@@ -109,8 +126,25 @@
     function reloadWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="reload.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'reload_webapps.jsp?webappFileName=<%= webappFileName %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
+                                        jQuery.ajax({
+                                        	type: "POST",
+                                        	url: "reload_webapps_ajaxprocessor.jsp",
+                                        	headers: {
+                                        		Accept: "text/html"
+                                        	},
+                                        	data: {
+                                        	    "webappFileName": "<%= webappFileName %>",
+                                                "redirectPage": "webapp_info.jsp",
+                                                "hostName": "<%= hostName %>",
+                                                "httpPort": "<%= httpPort %>"
+                                        	},
+                                        	async: false,
+                                        	success: function (responseText, status, XMLHttpRequest) {
+                                        		if (status == "success") {
+                                        			eval(jQuery(responseText).text());
+                                        		}
+                                        	}
+                                        });
                                       }
                 );
     }
@@ -118,8 +152,25 @@
     function stopWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="stop.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'stop_webapps.jsp?webappFileName=<%= webappFileName %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
+                                        jQuery.ajax({
+                                        	type: "POST",
+                                        	url: "stop_webapps_ajaxprocessor.jsp",
+                                        	headers: {
+                                        		Accept: "text/html"
+                                        	},
+                                        	data: {
+                                        	    "webappFileName": "<%= webappFileName %>",
+                                                "redirectPage": "webapp_info.jsp",
+                                                "hostName": "<%= hostName %>",
+                                                "httpPort": "<%= httpPort %>"
+                                        	},
+                                        	async: false,
+                                        	success: function (responseText, status, XMLHttpRequest) {
+                                        		if (status == "success") {
+                                        			eval(jQuery(responseText).text());
+                                        		}
+                                        	}
+                                        });
                                       }
                 );
     }
@@ -127,8 +178,25 @@
     function startWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="start.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'start_webapps.jsp?webappFileName=<%= webappFileName %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>';
+                                          jQuery.ajax({
+                                          	type: "POST",
+                                          	url: "start_webapps_ajaxprocessor.jsp",
+                                          	headers: {
+                                          	    Accept: "text/html"
+                                          	},
+                                          	data: {
+                                          	    "webappFileName": "<%= webappFileName %>",
+                                          	    "redirectPage": "webapp_info.jsp",
+                                          	    "hostName": "<%= hostName %>",
+                                          	    "httpPort": "<%= httpPort %>"
+                                          	},
+                                          	async: false,
+                                          	success: function (responseText, status, XMLHttpRequest) {
+                                          		if (status == "success") {
+                                          			eval(jQuery(responseText).text());
+                                          		}
+                                          	}
+                                          });
                                       }
                 );
     }

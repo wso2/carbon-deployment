@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-stub</artifactId>
-        <version>4.6.1-SNAPSHOT</version>
+        <version>4.6.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -117,7 +117,7 @@
             <artifactId>wsdl4j</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.neethi.wso2</groupId>
+            <groupId>org.wso2.orbit.org.apache.neethi</groupId>
             <artifactId>neethi</artifactId>
             <exclusions>
                 <exclusion>

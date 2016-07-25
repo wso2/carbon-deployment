@@ -107,8 +107,8 @@
                 if (webappType.equalsIgnoreCase("JaxWebapp")) {
                     webAppDataExtractor.getServletXML(client.getWarFileInputStream
                             (webapp.getWebappFile(), hostName, webappType));
-                    wsdlURLS= webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
-                    wadlURLS= webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
+                    wsdlURLS = webAppDataExtractor.getWSDLs(urlPrefix + webapp.getContext() + servletContext);
+                    wadlURLS = webAppDataExtractor.getWADLs(urlPrefix + webapp.getContext() + servletContext);
                     serviceListPath = webAppDataExtractor.getServiceListPath();
                 }
 
@@ -143,7 +143,7 @@
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="session.expiry.webapp.prompt"/>",
                                           function() {
-                                              document.sessionExpiryForm.setAttribute("action", "expire_sessions.jsp");
+                                              document.sessionExpiryForm.setAttribute("action", "expire_sessions_ajaxprocessor.jsp");
                                               document.sessionExpiryForm.submit();
                                           }
             );
@@ -154,8 +154,27 @@
     function expireAllSessions() {
         CARBON.showConfirmationDialog("<fmt:message key="session.expiry.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'expire_sessions.jsp?webappKey=<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8")%>&redirectPage=webapp_info.jsp'
-                                          + '&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>';
+                                        jQuery.ajax({
+                                        	type: "POST",
+                                        	url: "expire_sessions_ajaxprocessor.jsp",
+                                        	headers: {
+                                        		Accept: "text/html"
+                                        	},
+                                        	data: {
+                                        	    "webappKey": "<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8")%>",
+                                                "redirectPage": "webapp_info.jsp",
+                                                "hostName": "<%= hostName %>",
+                                                "httpPort": "<%= httpPort %>",
+                                                "webappType": "<%= webappType %>",
+                                                "defaultHostName": "<%= defaultHostName %>"
+                                        	},
+                                        	async: false,
+                                        	success: function (responseText, status, XMLHttpRequest) {
+                                        		if (status == "success") {
+                                        			eval(jQuery(responseText).text());
+                                        		}
+                                        	}
+                                        });
                                       }
                 );
     }
@@ -163,8 +182,27 @@
     function reloadWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="reload.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'reload_webapps.jsp?webappKey=<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>';
+                                        jQuery.ajax({
+                                        	type: "POST",
+                                        	url: "reload_webapps_ajaxprocessor.jsp",
+                                        	headers: {
+                                        		Accept: "text/html"
+                                        	},
+                                        	data: {
+                                        	    "webappKey": "<%= hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>",
+                                                "redirectPage": "webapp_info.jsp",
+                                                "hostName": "<%= hostName %>",
+                                                "httpPort": "<%= httpPort %>",
+                                                "webappType": "<%= webappType %>",
+                                                "defaultHostName": "<%= defaultHostName %>"
+                                        	},
+                                        	async: false,
+                                        	success: function (responseText, status, XMLHttpRequest) {
+                                        		if (status == "success") {
+                                        			eval(jQuery(responseText).text());
+                                        		}
+                                        	}
+                                        });
                                       }
                 );
     }
@@ -172,8 +210,26 @@
     function stopWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="stop.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'stop_webapps.jsp?webappKey=<%= hostName+':'+URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>&defaultHostName=<%= defaultHostName %>';
+                                        jQuery.ajax({
+                                        	type: "POST",
+                                        	url: "stop_webapps_ajaxprocessor.jsp",
+                                        	headers: {
+                                        		Accept: "text/html"
+                                        	},
+                                        	data: {
+                                        	    "webappKey": "<%= hostName+':'+URLEncoder.encode(webappFileName, "UTF-8") %>",
+                                                "redirectPage": "webapp_info.jsp",
+                                                "hostName": "<%= hostName %>",
+                                                "httpPort": "<%= httpPort %>",
+                                                "defaultHostName": "<%= defaultHostName %>"
+                                        	},
+                                        	async: false,
+                                        	success: function (responseText, status, XMLHttpRequest) {
+                                        		if (status == "success") {
+                                        			eval(jQuery(responseText).text());
+                                        		}
+                                        	}
+                                        });
                                       }
                 );
     }
@@ -181,8 +237,28 @@
     function startWebapp() {
         CARBON.showConfirmationDialog("<fmt:message key="start.selected.webapps.prompt"/>",
                                       function() {
-                                          location.href = 'start_webapps.jsp?webappKey=<%=hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>&redirectPage=webapp_info.jsp'
-                                                  +'&hostName=<%= hostName %>&httpPort=<%= httpPort %>&webappType=<%= webappType %>&defaultHostName=<%= defaultHostName %>';
+                                          jQuery.ajax({
+                                          	type: "POST",
+                                          	url: "start_webapps_ajaxprocessor.jsp",
+                                          	headers: {
+                                          	    Accept: "text/html"
+                                          	},
+                                          	data: {
+                                          	    "webappKey": "<%=hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8") %>",
+                                          	    "redirectPage": "webapp_info.jsp",
+                                          	    "hostName": "<%= hostName %>",
+                                          	    "httpPort": "<%= httpPort %>",
+                                          	    "webappType": "<%= webappType %>",
+                                          	    "defaultHostName": "<%= defaultHostName %>"
+                                          	},
+                                          	async: false,
+                                          	success: function (responseText, status, XMLHttpRequest) {
+                                          		if (status == "success") {
+                                          			eval(jQuery(responseText).text());
+                                          		}
+                                          	}
+                                          });
+
                                       }
                 );
     }
@@ -354,7 +430,7 @@
                                                         <fmt:message key="expire.sessions"/>
                                                     </a>
                                                     <nobr>
-                                                        <form name="sessionExpiryForm" onsubmit="expireSessions();return false;" >
+                                                        <form name="sessionExpiryForm" onsubmit="expireSessions();return false;" method="post" action="">
                                                             <input type="hidden" name="webappKey"
                                                                    value="<%=  hostName+':'+ URLEncoder.encode(webappFileName, "UTF-8")%>"/>
                                                             <input type="hidden" name="redirectPage"
@@ -812,7 +888,7 @@
             dataVal = dataVal + '&value=1'
             jQuery.ajax({
                 type: "POST",
-                url: "bam_activator.jsp",
+                url: "bam_activator_ajaxprocessor.jsp",
                 data: dataVal,
                 success: function(msg){
                     //  CARBON.showConfirmationDialog( msg.trim());
@@ -829,7 +905,7 @@
 
             jQuery.ajax({
                 type: "POST",
-                url: "bam_activator.jsp",
+                url: "bam_activator_ajaxprocessor.jsp",
                 data: dataVal,
                 success: function(msg){
                     //  CARBON.showConfirmationDialog( msg.trim());

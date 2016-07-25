@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>service-hosting-feature</artifactId>
-        <version>4.6.1-SNAPSHOT</version>
+        <version>4.6.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -66,7 +66,7 @@
                             <id>org.wso2.carbon.servicehosting</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.service.mgt:${carbon.deployment.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.service.mgt:compatible:${carbon.deployment.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.aarservices.feature

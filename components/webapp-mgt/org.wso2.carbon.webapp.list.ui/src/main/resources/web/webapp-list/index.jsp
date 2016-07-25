@@ -123,13 +123,28 @@
         if (allWebappsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="session.expiry.all.webapps.prompt"><fmt:param value="<%= numOfWebapps%>"/></fmt:message>",
                                           function() {
-                                              location.href = 'expire_sessions.jsp?expireAll=true';
+                                            jQuery.ajax({
+                                            	type: "POST",
+                                            	url: "expire_sessions_ajaxprocessor.jsp",
+                                            	headers: {
+                                            		Accept: "text/html"
+                                            	},
+                                            	data: {
+                                                    "expireAll": "true"
+                                            	},
+                                            	async: false,
+                                            	success: function (responseText, status, XMLHttpRequest) {
+                                            		if (status == "success") {
+                                            			eval(jQuery(responseText).text());
+                                            		}
+                                            	}
+                                            });
                                           }
                     );
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="session.expiry.selected.webapps.prompt"/>",
                                           function() {
-                                              document.webappsForm.action = 'expire_sessions.jsp';
+                                              document.webappsForm.action = 'expire_sessions_ajaxprocessor.jsp';
                                               document.webappsForm.submit();
                                           }
                     );
@@ -145,13 +160,28 @@
         if (allWebappsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="reload.all.webapps.prompt"><fmt:param value="<%= numOfWebapps%>"/></fmt:message>",
                                           function() {
-                                              location.href = 'reload_webapps.jsp?reloadAll=true';
+                                            jQuery.ajax({
+                                            	type: "POST",
+                                            	url: "reload_webapps_ajaxprocessor.jsp",
+                                            	headers: {
+                                            		Accept: "text/html"
+                                            	},
+                                            	data: {
+                                                    "reloadAll": "true"
+                                            	},
+                                            	async: false,
+                                            	success: function (responseText, status, XMLHttpRequest) {
+                                            		if (status == "success") {
+                                            			eval(jQuery(responseText).text());
+                                            		}
+                                            	}
+                                            });
                                           }
                     );
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="reload.selected.webapps.prompt"/>",
                                           function() {
-                                              document.webappsForm.action = 'reload_webapps.jsp';
+                                              document.webappsForm.action = 'reload_webapps_ajaxprocessor.jsp';
                                               document.webappsForm.submit();
                                           }
                     );
@@ -167,13 +197,28 @@
         if (allWebappsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="stop.all.webapps.prompt"><fmt:param value="<%= numOfWebapps %>"/></fmt:message>",
                                           function() {
-                                              location.href = 'stop_webapps.jsp?reloadAll=true';
+                                            jQuery.ajax({
+                                        	    type: "POST",
+                                            	url: "stop_webapps_ajaxprocessor.jsp",
+                                            	headers: {
+                                            		Accept: "text/html"
+                                            	},
+                                            	data: {
+                                                    "reloadAll": "true"
+                                            	},
+                                            	async: false,
+                                            	success: function (responseText, status, XMLHttpRequest) {
+                                            		if (status == "success") {
+                                            			eval(jQuery(responseText).text());
+                                            		}
+                                            	}
+                                            });
                                           }
                     );
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="stop.selected.webapps.prompt"/>",
                                           function() {
-                                              document.webappsForm.action = 'stop_webapps.jsp';
+                                              document.webappsForm.action = 'stop_webapps_ajaxprocessor.jsp';
                                               document.webappsForm.submit();
                                           }
                     );
@@ -189,13 +234,28 @@
         if (allWebappsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="start.all.webapps.prompt"><fmt:param value="<%= numOfWebapps%>"/></fmt:message>",
                                           function() {
-                                              location.href = 'start_webapps.jsp?reloadAll=true';
+                                                jQuery.ajax({
+                                                    type: "POST",
+                                                    url: "start_webapps_ajaxprocessor.jsp",
+                                                    headers: {
+                                                        Accept: "text/html"
+                                                    },
+                                                    data: {
+                                                        "reloadAll": "true"
+                                                    },
+                                                    async: false,
+                                                    success: function(responseText, status, XMLHttpRequest) {
+                                                        if (status == "success") {
+                                                            eval(jQuery(responseText).text());
+                                                        }
+                                                    }
+                                                });
                                           }
                     );
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="start.selected.webapps.prompt"/>",
                                           function() {
-                                              document.webappsForm.action = 'start_webapps.jsp';
+                                              document.webappsForm.action = 'start_webapps_ajaxprocessor.jsp';
                                               document.webappsForm.submit();
                                           }
                     );
@@ -224,13 +284,29 @@
         if (allWebappsSelected) {
             CARBON.showConfirmationDialog("<fmt:message key="delete.all.webapps.prompt"><fmt:param value="<%= numOfWebapps%>"/></fmt:message>",
                                           function() {
-                                              location.href = 'delete_webapps.jsp?deleteAllWebapps=true&webappState=<%= webappState%>';
+                                                jQuery.ajax({
+                                                    type: "POST",
+                                                    url: "delete_webapps_ajaxprocessor.jsp",
+                                                    headers: {
+                                                        Accept: "text/html"
+                                                    },
+                                                    data: {
+                                                        "deleteAllWebapps": "true",
+                                                        "webappState": "<%= webappState%>"
+                                                    },
+                                                    async: false,
+                                                    success: function(responseText, status, XMLHttpRequest) {
+                                                        if (status == "success") {
+                                                            eval(jQuery(responseText).text());
+                                                        }
+                                                    }
+                                                });
                                           }
                     );
         } else {
             CARBON.showConfirmationDialog("<fmt:message key="delete.webapps.on.page.prompt"/>",
                                           function() {
-                                              document.webappsForm.action = 'delete_webapps.jsp';
+                                              document.webappsForm.action = 'delete_webapps_ajaxprocessor.jsp';
                                               document.webappsForm.submit();
                                           }
                     );
@@ -446,7 +522,7 @@
                           numberOfPages="<%=numberOfPages%>"
                           extraHtml="<%= extraHtml%>"/>
 <p>&nbsp;</p>
-<form action="delete_webapps.jsp" name="webappsForm" method="post">
+<form action="delete_webapps_ajaxprocessor.jsp" name="webappsForm" method="post">
 <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
 <input type="hidden" name="webappState" value="<%= webappState %>"/>
 <input type="hidden" name="webappType" value="<%= webappType %>"/>

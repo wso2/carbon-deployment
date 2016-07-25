@@ -197,7 +197,7 @@ public class TomcatGenericWebappsDeployer {
         }
         if (!warContext.equals("") && webContextPrefix.length() == 0) {
             webContextPrefix = "/";
-        } else if (warContext.equals("")){
+        } else if (warContext.equals("")) {
             webContextPrefix = "";
         }
 
@@ -234,7 +234,7 @@ public class TomcatGenericWebappsDeployer {
         }
         if (!warContext.equals("") && webContextPrefix.length() == 0) {
             webContextPrefix = "/";
-        } else if (warContext.equals("")){
+        } else if (warContext.equals("")) {
             webContextPrefix = "";
         }
 

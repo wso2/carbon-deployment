@@ -60,7 +60,7 @@
             <parent-menu>webapps_add_menu</parent-menu>
             <link>../webapp-mgt/upload.jsp</link>
             <region>region1</region>
-            <order>1</order>
+            <order>30</order>
             <icon>../webapp-mgt/images/webapps.gif</icon>
             <style-class>home</style-class>
             <require-permission>/permission/admin/manage/add/webapp</require-permission>

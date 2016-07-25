@@ -443,18 +443,11 @@ public class OpenEJBContextConfig extends ContextConfig {
 
 	// ############ START - WSO2 PATCH ############
 	@Override // called before processAnnotationsFile so using it as hook to init webInfClassesAnnotationsProcessed
-	protected void processServletContainerInitializers(final ServletContext ctx) {
+	protected void processServletContainerInitializers() {
 		// ############ END - WSO2 PATCH ############
 		webInfClassesAnnotationsProcessed = false;
 		try {
-			// ############ START - WSO2 PATCH ############
-			//Since Tomee 1.7.2 based on Tomcat 7.0.61 and we are using Tomcat 7.0.59 there is a API change
-			//in org.apache.catalina.startup.ContextConfig.processServletContainerInitializers method
-			//In tomcat 7.0.61 this method take no arags. But in 7.0.59 it takes ServletContext
-			//Therefore add it manually to method signature
-			super.processServletContainerInitializers(ctx);
-			// ############ END - WSO2 PATCH ############
-
+			super.processServletContainerInitializers();
 			final Iterator<Map.Entry<ServletContainerInitializer,Set<Class<?>>>> iterator = initializerClassMap.entrySet().iterator();
 			while (iterator.hasNext()) {
 				final Map.Entry<ServletContainerInitializer, Set<Class<?>>> entry = iterator.next();
