@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Subject;
+import org.opensaml.security.SAMLSignatureProfileValidator;
 import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.validation.ValidationException;
 import org.wso2.carbon.base.MultitenantConstants;
@@ -50,10 +51,14 @@ public class SAMLSignatureValidatorImpl implements SAMLSignatureValidator {
                 throw new SSOAgentException("SAML2 Response signing is enabled, but signature element not found in SAML2 Response element");
             } else {
                 try {
+                    log.info("Invoking SAMLSignatureProfileValidator for Response");
+                    SAMLSignatureProfileValidator signatureProfileValidator = new SAMLSignatureProfileValidator();
+                    signatureProfileValidator.validate(response.getSignature());
+
                     SignatureValidator validator = getSignatureValidator(assertion);
                     validator.validate(response.getSignature());
                 } catch (ValidationException e) {
-                    throw new SSOAgentException("Signature validation failed for SAML2 Response");
+                    throw new SSOAgentException("Signature validation failed for SAML2 Response", e);
                 }
             }
         }
@@ -62,6 +67,10 @@ public class SAMLSignatureValidatorImpl implements SAMLSignatureValidator {
                 throw new SSOAgentException("SAML2 Assertion signing is enabled, but signature element not found in SAML2 Assertion element");
             } else {
                 try {
+                    log.info("Invoking SAMLSignatureProfileValidator for Assersion");
+                    SAMLSignatureProfileValidator signatureProfileValidator = new SAMLSignatureProfileValidator();
+                    signatureProfileValidator.validate(assertion.getSignature());
+
                     SignatureValidator validator = getSignatureValidator(assertion);
                     validator.validate(assertion.getSignature());
                 } catch (ValidationException e) {
