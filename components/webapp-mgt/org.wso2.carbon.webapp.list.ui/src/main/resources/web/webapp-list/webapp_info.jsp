@@ -18,6 +18,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
@@ -45,12 +46,12 @@
 <%
     response.setHeader("Cache-Control", "no-cache");
 
-    String webappFileName = request.getParameter("webappFileName");
-    String webappState = request.getParameter("webappState");
-    String hostName = request.getParameter("hostName");
-    String httpPort = request.getParameter("httpPort");
-    String webappType = request.getParameter("webappType");
-    String defaultHostName = request.getParameter("defaultHostName");
+    String webappFileName = Encode.forHtml(request.getParameter("webappFileName"));
+    String webappState = Encode.forHtml(request.getParameter("webappState"));
+    String hostName = Encode.forHtml(request.getParameter("hostName"));
+    String httpPort = Encode.forHtml(request.getParameter("httpPort"));
+    String webappType = Encode.forHtml(request.getParameter("webappType"));
+    String defaultHostName = Encode.forHtml(request.getParameter("defaultHostName"));
 
     WebAppDataExtractor webAppDataExtractor =new WebAppDataExtractor();
     List wsdlURLS=null;
