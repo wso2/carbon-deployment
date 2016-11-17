@@ -17,6 +17,7 @@
  -->
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.context.CarbonContext" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
@@ -56,6 +57,7 @@
         pageNumber = "0";
     }
     int pageNumberInt = 0;
+    pageNumber = Encode.forHtml(pageNumber);
     try {
         pageNumberInt = Integer.parseInt(pageNumber);
     } catch (NumberFormatException ignored) {
@@ -63,17 +65,17 @@
     WebappsWrapper webappsWrapper;
     VersionedWebappMetadata[] webapps;
 
-    String webappSearchString = request.getParameter("webappSearchString");
+    String webappSearchString = Encode.forHtml(request.getParameter("webappSearchString"));
     if (webappSearchString == null) {
         webappSearchString = "";
     }
 
-    String webappState = request.getParameter("webappState");
+    String webappState = Encode.forHtml(request.getParameter("webappState"));
     if (webappState == null) {
         webappState = "all";
     }
 
-    String webappType = request.getParameter("webappType");
+    String webappType = Encode.forHtml(request.getParameter("webappType"));
     if (webappType == null) {
         webappType = "all";
     }
@@ -505,7 +507,7 @@
 %>
 
 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
-                  page="index.jsp" pageNumberParameterName="pageNumber"
+                  page="index.jsp" pageNumberParameterName="<%=Encode.forHtml(pageNumber)%>"
                   resourceBundle="org.wso2.carbon.webapp.list.ui.i18n.Resources"
                   prevKey="prev" nextKey="next"
                   parameters="<%=parameters%>"/>
@@ -523,7 +525,7 @@
                           extraHtml="<%= extraHtml%>"/>
 <p>&nbsp;</p>
 <form action="delete_webapps_ajaxprocessor.jsp" name="webappsForm" method="post">
-<input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
+<input type="hidden" name="pageNumber" value="<%= Encode.forHtml(pageNumber)%>"/>
 <input type="hidden" name="webappState" value="<%= webappState %>"/>
 <input type="hidden" name="webappType" value="<%= webappType %>"/>
 <table class="styledLeft" id="webappsTable" width="100%">
@@ -796,7 +798,7 @@
                           numberOfPages="<%=numberOfPages%>"
                           extraHtml="<%= extraHtml%>"/>
 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
-                  page="index.jsp" pageNumberParameterName="pageNumber"
+                  page="index.jsp" pageNumberParameterName="<%=Encode.forHtml(pageNumber)%>"
                   resourceBundle="org.wso2.carbon.webapp.list.ui.i18n.Resources"
                   prevKey="prev" nextKey="next"
                   parameters="<%= parameters%>"/>
