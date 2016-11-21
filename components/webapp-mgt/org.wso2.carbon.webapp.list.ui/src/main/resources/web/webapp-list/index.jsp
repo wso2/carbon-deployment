@@ -65,20 +65,23 @@
     WebappsWrapper webappsWrapper;
     VersionedWebappMetadata[] webapps;
 
-    String webappSearchString = Encode.forHtml(request.getParameter("webappSearchString"));
-    if (webappSearchString == null) {
-        webappSearchString = "";
-    }
+    String webappSearchString = request.getParameter("webappSearchString");
+        if (webappSearchString == null) {
+            webappSearchString = "";
+        }
+    webappSearchString = Encode.forHtml(webappSearchString);
 
-    String webappState = Encode.forHtml(request.getParameter("webappState"));
+    String webappState = request.getParameter("webappState");
     if (webappState == null) {
         webappState = "all";
     }
+    webappState = Encode.forHtml(webappState);
 
-    String webappType = Encode.forHtml(request.getParameter("webappType"));
+    String webappType = request.getParameter("webappType");
     if (webappType == null) {
         webappType = "all";
     }
+    webappType = Encode.forHtml(webappType);
 
     boolean enableChangeDefaultAppVersion = Boolean.parseBoolean(System.getProperty("webapp.defaultversion"));
 
@@ -507,7 +510,7 @@
 %>
 
 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
-                  page="index.jsp" pageNumberParameterName="<%=Encode.forHtml(pageNumber)%>"
+                  page="index.jsp" pageNumberParameterName="<%=pageNumber%>"
                   resourceBundle="org.wso2.carbon.webapp.list.ui.i18n.Resources"
                   prevKey="prev" nextKey="next"
                   parameters="<%=parameters%>"/>
@@ -525,7 +528,7 @@
                           extraHtml="<%= extraHtml%>"/>
 <p>&nbsp;</p>
 <form action="delete_webapps_ajaxprocessor.jsp" name="webappsForm" method="post">
-<input type="hidden" name="pageNumber" value="<%= Encode.forHtml(pageNumber)%>"/>
+<input type="hidden" name="pageNumber" value="<%=pageNumber%>"/>
 <input type="hidden" name="webappState" value="<%= webappState %>"/>
 <input type="hidden" name="webappType" value="<%= webappType %>"/>
 <table class="styledLeft" id="webappsTable" width="100%">
