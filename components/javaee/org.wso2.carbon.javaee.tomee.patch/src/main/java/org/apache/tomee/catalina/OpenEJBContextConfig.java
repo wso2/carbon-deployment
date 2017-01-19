@@ -58,10 +58,6 @@ import org.apache.tomee.common.NamingUtil;
 import org.apache.tomee.common.ResourceFactory;
 import org.apache.xbean.finder.IAnnotationFinder;
 
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
-import javax.ws.rs.core.Application;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -72,6 +68,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -82,6 +79,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import javax.servlet.ServletContainerInitializer;
+import javax.servlet.http.HttpServlet;
+import javax.ws.rs.core.Application;
 
 public class OpenEJBContextConfig extends ContextConfig {
 	private static Logger logger = Logger.getInstance(LogCategory.OPENEJB, OpenEJBContextConfig.class);
@@ -105,14 +105,20 @@ public class OpenEJBContextConfig extends ContextConfig {
 
         // ############ START - WSO2 PATCH ############
         //set wso2 maintained web.xml and context.xml
-        String globalWebXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
-                File.separator + "repository" + File.separator + "conf" + File.separator +
-                "tomcat" + File.separator + "web.xml";
-        String globalContextXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
-                File.separator + "repository" + File.separator + "conf" + File.separator +
-                "tomcat" + File.separator + "context.xml";
-        this.setDefaultWebXml(globalWebXml);
-        this.setDefaultContextXml(globalContextXml);
+		String carbonConfigPath = System.getProperty("carbon.config.dir.path");
+		String globalWebXml;
+		String globalContextXml;
+		if (carbonConfigPath != null) {
+			globalWebXml = Paths.get(carbonConfigPath, "tomcat", "web.xml").toString();
+			globalContextXml = Paths.get(carbonConfigPath, "tomcat", "context.xml").toString();
+		} else {
+			String tomcatDirPath =
+					Paths.get(System.getProperty("carbon.home"), "repository", "conf", "tomcat").toString();
+			globalWebXml = Paths.get(tomcatDirPath, "web.xml").toString();
+			globalContextXml = Paths.get(tomcatDirPath, "context.xml").toString();
+		}
+		this.setDefaultWebXml(globalWebXml);
+		this.setDefaultContextXml(globalContextXml);
         // ############ END - WSO2 PATCH ############
 
     }

@@ -30,11 +30,12 @@ import org.apache.tomee.catalina.TomcatWebAppBuilder;
 import org.apache.tomee.common.UserTransactionFactory;
 import org.apache.tomee.loader.TomcatHelper;
 import org.wso2.carbon.tomcat.ext.scan.CarbonTomcatJarScanner;
+import org.wso2.carbon.utils.CarbonUtils;
 
-import javax.servlet.ServletContext;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
+import javax.servlet.ServletContext;
 
 public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
 
@@ -170,12 +171,9 @@ public class ASTomcatWebAppBuilder extends TomcatWebAppBuilder {
             }
         }
         //set default web.xml and context.xml
-        String globalWebXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
-                File.separator + "repository" + File.separator + "conf" + File.separator +
-                "tomcat" + File.separator + "web.xml";
-        String globalContextXml = new File(System.getProperty("carbon.home")).getAbsolutePath() +
-                File.separator + "repository" + File.separator + "conf" + File.separator +
-                "tomcat" + File.separator + "context.xml";
+        String carbonConfigPath = CarbonUtils.getCarbonConfigDirPath();
+        String globalWebXml = Paths.get(carbonConfigPath, "tomcat", "web.xml").toString();
+        String globalContextXml = Paths.get(carbonConfigPath, "tomcat", "context.xml").toString();
         ContextConfig contextConfig = new ASOpenEJBContextConfig(new StandardContextInfo(standardContext));
         contextConfig.setDefaultWebXml(globalWebXml);
         contextConfig.setDefaultContextXml(globalContextXml);
