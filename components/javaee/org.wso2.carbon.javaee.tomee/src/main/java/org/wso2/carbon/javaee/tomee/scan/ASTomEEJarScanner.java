@@ -22,6 +22,7 @@ import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomee.loader.TomEEJarScanner;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -31,6 +32,7 @@ import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Paths;
 import java.util.Set;
 
 /**
@@ -44,8 +46,7 @@ public class ASTomEEJarScanner extends TomEEJarScanner {
     private static final StringManager sm =
             StringManager.getManager(Constants.Package);
 
-    private static final String CARBON_PLUGINS_DIR_PATH = System.getProperty("carbon.home") +
-            File.separator +"repository" + File.separator + "components" + File.separator + "plugins";
+    private static final String CARBON_PLUGINS_DIR_PATH = Paths.get(CarbonUtils.getComponentsRepo()).toString();
 
 
     @Override

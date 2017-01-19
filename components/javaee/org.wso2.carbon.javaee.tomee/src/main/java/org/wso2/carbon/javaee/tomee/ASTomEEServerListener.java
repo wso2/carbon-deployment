@@ -31,7 +31,9 @@ import org.apache.openejb.util.OpenEjbVersion;
 import org.apache.tomee.TomEELogConfigurer;
 import org.apache.tomee.catalina.ServerListener;
 import org.apache.tomee.loader.TomcatHelper;
+import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +43,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -272,9 +275,7 @@ public class ASTomEEServerListener extends ServerListener {
 	}
 
 	private void readSystemPropertiesConf() {
-		String systemPropertiesPath = new File(System.getProperty("carbon.home")).getAbsolutePath() +
-		                              File.separator + "repository" + File.separator + "conf" + File.separator +
-		                              "tomee" + File.separator + "system.properties";
+		String systemPropertiesPath = Paths.get(CarbonUtils.getCarbonConfigDirPath(), "tomee", "system.properties").toString();
 
 		File file = new File(systemPropertiesPath);
 		if (!file.exists()) {

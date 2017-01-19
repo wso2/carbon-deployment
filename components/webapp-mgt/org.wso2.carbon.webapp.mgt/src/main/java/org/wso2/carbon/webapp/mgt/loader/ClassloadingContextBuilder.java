@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.core.util.Utils;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.utils.XMLUtils;
 
@@ -34,7 +35,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -48,13 +53,9 @@ public class ClassloadingContextBuilder {
     public synchronized static ClassloadingConfiguration buildSystemConfig() throws Exception {
         ClassloadingConfiguration classloadingConfig = new ClassloadingConfiguration();
 
-        String carbonHome = System.getProperty(WebappsConstants.CARBON_HOME);
-
-        String envConfigPath = carbonHome + File.separator + "repository" + File.separator + "conf" +
-                File.separator + "tomcat" + File.separator + LoaderConstants.ENV_CONFIG_FILE;
-
-        String clConfigPath = carbonHome + File.separator + "repository" + File.separator + "conf" +
-                File.separator + "tomcat" + File.separator + LoaderConstants.CL_CONFIG_FILE;
+        String carbonConfigPath = CarbonUtils.getCarbonConfigDirPath();
+        String envConfigPath = Paths.get(carbonConfigPath, "tomcat", LoaderConstants.ENV_CONFIG_FILE).toString();
+        String clConfigPath = Paths.get(carbonConfigPath, "tomcat", LoaderConstants.CL_CONFIG_FILE).toString();
 
         //Loading specified environment from the environment config file.
         File envConfigFile = new File(envConfigPath);
