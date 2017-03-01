@@ -20,13 +20,15 @@ package org.wso2.carbon.deployment.notifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.engine.Artifact;
-import org.wso2.carbon.deployment.engine.DeploymentConfigurationProvider;
 import org.wso2.carbon.deployment.engine.LifecycleEvent;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.deployment.engine.config.DeploymentNotifierConfig;
 import org.wso2.carbon.deployment.notifier.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.internal.DeploymentNotificationMessage;
 import org.wso2.carbon.deployment.notifier.internal.JMSConnectionFactory;
+import org.wso2.carbon.kernel.configprovider.CarbonConfigurationException;
+import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
 import java.io.StringWriter;
 import java.util.Hashtable;
@@ -59,8 +61,15 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
     String serverId;
 
     public DeploymentNotifierLifecycleListener() {
-        config = DeploymentConfigurationProvider.
-                getDeploymentConfiguration().getDeploymentNotifier();
+        try {
+            ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
+            if (configProvider != null) {
+                config = configProvider.getConfigurationObject(DeploymentConfiguration.class).getDeploymentNotifier();
+            }
+        } catch (CarbonConfigurationException e) {
+            logger.error("Fail to load deployment configuration");
+        }
+
         serverId = DataHolder.getInstance().getCarbonRuntime().getConfiguration().getId();
 
         if (config.isJmsPublishingEnabled()) {
@@ -127,9 +136,6 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
     }
 
     private JMSConnectionFactory getConnectionFactory() {
-        DeploymentNotifierConfig config = DeploymentConfigurationProvider.
-                getDeploymentConfiguration().getDeploymentNotifier();
-
         String destinationJNDIName = config.getDestinationJNDIName();
         String destinationType = config.getDestinationType();
         String javaNamingProviderUrl = config.getJavaNamingProviderURL();

@@ -156,6 +156,18 @@
             <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
             <!--<scope>test</scope>-->
         </dependency>
+
+        <!--Test Distribution-->
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>wso2carbon-deployment-test</artifactId>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.container</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -195,15 +207,21 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>copy-jacoco-dependencies</id>
+                                <id>unpack-distribution</id>
                                 <phase>compile</phase>
                                 <goals>
-                                    <goal>copy-dependencies</goal>
+                                    <goal>unpack</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}</outputDirectory>
-                                    <includeTypes>jar</includeTypes>
-                                    <includeArtifactIds>org.jacoco.ant</includeArtifactIds>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wso2.carbon.deployment</groupId>
+                                            <artifactId>wso2carbon-deployment-test</artifactId>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
                                 </configuration>
                             </execution>
                         </executions>
@@ -213,13 +231,25 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
-                                <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
-                                </org.ops4j.pax.url.mvn.localRepository>
                                 <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
+                                <org.wso2.carbon.test.default.distribution>
+                                    org.wso2.carbon.deployment:wso2carbon-deployment-test
+                                </org.wso2.carbon.test.default.distribution>
+                                <org.ops4j.pax.logging.DefaultServiceLog.level>ERROR</org.ops4j.pax.logging.DefaultServiceLog.level>
+                                <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}</org.ops4j.pax.url.mvn.localRepository>
                             </systemPropertyVariables>
+                            <systemProperties>
+                                <property>
+                                    <name>carbon.home</name>
+                                    <value>${basedir}/target/wso2carbon-deployment-test-${project.version}</value>
+                                </property>
+                            </systemProperties>
                             <suiteXmlFiles>
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <environmentVariables>
+                                <JAVA_OPTS>${jcoverage.command}</JAVA_OPTS>
+                            </environmentVariables>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -251,6 +281,49 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <target xmlns:jacoco="antlib:org.jacoco.ant">
+                                        //this task is to provide class/src files locations for jacoco report generation
+                                        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+                                            <classpath path="${project.build.directory}" />
+                                        </taskdef>
+                                        <jacoco:report>
+                                            <executiondata>
+                                                <file file="${project.build.directory}/jacoco.exec" />
+                                            </executiondata>
+                                            <structure name="Carbon Deployment OSGi Tests">
+                                                <classfiles>
+                                                    <fileset dir="../../components/org.wso2.carbon.deployment.engine/target/classes" />
+                                                    <fileset dir="../../components/org.wso2.carbon.deployment.notifier/target/classes" />
+                                                </classfiles>
+                                                <sourcefiles encoding="UTF-8">
+                                                    <fileset dir="../../components/org.wso2.carbon.deployment.engine/src" />
+                                                    <fileset dir="../../components/org.wso2.carbon.deployment.notifier/src" />
+                                                </sourcefiles>
+                                            </structure>
+                                            <html destdir="${project.build.directory}/site/jacoco" />
+                                        </jacoco:report>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.jacoco</groupId>
+                                <artifactId>org.jacoco.ant</artifactId>
+                                <version>${org.jacoco.ant.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                     <plugin>
                         <groupId>org.ops4j.pax.exam</groupId>

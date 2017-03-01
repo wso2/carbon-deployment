@@ -17,6 +17,9 @@
 */
 package org.wso2.carbon.deployment.engine.config;
 
+import org.wso2.carbon.kernel.annotations.Configuration;
+import org.wso2.carbon.kernel.annotations.Element;
+
 import java.util.Optional;
 import java.util.Properties;
 
@@ -25,24 +28,34 @@ import java.util.Properties;
  *
  * @since 5.1.0
  */
+@Configuration(description = "Deployment notifier configuration parameters")
 public class DeploymentNotifierConfig {
 
+    @Element(description = "JMS publishing enabled")
     private boolean jmsPublishingEnabled = false;
 
+    @Element(description = "Desitination JNDI name")
     private String destinationJNDIName = "topic0";
 
+    @Element(description = "Destination type")
     private String destinationType = "topic";
 
+    @Element(description = "Java naming factory initial")
     private String javaNamingFactoryInitial = "org.wso2.andes.jndi.PropertiesFileInitialContextFactory";
 
+    @Element(description = "Java naming provider URL")
     private String javaNamingProviderURL = "conf/jndi.properties";
 
+    @Element(description = "JMS user name")
     private Optional<String> jmsUsername = Optional.empty();
 
+    @Element(description = "JMS password")
     private Optional<String> jmsPassword = Optional.empty();
 
+    @Element(description = "Connection factory JNDI name")
     private String connectionFactoryJNDIName = "TopicConnectionFactory";
 
+    @Element(description = "Static massage content")
     private Properties staticMessageContent = new Properties();
 
     public boolean isJmsPublishingEnabled() {

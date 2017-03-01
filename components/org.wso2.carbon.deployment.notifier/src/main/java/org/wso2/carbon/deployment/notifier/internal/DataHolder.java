@@ -16,6 +16,7 @@
 package org.wso2.carbon.deployment.notifier.internal;
 
 import org.wso2.carbon.kernel.CarbonRuntime;
+import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
 /**
  * Deployment notifier DataHolder.
@@ -26,6 +27,7 @@ public class DataHolder {
     private static DataHolder instance = new DataHolder();
 
     private CarbonRuntime carbonRuntime;
+    private ConfigProvider configProvider;
 
     public static DataHolder getInstance() {
         return instance;
@@ -49,5 +51,23 @@ public class DataHolder {
      */
     public void setCarbonRuntime(CarbonRuntime carbonRuntime) {
         this.carbonRuntime = carbonRuntime;
+    }
+
+    /**
+     * This method is called to set the config provider service.
+     *
+     * @param configProvider the configProvider to be stored with this holder.
+     */
+    public void setConfigProvider(ConfigProvider configProvider) {
+        this.configProvider = configProvider;
+    }
+
+    /**
+     * This method is used to get the config provider service.
+     *
+     * @return this will return the configProvider service instance.
+     */
+    public ConfigProvider getConfigProvider() {
+        return configProvider;
     }
 }

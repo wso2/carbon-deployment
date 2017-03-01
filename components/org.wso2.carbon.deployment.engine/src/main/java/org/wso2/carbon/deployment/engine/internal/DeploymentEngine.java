@@ -22,10 +22,12 @@ import org.wso2.carbon.deployment.engine.ArtifactType;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.LifecycleEvent;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
 import org.wso2.carbon.deployment.engine.exception.DeployerRegistrationException;
 import org.wso2.carbon.deployment.engine.exception.DeploymentEngineException;
-import org.wso2.carbon.kernel.CarbonRuntime;
+import org.wso2.carbon.kernel.configprovider.CarbonConfigurationException;
+import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -115,14 +117,18 @@ public class DeploymentEngine {
     }
 
 
-    private void startScheduler() {
+    private void startScheduler() throws DeploymentEngineException {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
         SchedulerTask schedulerTask = new SchedulerTask(repositoryScanner);
-        CarbonRuntime carbonRuntime = DataHolder.getInstance().getCarbonRuntime();
+        ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
 
         int interval = 15;
-        if (carbonRuntime != null) {
-            interval = carbonRuntime.getConfiguration().getDeploymentConfig().getUpdateInterval();
+        if (configProvider != null) {
+            try {
+                interval = configProvider.getConfigurationObject(DeploymentConfiguration.class).getUpdateInterval();
+            } catch (CarbonConfigurationException e) {
+                throw new DeploymentEngineException("Fail to load deployment configuration");
+            }
             logger.debug("Using the specified scheduler update interval of {}", interval);
         } else {
             logger.debug("Using the default deployment scheduler update interval of 15 seconds");
