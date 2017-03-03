@@ -64,6 +64,7 @@ public class DeploymentEngineTest extends BaseTest {
     private static final String CARBON_REPO = "carbon-repo";
     private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
     private static final String YAML_CONF = "yaml.conf";
+    public static final String DEPLOYMENT_YAML = "deployment.yaml";
     private DeploymentEngine deploymentEngine;
     private CustomDeployer customDeployer;
     private FaultyDeployer1 faultyDeployer1;
@@ -94,7 +95,7 @@ public class DeploymentEngineTest extends BaseTest {
 
         System.setProperty(org.wso2.carbon.kernel.Constants.CARBON_HOME, getTestResourceFile("yaml").getAbsolutePath());
 
-        ConfigProvider configProvider = new ConfigProviderImpl(new YAMLBasedConfigFileReader("deployment.yaml"));
+        ConfigProvider configProvider = new ConfigProviderImpl(new YAMLBasedConfigFileReader(DEPLOYMENT_YAML));
         CarbonRuntime carbonRuntime = CarbonRuntimeFactory
                 .createCarbonRuntime(configProvider);
         DataHolder.getInstance().setCarbonRuntime(carbonRuntime);

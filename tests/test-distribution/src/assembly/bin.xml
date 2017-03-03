@@ -36,5 +36,13 @@
             </excludes>
         </fileSet>
 
+        <fileSet>
+            <directory>target/wso2carbon-deployment-${carbon.deployment.version}</directory>
+            <outputDirectory>/deployment</outputDirectory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+            <fileMode>755</fileMode>
+        </fileSet>
     </fileSets>
 </assembly>

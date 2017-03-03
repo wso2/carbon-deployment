@@ -34,13 +34,14 @@ import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.DeploymentService;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
-import org.wso2.carbon.deployment.engine.osgi.utils.OSGiTestUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.inject.Inject;
+
+import static org.wso2.carbon.container.options.CarbonDistributionOption.copyFile;
 
 /**
  * Carbon Deployment Engine OSGi Test case.
@@ -52,10 +53,11 @@ import javax.inject.Inject;
 @ExamFactory(CarbonContainerFactory.class)
 public class CarbonDeploymentEngineOSGiTest {
 
+    public static final String DEPLOYMENT_YAML = "deployment.yaml";
+
     @Configuration
     public Option[] createConfiguration() {
-        OSGiTestUtils.setEnv();
-        return OSGiTestUtils.getDefaultPaxOptions();
+        return new Option[] { copyDeploymentYmlFile() };
     }
 
     @Inject
@@ -184,4 +186,12 @@ public class CarbonDeploymentEngineOSGiTest {
 //            logger.error("Unable to copy the carbon.yml file", e);
 //        }
 //    }
+
+        /**
+         * Copy deployment.yaml file
+         */
+        private Option copyDeploymentYmlFile() {
+            return copyFile(Paths.get("src", "test", "resources", "conf", DEPLOYMENT_YAML),
+                    Paths.get("conf", DEPLOYMENT_YAML));
+        }
 }

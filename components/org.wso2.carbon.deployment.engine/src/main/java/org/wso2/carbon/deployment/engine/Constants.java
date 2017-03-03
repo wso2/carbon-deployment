@@ -26,8 +26,6 @@ package org.wso2.carbon.deployment.engine;
  */
 public final class Constants {
 
-    public static final String DEPLOYMENT_YAML_CONFIGURATION_FILE = "deployment.yaml";
-
     public static final String DEPLOYMENT_NOTIFIER_CONNECTION_FACTORY_JNDI_NAME = "TopicConnectionFactory";
 
     public static final String DEPLOYMENT_NOTIFIER_CONNECTION_STRING = "connectionfactory.TopicConnectionFactory";

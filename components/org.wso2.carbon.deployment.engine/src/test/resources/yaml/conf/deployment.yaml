@@ -1,5 +1,5 @@
 ################################################################################
-#   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@
 #  2. Triggered Mode - (enable below property to "triggered") - the deployment has to be triggered externally,
 #   eg : in a worker node we don't need the task to run, but rather when we receive a
 #        cluster msg,  the deployment has to be triggered manually
-wso2.deployment:
+wso2.artifact.deployment:
  mode: scheduled
 
  # Location of the artifact repository
- repositoryLocation: ${carbon.home}/deployment/
+ repositoryLocation: ${sys:carbon.home}/deployment/
 
  # Deployment update interval in seconds. This is the interval between repository listener
  # executions.

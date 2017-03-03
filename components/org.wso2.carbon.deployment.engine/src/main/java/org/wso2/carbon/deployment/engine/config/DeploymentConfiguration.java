@@ -23,14 +23,14 @@ import org.wso2.carbon.kernel.annotations.Element;
  *
  * @since 5.1.0
  */
-@Configuration(namespace = "wso2.deployment", description = "Deployment configuration parameters")
+@Configuration(namespace = "wso2.artifact.deployment", description = "Deployment configuration parameters")
 public class DeploymentConfiguration {
 
     @Element(description = "deployment mode")
     private DeploymentModeEnum mode = DeploymentModeEnum.scheduled;
 
     @Element(description = "repository location")
-    private String repositoryLocation = "${carbon.home}/deployment/";
+    private String repositoryLocation = "${sys:carbon.home}/deployment/";
 
     @Element(description = "Scheduler update interval")
     private int updateInterval = 15;

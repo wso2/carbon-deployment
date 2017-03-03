@@ -22,34 +22,33 @@
 #  2. Triggered Mode - (enable below property to "triggered") - the deployment has to be triggered externally,
 #   eg : in a worker node we don't need the task to run, but rather when we receive a
 #        cluster msg,  the deployment has to be triggered manually
-wso2.deployment:
- mode: scheduled
-
- # Location of the artifact repository
- repositoryLocation: ${carbon.home}/deployment/
-
- # Deployment update interval in seconds. This is the interval between repository listener
- # executions.
- updateInterval: 15
-
- # Notify deployment status via JMS to a topic
- # In a cluster, all nodes should publish the status to the same topic which may be
- # listened on to take deployment decisions such as reverting artifacts.
- # This is disabled by default.
- #
- # Specify any static message content to be published as key-value pairs
- # under staticMessageContent.
- deploymentNotifier:
-  jmsPublishingEnabled: false
-  javaNamingFactoryInitial: org.apache.activemq.jndi.ActiveMQInitialContextFactory
-  javaNamingProviderURL: vm://carbon?create=false
- # javaNamingProviderURL: conf/jndi.properties
- # jmsUsername: admin
- # jmsPassword: admin
-  connectionFactoryJNDIName: TopicConnectionFactory
-  destinationJNDIName: topic0
-  destinationType: topic
-  staticMessageContent:
- #  key: value
+  # Deployment configuration parameters
+wso2.artifact.deployment:
+    # deployment mode
+  mode: scheduled
+    # repository location
+  repositoryLocation: ${sys:carbon.home}/deployment/
+    # Scheduler update interval
+  updateInterval: 15
+    # Deployment notifier configuration parameters
+  deploymentNotifier:
+      # JMS publishing enabled
+    jmsPublishingEnabled: false
+      # Desitination JNDI name
+    destinationJNDIName: topic0
+      # Destination type
+    destinationType: topic
+      # Java naming factory initial
+    javaNamingFactoryInitial: org.apache.activemq.jndi.ActiveMQInitialContextFactory
+      # Java naming provider URL
+    javaNamingProviderURL: vm://carbon?create=false
+      # JMS user name
+    #jmsUsername: admin
+      # JMS password
+    #jmsPassword: admin
+      # Connection factory JNDI name
+    connectionFactoryJNDIName: TopicConnectionFactory
+      # Static massage content
+    staticMessageContent: {}
 
 
