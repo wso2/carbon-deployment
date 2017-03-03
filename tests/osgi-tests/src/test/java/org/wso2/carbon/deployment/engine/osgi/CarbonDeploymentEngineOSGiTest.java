@@ -63,9 +63,6 @@ public class CarbonDeploymentEngineOSGiTest {
     @Inject
     private BundleContext bundleContext;
 
-//    @Inject
-//    private CarbonServerInfo carbonServerInfo;
-
     @Inject
     private DeploymentService deploymentService;
 
@@ -168,30 +165,11 @@ public class CarbonDeploymentEngineOSGiTest {
         deploymentService.redeploy(artifactPath, customDeployer.getArtifactType());
     }
 
-//    /**
-//     * Replace the existing carbon.yml file with populated carbon.yml file.
-//     */
-//    private static void copyCarbonYAML() {
-//        Path carbonYAMLFilePath;
-//
-//        String basedir = System.getProperty("basedir");
-//        if (basedir == null) {
-//            basedir = Paths.get(".").toString();
-//        }
-//        try {
-//            carbonYAMLFilePath = Paths.get(basedir, "src", "test", "resources", "runtime", "carbon.yml");
-//            Files.copy(carbonYAMLFilePath, Paths.get(System.getProperty("carbon.home"), "conf",
-//                    "carbon.yml"), StandardCopyOption.REPLACE_EXISTING);
-//        } catch (IOException e) {
-//            logger.error("Unable to copy the carbon.yml file", e);
-//        }
-//    }
-
-        /**
-         * Copy deployment.yaml file
-         */
-        private Option copyDeploymentYmlFile() {
-            return copyFile(Paths.get("src", "test", "resources", "conf", DEPLOYMENT_YAML),
-                    Paths.get("conf", DEPLOYMENT_YAML));
+    /**
+     * Copy deployment.yaml file
+     */
+    private Option copyDeploymentYmlFile() {
+        return copyFile(Paths.get("src", "test", "resources", "conf", DEPLOYMENT_YAML),
+                Paths.get("conf", DEPLOYMENT_YAML));
         }
 }
