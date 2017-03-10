@@ -1,4 +1,4 @@
-# carbon-deployment
+# Carbon Deployment
 
 ---
 
