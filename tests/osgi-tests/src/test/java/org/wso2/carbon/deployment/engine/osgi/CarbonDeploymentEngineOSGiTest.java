@@ -15,9 +15,7 @@
  */
 package org.wso2.carbon.deployment.engine.osgi;
 
-import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.ExamFactory;
-import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
@@ -41,8 +39,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
-import static org.wso2.carbon.container.options.CarbonDistributionOption.copyFile;
-
 /**
  * Carbon Deployment Engine OSGi Test case.
  *
@@ -54,11 +50,6 @@ import static org.wso2.carbon.container.options.CarbonDistributionOption.copyFil
 public class CarbonDeploymentEngineOSGiTest {
 
     public static final String DEPLOYMENT_YAML = "deployment.yaml";
-
-    @Configuration
-    public Option[] createConfiguration() {
-        return new Option[] { copyDeploymentYmlFile() };
-    }
 
     @Inject
     private BundleContext bundleContext;
@@ -165,11 +156,4 @@ public class CarbonDeploymentEngineOSGiTest {
         deploymentService.redeploy(artifactPath, customDeployer.getArtifactType());
     }
 
-    /**
-     * Copy deployment.yaml file
-     */
-    private Option copyDeploymentYmlFile() {
-        return copyFile(Paths.get("src", "test", "resources", "conf", DEPLOYMENT_YAML),
-                Paths.get("conf", DEPLOYMENT_YAML));
-        }
 }

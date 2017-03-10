@@ -206,6 +206,7 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
             // Initialize deployment engine and scan it
             DeploymentConfiguration deploymentConfiguration = DataHolder.getInstance().getConfigProvider()
                     .getConfigurationObject(DeploymentConfiguration.class);
+            DataHolder.getInstance().setDeploymentConfiguration(deploymentConfiguration);
 
             logger.debug("Starting Carbon Deployment Engine");
             deploymentEngine.start(deploymentConfiguration.getRepositoryLocation());

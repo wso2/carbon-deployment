@@ -16,6 +16,7 @@
 package org.wso2.carbon.deployment.engine.internal;
 
 import org.osgi.framework.BundleContext;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.kernel.CarbonRuntime;
 import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
@@ -30,6 +31,7 @@ public class DataHolder {
 
     private CarbonRuntime carbonRuntime;
     private ConfigProvider configProvider;
+    private DeploymentConfiguration deploymentConfiguration;
 
     public static DataHolder getInstance() {
         return instance;
@@ -80,5 +82,23 @@ public class DataHolder {
      */
     public ConfigProvider getConfigProvider() {
         return configProvider;
+    }
+
+    /**
+     * This method is used to get the deploymentConfig.
+     *
+     * @return this will return the deploymentConfig instance.
+     */
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
+    }
+
+    /**
+     * This method is called to set the deploymentConfig object.
+     *
+     * @param deploymentConfiguration the deploymentConfig to be stored with this holder.
+     */
+    public void setDeploymentConfiguration(DeploymentConfiguration deploymentConfiguration) {
+        this.deploymentConfiguration = deploymentConfiguration;
     }
 }
