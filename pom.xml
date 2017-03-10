@@ -144,10 +144,46 @@
                 <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.kernel.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
-                <artifactId>org.wso2.carbon.deployment.feature</artifactId>
+                <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.pax.exam.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.container</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>wso2carbon-deployment-test</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+                <scope>test</scope>
             </dependency>
 
             <!-- OSGi test -->
@@ -211,12 +247,6 @@
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
                 <version>${javax.inject.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>carbon-kernel-osgi-test-util</artifactId>
-                <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -318,8 +348,8 @@
         <carbon.deployment.version>5.1.0-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.pkg.export.version>5.0.0</carbon.deployment.pkg.export.version>
 
-        <carbon.kernel.version>5.1.0</carbon.kernel.version>
-        <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
+        <carbon.kernel.version>5.2.0-m3</carbon.kernel.version>
+        <carbon.feature.plugin.version>3.0.0</carbon.feature.plugin.version>
         <org.snakeyaml.version>1.16.0.wso2v1</org.snakeyaml.version>
         <geronimo.jms.spec.version>1.1.1</geronimo.jms.spec.version>
         <apache.activemq.version>5.7.0</apache.activemq.version>
@@ -377,6 +407,7 @@
         <ow2.jta.spec.version>1.0.12</ow2.jta.spec.version>
         <javax.inject.version>1</javax.inject.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <org.eclipse.equinox.executable.version>3.5.0.v20110530-7P7NFUFFLWUl76mart</org.eclipse.equinox.executable.version>
 
     </properties>
 

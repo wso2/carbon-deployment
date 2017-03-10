@@ -28,9 +28,12 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.DeploymentService;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.deployment.engine.exception.DeployerRegistrationException;
 import org.wso2.carbon.deployment.engine.exception.DeploymentEngineException;
 import org.wso2.carbon.kernel.CarbonRuntime;
+import org.wso2.carbon.kernel.configprovider.CarbonConfigurationException;
+import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 
 /**
@@ -171,15 +174,42 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
         DataHolder.getInstance().setCarbonRuntime(null);
     }
 
+    /**
+     * Get the ConfigProvider service.
+     * This is the bind method that gets called for ConfigProvider service registration that satisfy the policy.
+     *
+     * @param configProvider the ConfigProvider service that is registered as a service.
+     */
+    @Reference(
+            name = "carbon.config.provider",
+            service = ConfigProvider.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unregisterConfigProvider"
+    )
+    protected void registerConfigProvider(ConfigProvider configProvider) {
+        DataHolder.getInstance().setConfigProvider(configProvider);
+    }
+
+    /**
+     * This is the unbind method for the above reference that gets called for ConfigProvider instance un-registrations.
+     *
+     * @param configProvider the ConfigProvider service that get unregistered.
+     */
+    protected void unregisterConfigProvider(ConfigProvider configProvider) {
+        DataHolder.getInstance().setConfigProvider(null);
+    }
+
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
         try {
             // Initialize deployment engine and scan it
-            String carbonRepositoryLocation = DataHolder.getInstance().getCarbonRuntime().getConfiguration().
-                    getDeploymentConfig().getRepositoryLocation();
+            DeploymentConfiguration deploymentConfiguration = DataHolder.getInstance().getConfigProvider()
+                    .getConfigurationObject(DeploymentConfiguration.class);
+            DataHolder.getInstance().setDeploymentConfiguration(deploymentConfiguration);
 
             logger.debug("Starting Carbon Deployment Engine");
-            deploymentEngine.start(carbonRepositoryLocation);
+            deploymentEngine.start(deploymentConfiguration.getRepositoryLocation());
 
             // Add deployment engine to the data holder for later usages/references of this object
             OSGiServiceHolder.getInstance().setCarbonDeploymentEngine(deploymentEngine);
@@ -193,6 +223,9 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
             logger.debug("Carbon Deployment Engine is successfully started");
         } catch (DeploymentEngineException e) {
             String msg = "Could not initialize carbon deployment engine";
+            logger.error(msg, e);
+        } catch (CarbonConfigurationException e) {
+            String msg = "Fail to load deployment configuration";
             logger.error(msg, e);
         }
     }

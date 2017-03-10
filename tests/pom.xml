@@ -12,6 +12,7 @@
     <name>WSO2 Carbon Deployment - Tests Parent</name>
 
     <modules>
+        <module>test-distribution</module>
         <module>osgi-tests</module>
     </modules>
 

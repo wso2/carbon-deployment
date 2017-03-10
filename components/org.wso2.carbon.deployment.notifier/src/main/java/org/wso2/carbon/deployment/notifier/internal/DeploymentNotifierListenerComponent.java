@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
 import org.wso2.carbon.deployment.notifier.DeploymentNotifierLifecycleListener;
 import org.wso2.carbon.kernel.CarbonRuntime;
+import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
 /**
  * This service component is responsible for initializing the DeploymentEngine and listening for deployer registrations.
@@ -89,6 +90,32 @@ public class DeploymentNotifierListenerComponent {
      */
     protected void unregisterCarbonRuntime(CarbonRuntime carbonRuntime) {
         DataHolder.getInstance().setCarbonRuntime(null);
+    }
+
+    /**
+     * Get the ConfigProvider service.
+     * This is the bind method that gets called for ConfigProvider service registration that satisfy the policy.
+     *
+     * @param configProvider the ConfigProvider service that is registered as a service.
+     */
+    @Reference(
+            name = "carbon.config.provider",
+            service = ConfigProvider.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unregisterConfigProvider"
+    )
+    protected void registerConfigProvider(ConfigProvider configProvider) {
+        DataHolder.getInstance().setConfigProvider(configProvider);
+    }
+
+    /**
+     * This is the unbind method for the above reference that gets called for ConfigProvider instance un-registrations.
+     *
+     * @param configProvider the ConfigProvider service that get unregistered.
+     */
+    protected void unregisterConfigProvider(ConfigProvider configProvider) {
+        DataHolder.getInstance().setConfigProvider(null);
     }
 
 }

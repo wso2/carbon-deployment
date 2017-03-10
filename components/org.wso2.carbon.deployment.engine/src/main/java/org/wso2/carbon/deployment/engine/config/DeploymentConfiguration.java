@@ -15,20 +15,36 @@
  */
 package org.wso2.carbon.deployment.engine.config;
 
+import org.wso2.carbon.kernel.annotations.Configuration;
+import org.wso2.carbon.kernel.annotations.Element;
+import org.wso2.carbon.kernel.utils.Utils;
+
 /**
  * DeploymentConfiguration class holds static configuration parameters specified in the deployment.yml file.
  *
  * @since 5.1.0
  */
+@Configuration(namespace = "wso2.artifact.deployment", description = "Deployment configuration parameters")
 public class DeploymentConfiguration {
 
+    @Element(description = "deployment mode")
     private DeploymentModeEnum mode = DeploymentModeEnum.scheduled;
 
-    private String repositoryLocation = "${carbon.home}/deployment/";
+    @Element(description = "repository location")
+    private String repositoryLocation;
 
+    @Element(description = "Scheduler update interval")
     private int updateInterval = 15;
 
+    @Element(description = "Deployment notifier config")
     private DeploymentNotifierConfig deploymentNotifier = new DeploymentNotifierConfig();
+
+    public DeploymentConfiguration() {
+        repositoryLocation = "${carbon.home}/deployment/";
+        if (Utils.getSystemVariableValue("carbon.home", null) != null) {
+            repositoryLocation = Utils.substituteVariables(repositoryLocation);
+        }
+    }
 
     public DeploymentModeEnum getMode() {
         return mode;

@@ -37,7 +37,9 @@ import org.wso2.carbon.deployment.notifier.deployers.FaultyDeployer2;
 import org.wso2.carbon.deployment.notifier.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.listeners.CustomLifecycleListener;
 import org.wso2.carbon.kernel.CarbonRuntime;
-import org.wso2.carbon.kernel.internal.config.YAMLBasedConfigProvider;
+import org.wso2.carbon.kernel.configprovider.ConfigProvider;
+import org.wso2.carbon.kernel.configprovider.YAMLBasedConfigFileReader;
+import org.wso2.carbon.kernel.internal.configprovider.ConfigProviderImpl;
 import org.wso2.carbon.kernel.internal.context.CarbonRuntimeFactory;
 
 import java.io.File;
@@ -61,6 +63,8 @@ public class DeploymentEngineTest extends BaseTest {
 
     private static final String CARBON_REPO = "carbon-repo";
     private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
+    private static final String YAML_CONF = "yaml.conf";
+    public static final String DEPLOYMENT_YAML = "deployment.yaml";
     private DeploymentEngine deploymentEngine;
     private CustomDeployer customDeployer;
     private FaultyDeployer1 faultyDeployer1;
@@ -91,8 +95,12 @@ public class DeploymentEngineTest extends BaseTest {
 
         System.setProperty(org.wso2.carbon.kernel.Constants.CARBON_HOME, getTestResourceFile("yaml").getAbsolutePath());
 
-        CarbonRuntime carbonRuntime = CarbonRuntimeFactory.createCarbonRuntime(new YAMLBasedConfigProvider());
+        ConfigProvider configProvider = new ConfigProviderImpl(new YAMLBasedConfigFileReader(DEPLOYMENT_YAML));
+        CarbonRuntime carbonRuntime = CarbonRuntimeFactory
+                .createCarbonRuntime(configProvider);
         DataHolder.getInstance().setCarbonRuntime(carbonRuntime);
+
+        DataHolder.getInstance().setConfigProvider(configProvider);
 
         //start a test message broker
         brokerService = new BrokerService();

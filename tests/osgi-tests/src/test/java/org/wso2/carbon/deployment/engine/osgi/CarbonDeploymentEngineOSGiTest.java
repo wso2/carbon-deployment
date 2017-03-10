@@ -15,9 +15,7 @@
  */
 package org.wso2.carbon.deployment.engine.osgi;
 
-import org.ops4j.pax.exam.Configuration;
-import org.ops4j.pax.exam.CoreOptions;
-import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
@@ -28,20 +26,18 @@ import org.osgi.framework.ServiceRegistration;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.container.CarbonContainerFactory;
 import org.wso2.carbon.deployment.engine.ArtifactType;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.DeploymentService;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
-import org.wso2.carbon.deployment.engine.osgi.utils.OSGiTestUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.inject.Inject;
-
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
 /**
  * Carbon Deployment Engine OSGi Test case.
@@ -50,29 +46,13 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
  */
 @Listeners(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
+@ExamFactory(CarbonContainerFactory.class)
 public class CarbonDeploymentEngineOSGiTest {
 
-    @Configuration
-    public Option[] createConfiguration() {
-        OSGiTestUtils.setEnv();
-
-        Option[] options = CoreOptions.options(mavenBundle().artifactId("org.wso2.carbon.deployment.engine").
-                        groupId("org.wso2.carbon.deployment").versionAsInProject(),
-                mavenBundle().artifactId("org.wso2.carbon.deployment.notifier").
-                        groupId("org.wso2.carbon.deployment").versionAsInProject(),
-                mavenBundle().artifactId("geronimo-jms_1.1_spec").
-                        groupId("org.apache.geronimo.specs").versionAsInProject(),
-                mavenBundle().artifactId("commons-pool").
-                        groupId("commons-pool.wso2").versionAsInProject()
-                );
-        return OSGiTestUtils.getDefaultPaxOptions(options);
-    }
+    public static final String DEPLOYMENT_YAML = "deployment.yaml";
 
     @Inject
     private BundleContext bundleContext;
-
-//    @Inject
-//    private CarbonServerInfo carbonServerInfo;
 
     @Inject
     private DeploymentService deploymentService;
@@ -82,7 +62,7 @@ public class CarbonDeploymentEngineOSGiTest {
     static {
         String basedir = System.getProperty("basedir");
         if (basedir == null) {
-            basedir = Paths.get(".").toString();
+            basedir = Paths.get("../../").toString();
         }
         Path testResourceDir = Paths.get(basedir, "src", "test", "resources");
         artifactPath = Paths.get(testResourceDir.toString(), "deployment", "text-files", "sample1.txt").toString();
@@ -176,22 +156,4 @@ public class CarbonDeploymentEngineOSGiTest {
         deploymentService.redeploy(artifactPath, customDeployer.getArtifactType());
     }
 
-//    /**
-//     * Replace the existing carbon.yml file with populated carbon.yml file.
-//     */
-//    private static void copyCarbonYAML() {
-//        Path carbonYAMLFilePath;
-//
-//        String basedir = System.getProperty("basedir");
-//        if (basedir == null) {
-//            basedir = Paths.get(".").toString();
-//        }
-//        try {
-//            carbonYAMLFilePath = Paths.get(basedir, "src", "test", "resources", "runtime", "carbon.yml");
-//            Files.copy(carbonYAMLFilePath, Paths.get(System.getProperty("carbon.home"), "conf",
-//                    "carbon.yml"), StandardCopyOption.REPLACE_EXISTING);
-//        } catch (IOException e) {
-//            logger.error("Unable to copy the carbon.yml file", e);
-//        }
-//    }
 }
