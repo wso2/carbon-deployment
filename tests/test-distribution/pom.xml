@@ -14,12 +14,11 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>tests</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.1.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -197,9 +196,8 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <replace dir="target/wso2carbon-deployment-${carbon.deployment.version}/wso2" token="false"
-                                         value="true">
-                                    <include name="**/bundles.info"/>
+                                <replace dir="target/wso2carbon-deployment-${carbon.deployment.version}/wso2" token="false" value="true">
+                                    <include name="**/bundles.info" />
                                 </replace>
                             </tasks>
                         </configuration>
@@ -212,13 +210,13 @@
                         <phase>install</phase>
                         <configuration>
                             <target>
-                                <delete dir="target/archive-tmp"/>
-                                <delete dir="target/dependency-maven-plugin-markers"/>
-                                <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart"/>
-                                <delete dir="target/p2-repo"/>
-                                <delete file="target/tmp"/>
-                                <delete dir="target/wso2carbon-deployment-${carbon.deployment.version}"/>
-                                <delete dir="target/antrun"/>
+                                <delete dir="target/archive-tmp" />
+                                <delete dir="target/dependency-maven-plugin-markers" />
+                                <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart" />
+                                <delete dir="target/p2-repo" />
+                                <delete file="target/tmp" />
+                                <delete dir="target/wso2carbon-deployment-${carbon.deployment.version}" />
+                                <delete dir="target/antrun" />
                             </target>
                         </configuration>
                         <goals>
