@@ -192,7 +192,7 @@ public class ASTomEEServerListener extends ServerListener {
 				// ###### WSO2 START PATCH ###### //
 				setServiceManager(properties);
 				setOpenJPALogFactory();
-				readSystemPropertiesConf();
+				readSystemPropertiesConf(properties);
 				ASTomcatLoader loader = new ASTomcatLoader();
 				loader.initSystemInstance(properties);
 				loader.initialize(properties);
@@ -271,7 +271,7 @@ public class ASTomEEServerListener extends ServerListener {
 		}
 	}
 
-	private void readSystemPropertiesConf() {
+	private void readSystemPropertiesConf(Properties properties) {
 		String systemPropertiesPath = new File(System.getProperty("carbon.home")).getAbsolutePath() +
 		                              File.separator + "repository" + File.separator + "conf" + File.separator +
 		                              "tomee" + File.separator + "system.properties";
@@ -287,7 +287,7 @@ public class ASTomEEServerListener extends ServerListener {
 		} catch (IOException e) {
 			return;
 		}
-
+		properties.putAll(systemProperties);
 		SystemInstance.get().getProperties().putAll(systemProperties);
 	}
 
