@@ -19,14 +19,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>axis2-service-mgt</artifactId>
-        <version>4.6.2</version>
+        <version>4.6.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.service.mgt.ui</artifactId>
     <packaging>bundle</packaging>
-    <version>4.6.2</version>
+    <version>4.6.3-SNAPSHOT</version>
     <name>WSO2 Carbon - Service Management UI</name>
     <description>org.wso2.carbon.service.mgt.ui represent the UI aspects of
         org.wso2.carbon.service.mgt bundle
