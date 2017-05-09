@@ -418,10 +418,11 @@ padding:0 10px;
             for (ServiceMetaData service : serviceData) {
                 String bgColor = ((position % 2) == 1) ? "#EEEFFB" : "white";
                 position++;
-                boolean isCAppArtifact = service.getCAppArtifact();
+                boolean isCAppArtifact;
                 if (service == null) {
                     continue;
                 }
+                isCAppArtifact = service.getCAppArtifact();
         %>
 
         <tr bgcolor="<%= bgColor%>">
