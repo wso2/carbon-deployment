@@ -102,6 +102,16 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.config</groupId>
+                <artifactId>org.wso2.carbon.config</artifactId>
+                <version>${carbon.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.utils</groupId>
+                <artifactId>carbon-utils</artifactId>
+                <version>${carbon.utils.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-jms_1.1_spec</artifactId>
                 <version>${geronimo.jms.spec.version}</version>
@@ -156,6 +166,24 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.config</groupId>
+                <artifactId>org.wso2.carbon.config.feature</artifactId>
+                <version>${carbon.config.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.secvault</groupId>
+                <artifactId>org.wso2.carbon.secvault.feature</artifactId>
+                <version>${carbon.securevault.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.utils</groupId>
+                <artifactId>org.wso2.carbon.utils.feature</artifactId>
+                <version>${carbon.utils.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
@@ -166,6 +194,13 @@
                 <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
                 <version>${carbon.deployment.version}</version>
                 <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.touchpoint.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -348,8 +383,15 @@
         <carbon.deployment.version>5.1.1-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.pkg.export.version>5.0.0</carbon.deployment.pkg.export.version>
 
-        <carbon.kernel.version>5.2.0-m3</carbon.kernel.version>
-        <carbon.feature.plugin.version>3.0.0</carbon.feature.plugin.version>
+        <carbon.kernel.version>5.2.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.config.version>2.0.0</carbon.config.version>
+        <carbon.config.package.import.version.range>[2.0.0, 3.0.0)</carbon.config.package.import.version.range>
+        <carbon.utils.version>1.2.1</carbon.utils.version>
+        <carbon.utils.package.import.version.range>[1.0.0, 2.0.0)</carbon.utils.package.import.version.range>
+        <carbon.securevault.version>5.0.4</carbon.securevault.version>
+        <carbon.securevault.version.range>[5.0.0, 6.0.0)</carbon.securevault.version.range>
+
+        <carbon.feature.plugin.version>3.1.0</carbon.feature.plugin.version>
         <org.snakeyaml.version>1.16.0.wso2v1</org.snakeyaml.version>
         <geronimo.jms.spec.version>1.1.1</geronimo.jms.spec.version>
         <apache.activemq.version>5.7.0</apache.activemq.version>

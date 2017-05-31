@@ -17,8 +17,8 @@
 */
 package org.wso2.carbon.deployment.engine.config;
 
-import org.wso2.carbon.kernel.annotations.Configuration;
-import org.wso2.carbon.kernel.annotations.Element;
+import org.wso2.carbon.config.annotation.Configuration;
+import org.wso2.carbon.config.annotation.Element;
 
 import java.util.Optional;
 import java.util.Properties;

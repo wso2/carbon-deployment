@@ -15,9 +15,9 @@
  */
 package org.wso2.carbon.deployment.engine.config;
 
-import org.wso2.carbon.kernel.annotations.Configuration;
-import org.wso2.carbon.kernel.annotations.Element;
-import org.wso2.carbon.kernel.utils.Utils;
+import org.wso2.carbon.config.ConfigurationUtils;
+import org.wso2.carbon.config.annotation.Configuration;
+import org.wso2.carbon.config.annotation.Element;
 
 /**
  * DeploymentConfiguration class holds static configuration parameters specified in the deployment.yml file.
@@ -40,10 +40,7 @@ public class DeploymentConfiguration {
     private DeploymentNotifierConfig deploymentNotifier = new DeploymentNotifierConfig();
 
     public DeploymentConfiguration() {
-        repositoryLocation = "${carbon.home}/deployment/";
-        if (Utils.getSystemVariableValue("carbon.home", null) != null) {
-            repositoryLocation = Utils.substituteVariables(repositoryLocation);
-        }
+        repositoryLocation = ConfigurationUtils.substituteVariables("${carbon.home}/deployment/");
     }
 
     public DeploymentModeEnum getMode() {

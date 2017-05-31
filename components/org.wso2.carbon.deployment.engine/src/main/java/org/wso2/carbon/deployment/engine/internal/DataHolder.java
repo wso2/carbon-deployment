@@ -16,9 +16,9 @@
 package org.wso2.carbon.deployment.engine.internal;
 
 import org.osgi.framework.BundleContext;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.kernel.CarbonRuntime;
-import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
 /**
  * Carbon kernel DataHolder.

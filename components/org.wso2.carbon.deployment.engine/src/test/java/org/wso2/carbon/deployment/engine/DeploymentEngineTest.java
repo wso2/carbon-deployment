@@ -63,8 +63,6 @@ public class DeploymentEngineTest extends BaseTest {
                 + File.separator + "sample1.txt"));
         artifact.setType(new ArtifactType<>("txt"));
         artifactsList.add(artifact);
-
-        System.setProperty(org.wso2.carbon.kernel.Constants.CARBON_HOME, getTestResourceFile("yaml").getAbsolutePath());
     }
 
     @Test(expectedExceptions = DeploymentEngineException.class,

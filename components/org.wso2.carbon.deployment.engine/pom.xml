@@ -75,6 +75,16 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.utils</groupId>
+            <artifactId>carbon-utils</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.config</groupId>
+            <artifactId>org.wso2.carbon.config</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,8 +125,8 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.extensions.configuration.maven.plugin</artifactId>
+                <groupId>org.wso2.carbon.config</groupId>
+                <artifactId>org.wso2.carbon.config.maven.plugin</artifactId>
                 <executions>
                     <execution>
                         <goals>
@@ -139,7 +149,9 @@
             org.slf4j.*;version="${slf4j.logging.import.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.yaml.snakeyaml.*;version="${org.snakeyaml.import.version.range}",
-            org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}"
+            org.wso2.carbon.kernel.*;version="${carbon.kernel.import.version.range}",
+            org.wso2.carbon.utils.*;version="${carbon.utils.package.import.version.range}",
+            org.wso2.carbon.config.*;version="${carbon.config.package.import.version.range}"
         </import.package>
         <carbon.component>
             startup.listener;componentName="carbon-deployment-service";
