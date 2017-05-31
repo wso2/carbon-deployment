@@ -62,7 +62,7 @@ public class CarbonDeploymentEngineOSGiTest {
     static {
         String basedir = System.getProperty("basedir");
         if (basedir == null) {
-            basedir = Paths.get("../../").toString();
+            basedir = Paths.get("..", "..", "..", "..").toString();
         }
         Path testResourceDir = Paths.get(basedir, "src", "test", "resources");
         artifactPath = Paths.get(testResourceDir.toString(), "deployment", "text-files", "sample1.txt").toString();

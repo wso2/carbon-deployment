@@ -23,7 +23,7 @@ import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
 import org.wso2.carbon.deployment.engine.internal.DeploymentEngine;
 import org.wso2.carbon.deployment.notifier.deployers.CustomDeployer;
 import org.wso2.carbon.deployment.notifier.service.CustomDeploymentService;
-import org.wso2.carbon.kernel.utils.FileUtils;
+import org.wso2.carbon.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

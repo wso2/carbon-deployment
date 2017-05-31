@@ -19,6 +19,8 @@ package org.wso2.carbon.deployment.notifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.deployment.engine.Artifact;
 import org.wso2.carbon.deployment.engine.LifecycleEvent;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
@@ -27,8 +29,6 @@ import org.wso2.carbon.deployment.engine.config.DeploymentNotifierConfig;
 import org.wso2.carbon.deployment.notifier.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.internal.DeploymentNotificationMessage;
 import org.wso2.carbon.deployment.notifier.internal.JMSConnectionFactory;
-import org.wso2.carbon.kernel.configprovider.CarbonConfigurationException;
-import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 
 import java.io.StringWriter;
 import java.util.Hashtable;
@@ -66,7 +66,7 @@ public class DeploymentNotifierLifecycleListener implements LifecycleListener {
             if (configProvider != null) {
                 config = configProvider.getConfigurationObject(DeploymentConfiguration.class).getDeploymentNotifier();
             }
-        } catch (CarbonConfigurationException e) {
+        } catch (ConfigurationException e) {
             logger.error("Fail to load deployment configuration");
         }
 
