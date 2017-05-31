@@ -25,7 +25,7 @@ import org.wso2.carbon.deployment.engine.exception.DeployerRegistrationException
 import org.wso2.carbon.deployment.engine.exception.DeploymentEngineException;
 import org.wso2.carbon.deployment.engine.internal.DeploymentEngine;
 import org.wso2.carbon.deployment.engine.service.CustomDeploymentService;
-import org.wso2.carbon.kernel.utils.FileUtils;
+import org.wso2.carbon.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

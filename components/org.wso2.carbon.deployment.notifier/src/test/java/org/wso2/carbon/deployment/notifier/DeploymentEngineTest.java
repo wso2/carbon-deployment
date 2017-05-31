@@ -18,12 +18,15 @@ package org.wso2.carbon.deployment.notifier;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQTopic;
+import org.easymock.EasyMock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.config.ConfigProviderFactory;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.deployment.engine.Artifact;
 import org.wso2.carbon.deployment.engine.ArtifactType;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
@@ -37,10 +40,8 @@ import org.wso2.carbon.deployment.notifier.deployers.FaultyDeployer2;
 import org.wso2.carbon.deployment.notifier.internal.DataHolder;
 import org.wso2.carbon.deployment.notifier.listeners.CustomLifecycleListener;
 import org.wso2.carbon.kernel.CarbonRuntime;
-import org.wso2.carbon.kernel.configprovider.ConfigProvider;
-import org.wso2.carbon.kernel.configprovider.YAMLBasedConfigFileReader;
-import org.wso2.carbon.kernel.internal.configprovider.ConfigProviderImpl;
 import org.wso2.carbon.kernel.internal.context.CarbonRuntimeFactory;
+import org.wso2.carbon.secvault.SecureVault;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,8 +64,7 @@ public class DeploymentEngineTest extends BaseTest {
 
     private static final String CARBON_REPO = "carbon-repo";
     private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
-    private static final String YAML_CONF = "yaml.conf";
-    public static final String DEPLOYMENT_YAML = "deployment.yaml";
+    private static final String DEPLOYMENT_YAML = "deployment.yaml";
     private DeploymentEngine deploymentEngine;
     private CustomDeployer customDeployer;
     private FaultyDeployer1 faultyDeployer1;
@@ -93,9 +93,11 @@ public class DeploymentEngineTest extends BaseTest {
         artifact.setType(new ArtifactType<>("txt"));
         artifactsList.add(artifact);
 
-        System.setProperty(org.wso2.carbon.kernel.Constants.CARBON_HOME, getTestResourceFile("yaml").getAbsolutePath());
-
-        ConfigProvider configProvider = new ConfigProviderImpl(new YAMLBasedConfigFileReader(DEPLOYMENT_YAML));
+        SecureVault secureVault = EasyMock.mock(SecureVault.class);
+        System.setProperty(org.wso2.carbon.utils.Constants.CARBON_HOME, getTestResourceFile("yaml")
+                .getAbsolutePath());
+        ConfigProvider configProvider = ConfigProviderFactory.getConfigProvider(getResourcePath
+                ("yaml", "conf", DEPLOYMENT_YAML).get(), secureVault);
         CarbonRuntime carbonRuntime = CarbonRuntimeFactory
                 .createCarbonRuntime(configProvider);
         DataHolder.getInstance().setCarbonRuntime(carbonRuntime);
@@ -312,5 +314,6 @@ public class DeploymentEngineTest extends BaseTest {
     @AfterTest
     public void cleanup() throws Exception {
         brokerService.stop();
+        System.clearProperty(org.wso2.carbon.utils.Constants.CARBON_HOME);
     }
 }

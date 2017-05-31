@@ -19,6 +19,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * BaseTest class for deployment tests.
@@ -31,6 +35,8 @@ public class BaseTest {
      * Basedir for all file I/O.
      */
     public static String basedir;
+    private static final String OS_NAME_KEY = "os.name";
+    private static final String WINDOWS_PARAM = "indow";
 
     static {
         basedir = System.getProperty("basedir");
@@ -63,5 +69,24 @@ public class BaseTest {
                     "' file does not exist. Verify that the 'basedir' System property " +
                     "is pointing to the root of the project", e);
         }
+    }
+
+    /**
+     * Get the path of a provided resource.
+     *
+     * @param resourcePaths path strings to the location of the resource
+     * @return path of the resources
+     */
+    public Optional<Path> getResourcePath(String... resourcePaths) {
+        URL resourceURL = BaseTest.class.getClassLoader().getResource("");
+        if (resourceURL != null) {
+            String resourcePath = resourceURL.getPath();
+            if (resourcePath != null) {
+                resourcePath = System.getProperty(OS_NAME_KEY).contains(WINDOWS_PARAM) ?
+                        resourcePath.substring(1) : resourcePath;
+                return Optional.ofNullable(Paths.get(resourcePath, resourcePaths));
+            }
+        }
+        return Optional.empty(); // Resource do not exist
     }
 }

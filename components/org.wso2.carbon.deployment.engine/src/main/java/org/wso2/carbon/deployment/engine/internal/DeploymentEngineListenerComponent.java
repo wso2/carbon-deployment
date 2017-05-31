@@ -25,6 +25,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.DeploymentService;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
@@ -32,9 +34,8 @@ import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.deployment.engine.exception.DeployerRegistrationException;
 import org.wso2.carbon.deployment.engine.exception.DeploymentEngineException;
 import org.wso2.carbon.kernel.CarbonRuntime;
-import org.wso2.carbon.kernel.configprovider.CarbonConfigurationException;
-import org.wso2.carbon.kernel.configprovider.ConfigProvider;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
+import org.wso2.carbon.kernel.startupresolver.StartupServiceUtils;
 
 /**
  * This service component is responsible for initializing the DeploymentEngine and listening for deployer registrations.
@@ -45,11 +46,12 @@ import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
         name = "org.wso2.carbon.deployment.engine.internal.DeploymentEngineListenerComponent",
         immediate = true,
         property = {
-                "componentName=carbon-deployment-service"
+                "componentName=" + DeploymentEngineListenerComponent.COMPONENT_NAME
         }
 )
 @SuppressWarnings("unused")
 public class DeploymentEngineListenerComponent implements RequiredCapabilityListener {
+    public static final String COMPONENT_NAME = "carbon-deployment-service";
     private static final Logger logger = LoggerFactory.getLogger(DeploymentEngineListenerComponent.class);
 
     private DeploymentEngine deploymentEngine;
@@ -103,6 +105,7 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
     protected void registerDeployer(Deployer deployer) {
         try {
             deploymentEngine.registerDeployer(deployer);
+            StartupServiceUtils.updateServiceCache(COMPONENT_NAME, Deployer.class);
         } catch (DeployerRegistrationException e) {
             logger.error("Error while adding deployer to the deployment engine", e);
         }
@@ -137,6 +140,7 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
     protected void registerDeploymentListener(LifecycleListener listener) {
         logger.debug("Received LifecycleListener {} ", listener.getClass().getName());
         deploymentEngine.registerDeploymentLifecycleListener(listener);
+        StartupServiceUtils.updateServiceCache(COMPONENT_NAME, LifecycleListener.class);
     }
 
     /**
@@ -224,7 +228,7 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
         } catch (DeploymentEngineException e) {
             String msg = "Could not initialize carbon deployment engine";
             logger.error(msg, e);
-        } catch (CarbonConfigurationException e) {
+        } catch (ConfigurationException e) {
             String msg = "Fail to load deployment configuration";
             logger.error(msg, e);
         }
