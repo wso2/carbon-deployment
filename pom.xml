@@ -393,7 +393,7 @@
         <carbon.deployment.version>5.1.2-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.pkg.export.version>5.0.0</carbon.deployment.pkg.export.version>
 
-        <carbon.kernel.version>5.2.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.kernel.version>5.2.0-m4</carbon.kernel.version>
         <carbon.config.version>2.0.0</carbon.config.version>
         <carbon.config.package.import.version.range>[2.0.0, 3.0.0)</carbon.config.package.import.version.range>
         <carbon.utils.version>1.2.1</carbon.utils.version>
