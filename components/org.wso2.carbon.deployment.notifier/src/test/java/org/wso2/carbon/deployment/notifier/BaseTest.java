@@ -36,7 +36,7 @@ public class BaseTest {
      */
     public static String basedir;
     private static final String OS_NAME_KEY = "os.name";
-    private static final String WINDOWS_PARAM = "indow";
+    private static final String WINDOWS_PARAM = "Windows";
 
     static {
         basedir = System.getProperty("basedir");

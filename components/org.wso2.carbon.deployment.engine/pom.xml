@@ -78,12 +78,10 @@
         <dependency>
             <groupId>org.wso2.carbon.utils</groupId>
             <artifactId>carbon-utils</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.config</groupId>
             <artifactId>org.wso2.carbon.config</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
