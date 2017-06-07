@@ -52,22 +52,22 @@ public class JMSConnectionFactory {
     private static final Logger log = LoggerFactory.getLogger(JMSConnectionFactory.class);
 
     /**
-     * The list of parameters from the deployment.yml
+     * The list of parameters from the deployment.yml.
      */
     private Hashtable<String, String> parameters = new Hashtable<>();
     private String name;
 
     /**
-     * The cached InitialContext reference
+     * The cached InitialContext reference.
      */
     private Context context = null;
     /**
-     * The JMS ConnectionFactory this definition refers to
+     * The JMS ConnectionFactory this definition refers to.
      */
     private ConnectionFactory conFactory = null;
 
     /**
-     * The Shared Destination
+     * The Shared Destination.
      */
     private Destination sharedDestination = null;
 
@@ -86,7 +86,7 @@ public class JMSConnectionFactory {
     }
 
     /**
-     * Digest a JMS CF definition  'Parameter' and construct
+     * Digest a JMS CF definition  'Parameter' and construct.
      */
     @SuppressWarnings("unchecked")
     public JMSConnectionFactory(Hashtable<String, String> parameters, String name, String destination,
@@ -139,7 +139,7 @@ public class JMSConnectionFactory {
     }
 
     /**
-     * Create a new MessageProducer
+     * Create a new MessageProducer.
      *
      * @param session     Session to be used
      * @param destination Destination to be used
@@ -160,7 +160,7 @@ public class JMSConnectionFactory {
     }
 
     /**
-     * Get cached InitialContext
+     * Get cached InitialContext.
      *
      * @return cache InitialContext
      */
@@ -170,7 +170,7 @@ public class JMSConnectionFactory {
     }
 
     /**
-     * Lookup a Destination using this JMS CF definitions and JNDI name
+     * Lookup a Destination using this JMS CF definitions and JNDI name.
      *
      * @return JMS Destination for the given JNDI name or null
      */
@@ -207,7 +207,7 @@ public class JMSConnectionFactory {
     }
 
     /**
-     * Return the type of the JMS CF Destination
+     * Return the type of the JMS CF Destination.
      *
      * @return TRUE if a Queue, FALSE for a Topic and NULL for a JMS 1.1 Generic Destination
      */

@@ -28,7 +28,7 @@ package org.wso2.carbon.deployment.engine;
 public interface LifecycleListener {
 
     /**
-     * Listen in on artifact deployment events and perform an action
+     * Listen in on artifact deployment events and perform an action.
      *
      * @param event The lifecycle event. The Artifact object and
      *              the currently triggered lifecycle event is stored
