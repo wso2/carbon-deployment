@@ -73,7 +73,7 @@ public class JMSUtils {
     }
 
     /**
-     * Return the JMS destination with the given destination name looked up from the context
+     * Return the JMS destination with the given destination name looked up from the context.
      * Borrowed generiously from axis2 jms transport implementation
      *
      * @param context the Context to lookup

@@ -23,6 +23,9 @@ import org.wso2.carbon.deployment.engine.Artifact;
 import org.wso2.carbon.deployment.engine.LifecycleEvent;
 import org.wso2.carbon.deployment.engine.LifecycleListener;
 
+/**
+ * Custom lifecycle listener for testing.
+ */
 public class CustomLifecycleListener implements LifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomLifecycleListener.class);
