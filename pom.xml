@@ -59,6 +59,16 @@
                     <artifactId>carbon-feature-plugin</artifactId>
                     <version>${carbon.feature.plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -408,7 +418,7 @@
         <javax.inject.version>1</javax.inject.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
         <org.eclipse.equinox.executable.version>3.5.0.v20110530-7P7NFUFFLWUl76mart</org.eclipse.equinox.executable.version>
-
+        <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
     </properties>
 
 </project>
