@@ -24,7 +24,7 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%
-    String serviceGroupsString = CharacterEncoder.getSafeText(request.getParameter("serviceGroupsString"));
+    String serviceGroupsString = request.getParameter("serviceGroupsString");
     String[] serviceGroupsList = serviceGroupsString.split(":");
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     ConfigurationContext configContext =
