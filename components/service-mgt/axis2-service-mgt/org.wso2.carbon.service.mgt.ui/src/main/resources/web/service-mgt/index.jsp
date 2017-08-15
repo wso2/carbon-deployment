@@ -27,6 +27,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonSecuredHttpContext" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
 <!-- This page is included to display messages which are set to request scope or session scope -->
@@ -433,7 +434,7 @@ padding:0 10px;
                     if (!serviceType.equals("bpel") && !serviceType.equals("bpelmgt") && !service.getDisableDeletion()) {
                 %>
                 <input type="checkbox" name="serviceGroups"
-                       value="<%=service.getServiceGroupName()%>"
+                       value="<%=Encode.forHtmlAttribute(service.getServiceGroupName())%>"
                        onclick="resetVars()" class="chkBox"/>
                 <%
                 } else {
@@ -458,10 +459,10 @@ padding:0 10px;
                     <%
                         if (loggedIn && !isCAppArtifact) {
                     %>
-                    <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
+                    <a href="./service_info.jsp?serviceName=<%=Encode.forHtmlAttribute(serviceName)%>"><%=Encode.forHtmlContent(serviceName)%>
                     </a>
                     <% } else { %>
-                    <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
+                    <a href="./service_info.jsp?serviceName=<%=Encode.forHtmlAttribute(serviceName)%>"><%=Encode.forHtmlContent(serviceName)%>
                         <img src="images/applications.gif"
                              title='<fmt:message key="capp.service.artifact.text"/>'
                              alt='<fmt:message key="capp.service.artifact"/>'/> </a>
@@ -487,7 +488,7 @@ padding:0 10px;
             </td>
             <td width="100px">
                 <% if (service.getActive()) {%>
-                <a href="<%=service.getWsdlURLs()[0]%>" class="icon-link"
+                <a href="<%=Encode.forUri(service.getWsdlURLs()[0])%>" class="icon-link"
                    style="background-image:url(images/wsdl.gif);" target="_blank">
                     WSDL1.1
                 </a>
@@ -495,7 +496,7 @@ padding:0 10px;
             </td>
             <td width="100px">
                 <% if (service.getActive()) {%>
-                <a href="<%=service.getWsdlURLs()[1]%>" class="icon-link"
+                <a href="<%=Encode.forUri(service.getWsdlURLs()[1])%>" class="icon-link"
                    style="background-image:url(images/wsdl.gif);" target="_blank">
                     WSDL2.0
                 </a>
@@ -505,7 +506,7 @@ padding:0 10px;
 				<div style="text-align:center">
                 <% if (!service.getDisableTryit() && service.getActive()) {%>
                 <nobr>
-                    <a href="<%=service.getTryitURL()%>" class="icon-link"
+                    <a href="<%=Encode.forUri(service.getTryitURL())%>" class="icon-link"
                        style="background-image:url(images/tryit.gif);" target="_blank">
                         <fmt:message key="try.this.service"/>
                     </a>
@@ -538,13 +539,13 @@ padding:0 10px;
                 <jsp:include page="<%= cApp_edit%>"/>
             <% } else { %>
             <td>
-                <a title="Edit '<%=service.getName()%>' in the design view" href="#" onclick="editPS('<%=service.getName()%>');return false;">
+                <a title="Edit '<%=Encode.forHtmlAttribute(service.getName())%>' in the design view" href="#" onclick="editPS('<%=Encode.forHtmlAttribute(service.getName())%>');return false;">
                     <img src="../proxyservices/images/design-view.gif" alt="" border="0"> Design View</a>
             </td>
             <td>
-                <a title="Edit '<%=service.getName()%>' in the source view editor"
+                <a title="Edit '<%=Encode.forHtmlAttribute(service.getName())%>' in the source view editor"
                    style="background-image: url(../proxyservices/images/source-view.gif);"
-                   class="icon-link" onclick="editProxySourceView('<%=service.getName()%>')" href="#">Source View</a>
+                   class="icon-link" onclick="editProxySourceView('<%=Encode.forHtmlAttribute(service.getName())%>')" href="#">Source View</a>
             </td>
             <% } %>
 
