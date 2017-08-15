@@ -36,11 +36,14 @@ import java.io.IOException;
 public class DeploymentServiceTest extends BaseTest {
 
     private static final String CARBON_REPO = "carbon-repo";
-    private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
+    private static final String RUNTIME_REPO = "deployment";
+    private static final String DEPLOYER_REPO = CARBON_REPO + File.separator + "text-files";
+    private static final String RUNTIME_DEPLOYER_REPO = RUNTIME_REPO + File.separator + "text-files";
     private CustomDeploymentService deploymentService;
     private DeploymentEngine deploymentEngine;
     private CustomDeployer customDeployer;
     private String artifactPath;
+    private String artifactPath2;
 
 
     /**
@@ -55,8 +58,11 @@ public class DeploymentServiceTest extends BaseTest {
         customDeployer = new CustomDeployer();
         artifactPath = getTestResourceFile(DEPLOYER_REPO).getAbsolutePath()
                 + File.separator + "sample1.txt";
+        artifactPath2 = getTestResourceFile(RUNTIME_DEPLOYER_REPO).getAbsolutePath()
+                       + File.separator + "sample2.txt";
         deploymentEngine = new DeploymentEngine();
-        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath());
+        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath(),
+                               getTestResourceFile(DEPLOYER_REPO).getAbsolutePath());
         deploymentEngine.registerDeployer(customDeployer);
     }
 
@@ -69,6 +75,8 @@ public class DeploymentServiceTest extends BaseTest {
     public void testDeploy() throws CarbonDeploymentException {
         deploymentService.deploy(artifactPath, customDeployer.getArtifactType());
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+        deploymentService.deploy(artifactPath2, customDeployer.getArtifactType());
+        Assert.assertTrue(CustomDeployer.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testDeploy"})
@@ -76,6 +84,9 @@ public class DeploymentServiceTest extends BaseTest {
         deploymentService.redeploy(new File(artifactPath).getName(),
                 customDeployer.getArtifactType());
         Assert.assertTrue(CustomDeployer.sample1Updated);
+        deploymentService.redeploy(new File(artifactPath2).getName(),
+                                   customDeployer.getArtifactType());
+        Assert.assertTrue(CustomDeployer.sample2Updated);
     }
 
     @Test(dependsOnMethods = {"testUpdate"})
@@ -83,11 +94,16 @@ public class DeploymentServiceTest extends BaseTest {
         deploymentService.undeploy(new File(artifactPath).getName(),
                 customDeployer.getArtifactType());
         Assert.assertFalse(CustomDeployer.sample1Deployed);
+        deploymentService.undeploy(new File(artifactPath2).getName(),
+                                   customDeployer.getArtifactType());
+        Assert.assertFalse(CustomDeployer.sample2Deployed);
     }
 
     @AfterTest
     public void cleanupTempfile() throws IOException {
         FileUtils.deleteDir(new File(getTestResourceFile(CARBON_REPO).getAbsolutePath() +
                 File.separator + "file:text-files"));
+        FileUtils.deleteDir(new File(getTestResourceFile(RUNTIME_REPO).getAbsolutePath() +
+                                     File.separator + "file:text-files"));
     }
 }

@@ -38,7 +38,9 @@ import java.util.ArrayList;
  */
 public class DeploymentEngineTest extends BaseTest {
     private static final String CARBON_REPO = "carbon-repo";
-    private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
+    private static final String RUNTIME_REPO = "deployment";
+    private static final String DEPLOYER_REPO = CARBON_REPO + File.separator + "text-files";
+    private static final String RUNTIME_DEPLOYER_REPO = RUNTIME_REPO + File.separator + "text-files";
     private DeploymentEngine deploymentEngine;
     private CustomDeployer customDeployer;
     private FaultyDeployer1 faultyDeployer1;
@@ -46,6 +48,7 @@ public class DeploymentEngineTest extends BaseTest {
     private ArrayList<Artifact> artifactsList;
     private RepositoryScanner repositoryScanner;
     private Artifact artifact;
+    private Artifact artifact2;
 
     /**
      * @param testName name of the test case
@@ -63,19 +66,24 @@ public class DeploymentEngineTest extends BaseTest {
                 + File.separator + "sample1.txt"));
         artifact.setType(new ArtifactType<>("txt"));
         artifactsList.add(artifact);
+        artifact2 = new Artifact(new File(getTestResourceFile(RUNTIME_DEPLOYER_REPO).getAbsolutePath()
+                                         + File.separator + "sample2.txt"));
+        artifact2.setType(new ArtifactType<>("txt"));
+        artifactsList.add(artifact2);
     }
 
     @Test(expectedExceptions = DeploymentEngineException.class,
             expectedExceptionsMessageRegExp = "Cannot find repository : .*")
     public void testUninitializedDeploymentEngine() throws DeploymentEngineException {
         DeploymentEngine engine = new DeploymentEngine();
-        engine.start("/fake/path");
+        engine.start("/fake/path", "/fake/path2");
     }
 
     @Test
     public void testCarbonDeploymentEngine() throws DeploymentEngineException {
         deploymentEngine = new DeploymentEngine();
-        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath());
+        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath(),
+                               getTestResourceFile(RUNTIME_REPO).getAbsolutePath());
         repositoryScanner = new RepositoryScanner(deploymentEngine);
     }
 
@@ -112,6 +120,8 @@ public class DeploymentEngineTest extends BaseTest {
     public void testRepositoryScanner() {
         repositoryScanner.scan();
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+        Assert.assertTrue(CustomDeployer.sample2Deployed);
+
     }
 
     @Test(dependsOnMethods = {"testRepositoryScanner"})
@@ -124,18 +134,21 @@ public class DeploymentEngineTest extends BaseTest {
     public void testDeployArtifacts() {
         deploymentEngine.deployArtifacts(artifactsList);
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+        Assert.assertTrue(CustomDeployer.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testDeployArtifacts"})
     public void testUpdateArtifacts() {
         deploymentEngine.updateArtifacts(artifactsList);
         Assert.assertTrue(CustomDeployer.sample1Updated);
+        Assert.assertTrue(CustomDeployer.sample2Updated);
     }
 
     @Test(dependsOnMethods = {"testUpdateArtifacts"})
     public void testUndeployArtifacts() {
         deploymentEngine.undeployArtifacts(artifactsList);
         Assert.assertFalse(CustomDeployer.sample1Deployed);
+        Assert.assertFalse(CustomDeployer.sample2Deployed);
     }
 
     @Test

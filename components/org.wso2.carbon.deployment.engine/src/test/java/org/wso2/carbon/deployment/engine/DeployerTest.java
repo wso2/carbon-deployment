@@ -31,9 +31,12 @@ import java.util.HashMap;
  */
 public class DeployerTest extends BaseTest {
     private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
+    private static final String RUNTIME_DEPLOYER_REPO = "deployment" + File.separator + "text-files";
     private CustomDeployer customDeployer;
     private Artifact artifact;
+    private Artifact artifact2;
     private String key;
+    private String key2;
 
     /**
      * @param testName
@@ -50,6 +53,10 @@ public class DeployerTest extends BaseTest {
                 + File.separator + "sample1.txt"));
         artifact.setVersion("1.0.0");
         artifact.setProperties(new HashMap<String, Object>());
+        artifact2 = new Artifact(new File(getTestResourceFile(RUNTIME_DEPLOYER_REPO).getAbsolutePath()
+                                         + File.separator + "sample2.txt"));
+        artifact2.setVersion("1.0.0");
+        artifact2.setProperties(new HashMap<String, Object>());
     }
 
     @Test
@@ -61,17 +68,23 @@ public class DeployerTest extends BaseTest {
     public void testDeploy() throws CarbonDeploymentException {
         key = customDeployer.deploy(artifact);
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+        key2 = customDeployer.deploy(artifact2);
+        Assert.assertTrue(CustomDeployer.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testDeploy"})
     public void testUpdate() throws CarbonDeploymentException {
         key = customDeployer.update(artifact);
         Assert.assertTrue(CustomDeployer.sample1Updated);
+        key2 = customDeployer.update(artifact2);
+        Assert.assertTrue(CustomDeployer.sample2Updated);
     }
 
     @Test(dependsOnMethods = {"testUpdate"})
     public void testUnDeploy() throws CarbonDeploymentException {
         customDeployer.undeploy(key);
         Assert.assertFalse(CustomDeployer.sample1Deployed);
+        customDeployer.undeploy(key2);
+        Assert.assertFalse(CustomDeployer.sample2Deployed);
     }
 }

@@ -75,12 +75,16 @@ public class RepositoryScanner {
      * deployment process.
      */
     private void mark() {
-        File carbonRepo = carbonDeploymentEngine.getRepositoryDirectory();
+        File serverRepo = carbonDeploymentEngine.getServerRepositoryDirectory();
+        File runtimeRepo = carbonDeploymentEngine.geRuntimeRepositoryDirectory();
         carbonDeploymentEngine.getDeployers()
                 .values()
                 .forEach(deployer -> {
                     File deploymentLocation = Utils.resolveFileURL(deployer.getLocation().getPath(),
-                            carbonRepo.getPath());
+                            serverRepo.getPath());
+                    findArtifactsToDeploy(deploymentLocation, deployer.getArtifactType());
+                    deploymentLocation = Utils.resolveFileURL(deployer.getLocation().getPath(),
+                                                              runtimeRepo.getPath());
                     findArtifactsToDeploy(deploymentLocation, deployer.getArtifactType());
                 });
         checkUndeployedArtifacts();

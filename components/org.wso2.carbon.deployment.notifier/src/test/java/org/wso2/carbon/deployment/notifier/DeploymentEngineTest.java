@@ -63,7 +63,9 @@ public class DeploymentEngineTest extends BaseTest {
     private static final Logger logger = LoggerFactory.getLogger(DeploymentEngineTest.class);
 
     private static final String CARBON_REPO = "carbon-repo";
-    private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
+    private static final String RUNTIME_REPO = "deployment";
+    private static final String DEPLOYER_REPO = CARBON_REPO + File.separator + "text-files";
+    private static final String RUNTIME_DEPLOYER_REPO = RUNTIME_REPO + File.separator + "text-files";
     private static final String DEPLOYMENT_YAML = "deployment.yaml";
     private DeploymentEngine deploymentEngine;
     private CustomDeployer customDeployer;
@@ -72,6 +74,7 @@ public class DeploymentEngineTest extends BaseTest {
     private ArrayList<Artifact> artifactsList;
     private RepositoryScanner repositoryScanner;
     private Artifact artifact;
+    private Artifact artifact2;
 
     private BrokerService brokerService;
     private TopicSubscriber topicSubscriber;
@@ -92,9 +95,15 @@ public class DeploymentEngineTest extends BaseTest {
                 + File.separator + "sample1.txt"));
         artifact.setType(new ArtifactType<>("txt"));
         artifactsList.add(artifact);
+        artifact2 = new Artifact(new File(getTestResourceFile(RUNTIME_DEPLOYER_REPO).getAbsolutePath()
+                                         + File.separator + "sample2.txt"));
+        artifact2.setType(new ArtifactType<>("txt"));
+        artifactsList.add(artifact2);
 
         SecureVault secureVault = EasyMock.mock(SecureVault.class);
         System.setProperty(org.wso2.carbon.utils.Constants.CARBON_HOME, getTestResourceFile("yaml")
+                .getAbsolutePath());
+        System.setProperty(org.wso2.carbon.utils.Constants.RUNTIME_PATH, getTestResourceFile("deployment/conf")
                 .getAbsolutePath());
         ConfigProvider configProvider = ConfigProviderFactory.getConfigProvider(getResourcePath
                 ("yaml", "conf", DEPLOYMENT_YAML).get(), secureVault);
@@ -126,13 +135,14 @@ public class DeploymentEngineTest extends BaseTest {
             expectedExceptionsMessageRegExp = "Cannot find repository : .*")
     public void testUninitializedDeploymentEngine() throws DeploymentEngineException {
         DeploymentEngine engine = new DeploymentEngine();
-        engine.start("/fake/path");
+        engine.start("/fake/path", "/fake/path2");
     }
 
     @Test
     public void testCarbonDeploymentEngine() throws DeploymentEngineException {
         deploymentEngine = new DeploymentEngine();
-        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath());
+        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath(),
+                               getTestResourceFile(RUNTIME_REPO).getAbsolutePath());
         repositoryScanner = new RepositoryScanner(deploymentEngine);
     }
 
@@ -169,6 +179,7 @@ public class DeploymentEngineTest extends BaseTest {
     public void testRepositoryScanner() {
         repositoryScanner.scan();
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+        Assert.assertTrue(CustomDeployer.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testRepositoryScanner"})
@@ -184,6 +195,7 @@ public class DeploymentEngineTest extends BaseTest {
     public void testDeployArtifacts() throws JMSException {
         deploymentEngine.deployArtifacts(artifactsList);
         Assert.assertTrue(CustomDeployer.sample1Deployed);
+        Assert.assertTrue(CustomDeployer.sample2Deployed);
 
         //wait 20 seconds max
         TextMessage message = (TextMessage) topicSubscriber.receive(10000);
@@ -197,12 +209,14 @@ public class DeploymentEngineTest extends BaseTest {
     public void testUpdateArtifacts() {
         deploymentEngine.updateArtifacts(artifactsList);
         Assert.assertTrue(CustomDeployer.sample1Updated);
+        Assert.assertTrue(CustomDeployer.sample2Updated);
     }
 
     @Test(dependsOnMethods = {"testUpdateArtifacts"})
     public void testUndeployArtifacts() {
         deploymentEngine.undeployArtifacts(artifactsList);
         Assert.assertFalse(CustomDeployer.sample1Deployed);
+        Assert.assertFalse(CustomDeployer.sample2Deployed);
     }
 
     @Test
@@ -232,7 +246,7 @@ public class DeploymentEngineTest extends BaseTest {
         //wait 20 seconds max
         TextMessage message = (TextMessage) topicSubscriber.receive(20000);
         Assert.assertNotNull(message, "The deployment status has not been published to the JMS topic.");
-        Assert.assertTrue(message.getText().contains("sample1.txt"));
+        Assert.assertTrue(message.getText().contains("sample2.txt"));
         logger.info("Message received - " + message.getText());
     }
 
@@ -247,24 +261,28 @@ public class DeploymentEngineTest extends BaseTest {
     public void testFaultyDeployerRepositoryScan1() {
         repositoryScanner.scan();
         Assert.assertFalse(FaultyDeployer1.sample1Deployed);
+        Assert.assertFalse(FaultyDeployer1.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testFaultyDeployerRepositoryScan1"})
     public void testFaultyDeployArtifacts1() {
         deploymentEngine.deployArtifacts(artifactsList);
         Assert.assertFalse(FaultyDeployer1.sample1Deployed);
+        Assert.assertFalse(FaultyDeployer1.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testFaultyDeployArtifacts1"})
     public void testFaultyUpdateArtifacts1() {
         deploymentEngine.updateArtifacts(artifactsList);
         Assert.assertTrue(FaultyDeployer1.sample1Updated);
+        Assert.assertTrue(FaultyDeployer1.sample2Updated);
     }
 
     @Test(dependsOnMethods = {"testFaultyUpdateArtifacts1"})
     public void testFaultyUndeployArtifacts1() {
         deploymentEngine.undeployArtifacts(artifactsList);
         Assert.assertFalse(FaultyDeployer1.sample1Deployed);
+        Assert.assertFalse(FaultyDeployer1.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testFaultyUndeployArtifacts1"})
@@ -291,18 +309,21 @@ public class DeploymentEngineTest extends BaseTest {
     public void testFaultyDeployArtifacts2() {
         deploymentEngine.deployArtifacts(artifactsList);
         Assert.assertFalse(FaultyDeployer2.sample1Deployed);
+        Assert.assertFalse(FaultyDeployer2.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testFaultyDeployArtifacts2"})
     public void testFaultyUpdateArtifacts2() {
         deploymentEngine.updateArtifacts(artifactsList);
         Assert.assertFalse(FaultyDeployer2.sample1Updated);
+        Assert.assertFalse(FaultyDeployer2.sample2Updated);
     }
 
     @Test(dependsOnMethods = {"testFaultyUpdateArtifacts2"})
     public void testFaultyUndeployArtifacts2() {
         deploymentEngine.undeployArtifacts(artifactsList);
         Assert.assertFalse(FaultyDeployer2.sample1Deployed);
+        Assert.assertFalse(FaultyDeployer2.sample2Deployed);
     }
 
     @Test(dependsOnMethods = {"testFaultyUndeployArtifacts2"})
