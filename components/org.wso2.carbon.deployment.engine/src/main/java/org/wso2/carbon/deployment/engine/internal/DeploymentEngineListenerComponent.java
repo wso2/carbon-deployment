@@ -213,7 +213,8 @@ public class DeploymentEngineListenerComponent implements RequiredCapabilityList
             DataHolder.getInstance().setDeploymentConfiguration(deploymentConfiguration);
 
             logger.debug("Starting Carbon Deployment Engine");
-            deploymentEngine.start(deploymentConfiguration.getRepositoryLocation());
+            deploymentEngine.start(deploymentConfiguration.getServerRepositoryLocation(),
+                                   deploymentConfiguration.getRuntimeRepositoryLocation());
 
             // Add deployment engine to the data holder for later usages/references of this object
             OSGiServiceHolder.getInstance().setCarbonDeploymentEngine(deploymentEngine);

@@ -44,15 +44,25 @@ public class CustomDeployer implements Deployer {
      */
     public static boolean sample1Deployed;
     /**
+     * Set to true if "XML2" has been deployed.
+     */
+    public static boolean sample2Deployed;
+    /**
      * Set to true if "XML1" has been updated.
      */
     public static boolean sample1Updated;
+    /**
+     * Set to true if "XML2" has been updated.
+     */
+    public static boolean sample2Updated;
 
     private String directory = "text-files";
     private URL directoryLocation;
     private ArtifactType artifactType;
     private String testDir = "src" + File.separator + "test" + File.separator + "resources" +
             File.separator + "carbon-repo" + File.separator + directory;
+    private String testDir2 = "src" + File.separator + "test" + File.separator + "resources" +
+                             File.separator + "deployment" + File.separator + directory;
 
     public CustomDeployer() {
         artifactType = new ArtifactType<String>("txt");
@@ -71,14 +81,16 @@ public class CustomDeployer implements Deployer {
     public String deploy(Artifact artifact) throws CarbonDeploymentException {
         logger.info("Deploying : " + artifact.getName());
         String key = null;
-        try {
-            FileInputStream fis = new FileInputStream(artifact.getFile());
+        try (FileInputStream fis = new FileInputStream(artifact.getFile())) {
             int x = fis.available();
             byte b[] = new byte[x];
             fis.read(b);
             String content = new String(b);
             if (content.contains("sample1")) {
                 sample1Deployed = true;
+                key = artifact.getName();
+            } else if (content.contains("sample2")) {
+                sample2Deployed = true;
                 key = artifact.getName();
             }
         } catch (IOException e) {
@@ -93,16 +105,24 @@ public class CustomDeployer implements Deployer {
                     "is not a String value");
         }
         logger.info("Undeploying : " + key);
-        try {
-            File fileToUndeploy = new File(testDir + File.separator + key);
-            logger.info("File to undeploy : " + fileToUndeploy.getAbsolutePath());
-            FileInputStream fis = new FileInputStream(fileToUndeploy);
+        File fileToUndeploy;
+        if (key.equals("sample1.txt")) {
+            fileToUndeploy = new File(testDir + File.separator + key);
+        } else if (key.equals("sample2.txt")) {
+            fileToUndeploy = new File(testDir2 + File.separator + key);
+        } else {
+            throw new CarbonDeploymentException("Error while Un Deploying : " + key);
+        }
+        logger.info("File to undeploy : " + fileToUndeploy.getAbsolutePath());
+        try (FileInputStream fis = new FileInputStream(fileToUndeploy)) {
             int x = fis.available();
             byte b[] = new byte[x];
             fis.read(b);
             String content = new String(b);
             if (content.contains("sample1")) {
                 sample1Deployed = false;
+            } else if (content.contains("sample2")) {
+                sample2Deployed = false;
             }
         } catch (IOException e) {
             throw new CarbonDeploymentException("Error while Un Deploying : " + key, e);
@@ -111,7 +131,19 @@ public class CustomDeployer implements Deployer {
 
     public String update(Artifact artifact) throws CarbonDeploymentException {
         logger.info("Updating : " + artifact.getName());
-        sample1Updated = true;
+        try (FileInputStream fis = new FileInputStream(artifact.getFile())) {
+            int x = fis.available();
+            byte b[] = new byte[x];
+            fis.read(b);
+            String content = new String(b);
+            if (content.contains("sample1")) {
+                sample1Updated = true;
+            } else if (content.contains("sample2")) {
+                sample2Updated = true;
+            }
+        } catch (IOException e) {
+            throw new CarbonDeploymentException("Error while updating : " + artifact.getName(), e);
+        }
         return artifact.getName();
     }
 

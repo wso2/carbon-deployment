@@ -55,9 +55,14 @@ public class DeploymentEngine {
     private RepositoryScanner repositoryScanner;
 
     /**
-     * Repository directory for this deployment engine.
+     * Server repository directory for this deployment engine.
      */
-    private File repositoryDirectory = null;
+    private File serverRepositoryDirectory = null;
+
+    /**
+     * Runtime repository directory for this deployment engine.
+     */
+    private File runtimeRepositoryDirectory = null;
 
     /**
      * The map which holds the set of registered deployers with this engine.
@@ -93,15 +98,22 @@ public class DeploymentEngine {
      * This will start the repository scanner and scheduler task and load artifacts to
      * the deployment engine.
      *
-     * @param repositoryDir the deployment repository directory that repository scanner will start scanning.
+     * @param serverRepositoryDir server deployment repository directory that repository scanner will start scanning.
+     * @param runtimeRepositoryDir runtime deployment repository directory that repository scanner will start scanning.
      * @throws DeploymentEngineException when an error occurs while trying to start the deployment engine.
      */
-    public void start(String repositoryDir) throws DeploymentEngineException {
-        logger.debug("Starting carbon deployment engine for repository : " + repositoryDir);
-        repositoryDirectory = new File(repositoryDir);
-        if (!repositoryDirectory.exists()) {
-            throw new DeploymentEngineException("Cannot find repository : " + repositoryDirectory);
+    public void start(String serverRepositoryDir, String runtimeRepositoryDir) throws DeploymentEngineException {
+        serverRepositoryDirectory = new File(serverRepositoryDir);
+        runtimeRepositoryDirectory = new File(runtimeRepositoryDir);
+
+        if (!serverRepositoryDirectory.exists()) {
+            throw new DeploymentEngineException("Cannot find repository : " + serverRepositoryDirectory);
         }
+        if (!runtimeRepositoryDirectory.exists()) {
+            throw new DeploymentEngineException("Cannot find repository : " + runtimeRepositoryDirectory);
+        }
+        logger.debug("Starting carbon deployment engine for repository : " + serverRepositoryDir);
+
         //Deploy initial set of artifacts
         repositoryScanner.scan();
         // We need to check and scan the task based on the deployment engine mode of operation
@@ -214,13 +226,23 @@ public class DeploymentEngine {
     }
 
     /**
-     * Returns the repository directory that the deployment engine is registered with.
-     * Eg: CARBON_HOME/deployment/server
+     * Returns the server repository directory that the deployment engine is registered with.
+     * Eg: CARBON_HOME/deployment
      *
-     * @return repository directory
+     * @return server repository directory
      */
-    public File getRepositoryDirectory() {
-        return repositoryDirectory;
+    public File getServerRepositoryDirectory() {
+        return serverRepositoryDirectory;
+    }
+
+    /**
+     * Returns the runtime repository directory that the deployment engine is registered with.
+     * Eg: CARBON_HOME/wso2/<runtime-name>/deployment
+     *
+     * @return runtime repository directory
+     */
+    public File geRuntimeRepositoryDirectory() {
+        return runtimeRepositoryDirectory;
     }
 
     /**

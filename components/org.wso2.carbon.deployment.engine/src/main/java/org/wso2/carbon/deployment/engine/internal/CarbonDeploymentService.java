@@ -64,7 +64,7 @@ public class CarbonDeploymentService implements DeploymentService {
             throw new CarbonDeploymentException("Unknown artifactType : " + artifactType);
         }
         try {
-            Path destination = Paths.get(carbonDeploymentEngine.getRepositoryDirectory().getAbsolutePath(),
+            Path destination = Paths.get(carbonDeploymentEngine.getServerRepositoryDirectory().getAbsolutePath(),
                     deployer.getLocation().getFile());
             FileUtils.copyFileToDir(new File(artifactPath), destination.toFile());
         } catch (IOException e) {

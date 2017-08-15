@@ -18,6 +18,7 @@ package org.wso2.carbon.deployment.engine.config;
 import org.wso2.carbon.config.ConfigurationUtils;
 import org.wso2.carbon.config.annotation.Configuration;
 import org.wso2.carbon.config.annotation.Element;
+import org.wso2.carbon.config.annotation.Ignore;
 
 /**
  * DeploymentConfiguration class holds static configuration parameters specified in the deployment.yml file.
@@ -30,8 +31,11 @@ public class DeploymentConfiguration {
     @Element(description = "deployment mode")
     private DeploymentModeEnum mode = DeploymentModeEnum.scheduled;
 
-    @Element(description = "repository location")
-    private String repositoryLocation;
+    @Element(description = "server repository location")
+    private String serverRepositoryLocation = "${carbon.home}/deployment/";
+
+    @Ignore
+    private String runtimeRepositoryLocation = "${wso2.runtime.path}/deployment/";
 
     @Element(description = "Scheduler update interval")
     private int updateInterval = 15;
@@ -40,15 +44,20 @@ public class DeploymentConfiguration {
     private DeploymentNotifierConfig deploymentNotifier = new DeploymentNotifierConfig();
 
     public DeploymentConfiguration() {
-        repositoryLocation = ConfigurationUtils.substituteVariables("${carbon.home}/deployment/");
+        serverRepositoryLocation = ConfigurationUtils.substituteVariables(serverRepositoryLocation);
+        runtimeRepositoryLocation = ConfigurationUtils.substituteVariables(runtimeRepositoryLocation);
     }
 
     public DeploymentModeEnum getMode() {
         return mode;
     }
 
-    public String getRepositoryLocation() {
-        return repositoryLocation;
+    public String getServerRepositoryLocation() {
+        return serverRepositoryLocation;
+    }
+
+    public String getRuntimeRepositoryLocation() {
+        return runtimeRepositoryLocation;
     }
 
     public int getUpdateInterval() {

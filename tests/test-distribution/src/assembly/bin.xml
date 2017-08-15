@@ -36,4 +36,12 @@
             </excludes>
         </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>carbon-home/conf/deployment.yaml</source>
+            <outputDirectory>conf/default/</outputDirectory>
+            <fileMode>644</fileMode>
+            <filtered>true</filtered>
+        </file>
+    </files>
 </assembly>

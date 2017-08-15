@@ -37,7 +37,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.utils</groupId>
-            <artifactId>carbon-utils</artifactId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -61,7 +61,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.org.yaml</groupId>
+            <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <optional>true</optional>
         </dependency>

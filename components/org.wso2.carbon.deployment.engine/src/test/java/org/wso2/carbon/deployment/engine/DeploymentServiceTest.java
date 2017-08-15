@@ -38,6 +38,7 @@ import java.io.IOException;
 public class DeploymentServiceTest extends BaseTest {
 
     private static final String CARBON_REPO = "carbon-repo";
+    private static final String RUNTIME_REPO = "deployment";
     private static final String DEPLOYER_REPO = "carbon-repo" + File.separator + "text-files";
     private CustomDeploymentService deploymentService;
     private DeploymentEngine deploymentEngine;
@@ -57,7 +58,8 @@ public class DeploymentServiceTest extends BaseTest {
         artifactPath = getTestResourceFile(DEPLOYER_REPO).getAbsolutePath()
                 + File.separator + "sample1.txt";
         deploymentEngine = new DeploymentEngine();
-        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath());
+        deploymentEngine.start(getTestResourceFile(CARBON_REPO).getAbsolutePath(),
+                               getTestResourceFile(DEPLOYER_REPO).getAbsolutePath());
         deploymentEngine.registerDeployer(customDeployer);
     }
 
