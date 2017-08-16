@@ -106,9 +106,9 @@ public class CustomDeployer implements Deployer {
         }
         logger.info("Undeploying : " + key);
         File fileToUndeploy;
-        if (key.equals("sample1.txt")) {
+        if ("sample1.txt".equals(key)) {
             fileToUndeploy = new File(testDir + File.separator + key);
-        } else if (key.equals("sample2.txt")) {
+        } else if ("sample2.txt".equals(key)) {
             fileToUndeploy = new File(testDir2 + File.separator + key);
         } else {
             throw new CarbonDeploymentException("Error while Un Deploying : " + key);

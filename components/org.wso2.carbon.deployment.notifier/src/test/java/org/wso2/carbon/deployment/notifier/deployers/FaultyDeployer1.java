@@ -22,7 +22,6 @@ import org.wso2.carbon.deployment.engine.ArtifactType;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -54,13 +53,8 @@ public class FaultyDeployer1 implements Deployer {
      */
     public static boolean sample2Updated;
 
-    private String directory = "text-files";
     private URL directoryLocation;
     private ArtifactType artifactType;
-    private String testDir = "src" + File.separator + "test" + File.separator + "resources" +
-            File.separator + "carbon-repo" + File.separator + directory;
-    private String testDir2 = "src" + File.separator + "test" + File.separator + "resources" +
-                             File.separator + "deployment" + File.separator + directory;
 
     public FaultyDeployer1() {
         artifactType = new ArtifactType<>("txt");
@@ -78,9 +72,9 @@ public class FaultyDeployer1 implements Deployer {
 
     public String deploy(Artifact artifact) throws CarbonDeploymentException {
         logger.info("Deploying : " + artifact.getName());
-        if (artifact.getName().contains("sample1.txt")) {
+        if (artifact.getName() != null && artifact.getName().contains("sample1.txt")) {
             sample1Deployed = false;
-        } else if (artifact.getName().contains("sample2.txt")) {
+        } else if (artifact.getName() != null && artifact.getName().contains("sample2.txt")) {
             sample2Deployed = false;
         }
         throw new CarbonDeploymentException("Error while deploying : " + artifact.getName());
@@ -93,9 +87,9 @@ public class FaultyDeployer1 implements Deployer {
 
     public String update(Artifact artifact) throws CarbonDeploymentException {
         logger.info("Updating : " + artifact.getName());
-        if (artifact.getName().contains("sample1.txt")) {
+        if (artifact.getName() != null && artifact.getName().contains("sample1.txt")) {
             sample1Updated = true;
-        } else if (artifact.getName().contains("sample2.txt")) {
+        } else if (artifact.getName() != null && artifact.getName().contains("sample2.txt")) {
             sample2Updated = true;
         }
         return artifact.getName();

@@ -57,12 +57,12 @@ public class DeploymentEngine {
     /**
      * Server repository directory for this deployment engine.
      */
-    private File serverRepositoryDirectory = null;
+    private File serverRepositoryDirectory;
 
     /**
      * Runtime repository directory for this deployment engine.
      */
-    private File runtimeRepositoryDirectory = null;
+    private File runtimeRepositoryDirectory;
 
     /**
      * The map which holds the set of registered deployers with this engine.
@@ -112,7 +112,10 @@ public class DeploymentEngine {
         if (!runtimeRepositoryDirectory.exists()) {
             throw new DeploymentEngineException("Cannot find repository : " + runtimeRepositoryDirectory);
         }
-        logger.debug("Starting carbon deployment engine for repository : " + serverRepositoryDir);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Starting carbon deployment engine for repository : " + serverRepositoryDir);
+        }
 
         //Deploy initial set of artifacts
         repositoryScanner.scan();
