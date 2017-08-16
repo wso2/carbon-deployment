@@ -22,7 +22,6 @@ import org.wso2.carbon.deployment.engine.ArtifactType;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -46,11 +45,8 @@ public class FaultyDeployer1 implements Deployer {
      */
     public static boolean sample1Updated;
 
-    private String directory = "text-files";
     private URL directoryLocation;
     private ArtifactType artifactType;
-    private String testDir = "src" + File.separator + "test" + File.separator + "resources" +
-            File.separator + "carbon-repo" + File.separator + directory;
 
     public FaultyDeployer1() {
         artifactType = new ArtifactType<>("txt");

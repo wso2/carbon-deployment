@@ -121,7 +121,6 @@ public class DeploymentEngineTest extends BaseTest {
         repositoryScanner.scan();
         Assert.assertTrue(CustomDeployer.sample1Deployed);
         Assert.assertTrue(CustomDeployer.sample2Deployed);
-
     }
 
     @Test(dependsOnMethods = {"testRepositoryScanner"})
