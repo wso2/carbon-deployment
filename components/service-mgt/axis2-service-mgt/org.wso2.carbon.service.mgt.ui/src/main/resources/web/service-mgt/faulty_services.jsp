@@ -26,6 +26,7 @@
 <%@ page import="org.wso2.carbon.service.mgt.stub.types.carbon.FaultyServicesWrapper" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
 <%
@@ -257,7 +258,7 @@
                 <tr id="errorMsg<%=count %>">
                     <td>&nbsp;</td>
                     <td colspan="2">
-                        <%=service.getFault()%>
+                        <%=Encode.forHtmlContent(service.getFault())%>
                     </td>
                 </tr>
                 <%

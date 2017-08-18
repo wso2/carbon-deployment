@@ -31,6 +31,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 
 <jsp:include page="../dialog/display_messages.jsp"/>
 
@@ -168,12 +169,12 @@
             </tr>
             <tr>
                 <td><fmt:message key="service.description"/></td>
-                <td><%=service.getDescription()%>
+                <td><%=Encode.forHtmlContent(service.getDescription())%>
                 </td>
             </tr>
             <tr>
                 <td><fmt:message key="service.group.name"/></td>
-                <td><%=service.getServiceGroupName()%>
+                <td><%=Encode.forHtmlContent(service.getServiceGroupName())%>
                 </td>
             </tr>
             <tr>

@@ -27,6 +27,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonSecuredHttpContext" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
 <!-- This page is included to display messages which are set to request scope or session scope -->
@@ -360,7 +361,7 @@
                     if (!serviceType.equals("bpel") && !serviceType.equals("bpelmgt") && !serviceGroup.getDisableDeletion()) {
                 %>
                 <input type="checkbox" name="serviceGroups"
-                       value="<%=serviceGroup.getServiceGroupName()%>"
+                       value="<%=Encode.forHtmlAttribute(serviceGroup.getServiceGroupName())%>"
                        onclick="resetVars()" class="chkBox"/>
                 <%
                 } else {
@@ -374,11 +375,11 @@
                     <%
                         if (loggedIn) {
                     %>
-                    <a href="./list_service_group.jsp?serviceGroupName=<%= serviceGroup.getServiceGroupName() %>">
-                        <%= serviceGroup.getServiceGroupName() %>
+                    <a href="./list_service_group.jsp?serviceGroupName=<%=Encode.forHtmlAttribute(serviceGroup.getServiceGroupName())%>">
+                        <%=Encode.forHtmlContent(serviceGroup.getServiceGroupName())%>
                     </a>
                     <% } else { %>
-                    <%= serviceGroup.getServiceGroupName() %>
+                    <%=Encode.forHtmlContent(serviceGroup.getServiceGroupName())%>
                     <% } %>
                 </nobr>
             </td>
@@ -398,10 +399,10 @@
                 <%
                     if (loggedIn) {
                 %>
-                <a href="./service_info.jsp?serviceName=<%=serviceName%>"><%=serviceName%>
+                <a href="./service_info.jsp?serviceName=<%=Encode.forHtmlAttribute(serviceName)%>"><%=Encode.forHtmlContent(serviceName)%>
                 </a>
                 <% } else { %>
-                <%=serviceName%>
+                <%=Encode.forHtmlContent(serviceName)%>
                 <% } %>
             </td>
             <td width="20px" style="text-align:center;">
@@ -411,7 +412,7 @@
             </td>
             <td width="100px">
                 <% if (service.getActive()) {%>
-                <a href="<%=service.getWsdlURLs()[0]%>" class="icon-link"
+                <a href="<%=Encode.forUri(service.getWsdlURLs()[0])%>" class="icon-link"
                    style="background-image:url(images/wsdl.gif);" target="_blank">
                     WSDL1.1
                 </a>
@@ -419,7 +420,7 @@
             </td>
             <td width="100px">
                 <% if (service.getActive()) {%>
-                <a href="<%=service.getWsdlURLs()[1]%>" class="icon-link"
+                <a href="<%=Encode.forUri(service.getWsdlURLs()[1])%>" class="icon-link"
                    style="background-image:url(images/wsdl.gif);" target="_blank">
                     WSDL2.0
                 </a>
@@ -428,7 +429,7 @@
             <td width="100px">
                 <% if (!service.getDisableTryit() && service.getActive()) {%>
                 <nobr>
-                    <a href="<%=service.getTryitURL()%>" class="icon-link"
+                    <a href="<%=Encode.forUri(service.getTryitURL())%>" class="icon-link"
                        style="background-image:url(images/tryit.gif);" target="_blank">
                         <fmt:message key="try.this.service"/>
                     </a>
