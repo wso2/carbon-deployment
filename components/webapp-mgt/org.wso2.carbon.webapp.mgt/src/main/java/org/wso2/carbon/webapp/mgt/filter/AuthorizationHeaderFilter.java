@@ -55,15 +55,30 @@ public class AuthorizationHeaderFilter implements Filter {
 
     private ServletContext context;
 
+    /**
+     * Initialize AuthorizationHeaderFilter.
+     *
+     * @param fConfig FilterConfig
+     * @throws ServletException
+     */
+    @Override
     public void init(FilterConfig fConfig) throws ServletException {
-
         this.context = fConfig.getServletContext();
         this.context.log("AuthorizationHeaderFilter initialized");
     }
 
+    /**
+     * Validate the authorization header.
+     *
+     * @param request ServletRequest
+     * @param response ServletResponse
+     * @param chain FilterChain
+     * @throws IOException
+     * @throws ServletException
+     */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
         final HttpServletRequest req = (HttpServletRequest) request;
         final String authHeader = req.getHeader(HTTPConstants.HEADER_AUTHORIZATION);
         if (StringUtils.isEmpty(authHeader)) {
@@ -80,18 +95,15 @@ public class AuthorizationHeaderFilter implements Filter {
             //if auth header comes in invalid format send error in response
             if (StringUtils.isBlank(authCredentials) || authCredentials.indexOf(' ') >= 0
                     || authCredentials.length() < MINIMUM_CREDENTIAL_SIZE) {
-                String errorMsg = "Internal Server Error";
-                handleErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                String errorMsg = "Invalid credentials";
+                handleErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_UNAUTHORIZED,
                         errorMsg);
             } else if (authHeader.substring((AUTH_TYPE_BASIC + " ").length()).startsWith(" ")) {
                 //if there is more than single space between auth_type and credentials modify the request header
                 HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(req) {
-
                     @Override
                     public Enumeration<String> getHeaders(String name) {
-
                         if (StringUtils.equalsIgnoreCase(name, HTTPConstants.HEADER_AUTHORIZATION)) {
-
                             Enumeration<String> headerValues = req.getHeaders(name);
                             ArrayList<String> newHeaderValues = new ArrayList<>();
                             while (headerValues.hasMoreElements()) {
@@ -120,12 +132,15 @@ public class AuthorizationHeaderFilter implements Filter {
         }
     }
 
+    /**
+     * Clean up any resources being held by the filter.
+     */
+    @Override
     public void destroy() {
         //we can close resources here
     }
 
     private void handleErrorResponse(HttpServletResponse response, int error, String errorMsg) throws IOException {
-
         response.sendError(error, errorMsg);
     }
 }
