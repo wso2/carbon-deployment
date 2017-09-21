@@ -300,6 +300,12 @@
                 <version>${javax.inject.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>${easy.mock.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -440,6 +446,7 @@
         <pax.exam.testng.version>4.6.0</pax.exam.testng.version>
         <pax.exam.link.mvn.version>4.6.0</pax.exam.link.mvn.version>
         <pax.url.aether.version>1.6.0</pax.url.aether.version>
+        <easy.mock.version>3.4</easy.mock.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
         <equinox.simpleconfigurator.version>1.1.0.v20131217-1203</equinox.simpleconfigurator.version>
