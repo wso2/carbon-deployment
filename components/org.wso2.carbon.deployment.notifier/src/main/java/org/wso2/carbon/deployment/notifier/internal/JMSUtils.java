@@ -19,6 +19,7 @@ package org.wso2.carbon.deployment.notifier.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.owasp.encoder.Encode;
 import org.wso2.carbon.deployment.notifier.Constants;
 
 import java.util.Properties;
@@ -161,8 +162,8 @@ public class JMSUtils {
 
         Connection connection = null;
         if (log.isDebugEnabled()) {
-            log.debug("Creating a " + (isQueue ? "Queue" : "Topic") +
-                    "Connection using credentials : (" + user + "/" + pass + ")");
+            log.debug(getEncodedString("Creating a " + (isQueue ? "Queue" : "Topic") +
+                    "Connection using credentials : (" + user + "/" + pass + ")"));
         }
 
         if (jmsSpec11 || isQueue == null) {
@@ -228,5 +229,14 @@ public class JMSUtils {
                 return ((TopicSession) session).createPublisher((Topic) destination);
             }
         }
+    }
+
+    private static String getEncodedString(String str) {
+        String cleanedString = str.replace('\n', '_').replace('\r', '_');
+        cleanedString = Encode.forHtml(cleanedString);
+        if (!cleanedString.equals(str)) {
+            cleanedString += " (Encoded)";
+        }
+        return cleanedString;
     }
 }
