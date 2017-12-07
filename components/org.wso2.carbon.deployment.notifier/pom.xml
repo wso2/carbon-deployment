@@ -170,7 +170,7 @@
             javax.jms.*,
             javax.xml.bind,
             javax.naming,
-            org.wso2.orbit.org.owasp.encoder.*;version="0.0.0",
+            org.owasp.encoder.*;version="${owasp.encoder.version.range}",
         </import.package>
         <carbon.component>
             osgi.service;objectClass="org.wso2.carbon.deployment.engine.LifecycleListener"
