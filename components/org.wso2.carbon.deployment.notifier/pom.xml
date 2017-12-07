@@ -102,6 +102,10 @@
             <artifactId>commons-pool</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <scope>test</scope>
@@ -165,7 +169,8 @@
             org.apache.commons.pool.*,
             javax.jms.*,
             javax.xml.bind,
-            javax.naming
+            javax.naming,
+            org.wso2.orbit.org.owasp.encoder.*;version="0.0.0",
         </import.package>
         <carbon.component>
             osgi.service;objectClass="org.wso2.carbon.deployment.engine.LifecycleListener"
