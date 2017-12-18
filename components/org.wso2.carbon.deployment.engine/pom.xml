@@ -146,7 +146,7 @@
         <private.package>org.wso2.carbon.deployment.engine.internal.*,</private.package>
         <export.package>
             !org.wso2.carbon.deployment.engine.internal.*,
-            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.pkg.export.version}",
+            org.wso2.carbon.deployment.engine.*;version="${project.version}",
         </export.package>
         <import.package>
             org.slf4j.*;version="${slf4j.logging.import.version.range}",
