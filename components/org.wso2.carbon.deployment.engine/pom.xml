@@ -161,8 +161,7 @@
             requiredService="org.wso2.carbon.deployment.engine.Deployer,
             org.wso2.carbon.deployment.engine.LifecycleListener",
 
-            osgi.service;objectClass="org.wso2.carbon.deployment.engine.DeploymentService";
-            dependentComponentName="carbon-transport-mgt"
+            osgi.service;objectClass="org.wso2.carbon.deployment.engine.DeploymentService"
         </carbon.component>
     </properties>
 
