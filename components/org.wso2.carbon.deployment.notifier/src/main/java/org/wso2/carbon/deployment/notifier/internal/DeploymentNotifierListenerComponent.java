@@ -35,7 +35,7 @@ import org.wso2.carbon.kernel.CarbonRuntime;
  * @since 5.0.0
  */
 @Component(
-        name = "DeploymentNotifierListenerComponent",
+        name = "org.wso2.carbon.deployment.notifier.internal.DeploymentNotifierListenerComponent",
         immediate = true
 )
 @SuppressWarnings("unused")
