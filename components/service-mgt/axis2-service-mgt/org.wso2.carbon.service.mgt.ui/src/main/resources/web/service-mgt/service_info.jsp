@@ -260,6 +260,9 @@
                     for (String epr : eprs) {
                         if (epr != null) {
                         	if (epr.contains("http")||epr.contains("https")) {
+                                if (epr.contains("http:") && isSecured) {
+                                    continue;
+                                }
                         		carbonEndpoint =epr;
                         	}
                             %>
