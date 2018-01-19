@@ -115,6 +115,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     public static final String DISABLE_TRY_IT_PARAM = "disableTryIt";
     public static final String DISABLE_DELETION_PARAM = "disableDeletion";
     private static final String AXIS2_SERVICE_TYPE = "axis2";
+    private static final String PROXY_SERVICE_TYPE = "proxy";
+    private static final String DATA_SERVICE_TYPE = "data_service";
 
     private PersistenceFactory pf;
     private ServicePersistenceManager spm;
@@ -2544,22 +2546,26 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
     private boolean isAxisServiceCApp(AxisService axisService) {
         //Check if Service is deployed from a CApp
-        if (AXIS2_SERVICE_TYPE.equals(getServiceType(axisService))) {
-            try {
-                Path axis2ServiceAppPath = Paths.get(axisService.getFileName().toURI());
-                if (axis2ServiceAppPath != null) {
-                    String tenantId = AppDeployerUtils.getTenantIdString();
-                    // Check whether there is an application in the system from the given name
-                    ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
-                    for (CarbonApplication application : appList) {
-                        Path cappPath = Paths.get(application.getExtractedPath());
-                        if (axis2ServiceAppPath.startsWith(cappPath)) {
-                            return true;
+        if (AXIS2_SERVICE_TYPE.equals(getServiceType(axisService)) || PROXY_SERVICE_TYPE
+                .equals(getServiceType(axisService)) || DATA_SERVICE_TYPE.equals(getServiceType(axisService))) {
+            URL fileName = axisService.getFileName();
+            if (fileName != null) {
+                try {
+                    Path axis2ServiceAppPath = Paths.get(fileName.toURI());
+                    if (axis2ServiceAppPath != null) {
+                        String tenantId = AppDeployerUtils.getTenantIdString();
+                        // Check whether there is an application in the system from the given name
+                        ArrayList<CarbonApplication> appList = DataHolder.getApplicationManager().getCarbonApps(tenantId);
+                        for (CarbonApplication application : appList) {
+                            Path cappPath = Paths.get(application.getExtractedPath());
+                            if (axis2ServiceAppPath.startsWith(cappPath)) {
+                                return true;
+                            }
                         }
                     }
+                } catch (URISyntaxException e) {
+                    log.error("Unable to retrieve CApp file path ", e);
                 }
-            } catch (URISyntaxException e) {
-                log.error("Unable to retrieve CApp file path ", e);
             }
         }
         return false;

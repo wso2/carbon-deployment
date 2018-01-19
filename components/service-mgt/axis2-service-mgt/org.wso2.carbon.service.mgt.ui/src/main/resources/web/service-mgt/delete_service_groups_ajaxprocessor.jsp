@@ -23,6 +23,8 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
+<%@ page import="org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData" %>
+<%@ page import="org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaDataWrapper" %>
 <%
     
     String httpMethod = request.getMethod().toLowerCase();
@@ -63,10 +65,40 @@
 
     try {
         if (deleteAllServiceGroups != null) {
+            ServiceMetaDataWrapper allServices = client.getAllServices("ALL", "", 0);
+            ServiceMetaData[] services = allServices.getServices();
+            for (ServiceMetaData smd : services) {
+                if (smd.getCAppArtifact()) {
+                    CarbonUIMessage
+                            .sendCarbonUIMessage(bundle.getString("cannot.delete.capp.service"), CarbonUIMessage.ERROR,
+                                    request);
+            %>
+            <script>
+                location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
+            </script>
+
+            <%
+                    return;
+                }
+            }
             client.deleteAllNonAdminServiceGroups();
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.non.admin.service.groups"),
                     CarbonUIMessage.INFO, request);
         } else {
+                for (String s : serviceGroups) {
+                    ServiceMetaData smd = client.getServiceData(s);
+                    if (smd.getCAppArtifact()) {
+                        CarbonUIMessage.sendCarbonUIMessage(bundle.getString("cannot.delete.capp.service"),
+                                CarbonUIMessage.ERROR, request);
+                    %>
+                    <script>
+                        location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
+                    </script>
+
+                    <%
+                        return;
+                    }
+                }
             client.deleteServiceGroups(serviceGroups);  //TODO handle the returned boolean value
             CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.service.groups"),
                     CarbonUIMessage.INFO, request);
