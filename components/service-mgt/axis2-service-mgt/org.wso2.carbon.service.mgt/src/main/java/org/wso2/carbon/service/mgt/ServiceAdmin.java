@@ -810,6 +810,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                     isDeleted = true;
                     getAxisConfig().getFaultyServices().remove(originalName);
                 }
+            } else {
+                isDeleted = true;
+                getAxisConfig().getFaultyServices().remove(archiveName);
+                deleteServiceGroup(archiveName);
             }
         } else {
 	        	isDeleted = true;
