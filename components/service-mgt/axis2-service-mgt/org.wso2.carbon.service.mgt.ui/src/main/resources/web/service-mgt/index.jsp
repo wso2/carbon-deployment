@@ -462,10 +462,11 @@ padding:0 10px;
                     <a href="./service_info.jsp?serviceName=<%=Encode.forHtmlAttribute(serviceName)%>"><%=Encode.forHtmlContent(serviceName)%>
                     </a>
                     <% } else { %>
+                    <img src="images/applications.gif"
+                         title='<fmt:message key="capp.service.artifact.text"/>'
+                         alt='<fmt:message key="capp.service.artifact"/>'/>
                     <a href="./service_info.jsp?serviceName=<%=Encode.forHtmlAttribute(serviceName)%>"><%=Encode.forHtmlContent(serviceName)%>
-                        <img src="images/applications.gif"
-                             title='<fmt:message key="capp.service.artifact.text"/>'
-                             alt='<fmt:message key="capp.service.artifact"/>'/> </a>
+                    </a>
                     <% } %>
                 </nobr>
             </td>
