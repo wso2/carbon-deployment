@@ -848,9 +848,9 @@
 
             <!--CXF runtime environment-->
             <dependency>
-                <groupId>org.apache.cxf</groupId>
+                <groupId>org.wso2.orbit.org.apache.cxf</groupId>
                 <artifactId>cxf-bundle</artifactId>
-                <version>${cxf.bundle.version}</version>
+                <version>${cxf.bundle.orbit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf.xjcplugins</groupId>
@@ -1430,6 +1430,7 @@
         <orbit.version.woden>1.0.0.M8-wso2v1</orbit.version.woden>
 
         <!-- CXF Runtime Bundles -->
+        <cxf.bundle.orbit.version>2.7.16.wso2v1</cxf.bundle.orbit.version>
         <cxf.bundle.version>2.7.16</cxf.bundle.version>
         <cxf.xjc.version>3.2.0</cxf.xjc.version>
         <spring.version>3.2.18.RELEASE</spring.version>
