@@ -68,7 +68,7 @@
             </dependency>
             <dependency>
                 <artifactId>commons-fileupload</artifactId>
-                <groupId>commons-fileupload.wso2</groupId>
+                <groupId>org.wso2.orbit.commons-fileupload</groupId>
             </dependency>
         </dependencies>
 </project>
