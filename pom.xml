@@ -775,7 +775,7 @@
             </dependency>
             <dependency>
                 <artifactId>commons-fileupload</artifactId>
-                <groupId>commons-fileupload.wso2</groupId>
+                <groupId>org.wso2.orbit.commons-fileupload</groupId>
                 <version>${orbit.version.commons.fileuploader}</version>
             </dependency>
             <dependency>
@@ -1426,7 +1426,7 @@
         <imp.pkg.version.spring>[3.2.9.wso2v1, 3.3.0)</imp.pkg.version.spring>
         <org.scannotation.version>1.0.3</org.scannotation.version>
 
-        <orbit.version.commons.fileuploader>1.2.0.wso2v1</orbit.version.commons.fileuploader>
+        <orbit.version.commons.fileuploader>1.3.3.wso2v1</orbit.version.commons.fileuploader>
         <orbit.version.woden>1.0.0.M8-wso2v1</orbit.version.woden>
 
         <!-- CXF Runtime Bundles -->
