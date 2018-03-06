@@ -995,11 +995,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-asm</artifactId>
-                <version>${spring.asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
                 <version>${spring.version}</version>
             </dependency>
@@ -1434,7 +1429,6 @@
         <cxf.bundle.version>2.7.16</cxf.bundle.version>
         <cxf.xjc.version>3.2.0</cxf.xjc.version>
         <spring.version>3.2.18.RELEASE</spring.version>
-        <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
         <carbon.cxf.webapp.ext>1.0.1</carbon.cxf.webapp.ext>
         <aopalliance.version>1.0</aopalliance.version>
         <wss4j.version>1.6.18</wss4j.version>
