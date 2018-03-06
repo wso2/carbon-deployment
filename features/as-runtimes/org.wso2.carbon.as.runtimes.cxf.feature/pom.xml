@@ -35,7 +35,7 @@
     <dependencies>
         <!--CXF runtime environment-->
         <dependency>
-            <groupId>org.apache.cxf</groupId>
+            <groupId>org.wso2.orbit.org.apache.cxf</groupId>
             <artifactId>cxf-bundle</artifactId>
         </dependency>
         <dependency>
