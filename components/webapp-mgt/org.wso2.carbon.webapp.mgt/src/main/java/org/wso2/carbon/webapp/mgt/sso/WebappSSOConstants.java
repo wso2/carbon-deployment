@@ -42,25 +42,25 @@ public class WebappSSOConstants {
     /**
      * Tenant name as specified in web.xml of application.
      */
-    static final String ENABLE_SAML2_SSO_WITH_TENANT = "enable.saml2.sso.with.tenant";
+    public static final String ENABLE_SAML2_SSO_WITH_TENANT = "enable.saml2.sso.with.tenant";
 
     /**
      * URLs that need to be skipped from SSO flow, as configured in web.xml of application.
      */
-    static final String SKIP_URIS = "sso.skip.uris";
+    public static final String SKIP_URIS = "sso.skip.uris";
 
     /**
      * Custom HTTP header that can override the default generated ACS url for a web application.
      */
-    static final String CUSTOM_ACS_HEADER = "CustomACSHeader";
+    public static final String CUSTOM_ACS_HEADER = "CustomACSHeader";
 
     /**
      * Tenant url prefix used by default in application server.
      */
-    static final String TENANT_URL_PREFIX = "/t/";
+    public static final String TENANT_URL_PREFIX = "/t/";
 
     /**
      * Web application prefix used by default in application server.
      */
-    static final String WEBAPP_PREFIX = "/webapps";
+    public static final String WEBAPP_PREFIX = "/webapps";
 }

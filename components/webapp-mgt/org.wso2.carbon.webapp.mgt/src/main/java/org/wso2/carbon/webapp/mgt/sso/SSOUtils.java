@@ -30,8 +30,6 @@ public class SSOUtils {
 
     private static Log log = LogFactory.getLog(SSOUtils.class);
 
-
-
     public static boolean isSSOSPConfigExists() {
         File configFile = new File(WebappSSOConstants.SSO_SP_CONFIG_PATH);
         return configFile.exists();
@@ -59,7 +57,7 @@ public class SSOUtils {
      * @param ssoSPConfigProperties SSO properties loaded from server level sso-sp-config.properties file.
      * @return appropriate ACS url
      */
-    static String generateConsumerUrl(Request request, Properties ssoSPConfigProperties) {
+    public static String generateConsumerUrl(Request request, Properties ssoSPConfigProperties) {
 
         String assertionConsumerURL = request.getHeader(ssoSPConfigProperties.getProperty(WebappSSOConstants
                 .CUSTOM_ACS_HEADER));
@@ -85,11 +83,12 @@ public class SSOUtils {
      * @param tenantName Name of tenant that owns the web application.
      * @return
      */
-    static String removeTenantFromURI(String uri, String customACSUrl, String tenantName) {
+    public static String removeTenantFromURI(String uri, String customACSUrl, String tenantName) {
 
         String returnURI = uri;
 
-        if (!StringUtils.isBlank(customACSUrl) && !StringUtils.isBlank(tenantName) && !customACSUrl.contains(tenantName)) {
+        if (!StringUtils.isBlank(customACSUrl) && !StringUtils.isBlank(tenantName)
+                && !customACSUrl.contains(tenantName) && !StringUtils.isBlank(returnURI)) {
             returnURI = returnURI.replace(WebappSSOConstants.TENANT_URL_PREFIX + tenantName +
                     WebappSSOConstants.WEBAPP_PREFIX,"");
         }
