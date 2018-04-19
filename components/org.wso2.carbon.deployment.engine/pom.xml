@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,17 +12,13 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
--->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>org.wso2.carbon.deployment.parent</artifactId>
         <version>5.2.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.deployment.engine</artifactId>
     <version>5.2.1-SNAPSHOT</version>
@@ -33,7 +28,6 @@
         The core bundle which includes the Deployment Framework 
     </description>
     <url>http://wso2.com</url>
-
     <dependencies>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
@@ -89,7 +83,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -99,6 +92,7 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <argLine>${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -141,7 +135,6 @@
             </plugin>
         </plugins>
     </build>
-
     <properties>
         <private.package>org.wso2.carbon.deployment.engine.internal.*,</private.package>
         <export.package>
@@ -164,5 +157,4 @@
             osgi.service;objectClass="org.wso2.carbon.deployment.engine.DeploymentService"
         </carbon.component>
     </properties>
-
 </project>

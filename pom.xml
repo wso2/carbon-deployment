@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,23 +12,18 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>5</version>
     </parent>
-
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>org.wso2.carbon.deployment.parent</artifactId>
     <packaging>pom</packaging>
     <version>5.2.1-SNAPSHOT</version>
     <name>WSO2 Carbon Deployment - Parent</name>
-
     <modules>
         <module>components/org.wso2.carbon.deployment.engine</module>
         <module>components/org.wso2.carbon.deployment.notifier</module>
@@ -37,14 +31,12 @@
         <module>features/org.wso2.carbon.deployment.notifier.feature</module>
         <module>tests</module>
     </modules>
-
     <scm>
         <url>https://github.com/wso2/carbon-deployment.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-deployment.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-deployment.git</connection>
         <tag>HEAD</tag>
     </scm>
-
     <build>
         <extensions>
             <extension>
@@ -67,11 +59,60 @@
                         <systemPropertyVariables>
                             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
                         </systemPropertyVariables>
+                        <argLine>${argLine}</argLine>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.0</version>
+                    <executions>
+                        <execution>
+                            <id>default-prepare-agent-by-coverage-enforcer</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <propertyName>argLine</propertyName>
+                                <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-report-by-coverage-enforcer</id>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-check-by-coverage-enforcer</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                                <rules>
+                                    <!-- implementation is needed only for Maven 2 -->
+                                    <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                        <element>BUNDLE</element>
+                                        <limits>
+                                            <!-- implementation is needed only for Maven 2 -->
+                                            <limit implementation="org.jacoco.report.check.Limit">
+                                                <counter>LINE</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>0.0</minimum>
+                                            </limit>
+                                        </limits>
+                                    </rule>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -87,7 +128,6 @@
             </plugin>
         </plugins>
     </build>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -105,7 +145,6 @@
                 <artifactId>org.eclipse.equinox.ds</artifactId>
                 <version>${equinox.ds.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
@@ -152,7 +191,6 @@
                 <artifactId>commons-pool</artifactId>
                 <version>${commons.pool.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.deployment.engine</artifactId>
@@ -236,7 +274,6 @@
                 <type>zip</type>
                 <scope>test</scope>
             </dependency>
-
             <!-- OSGi test -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -306,7 +343,6 @@
                 <version>${easy.mock.version}</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -397,13 +433,10 @@
                 <artifactId>org.eclipse.equinox.cm</artifactId>
                 <version>${org.eclipse.equinox.cm.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
-
     <properties>
         <carbon.deployment.version>5.2.1-SNAPSHOT</carbon.deployment.version>
-
         <carbon.kernel.version>5.2.0</carbon.kernel.version>
         <carbon.touchpoint.version>1.1.0</carbon.touchpoint.version>
         <carbon.config.version>2.1.2</carbon.config.version>
@@ -412,30 +445,24 @@
         <carbon.utils.package.import.version.range>[2.0.0, 3.0.0)</carbon.utils.package.import.version.range>
         <carbon.securevault.version>5.0.8</carbon.securevault.version>
         <carbon.securevault.version.range>[5.0.0, 6.0.0)</carbon.securevault.version.range>
-
         <carbon.feature.plugin.version>3.1.2</carbon.feature.plugin.version>
         <org.snakeyaml.version>1.17</org.snakeyaml.version>
         <geronimo.jms.spec.version>1.1.1</geronimo.jms.spec.version>
         <apache.activemq.version>5.7.0</apache.activemq.version>
         <commons.io.version>2.4.0.wso2v1</commons.io.version>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
-
         <slf4j.api.version>1.7.12</slf4j.api.version>
-
         <!-- OSGi API dependency versions -->
         <osgi.core.api.version>6.0.0</osgi.core.api.version>
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
-
         <!-- Export versions -->
         <org.osgi.service.deployment.export.version>5.0.0</org.osgi.service.deployment.export.version>
-
         <!-- Import version ranges -->
         <carbon.deployment.import.version.range>[5.0.0, 6.0.0)</carbon.deployment.import.version.range>
         <carbon.kernel.import.version.range>[5.0.0, 6.0.0)</carbon.kernel.import.version.range>
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <slf4j.logging.import.version.range>[1.7.1, 2.0.0)</slf4j.logging.import.version.range>
         <org.snakeyaml.import.version.range>[1.17.0,2.0.0)</org.snakeyaml.import.version.range>
-
         <!-- OSGi Tests -->
         <testng.version>6.9.4</testng.version>
         <pax.logging.api.version>1.8.4</pax.logging.api.version>
@@ -474,5 +501,4 @@
         <org.eclipse.equinox.executable.version>3.5.0.v20110530-7P7NFUFFLWUl76mart</org.eclipse.equinox.executable.version>
         <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
     </properties>
-
 </project>
