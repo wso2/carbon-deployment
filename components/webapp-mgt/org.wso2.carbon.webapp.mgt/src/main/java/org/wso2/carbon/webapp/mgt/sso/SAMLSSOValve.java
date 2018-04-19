@@ -26,6 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
+import org.opensaml.saml2.core.StatusCode;
+import org.opensaml.xml.util.Base64;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
@@ -45,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -237,6 +240,29 @@ public class SAMLSSOValve extends SingleSignOn {
                             Boolean.parseBoolean(ssoSPConfigProperties.getProperty(
                                     WebappSSOConstants.HANDLE_CONSUMER_URL_AFTER_SLO))) {
 
+                        if (Boolean.valueOf(ssoSPConfigProperties
+                                .getProperty(WebappSSOConstants.ENABLE_IDP_SESSION_VALIDATION_BEFORE_LOGOUT, "false"))
+                                && ssoAgentConfig.getSAML2().isPassiveAuthn()) {
+
+                            String saml2ResponseString = new String(Base64.decode(
+                                    request.getParameter(SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_RESP)),
+                                    Charset.forName("UTF-8"));
+                            org.opensaml.saml2.core.Response saml2Response = (org.opensaml.saml2.core.Response) SSOAgentUtils
+                                    .unmarshall(saml2ResponseString);
+                            String htmlPayload;
+                            ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+
+                            if (isNoPassive(saml2Response)) {
+                                htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
+                            } else {
+                                htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                            }
+                            response.addHeader(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE_TEXT_HTML);
+                            SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                            return;
+
+                        }
+
                         redirectPath = SSOUtils.removeTenantFromURI(redirectPath, customACSUrl, tenantName);
 
                         if (log.isDebugEnabled()) {
@@ -259,8 +285,18 @@ public class SAMLSSOValve extends SingleSignOn {
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 if (resolver.isHttpPostBinding()) {
                     if (request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) != null) {
-                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        String htmlPayload;
+                        if (Boolean.valueOf(ssoSPConfigProperties
+                                .getProperty(WebappSSOConstants.ENABLE_IDP_SESSION_VALIDATION_BEFORE_LOGOUT,
+                                        "false"))) {
+                            // IDP session validation before logout
+                            ssoAgentConfig.getSAML2().setPassiveAuthn(true);
+                            ssoAgentConfig.getSAML2().setRelayState(null);
+                            htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
+                        } else {
+                            ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                            htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        }
                         response.addHeader(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE_TEXT_HTML);
                         SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     } else {
@@ -273,8 +309,18 @@ public class SAMLSSOValve extends SingleSignOn {
                     if (log.isDebugEnabled()) {
                         log.debug("HTTP_BINDING_PARAM is not defined. Therefore redirecting to : ");
                     }
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, true));
+
+                    if (Boolean.valueOf(ssoSPConfigProperties
+                            .getProperty(WebappSSOConstants.ENABLE_IDP_SESSION_VALIDATION_BEFORE_LOGOUT, "false"))) {
+                        // IDP session validation before logout
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(true);
+                        ssoAgentConfig.getSAML2().setRelayState(null);
+                        response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
+
+                    } else {
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        response.sendRedirect(samlSSOManager.buildRedirectRequest(request, true));
+                    }
                 }
                 return;
 
@@ -390,5 +436,14 @@ public class SAMLSSOValve extends SingleSignOn {
         }
 
         return redirectPath;
+    }
+
+    private boolean isNoPassive(org.opensaml.saml2.core.Response response) {
+
+        return response.getStatus() != null &&
+                response.getStatus().getStatusCode() != null &&
+                response.getStatus().getStatusCode().getValue().equals(StatusCode.RESPONDER_URI) &&
+                response.getStatus().getStatusCode().getStatusCode() != null &&
+                response.getStatus().getStatusCode().getStatusCode().getValue().equals(StatusCode.NO_PASSIVE_URI);
     }
 }

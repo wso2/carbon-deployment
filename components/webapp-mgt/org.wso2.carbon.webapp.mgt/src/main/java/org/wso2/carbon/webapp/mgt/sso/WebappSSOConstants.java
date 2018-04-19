@@ -37,6 +37,8 @@ public class WebappSSOConstants {
     //SSO SP config property names
     public static String APP_SERVER_URL = "ApplicationServerURL";
 
+    public static String ENABLE_IDP_SESSION_VALIDATION_BEFORE_LOGOUT = "EnableIdpSessionValidationBeforeLogout";
+
     public static String CONSUMER_URL_POSTFIX = "SAML.ConsumerUrlPostFix";
 
     /**
