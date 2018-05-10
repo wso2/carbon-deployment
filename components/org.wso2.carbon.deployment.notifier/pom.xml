@@ -117,6 +117,7 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+		    <argLine>${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
