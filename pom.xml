@@ -73,7 +73,7 @@
 		<plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.0</version>
+                    <version>${jacoco.maven.plugin.version}</version>
                     <executions>
                         <execution>
                             <id>default-prepare-agent-by-coverage-enforcer</id>
@@ -500,6 +500,7 @@
         <jacoco.version>0.7.5.201505241946</jacoco.version>
         <org.eclipse.equinox.executable.version>3.5.0.v20110530-7P7NFUFFLWUl76mart</org.eclipse.equinox.executable.version>
         <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
+	<jacoco.maven.plugin.version>0.8.0</jacoco.maven.plugin.version>
     </properties>
 
 </project>
