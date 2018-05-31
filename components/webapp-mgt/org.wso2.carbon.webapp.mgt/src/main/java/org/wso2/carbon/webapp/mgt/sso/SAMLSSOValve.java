@@ -159,17 +159,26 @@ public class SAMLSSOValve extends SingleSignOn {
                 }
                 getNext().invoke(request, response);
                 return;
-            }  else {
-                String webappSkipURIs = request.getContext().findParameter(WebappSSOConstants.SKIP_URIS);
-                if (!StringUtils.isBlank(webappSkipURIs) && webappSkipURIs.contains(request.getRequestURI())) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Request matched a skip URL on the webapp. Skipping : " + request.getRequestURI());
+            } else {
+                String webappSkipURIs = request.getContext().findParameter(org.wso2.carbon.webapp.mgt.sso.WebappSSOConstants.SKIP_URIS);
+                String requestURI = request.getRequestURI();
+                if (StringUtils.isNotBlank(webappSkipURIs)) {
+                    List webappSkipURIsList = Arrays.asList(webappSkipURIs.split(","));
+                    if (webappSkipURIsList.contains(requestURI)) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Request matched a skip URL on the webapp. Skipping : " + requestURI);
+                        }
+                        getNext().invoke(request, response);
+                        return;
+                    } else {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Request did not match a skip URL on the webapp. : " + requestURI);
+                        }
                     }
-                    getNext().invoke(request, response);
-                    return;
                 } else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Request did not match a skip URL on the webapp. : " + request.getRequestURI());
+                        log.debug("The skip URL is empty. Request did not match a skip URL on the webapp. : " +
+                                requestURI);
                     }
                 }
             }
