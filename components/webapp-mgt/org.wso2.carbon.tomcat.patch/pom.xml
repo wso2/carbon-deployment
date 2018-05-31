@@ -17,13 +17,13 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt</artifactId>
-        <version>4.7.18-SNAPSHOT</version>
+        <version>4.7.18</version>
 	    <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
-    <version>4.7.18-SNAPSHOT</version>
+    <version>4.7.18</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Tomcat patch</name>
 	<description>The bundle to patch Tomcat source</description>
