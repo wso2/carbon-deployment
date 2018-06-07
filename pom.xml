@@ -1427,7 +1427,7 @@
         <!-- CXF Runtime Bundles -->
         <cxf.bundle.orbit.version>2.7.16.wso2v1</cxf.bundle.orbit.version>
         <cxf.bundle.version>2.7.16</cxf.bundle.version>
-        <cxf.xjc.version>3.2.0</cxf.xjc.version>
+        <cxf.xjc.version>3.2.1</cxf.xjc.version>
         <spring.version>3.2.18.RELEASE</spring.version>
         <carbon.cxf.webapp.ext>1.0.1</carbon.cxf.webapp.ext>
         <aopalliance.version>1.0</aopalliance.version>
