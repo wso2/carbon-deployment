@@ -141,6 +141,6 @@ public class AuthorizationHeaderFilter implements Filter {
     }
 
     private void handleErrorResponse(HttpServletResponse response, int error, String errorMsg) throws IOException {
-        response.sendError(error, errorMsg);
+        response.setStatus(error);
     }
 }
