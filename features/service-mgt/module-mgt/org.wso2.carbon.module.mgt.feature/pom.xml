@@ -71,7 +71,7 @@
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.server.feature:${carbon.deployment.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.server.feature:${project.version}
                                 </includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.ui.feature
                                 </includedFeatureDef>

@@ -64,7 +64,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.stat.publisher:${carbon.deployment.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.stat.publisher:${project.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

@@ -99,7 +99,7 @@
                                     ua.parser.wso2:ua-parser:${ua.parser.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.as.monitoring:${carbon.deployment.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.as.monitoring:${project.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

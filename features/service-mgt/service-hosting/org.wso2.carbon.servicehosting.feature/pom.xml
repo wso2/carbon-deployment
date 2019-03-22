@@ -66,7 +66,7 @@
                             <id>org.wso2.carbon.servicehosting</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.service.mgt:compatible:${carbon.deployment.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.service.mgt:compatible:${project.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.aarservices.feature
