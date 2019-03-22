@@ -73,5 +73,11 @@
             <Classpath>${carbon.home}/lib/runtimes/cxf/*.jar;${carbon.home}/lib/runtimes/cxf/</Classpath>
         </ExclusiveEnvironment>
     </ExclusiveEnvironments>
+    <ExclusiveEnvironments>
+        <ExclusiveEnvironment>
+            <Name>CXF3</Name>
+            <Classpath>${carbon.home}/lib/runtimes/cxf3/*.jar;${carbon.home}/lib/runtimes/cxf3/</Classpath>
+        </ExclusiveEnvironment>
+    </ExclusiveEnvironments>
 
 </Classloading>
