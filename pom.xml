@@ -395,9 +395,9 @@
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity</groupId>
+                <groupId>org.wso2.carbon.identity.agent.entitlement.mediator</groupId>
                 <artifactId>org.wso2.carbon.identity.entitlement.proxy</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.entitlement.proxy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -1327,6 +1327,8 @@
         <!-- Carbon Identity version-->
         <carbon.identity.version>5.1.0</carbon.identity.version>
         <carbon.identity.imp.pkg.version>[5.0.0, 6.0.0)</carbon.identity.imp.pkg.version>
+
+        <carbon.identity.entitlement.proxy.version>5.1.5</carbon.identity.entitlement.proxy.version>
 
         <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
 
