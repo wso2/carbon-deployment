@@ -90,7 +90,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.bam.service.data.publisher:${carbon.deployment.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.bam.service.data.publisher:${project.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

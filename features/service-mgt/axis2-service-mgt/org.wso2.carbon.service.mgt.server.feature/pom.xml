@@ -79,7 +79,7 @@
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
                                 </importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.module.mgt.server:compatible:${carbon.deployment.version}
+                                <importFeatureDef>org.wso2.carbon.module.mgt.server:compatible:${project.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>

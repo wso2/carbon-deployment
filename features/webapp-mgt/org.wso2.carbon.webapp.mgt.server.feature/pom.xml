@@ -106,7 +106,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${carbon.deployment.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${project.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.deployer</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.tomcat.patch</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.discovery.cxf</bundleDef>

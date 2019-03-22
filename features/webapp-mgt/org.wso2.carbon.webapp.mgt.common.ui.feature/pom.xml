@@ -66,8 +66,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.list.ui:${carbon.deployment.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.stub:${carbon.deployment.version}
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.list.ui:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.stub:${project.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

@@ -62,8 +62,8 @@
                                 <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.server.feature:${carbon.deployment.version}</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.ui.feature:${carbon.deployment.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.server.feature:${project.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.ui.feature:${project.version}</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>
