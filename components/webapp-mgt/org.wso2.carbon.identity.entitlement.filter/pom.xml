@@ -52,7 +52,7 @@
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.agent.entitlement.mediator</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.entitlement.proxy</artifactId>
             <exclusions>
                 <exclusion>
