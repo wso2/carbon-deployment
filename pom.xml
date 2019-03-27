@@ -4,7 +4,7 @@
     <groupId>org.wso2.carbon.deployment</groupId>
     <artifactId>carbon-deployment</artifactId>
     <packaging>pom</packaging>
-    <version>4.7.21-SNAPSHOT</version>
+    <version>4.7.21</version>
     <name>WSO2 Carbon - Deployment Aggregator Pom</name>
     <url>http://wso2.org</url>
 
@@ -33,7 +33,7 @@
         <url>https://github.com/wso2/carbon-deployment.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-deployment.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-deployment.git</connection>
-        <tag>HEAD</tag>
+        <tag>v4.7.21</tag>
     </scm>
 
     <dependencyManagement>
@@ -1331,7 +1331,7 @@
         <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
 
         <!-- Carbon Deployment version-->
-        <carbon.deployment.version>4.7.21-SNAPSHOT</carbon.deployment.version>
+        <carbon.deployment.version>4.7.21</carbon.deployment.version>
         <carbon.deployment.exp.pkg.version>${carbon.deployment.version}</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.6.0, 5.0.0)</carbon.deployment.imp.pkg.version>
 
