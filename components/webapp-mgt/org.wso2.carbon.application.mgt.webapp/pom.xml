@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt</artifactId>
-        <version>4.8.1-SNAPSHOT</version>
+        <version>4.8.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -28,7 +28,7 @@
     <artifactId>org.wso2.carbon.application.mgt.webapp</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Webapp Applications BE</name>
-    <version>4.8.1-SNAPSHOT</version>
+    <version>4.8.1</version>
     <description>org.wso2.carbon.application.mgt.webapp provides the carbon app mgt functionalities specific to
         webapplications
     </description>
