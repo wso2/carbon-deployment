@@ -1437,7 +1437,7 @@
         <!-- Rampart Version -->
         <rampart.wso2.version>1.6.1.wso2v19</rampart.wso2.version>
 
-        <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
+        <libthrift.wso2.version>0.9.2.wso2v1</libthrift.wso2.version>
 
         <!-- JSON Version -->
         <orbit.version.json>2.0.0.wso2v1</orbit.version.json>
