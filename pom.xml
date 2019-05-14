@@ -1555,7 +1555,7 @@
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 
         <org.apache.cxf.version>3.2.8</org.apache.cxf.version>
-        <com.fasterxml.jackson.version>2.9.7</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.9.8</com.fasterxml.jackson.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
         <!-- for maven release process -->
