@@ -44,6 +44,13 @@ public class WebAppDeployerServiceComponent {
                 vhostDeployerProvider, null);
     }
 
+    protected void deactivate(ComponentContext context) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Deactivating Webapp Deployer Service Component");
+        }
+    }
+
     protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
         DataHolder.setCarbonTomcatService(carbonTomcatService);
     }

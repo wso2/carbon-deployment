@@ -19,6 +19,9 @@
 package org.wso2.carbon.module.mgt.internal;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -29,6 +32,22 @@ import org.wso2.carbon.registry.core.service.RegistryService;
  * unbind="unsetRegistryService"
  */
 public class ModuleManagementServiceComponent {
+
+    private static final Log log = LogFactory.getLog(ModuleManagementServiceComponent.class);
+
+    protected void activate(ComponentContext ctx) {
+
+        if (log.isDebugEnabled()) {
+            log.info("Activating Module Management Service Component");
+        }
+    }
+
+    protected void deactivate(ComponentContext context) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Deactivating Module Management Service Component");
+        }
+    }
 
     protected void setRegistryService(RegistryService registryService) {
         DataHolder.setRegistryService(registryService);

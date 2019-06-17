@@ -15,6 +15,9 @@
  */
 package org.wso2.carbon.webapp.mgt.internal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
@@ -33,6 +36,21 @@ import org.wso2.carbon.webapp.mgt.DataHolder;
  */
 public class WebappDeploymentServiceComponent {
 
+    private static final Log log = LogFactory.getLog(WebappDeploymentServiceComponent.class);
+
+    protected void activate(ComponentContext ctx) {
+
+        if (log.isDebugEnabled()) {
+            log.info("Activating Webapp Deployment Service Component");
+        }
+    }
+
+    protected void deactivate(ComponentContext context) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Deactivating Webapp Deployment Service Component");
+        }
+    }
 
     protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
         DataHolder.setCarbonTomcatService(carbonTomcatService);
