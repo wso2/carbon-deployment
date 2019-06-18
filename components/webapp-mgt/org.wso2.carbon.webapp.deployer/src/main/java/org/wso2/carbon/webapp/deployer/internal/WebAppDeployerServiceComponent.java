@@ -16,7 +16,6 @@
  *  under the License.
  *
  */
-
 package org.wso2.carbon.webapp.deployer.internal;
 
 import org.apache.commons.logging.Log;
@@ -25,32 +24,39 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.deployment.Axis2DeployerProvider;
 import org.wso2.carbon.webapp.mgt.DataHolder;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="org.wso2.carbon.webapp.deployer.internal.WebAppDeployerServiceComponent"
- * immediate="true"
- * @scr.reference name="carbon.tomcat.service"
- * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
- * cardinality="0..1" policy="dynamic" bind="setCarbonTomcatService"
- * unbind="unsetCarbonTomcatService"
- */
+@Component(
+         name = "org.wso2.carbon.webapp.deployer.internal.WebAppDeployerServiceComponent", 
+         immediate = true)
 public class WebAppDeployerServiceComponent {
 
     private static final Log log = LogFactory.getLog(WebAppDeployerServiceComponent.class);
 
+    @Activate
     protected void activate(ComponentContext ctx) {
-        VirtualHostDeployerProvider vhostDeployerProvider =  new VirtualHostDeployerProvider();
-        (ctx.getBundleContext()).registerService(Axis2DeployerProvider.class.getName(),
-                vhostDeployerProvider, null);
+        VirtualHostDeployerProvider vhostDeployerProvider = new VirtualHostDeployerProvider();
+        (ctx.getBundleContext()).registerService(Axis2DeployerProvider.class.getName(), vhostDeployerProvider, null);
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext context) {
-
         if (log.isDebugEnabled()) {
             log.debug("Deactivating Webapp Deployer Service Component");
         }
     }
 
+    @Reference(
+             name = "carbon.tomcat.service", 
+             service = org.wso2.carbon.tomcat.api.CarbonTomcatService.class, 
+             cardinality = ReferenceCardinality.OPTIONAL, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetCarbonTomcatService")
     protected void setCarbonTomcatService(CarbonTomcatService carbonTomcatService) {
         DataHolder.setCarbonTomcatService(carbonTomcatService);
     }
@@ -59,3 +65,4 @@ public class WebAppDeployerServiceComponent {
         DataHolder.setCarbonTomcatService(null);
     }
 }
+

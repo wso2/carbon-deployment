@@ -15,38 +15,48 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-
 package org.wso2.carbon.application.mgt.webapp.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="application.mgt.webapp.dscomponent" immediate="true"
- * @scr.reference name="application.manager"
- * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
- * cardinality="1..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
- */
+@Component(
+         name = "application.mgt.webapp.dscomponent", 
+         immediate = true)
 public class WarAppServiceComponent {
 
     private static Log log = LogFactory.getLog(WarAppServiceComponent.class);
 
     private static ApplicationManagerService applicationManager;
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Activated WarAppServiceComponent");
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Deactivated WarAppServiceComponent");
         }
     }
 
+    @Reference(
+             name = "application.manager", 
+             service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetAppManager")
     protected void setAppManager(ApplicationManagerService appManager) {
         applicationManager = appManager;
     }
@@ -57,10 +67,10 @@ public class WarAppServiceComponent {
 
     public static ApplicationManagerService getAppManager() {
         if (applicationManager == null) {
-            String msg = "Before activating War App management service component, an instance of "
-                    + "ApplicationManager should be in existance";
+            String msg = "Before activating War App management service component, an instance of " + "ApplicationManager should be in existance";
             log.error(msg);
         }
         return applicationManager;
     }
 }
+

@@ -20,36 +20,44 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
  * UrlMapperServiceComponent is to get HotUpdateService
  * from url-mapper whenever the component is available.
- *
- * @scr.component name="org.wso2.carbon.webapp.mgt.internal.UrlMapperServiceComponent"
- * immediate="true"
-  * @scr.reference name="url.mapper.service"
- * interface="org.wso2.carbon.url.mapper.HotUpdateService"
- * cardinality="0..1" policy="dynamic" bind="setHotUpdateService"
- * unbind="unsetHotUpdateService"
  */
+@Component(
+         name = "org.wso2.carbon.webapp.mgt.internal.UrlMapperServiceComponent", 
+         immediate = true)
 public class UrlMapperServiceComponent {
 
     private static final Log log = LogFactory.getLog(UrlMapperServiceComponent.class);
 
+    @Activate
     protected void activate(ComponentContext ctx) {
-
         if (log.isDebugEnabled()) {
             log.info("Activating URL Mapped Service Component");
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext context) {
-
         if (log.isDebugEnabled()) {
             log.debug("Deactivating URL Mapped Service Component");
         }
     }
 
+    @Reference(
+             name = "url.mapper.service", 
+             service = org.wso2.carbon.url.mapper.HotUpdateService.class, 
+             cardinality = ReferenceCardinality.OPTIONAL, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetHotUpdateService")
     protected void setHotUpdateService(HotUpdateService hotUpdateService) {
         DataHolder.setHotUpdateService(hotUpdateService);
     }
@@ -58,3 +66,4 @@ public class UrlMapperServiceComponent {
         DataHolder.setHotUpdateService(null);
     }
 }
+

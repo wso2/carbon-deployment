@@ -38,7 +38,6 @@ import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -48,27 +47,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="org.wso2.carbon.bam.service.data.publisher " immediate="true"
- * @scr.reference name="org.wso2.carbon.statistics.services"
- * interface="org.wso2.carbon.statistics.services.SystemStatisticsUtil"
- * cardinality="1..1" policy="dynamic" bind="setSystemStatisticsUtil"
- * unbind="unsetSystemStatisticsUtil"
- * @scr.reference name="config.context.service"
- * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
- * policy="dynamic" bind="setConfigurationContextService"
- * unbind="unsetConfigurationContextService"
- * @scr.reference name="org.wso2.carbon.registry.service"
- * interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="1..1" policy="dynamic" bind="setRegistryService"
- * unbind="unsetRegistryService"
- */
-
+@Component(
+         name = "org.wso2.carbon.bam.service.data.publisher ", 
+         immediate = true)
 public class StatisticsServiceComponent {
 
     private static SystemStatisticsUtil systemStatisticsUtil;
+
     private static ConfigurationContext configurationContext;
+
     private static ServerConfiguration serverConfiguration;
 
     private static ServiceDataPublisherAdmin dataPublisherAdminService;
@@ -77,30 +71,26 @@ public class StatisticsServiceComponent {
 
     private static Log log = LogFactory.getLog(StatisticsServiceComponent.class);
 
+    @Activate
     protected void activate(ComponentContext context) {
         try {
             dataPublisherAdminService = new ServiceDataPublisherAdmin();
             BundleContext bundleContext = context.getBundleContext();
             bundleContext.registerService(ServiceDataPublisherAdmin.class.getName(), dataPublisherAdminService, null);
         } catch (Throwable e) {
-            //since component activation happen at startup log and ignore it.
+            // since component activation happen at startup log and ignore it.
             log.error("Error while registering service ", e);
         }
         checkPublishingEnabled();
-
         ServiceAgentUtil.setPublishingEnabled(publishingEnabled);
-        //Engaging module only if  service publishing is enabled in bam.xml
+        // Engaging module only if  service publishing is enabled in bam.xml
         if (publishingEnabled) {
             try {
                 // Engaging StatisticsModule as a global module
-                configurationContext.getAxisConfiguration().engageModule(
-                        ServiceStatisticsPublisherConstants.BAM_SERVICE_STATISTICS_PUBLISHER_MODULE_NAME);
+                configurationContext.getAxisConfiguration().engageModule(ServiceStatisticsPublisherConstants.BAM_SERVICE_STATISTICS_PUBLISHER_MODULE_NAME);
                 BundleContext bundleContext = context.getBundleContext();
-                bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
-                        new ServiceStatisticsAxis2ConfigurationContextObserver(), null);
-
+                bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(), new ServiceStatisticsAxis2ConfigurationContextObserver(), null);
                 new RegistryPersistenceManager().load();
-
                 log.info("BAM service statistics data publisher bundle is activated");
             } catch (AxisFault axisFault) {
                 if (log.isErrorEnabled()) {
@@ -112,11 +102,11 @@ public class StatisticsServiceComponent {
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext context) throws DataEndpointException {
         if (log.isDebugEnabled()) {
             log.debug("BAM service statistics data publisher bundle is deactivated");
-            Map<Integer, EventConfigNStreamDef> tenantSpecificEventConfig =
-                    TenantEventConfigData.getTenantSpecificEventingConfigData();
+            Map<Integer, EventConfigNStreamDef> tenantSpecificEventConfig = TenantEventConfigData.getTenantSpecificEventingConfigData();
             for (Map.Entry<Integer, EventConfigNStreamDef> entry : tenantSpecificEventConfig.entrySet()) {
                 EventConfigNStreamDef configData = entry.getValue();
                 String key = configData.getUrl() + "_" + configData.getUserName() + "_" + configData.getPassword();
@@ -133,11 +123,9 @@ public class StatisticsServiceComponent {
     private void checkPublishingEnabled() {
         OMElement bamConfig = getPublishingConfig();
         if (null != bamConfig) {
-            OMElement servicePublishElement =
-                    bamConfig.getFirstChildWithName(new QName(CommonConstants.BAM_SERVICE_PUBLISH_OMELEMENT));
+            OMElement servicePublishElement = bamConfig.getFirstChildWithName(new QName(CommonConstants.BAM_SERVICE_PUBLISH_OMELEMENT));
             if (null != servicePublishElement) {
-                if (servicePublishElement.getText().trim()
-                        .equalsIgnoreCase(CommonConstants.BAM_SERVICE_PUBLISH_ENABLED)) {
+                if (servicePublishElement.getText().trim().equalsIgnoreCase(CommonConstants.BAM_SERVICE_PUBLISH_ENABLED)) {
                     publishingEnabled = true;
                 } else {
                     log.info("BAM Service Stat Publishing is disabled");
@@ -153,18 +141,14 @@ public class StatisticsServiceComponent {
     }
 
     private OMElement getPublishingConfig() {
-        String bamConfigPath = CarbonUtils.getEtcCarbonConfigDirPath() +
-                File.separator + CommonConstants.BAM_CONFIG_XML;
-
+        String bamConfigPath = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator + CommonConstants.BAM_CONFIG_XML;
         File bamConfigFile = new File(bamConfigPath);
         try {
             XMLInputFactory xif = XMLInputFactory.newInstance();
             InputStream inputStream = new FileInputStream(bamConfigFile);
             XMLStreamReader reader = xif.createXMLStreamReader(inputStream);
             xif.setProperty("javax.xml.stream.isCoalescing", false);
-
             StAXOMBuilder builder = new StAXOMBuilder(reader);
-
             return builder.getDocument().getOMDocumentElement();
         } catch (FileNotFoundException e) {
             log.warn("No " + CommonConstants.BAM_CONFIG_XML + " found in " + bamConfigPath);
@@ -175,7 +159,12 @@ public class StatisticsServiceComponent {
         }
     }
 
-
+    @Reference(
+             name = "org.wso2.carbon.statistics.services", 
+             service = org.wso2.carbon.statistics.services.SystemStatisticsUtil.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetSystemStatisticsUtil")
     protected void setSystemStatisticsUtil(SystemStatisticsUtil systemStatisticsUtil) {
         this.systemStatisticsUtil = systemStatisticsUtil;
     }
@@ -188,17 +177,26 @@ public class StatisticsServiceComponent {
         systemStatisticsUtil = null;
     }
 
-    protected void setConfigurationContextService(
-            ConfigurationContextService configurationContextService) {
+    @Reference(
+             name = "config.context.service", 
+             service = org.wso2.carbon.utils.ConfigurationContextService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetConfigurationContextService")
+    protected void setConfigurationContextService(ConfigurationContextService configurationContextService) {
         configurationContext = configurationContextService.getServerConfigContext();
-
     }
 
-    protected void unsetConfigurationContextService(
-            ConfigurationContextService configurationContextService) {
+    protected void unsetConfigurationContextService(ConfigurationContextService configurationContextService) {
         configurationContext = null;
     }
 
+    @Reference(
+             name = "org.wso2.carbon.registry.service", 
+             service = org.wso2.carbon.registry.core.service.RegistryService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetRegistryService")
     protected void setRegistryService(RegistryService registryService) {
         try {
             RegistryPersistenceManager.setRegistryService(registryService);
@@ -207,7 +205,6 @@ public class StatisticsServiceComponent {
         }
     }
 
-
     protected void unsetRegistryService(RegistryService registryService) {
         RegistryPersistenceManager.setRegistryService(null);
     }
@@ -215,5 +212,5 @@ public class StatisticsServiceComponent {
     public static boolean isPublishingEnabled() {
         return publishingEnabled;
     }
-
 }
+

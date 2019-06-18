@@ -27,32 +27,27 @@ import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.service.mgt.multitenancy.ServiceUnloader;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.MBeanRegistrar;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="org.wso2.carbon.service.mgt.ServiceManagementServiceComponent"
- * immediate="true"
- * @scr.reference name="org.wso2.carbon.configCtx"
- * interface="org.wso2.carbon.utils.ConfigurationContextService"
- * cardinality="1..1" policy="dynamic"
- * bind="setConfigurationContext"
- * unbind="unsetConfigurationContext"
- * @scr.reference name="org.wso2.carbon.base.serverConfig"
- * interface="org.wso2.carbon.base.api.ServerConfigurationService"
- * cardinality="1..1" policy="dynamic"
- * bind="setServerConfiguration"
- * unbind="unsetServerConfiguration"
- * @scr.reference name="application.manager"
- * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
- * cardinality="0..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
- */
+@Component(
+         name = "org.wso2.carbon.service.mgt.ServiceManagementServiceComponent", 
+         immediate = true)
 public class ServiceManagementServiceComponent {
 
     private static Log log = LogFactory.getLog(ServiceManagementServiceComponent.class);
 
     private ConfigurationContext configCtx;
+
     private ServiceAdmin serviceAdmin;
+
     private static ApplicationManagerService applicationManager;
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         try {
             BundleContext bundleContext = ctxt.getBundleContext();
@@ -75,12 +70,19 @@ public class ServiceManagementServiceComponent {
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Deactivated ServiceManagementServiceComponent");
         }
     }
 
+    @Reference(
+             name = "org.wso2.carbon.configCtx", 
+             service = org.wso2.carbon.utils.ConfigurationContextService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
         DataHolder.setServerConfigContext(configCtx.getServerConfigContext());
@@ -90,12 +92,17 @@ public class ServiceManagementServiceComponent {
         this.configCtx = null;
     }
 
+    @Reference(
+             name = "org.wso2.carbon.base.serverConfig", 
+             service = org.wso2.carbon.base.api.ServerConfigurationService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetServerConfiguration")
     protected void setServerConfiguration(ServerConfigurationService serverConfigurationService) {
         registerMBeans(serverConfigurationService);
     }
 
-    protected void unsetServerConfiguration(
-            ServerConfigurationService serverConfigurationServiceg) {
+    protected void unsetServerConfiguration(ServerConfigurationService serverConfigurationServiceg) {
     }
 
     private void registerMBeans(ServerConfigurationService serverConfigurationService) {
@@ -110,6 +117,12 @@ public class ServiceManagementServiceComponent {
         }
     }
 
+    @Reference(
+             name = "application.manager", 
+             service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class, 
+             cardinality = ReferenceCardinality.OPTIONAL, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetAppManager")
     protected void setAppManager(ApplicationManagerService applicationManager) {
         this.applicationManager = applicationManager;
         DataHolder.setApplicationManager(applicationManager);
@@ -119,3 +132,4 @@ public class ServiceManagementServiceComponent {
         this.applicationManager = null;
     }
 }
+
