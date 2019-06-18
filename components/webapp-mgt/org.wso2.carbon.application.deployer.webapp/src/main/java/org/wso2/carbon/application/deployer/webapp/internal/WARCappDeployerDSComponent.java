@@ -27,45 +27,47 @@ import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.application.deployer.Feature;
 import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.webapp.WARCappDeployer;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="application.deployer.war" immediate="true"
- */
-
+@Component(
+         name = "application.deployer.war", 
+         immediate = true)
 public class WARCappDeployerDSComponent {
 
     private static Log log = LogFactory.getLog(WARCappDeployerDSComponent.class);
 
-//    private static ApplicationManagerService applicationManager;
+    // private static ApplicationManagerService applicationManager;
     private static Map<String, List<Feature>> requiredFeatures;
 
     private static ServiceRegistration appHandlerRegistration;
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         try {
-            //register war deployer as an OSGi service
+            // register war deployer as an OSGi service
             WARCappDeployer warDeployer = new WARCappDeployer();
-            appHandlerRegistration = ctxt.getBundleContext().registerService(
-                    AppDeploymentHandler.class.getName(), warDeployer, null);
-
+            appHandlerRegistration = ctxt.getBundleContext().registerService(AppDeploymentHandler.class.getName(), warDeployer, null);
             // read required-features.xml
-            URL reqFeaturesResource = ctxt.getBundleContext().getBundle()
-                    .getResource(AppDeployerConstants.REQ_FEATURES_XML);
+            URL reqFeaturesResource = ctxt.getBundleContext().getBundle().getResource(AppDeployerConstants.REQ_FEATURES_XML);
             if (reqFeaturesResource != null) {
                 InputStream xmlStream = reqFeaturesResource.openStream();
-                requiredFeatures = AppDeployerUtils
-                        .readRequiredFeaturs(new StAXOMBuilder(xmlStream).getDocumentElement());
+                requiredFeatures = AppDeployerUtils.readRequiredFeaturs(new StAXOMBuilder(xmlStream).getDocumentElement());
             }
         } catch (Throwable e) {
             log.error("Failed to activate WAR Capp Deployer", e);
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         // Unregister the OSGi service
         if (appHandlerRegistration != null) {
@@ -76,5 +78,5 @@ public class WARCappDeployerDSComponent {
     public static Map<String, List<Feature>> getRequiredFeatures() {
         return requiredFeatures;
     }
-
 }
+

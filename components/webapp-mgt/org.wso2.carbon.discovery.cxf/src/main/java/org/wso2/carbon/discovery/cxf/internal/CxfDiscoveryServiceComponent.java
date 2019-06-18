@@ -15,50 +15,54 @@
 */
 package org.wso2.carbon.discovery.cxf.internal;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="org.wso2.carbon.discovery.cxf" immediate="true"
- * @scr.reference name="config.context.service"
- * interface="org.wso2.carbon.utils.ConfigurationContextService"
- * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
- * unbind="unsetConfigurationContextService"
- * @scr.reference name="server.configuration.service"
- * interface="org.wso2.carbon.base.api.ServerConfigurationService"
- * cardinality="1..1" policy="dynamic" bind="setServerConfigurationService"
- * unbind="unsetServerConfigurationService"
- */
+@Component(
+         name = "org.wso2.carbon.discovery.cxf", 
+         immediate = true)
 public class CxfDiscoveryServiceComponent {
 
     private static final Log log = LogFactory.getLog(CxfDiscoveryServiceComponent.class);
 
     private ServiceRegistration observerServiceRegistration;
+
     private CxfDiscoveryDataHolder dataHolder = CxfDiscoveryDataHolder.getInstance();
 
+    @Activate
     protected void activate(ComponentContext ctx) {
-
         if (log.isDebugEnabled()) {
             log.info("Activating CXF WS-Discovery Startup Publisher Component");
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Deactivating CXF WS-Discovery component");
         }
-
         if (observerServiceRegistration != null) {
             observerServiceRegistration.unregister();
             observerServiceRegistration = null;
         }
     }
 
+    @Reference(
+             name = "config.context.service", 
+             service = org.wso2.carbon.utils.ConfigurationContextService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetConfigurationContextService")
     protected void setConfigurationContextService(ConfigurationContextService contextService) {
         dataHolder.setMainServerConfigContext(contextService.getServerConfigContext());
         dataHolder.setClientConfigurationContext(contextService.getClientConfigContext());
@@ -68,6 +72,13 @@ public class CxfDiscoveryServiceComponent {
         dataHolder.setMainServerConfigContext(null);
         dataHolder.setClientConfigurationContext(null);
     }
+
+    @Reference(
+             name = "server.configuration.service", 
+             service = org.wso2.carbon.base.api.ServerConfigurationService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetServerConfigurationService")
     protected void setServerConfigurationService(ServerConfigurationService serverConfiguration) {
         dataHolder.setServerConfigurationService(serverConfiguration);
     }
@@ -76,3 +87,4 @@ public class CxfDiscoveryServiceComponent {
         dataHolder.setServerConfigurationService(null);
     }
 }
+

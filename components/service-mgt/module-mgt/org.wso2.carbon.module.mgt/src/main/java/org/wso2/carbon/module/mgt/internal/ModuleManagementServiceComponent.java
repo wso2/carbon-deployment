@@ -15,21 +15,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.module.mgt.internal;
 
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="org.wso2.carbon.module.mgt.internal.ModuleManagementServiceComponent" immediate="true"
- * @scr.reference name="org.wso2.carbon.registry.service"
- * interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="1..1" policy="dynamic" bind="setRegistryService"
- * unbind="unsetRegistryService"
- */
+@Component(
+         name = "org.wso2.carbon.module.mgt.internal.ModuleManagementServiceComponent", 
+         immediate = true)
 public class ModuleManagementServiceComponent {
 
+    private static final Log log = LogFactory.getLog(ModuleManagementServiceComponent.class);
+
+    @Activate
+    protected void activate(ComponentContext ctx) {
+        if (log.isDebugEnabled()) {
+            log.info("Activating Module Management Service Component");
+        }
+    }
+
+    @Deactivate
+    protected void deactivate(ComponentContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("Deactivating Module Management Service Component");
+        }
+    }
+
+    @Reference(
+             name = "org.wso2.carbon.registry.service", 
+             service = org.wso2.carbon.registry.core.service.RegistryService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetRegistryService")
     protected void setRegistryService(RegistryService registryService) {
         DataHolder.setRegistryService(registryService);
     }
@@ -37,5 +62,5 @@ public class ModuleManagementServiceComponent {
     protected void unsetRegistryService(RegistryService registryService) {
         DataHolder.setRegistryService(null);
     }
-
 }
+

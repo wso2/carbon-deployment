@@ -42,37 +42,26 @@ import org.wso2.carbon.webapp.mgt.WebappsConstants;
 import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
 import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-
-/**
- * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
- * immediate="true"
- * @scr.reference name="config.context.service"
- * interface="org.wso2.carbon.utils.ConfigurationContextService"
- * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService"
- * unbind="unsetConfigurationContextService"
- * @scr.reference name="user.realmservice.default" interface="org.wso2.carbon.user.core.service.RealmService"
- * cardinality="1..1" policy="dynamic" bind="setRealmService"  unbind="unsetRealmService"
- * @scr.reference name="depsych.service" interface="org.wso2.carbon.core.deployment.DeploymentSynchronizer"
- * cardinality="0..1" policy="dynamic"  bind="setDeploymentSynchronizerService" unbind="unsetDeploymentSynchronizerService"
- * @scr.reference name="tenant.registryloader"
- * interface="org.wso2.carbon.registry.core.service.TenantRegistryLoader"
- * cardinality="1..1" policy="dynamic"
- * bind="setTenantRegistryLoader"
- * unbind="unsetTenantRegistryLoader"
- * @scr.reference name="application.manager"
- * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
- * cardinality="0..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
- */
+@Component(
+         name = "org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent", 
+         immediate = true)
 public class WebappManagementServiceComponent {
+
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
 
     private static ApplicationManagerService applicationManager;
 
+    @Activate
     protected void activate(ComponentContext ctx) {
         try {
             // Register the valves with Tomcat
@@ -82,33 +71,35 @@ public class WebappManagementServiceComponent {
                 valves.add(new GhostWebappDeployerValve());
                 // registering WebappUnloader as an OSGi service
                 WebappUnloader webappUnloader = new WebappUnloader();
-                ctx.getBundleContext().registerService(ArtifactUnloader.class.getName(),
-                                                       webappUnloader, null);
+                ctx.getBundleContext().registerService(ArtifactUnloader.class.getName(), webappUnloader, null);
                 GhostWebappMetaArtifactsLoader artifactsLoader = new GhostWebappMetaArtifactsLoader();
-                ctx.getBundleContext().registerService(GhostMetaArtifactsLoader.class.getName(),
-                                                       artifactsLoader, null);
-
+                ctx.getBundleContext().registerService(GhostMetaArtifactsLoader.class.getName(), artifactsLoader, null);
             } else {
                 setServerURLParam(DataHolder.getServerConfigContext());
             }
-            //adding TenantLazyLoaderValve first in the TomcatContainer if Url mapping available
-            if (DataHolder.getHotUpdateService() != null
-//                && TomcatValveContainer.isValveExists(new UrlMapperValve //TODO: Fix this once URLMapper component becomes available
-                    ) {
+            // adding TenantLazyLoaderValve first in the TomcatContainer if Url mapping available
+            if (DataHolder.getHotUpdateService() != null) // && TomcatValveContainer.isValveExists(new UrlMapperValve //TODO: Fix this once URLMapper component becomes available
+            {
                 TomcatValveContainer.addValves(WebappsConstants.VALVE_INDEX, valves);
             } else {
                 TomcatValveContainer.addValves(valves);
             }
-
         } catch (Throwable e) {
             log.error("Error occurred while activating WebappManagementServiceComponent", e);
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctx) {
-//         TomcatValveContainer.removeValves();
+    // TomcatValveContainer.removeValves();
     }
 
+    @Reference(
+             name = "config.context.service", 
+             service = org.wso2.carbon.utils.ConfigurationContextService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetConfigurationContextService")
     protected void setConfigurationContextService(ConfigurationContextService contextService) {
         DataHolder.setServerConfigContext(contextService.getServerConfigContext());
     }
@@ -117,15 +108,26 @@ public class WebappManagementServiceComponent {
         DataHolder.setServerConfigContext(null);
     }
 
-
+    @Reference(
+             name = "user.realmservice.default", 
+             service = org.wso2.carbon.user.core.service.RealmService.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetRealmService")
     protected void setRealmService(RealmService realmService) {
-        //keeping the realm service in the DataHolder class
+        // keeping the realm service in the DataHolder class
         DataHolder.setRealmService(realmService);
     }
 
     protected void unsetRealmService(RealmService realmService) {
     }
 
+    @Reference(
+             name = "tenant.registryloader", 
+             service = org.wso2.carbon.registry.core.service.TenantRegistryLoader.class, 
+             cardinality = ReferenceCardinality.MANDATORY, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetTenantRegistryLoader")
     protected void setTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
         DataHolder.setTenantRegistryLoader(tenantRegistryLoader);
     }
@@ -133,6 +135,12 @@ public class WebappManagementServiceComponent {
     protected void unsetTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
     }
 
+    @Reference(
+             name = "depsych.service", 
+             service = org.wso2.carbon.core.deployment.DeploymentSynchronizer.class, 
+             cardinality = ReferenceCardinality.OPTIONAL, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetDeploymentSynchronizerService")
     protected void setDeploymentSynchronizerService(DeploymentSynchronizer depSynchService) {
         DataHolder.setDeploymentSynchronizerService(depSynchService);
     }
@@ -143,34 +151,27 @@ public class WebappManagementServiceComponent {
 
     private void setServerURLParam(ConfigurationContext configurationContext) {
         // Adding server url as a parameter to webapps servlet context init parameter
-        Map<String, WebApplicationsHolder> webApplicationsHolderList =
-                WebAppUtils.getAllWebappHolders(configurationContext);
-
-        WebContextParameter serverUrlParam =
-                new WebContextParameter("webServiceServerURL", CarbonUtils.
-                        getServerURL(ServerConfiguration.getInstance(),
-                                     configurationContext));
-
-        List<WebContextParameter> servletContextParameters =
-                (ArrayList<WebContextParameter>) configurationContext.
-                        getProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST);
-
+        Map<String, WebApplicationsHolder> webApplicationsHolderList = WebAppUtils.getAllWebappHolders(configurationContext);
+        WebContextParameter serverUrlParam = new WebContextParameter("webServiceServerURL", CarbonUtils.getServerURL(ServerConfiguration.getInstance(), configurationContext));
+        List<WebContextParameter> servletContextParameters = (ArrayList<WebContextParameter>) configurationContext.getProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST);
         if (servletContextParameters != null) {
             servletContextParameters.add(serverUrlParam);
         }
-
         for (WebApplicationsHolder webApplicationsHolder : webApplicationsHolderList.values()) {
             if (webApplicationsHolder != null) {
                 for (WebApplication application : webApplicationsHolder.getStartedWebapps().values()) {
-                    application.getContext().getServletContext().
-                            setAttribute(serverUrlParam.getName(), serverUrlParam.getValue());
+                    application.getContext().getServletContext().setAttribute(serverUrlParam.getName(), serverUrlParam.getValue());
                 }
             }
-
         }
-
     }
 
+    @Reference(
+             name = "application.manager", 
+             service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class, 
+             cardinality = ReferenceCardinality.OPTIONAL, 
+             policy = ReferencePolicy.DYNAMIC, 
+             unbind = "unsetAppManager")
     protected void setAppManager(ApplicationManagerService applicationManager) {
         this.applicationManager = applicationManager;
         DataHolder.setApplicationManager(applicationManager);
@@ -179,5 +180,5 @@ public class WebappManagementServiceComponent {
     protected void unsetAppManager(ApplicationManagerService appManager) {
         applicationManager = null;
     }
-
 }
+
