@@ -28,13 +28,13 @@ import org.opensaml.xml.validation.ValidationException;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.KeyStoreManager;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.saml.SAMLSignatureValidator;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.webapp.mgt.DataHolder;
-import org.wso2.carbon.identity.sso.agent.util.SAMLSignatureValidator;
 
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
