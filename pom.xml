@@ -1414,7 +1414,7 @@
 
         <!-- Carbon Identity version-->
         <carbon.identity.version>5.13.0</carbon.identity.version>
-        <sso.agent.version>5.2.0</sso.agent.version>
+        <sso.agent.version>5.2.1</sso.agent.version>
         <entitlement.proxy.version>5.2.0</entitlement.proxy.version>
         <carbon.identity.imp.pkg.version>[5.13.0, 6.0.0)</carbon.identity.imp.pkg.version>
 
