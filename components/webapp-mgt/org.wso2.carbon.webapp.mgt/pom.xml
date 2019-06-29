@@ -67,10 +67,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
 
                 <extensions>true</extensions>
@@ -83,6 +79,7 @@
                         </Bundle-Activator>
                         <Private-Package>org.wso2.carbon.webapp.mgt.internal</Private-Package>
                         <Import-Package>
+                            !org.wso2.carbon.webapp.mgt.*,
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
                             org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             org.apache.neethi.*; version="${neethi.osgi.version.range}",
