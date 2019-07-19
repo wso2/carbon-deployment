@@ -51,7 +51,7 @@
                         <Import-Package>
                             !org.wso2.carbon.aarservices.*,
                             org.apache.axis2.*; version="${imp.pkg.version.axis2}",
-                            org.apache.commons.logging.*,
+                            org.apache.commons.logging.*; version="${import.package.version.commons.logging}",
                             *;resolution:=optional,
                         </Import-Package>
                     </instructions>

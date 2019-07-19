@@ -61,9 +61,9 @@
             <artifactId>tomcat</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
+    <groupId>org.ops4j.pax.logging</groupId>
+    <artifactId>pax-logging-api</artifactId>
+</dependency>
         <dependency>
                 <groupId>org.eclipse.osgi</groupId>
                 <artifactId>org.eclipse.osgi</artifactId>
