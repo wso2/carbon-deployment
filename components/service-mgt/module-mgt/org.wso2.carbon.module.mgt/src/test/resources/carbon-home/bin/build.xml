@@ -96,7 +96,7 @@
                 <include name="org.wso2.carbon.registry.api*.jar"/>
                 <include name="org.wso2.carbon.context*.jar"/>
                 <include name="org.wso2.carbon.base*.jar"/>
-                <include name="org.wso2.carbon.logging*.jar"/>
+                <!--<include name="org.wso2.carbon.logging*.jar"/>-->
                 <include name="jsr107cache*.jar"/><!-- used by the G-reg jcr sample-->
                 <include name="org.wso2.carbon.caching.core*.jar"/> <!-- used by the G-reg jcr sample-->
                 <include name="org.wso2.securevault*.jar"/> <!-- used by the G-reg jcr sample-->
