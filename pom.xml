@@ -1327,7 +1327,7 @@
         <carbon.deployment.exp.pkg.version>${project.version}</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.9.0, 5.0.0)</carbon.deployment.imp.pkg.version>
 
-        <version.tomcat>7.0.69</version.tomcat>
+        <version.tomcat>9.0.21</version.tomcat>
         <orbit.version.tomcat>${version.tomcat}.wso2v1</orbit.version.tomcat>
 
         <eclipse.osgi.version>3.9.1.v20130814-1242</eclipse.osgi.version>

@@ -20,13 +20,17 @@ package org.wso2.carbon.webapp.mgt.loader;
 import org.apache.catalina.loader.WebappClassLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.ExceptionUtils;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -44,6 +48,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
     private WebappClassloadingContext webappCC;
 
     private static List<String> systemPackages;
+    private static final String CLASS_FILE_SUFFIX = ".class";
 
     public CarbonWebappClassLoader(ClassLoader parent) {
         super(parent);
@@ -53,6 +58,15 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
     public void setWebappCC(WebappClassloadingContext classloadingContext) {
         this.webappCC = classloadingContext;
+        // Adding provided classpath entries, if any
+        // TODO: 30/07/19 Fix this by introducing shared classloading
+        for (String repository : webappCC.getProvidedRepositories()) {
+            try {
+                addURL(new URL(repository));
+            } catch (MalformedURLException e) {
+                // do nothing
+            }
+        }
     }
 
     @Override
@@ -63,14 +77,8 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             log.debug("loadClass(" + name + ", " + resolve + ")");
         Class<?> clazz;
 
-        // Log access to stopped classloader
-        if (!started) {
-            try {
-                throw new IllegalStateException();
-            } catch (IllegalStateException e) {
-                log.info(sm.getString("webappClassLoader.stopped", name), e);
-            }
-        }
+        // Log access to stopped class loader
+        checkStateForClassLoading(name);
 
         // (0) Check our previously loaded local class cache
         clazz = findLoadedClass0(name);
@@ -93,16 +101,51 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         }
 
         // (0.2) Try loading the class with the system class loader, to prevent
-        //       the webapp from overriding J2SE classes
+        //       the webapp from overriding Java SE classes. This implements
+        //       SRV.10.7.2
+        String resourceName = binaryNameToPath(name, false);
+
+        ClassLoader javaseLoader = getJavaseClassLoader();
+        boolean tryLoadingFromJavaseLoader;
         try {
-            clazz = j2seClassLoader.loadClass(name);
-            if (clazz != null) {
-                if (resolve)
-                    resolveClass(clazz);
-                return (clazz);
+            // Use getResource as it won't trigger an expensive
+            // ClassNotFoundException if the resource is not available from
+            // the Java SE class loader. However (see
+            // https://bz.apache.org/bugzilla/show_bug.cgi?id=58125 for
+            // details) when running under a security manager in rare cases
+            // this call may trigger a ClassCircularityError.
+            // See https://bz.apache.org/bugzilla/show_bug.cgi?id=61424 for
+            // details of how this may trigger a StackOverflowError
+            // Given these reported errors, catch Throwable to ensure any
+            // other edge cases are also caught
+            URL url;
+            if (securityManager != null) {
+                PrivilegedAction<URL> dp = new PrivilegedJavaseGetResource(resourceName);
+                url = AccessController.doPrivileged(dp);
+            } else {
+                url = javaseLoader.getResource(resourceName);
             }
-        } catch (ClassNotFoundException e) {
-            // Ignore
+            tryLoadingFromJavaseLoader = (url != null);
+        } catch (Throwable t) {
+            // Swallow all exceptions apart from those that must be re-thrown
+            ExceptionUtils.handleThrowable(t);
+            // The getResource() trick won't work for this class. We have to
+            // try loading it directly and accept that we might get a
+            // ClassNotFoundException.
+            tryLoadingFromJavaseLoader = true;
+        }
+
+        if (tryLoadingFromJavaseLoader) {
+            try {
+                clazz = javaseLoader.loadClass(name);
+                if (clazz != null) {
+                    if (resolve)
+                        resolveClass(clazz);
+                    return clazz;
+                }
+            } catch (ClassNotFoundException e) {
+                // Ignore
+            }
         }
 
         // (0.5) Permission to access this class when using a SecurityManager
@@ -110,15 +153,15 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             int i = name.lastIndexOf('.');
             if (i >= 0) {
                 try {
-                    securityManager.checkPackageAccess(name.substring(0, i));
+                    securityManager.checkPackageAccess(name.substring(0,i));
                 } catch (SecurityException se) {
-                    String error = "Security Violation, attempt to use " +
-                            "Restricted Class: " + name;
+                    String error = sm.getString("webappClassLoader.restrictedPackage", name);
                     log.info(error, se);
                     throw new ClassNotFoundException(error, se);
                 }
             }
         }
+
 
 
         // 1) Load from the parent if the parent-first is true and if package matches with the
@@ -159,7 +202,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             log.debug("  Delegating to parent classloader1 " + parent);
         ClassLoader loader = parent;
         if (loader == null)
-            loader = j2seClassLoader;
+            loader = getJavaseClassLoader();
         try {
             clazz = Class.forName(name, false, loader);
             if (clazz != null) {
@@ -197,8 +240,8 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
             InputStream stream = super.getResourceAsStream(name);
             if (stream != null) {
                 return stream;
-            } else if (name.endsWith(".class") && isSystemPackage(name)) {
-                ClassLoader loader = j2seClassLoader;
+            } else if (name.endsWith(CLASS_FILE_SUFFIX) && isSystemPackage(name)) {
+                ClassLoader loader = getJavaseClassLoader();
                 stream = loader.getResourceAsStream(name);
 
                 if (stream != null) {
@@ -211,6 +254,17 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
             return null;
         }
+
+    private String binaryNameToPath(String binaryName, boolean withLeadingSlash) {
+        // 1 for leading '/', 6 for ".class"
+        StringBuilder path = new StringBuilder(7 + binaryName.length());
+        if (withLeadingSlash) {
+            path.append('/');
+        }
+        path.append(binaryName.replace('.', '/'));
+        path.append(CLASS_FILE_SUFFIX);
+        return path.toString();
+    }
 
     private boolean isSystemPackage(String resourceName) {
         resourceName = resourceName.replace(".class", "").

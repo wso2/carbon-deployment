@@ -47,11 +47,6 @@ public class CarbonWebappLoader extends WebappLoader {
             throw new LifecycleException(e.getMessage(), e);
         }
 
-        //Adding provided classpath entries, if any
-        for (String repository : webappClassloadingContext.getProvidedRepositories()) {
-            addRepository(repository);
-        }
-
         super.startInternal();
 
         //Adding the WebappClassloadingContext to the WebappClassloader
@@ -67,11 +62,11 @@ public class CarbonWebappLoader extends WebappLoader {
     //TODO Refactor
     private String getWebappFilePath() throws IOException {
         String webappFilePath = null;
-        if (getContainer() instanceof Context) {
+        if (getContext() instanceof Context) {
 
             //Value of the following variable depends on various conditions. Sometimes you get just the webapp directory
             //name. Sometime you get absolute path the webapp directory or war file.
-            Context ctx = (Context) getContainer();
+            Context ctx = getContext();
             String docBase = ctx.getDocBase();
 
             Host host = (Host) ctx.getParent();
