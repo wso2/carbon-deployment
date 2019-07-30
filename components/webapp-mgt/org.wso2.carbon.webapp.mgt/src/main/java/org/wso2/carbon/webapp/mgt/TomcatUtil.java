@@ -19,10 +19,10 @@ package org.wso2.carbon.webapp.mgt;
 import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
+import org.apache.catalina.mapper.MappingData;
 import org.apache.catalina.util.SessionConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tomcat.util.http.mapper.MappingData;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -78,6 +78,7 @@ public class TomcatUtil {
     }
 
     /**
+     * // TODO: 30/07/19 See the possibility of removing it
      * This method is used in remapping a request with context at tomcat level. This is mainly used
      * with Lazy loading of tenants and Lazy loading of webapps, where we can remap a request for a
      * lazy loaded webapp so that any request (GET, POST) parameters will not get lost with the
@@ -92,13 +93,13 @@ public class TomcatUtil {
         MappingData mappingData = connectorReq.getMappingData();
         mappingData.recycle();
 
-        connectorReq.getConnector().
+        connectorReq.getConnector().getService().
                 getMapper().map(connectorReq.getCoyoteRequest().serverName(),
                                 connectorReq.getCoyoteRequest().decodedURI(), null,
                                 mappingData);
 
-        connectorReq.setContext((Context) connectorReq.getMappingData().context);
-        connectorReq.setWrapper((Wrapper) connectorReq.getMappingData().wrapper);
+//        connectorReq.setContext((Context) connectorReq.getMappingData().context);
+//        connectorReq.setWrapper((Wrapper) connectorReq.getMappingData().wrapper);
 
         parseSessionCookiesId(connectorReq);
     }

@@ -29,6 +29,7 @@ import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+// TODO: 30/07/19 check if we can remove
 /**
  * Handles lazily loading tenant artifacts if a tenant webapp request comes in
  */

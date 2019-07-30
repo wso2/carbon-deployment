@@ -268,7 +268,7 @@ public class WebApplication {
     }
 
     private boolean reload(Context contextOfWepap) {
-        if (contextOfWepap.getAvailable()) {
+        if (context.getState().isAvailable()) {
             contextOfWepap.reload();
             log.info("Reloaded webapp: " + contextOfWepap);
             return true;
@@ -312,7 +312,7 @@ public class WebApplication {
 
     private boolean stop(Context contextOfWepap) throws CarbonException {
         try {
-            if (contextOfWepap.getAvailable()) {
+            if (context.getState().isAvailable()) {
                 contextOfWepap.stop();
                 this.setState("Stopped");
                 log.info("Stopped webapp: " + contextOfWepap);
@@ -339,7 +339,7 @@ public class WebApplication {
 
     private boolean start(Context contextOfWepap) throws CarbonException {
         try {
-            if (!contextOfWepap.getAvailable()) {
+            if (!context.getState().isAvailable()) {
                 contextOfWepap.start();
                 this.setState("Started");
                 log.info("Started webapp: " + contextOfWepap);
@@ -367,7 +367,7 @@ public class WebApplication {
         if(DataHolder.getCarbonTomcatService() != null){
         Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
         try {
-            if (context.getAvailable()) {
+            if (context.getState().isAvailable()) {
                 // If the following is not done, the Realm will throw a LifecycleException, because
                 // Realm.stop is called for each context.
                 context.setRealm(null);
@@ -690,7 +690,7 @@ public class WebApplication {
         }
 
         public int getMaxSessionInactivityInterval() {
-            return isGhostWebApp() ? 0 : sessionManager.getMaxInactiveInterval();
+            return isGhostWebApp() ? 0 : sessionManager.getContext().getSessionTimeout();
         }
 
         public int getMaxSessionLifetime() {

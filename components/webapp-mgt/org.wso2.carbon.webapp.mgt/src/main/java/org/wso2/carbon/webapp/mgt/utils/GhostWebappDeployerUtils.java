@@ -329,7 +329,7 @@ public class GhostWebappDeployerUtils {
                 jaxContextWrapper.setLoadOnStartup(1);
                 jaxContextWrapper.setServletClass(DefaultServlet.class.getName());
                 context.addChild(jaxContextWrapper);
-                context.addServletMapping(jaxContext, jaxMapping);
+                context.addServletMappingDecoded(jaxContext, jaxMapping);
             }
 
             String filterProp = webAppElm.

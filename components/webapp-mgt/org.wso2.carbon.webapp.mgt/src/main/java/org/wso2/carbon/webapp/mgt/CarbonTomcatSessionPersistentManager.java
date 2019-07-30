@@ -67,16 +67,6 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
     protected static final String name = "CarbonTomcatSessionPersistentManager";
 
     /**
-     * Return descriptive information about this Manager implementation and
-     * the corresponding version number, in the format
-     * <code>description/version</code>.
-     */
-    @Override
-    public String getInfo() {
-        return info;
-    }
-
-    /**
      * Return the descriptive short name of this Manager implementation.
      */
     @Override
@@ -125,17 +115,6 @@ public class CarbonTomcatSessionPersistentManager extends PersistentManagerBase 
     public int getRejectedSessions() {
         checkAccess();
         return super.getRejectedSessions();
-    }
-
-    /**
-     * Return the default maximum inactive interval (in seconds) for Sessions created by this Manager.
-     *
-     * @return Inactive time in minutes
-     */
-    @Override
-    public int getMaxInactiveInterval() {
-        checkAccess();
-        return super.getMaxInactiveInterval();
     }
 
     /**

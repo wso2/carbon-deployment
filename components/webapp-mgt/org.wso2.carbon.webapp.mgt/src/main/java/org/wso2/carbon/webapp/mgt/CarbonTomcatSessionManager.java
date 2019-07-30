@@ -72,12 +72,6 @@ public class CarbonTomcatSessionManager extends StandardManager {
     }
 
     @Override
-    public int getMaxInactiveInterval() {
-        checkAccess();
-        return super.getMaxInactiveInterval();
-    }
-
-    @Override
     public Session findSession(String id) throws IOException {
         checkAccess();
         return super.findSession(id);

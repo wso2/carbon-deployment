@@ -22,7 +22,6 @@ import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.catalina.Session;
 import org.apache.catalina.ha.ClusterManager;
 import org.apache.catalina.ha.ClusterMessage;
-import org.apache.catalina.ha.session.Constants;
 import org.apache.catalina.ha.session.DeltaManager;
 import org.apache.catalina.ha.session.DeltaSession;
 import org.apache.catalina.ha.session.SessionMessage;
@@ -53,7 +52,7 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(Constants.Package);
+    protected static final StringManager sm = StringManager.getManager("org.apache.catalina.ha.session");
 
 
     private boolean expireSessionsOnShutdown = false;
@@ -105,11 +104,6 @@ public class CarbonTomcatClusterableSessionManager extends DeltaManager {
     @Override
     public long getExpiredSessions() {
         return super.getExpiredSessions();
-    }
-
-    @Override
-    public int getMaxInactiveInterval() {
-        return super.getMaxInactiveInterval();
     }
 
     @Override
