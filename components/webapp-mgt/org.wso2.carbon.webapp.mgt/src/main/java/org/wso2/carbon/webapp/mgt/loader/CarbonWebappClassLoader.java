@@ -22,11 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.webapp.mgt.loader.shared.SharedURLClassLoader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.security.AccessController;
@@ -46,26 +46,18 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
     private static final Log log = LogFactory.getLog(CarbonWebappClassLoader.class);
 
     private WebappClassloadingContext webappCC;
-
     private static List<String> systemPackages;
     private static final String CLASS_FILE_SUFFIX = ".class";
 
     public CarbonWebappClassLoader(ClassLoader parent) {
-        super(parent);
+        super(new SharedURLClassLoader(new URL[0], parent));
         String launchIniPath = Paths.get(CarbonUtils.getCarbonConfigDirPath(), "etc", "launch.ini").toString();
         readSystemPackagesList(launchIniPath);
     }
 
     public void setWebappCC(WebappClassloadingContext classloadingContext) {
         this.webappCC = classloadingContext;
-        // Adding provided classpath entries, if any
-        for (String repository : webappCC.getProvidedRepositories()) {
-            try {
-                addURL(new URL(repository));
-            } catch (MalformedURLException e) {
-                // do nothing
-            }
-        }
+        ((SharedURLClassLoader)this.parent).setWebappCC(classloadingContext);
     }
 
     @Override
@@ -163,12 +155,8 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
 
 
-        // 1) Load from the parent if the parent-first is true and if package matches with the
-        //    list of delegated packages
-        boolean delegatedPkg = webappCC.isDelegatedPackage(name);
-        boolean excludedPkg = webappCC.isExcludedPackage(name);
-
-        if (webappCC.isParentFirst() && delegatedPkg && !excludedPkg) {
+        // 1) Load from the parent if the parent-first is true.
+        if (webappCC.isParentFirst()) {
             clazz = findClassFromParent(name, resolve);
             if (clazz != null) {
                 return clazz;
@@ -183,9 +171,8 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
         // 3) TODO load from the shared repositories
 
-        // 4) Load from the parent if the parent-first is false and if the package matches with the
-        //    list of delegated packages.
-        if (!webappCC.isParentFirst() && delegatedPkg && !excludedPkg) {
+        // 4) Load from the parent if the parent-first is false.
+        if (!webappCC.isParentFirst()) {
             clazz = findClassFromParent(name, resolve);
             if (clazz != null) {
                 return clazz;

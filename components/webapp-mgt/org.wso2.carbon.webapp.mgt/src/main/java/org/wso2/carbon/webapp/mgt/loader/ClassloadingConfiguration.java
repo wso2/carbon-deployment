@@ -53,6 +53,10 @@ public class ClassloadingConfiguration {
         return exclusiveEnvironments.get(name);
     }
 
+    public Map<String, CLEnvironment> getExclusiveEnvironments(){
+        return exclusiveEnvironments;
+    }
+
     public String[] getEnvironments(){
         return environments;
     }
