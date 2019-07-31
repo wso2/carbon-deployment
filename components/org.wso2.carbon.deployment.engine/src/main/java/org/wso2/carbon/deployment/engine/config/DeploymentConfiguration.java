@@ -38,7 +38,7 @@ public class DeploymentConfiguration {
     private String runtimeRepositoryLocation = "${wso2.runtime.path}/deployment/";
 
     @Element(description = "Scheduler update interval")
-    private int updateInterval = 15;
+    private int updateInterval = 5;
 
     @Element(description = "Deployment notifier config")
     private DeploymentNotifierConfig deploymentNotifier = new DeploymentNotifierConfig();
