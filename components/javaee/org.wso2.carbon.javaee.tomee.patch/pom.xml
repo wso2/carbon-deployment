@@ -57,7 +57,7 @@
             <version>${tomee.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.tomcat</groupId>
+            <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
             <artifactId>tomcat</artifactId>
         </dependency>
         <dependency>
