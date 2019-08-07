@@ -28,8 +28,6 @@ import org.wso2.carbon.utils.CarbonUtils;
 public class WebappManagementActivator implements BundleActivator {
     private static final Log log = LogFactory.getLog(WebappManagementActivator.class);
 
-    private ServiceRegistration serviceRegistration;
-
     public void start(final BundleContext bundleContext) {
 
 //        serviceRegistration = bundleContext.registerService(AppVersionHandler.class.getName(), new AppVersionHandlerImpl(), null);
@@ -58,6 +56,8 @@ public class WebappManagementActivator implements BundleActivator {
     }
 
     public void stop(BundleContext bundleContext) {
-        serviceRegistration.unregister();
+        if (log.isDebugEnabled()) {
+            log.debug("Stopping the Webapp Management Activator");
+        }
     }
 }

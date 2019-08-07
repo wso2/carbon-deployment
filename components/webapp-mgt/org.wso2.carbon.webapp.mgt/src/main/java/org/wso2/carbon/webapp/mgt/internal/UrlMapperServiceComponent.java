@@ -18,14 +18,9 @@ package org.wso2.carbon.webapp.mgt.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.url.mapper.HotUpdateService;
-import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
  * UrlMapperServiceComponent is to get HotUpdateService
@@ -50,20 +45,6 @@ public class UrlMapperServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("Deactivating URL Mapped Service Component");
         }
-    }
-
-    @Reference(
-             name = "url.mapper.service", 
-             service = org.wso2.carbon.url.mapper.HotUpdateService.class, 
-             cardinality = ReferenceCardinality.OPTIONAL, 
-             policy = ReferencePolicy.DYNAMIC, 
-             unbind = "unsetHotUpdateService")
-    protected void setHotUpdateService(HotUpdateService hotUpdateService) {
-        DataHolder.setHotUpdateService(hotUpdateService);
-    }
-
-    protected void unsetHotUpdateService(HotUpdateService hotUpdateService) {
-        DataHolder.setHotUpdateService(null);
     }
 }
 
