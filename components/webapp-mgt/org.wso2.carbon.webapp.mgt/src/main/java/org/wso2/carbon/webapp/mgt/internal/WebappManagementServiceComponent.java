@@ -19,38 +19,29 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
-import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.core.ArtifactUnloader;
-import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
-import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
-import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
-import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
-import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ConfigurationContextService;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
-import org.wso2.carbon.utils.deployment.GhostMetaArtifactsLoader;
-import org.wso2.carbon.webapp.mgt.DataHolder;
-import org.wso2.carbon.webapp.mgt.GhostWebappDeployerValve;
-import org.wso2.carbon.webapp.mgt.TenantLazyLoaderValve;
-import org.wso2.carbon.webapp.mgt.WebApplication;
-import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
-import org.wso2.carbon.webapp.mgt.WebContextParameter;
-import org.wso2.carbon.webapp.mgt.WebappsConstants;
-import org.wso2.carbon.webapp.mgt.multitenancy.GhostWebappMetaArtifactsLoader;
-import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
-import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
+import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
+import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.webapp.mgt.DataHolder;
+import org.wso2.carbon.webapp.mgt.WebApplication;
+import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
+import org.wso2.carbon.webapp.mgt.WebContextParameter;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component(
          name = "org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent", 
@@ -64,26 +55,7 @@ public class WebappManagementServiceComponent {
     @Activate
     protected void activate(ComponentContext ctx) {
         try {
-            // Register the valves with Tomcat
-            ArrayList<CarbonTomcatValve> valves = new ArrayList<CarbonTomcatValve>();
-            valves.add(new TenantLazyLoaderValve());
-            if (GhostDeployerUtils.isGhostOn()) {
-                valves.add(new GhostWebappDeployerValve());
-                // registering WebappUnloader as an OSGi service
-                WebappUnloader webappUnloader = new WebappUnloader();
-                ctx.getBundleContext().registerService(ArtifactUnloader.class.getName(), webappUnloader, null);
-                GhostWebappMetaArtifactsLoader artifactsLoader = new GhostWebappMetaArtifactsLoader();
-                ctx.getBundleContext().registerService(GhostMetaArtifactsLoader.class.getName(), artifactsLoader, null);
-            } else {
-                setServerURLParam(DataHolder.getServerConfigContext());
-            }
-            // adding TenantLazyLoaderValve first in the TomcatContainer if Url mapping available
-            if (DataHolder.getHotUpdateService() != null) // && TomcatValveContainer.isValveExists(new UrlMapperValve //TODO: Fix this once URLMapper component becomes available
-            {
-                TomcatValveContainer.addValves(WebappsConstants.VALVE_INDEX, valves);
-            } else {
-                TomcatValveContainer.addValves(valves);
-            }
+            setServerURLParam(DataHolder.getServerConfigContext());
         } catch (Throwable e) {
             log.error("Error occurred while activating WebappManagementServiceComponent", e);
         }
