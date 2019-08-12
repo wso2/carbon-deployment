@@ -32,22 +32,10 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.application.deployer.webapp</module>
-        <module>org.wso2.carbon.application.mgt.webapp</module>
-        <module>org.wso2.carbon.application.mgt.webapp.ui</module>
         <module>org.wso2.carbon.webapp.mgt</module>
-        <module>org.wso2.carbon.webapp.mgt.ui</module>
         <module>org.wso2.carbon.webapp.deployer</module>
-        <module>org.wso2.carbon.webapp.list.ui</module>
-        <module>org.wso2.carbon.jaxws.webapp.deployer</module>
-        <module>org.wso2.carbon.jaxws.webapp.mgt</module>
-        <module>org.wso2.carbon.jaxws.webapp.mgt.ui</module>
         <module>org.wso2.carbon.identity.entitlement.filter</module>
-        <module>org.wso2.carbon.bam.webapp.stat.publisher</module>
-        <module>org.wso2.carbon.bam.webapp.stat.publisher.ui</module>
         <module>org.wso2.carbon.cxf.ext</module>
-        <module>org.wso2.carbon.discovery.cxf</module>
-        <module>org.wso2.carbon.tomcat.patch</module>
     </modules>
 
     <dependencies>

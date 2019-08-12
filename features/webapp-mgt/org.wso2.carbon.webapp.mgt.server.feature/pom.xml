@@ -43,14 +43,6 @@
             <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.discovery.cxf</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
             <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
         </dependency>
@@ -108,8 +100,6 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${project.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.deployer</bundleDef>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.tomcat.patch</bundleDef>
-                                <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.discovery.cxf</bundleDef>
                                 <bundleDef>org.wso2.carbon.identity.agent.sso.java:org.wso2.carbon.identity.sso.agent</bundleDef>
                             </bundles>
                             <importFeatures>
