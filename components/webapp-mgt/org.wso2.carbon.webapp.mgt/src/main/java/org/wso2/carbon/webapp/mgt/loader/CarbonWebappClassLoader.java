@@ -59,7 +59,6 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
     public void setWebappCC(WebappClassloadingContext classloadingContext) {
         this.webappCC = classloadingContext;
         // Adding provided classpath entries, if any
-        // TODO: 30/07/19 Fix this by introducing shared classloading
         for (String repository : webappCC.getProvidedRepositories()) {
             try {
                 addURL(new URL(repository));
