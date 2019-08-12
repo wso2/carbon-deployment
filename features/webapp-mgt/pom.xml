@@ -31,18 +31,8 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.application.mgt.webapp.feature</module>
-        <module>org.wso2.carbon.application.mgt.webapp.server.feature</module>
-        <module>org.wso2.carbon.application.mgt.webapp.ui.feature</module>
-        <module>org.wso2.carbon.application.deployer.webapp.feature</module>
-        <module>org.wso2.carbon.webapp.mgt.feature</module>
         <module>org.wso2.carbon.webapp.mgt.server.feature</module>
-        <module>org.wso2.carbon.webapp.mgt.common.ui.feature</module>
-        <module>org.wso2.carbon.webapp.mgt.ui.feature</module>
         <module>org.wso2.carbon.identity.xacml.filter.feature</module>
-        <module>org.wso2.carbon.bam.webapp.agent.server.feature</module>
-        <module>org.wso2.carbon.bam.webapp.agent.ui.feature</module>
-        <module>org.wso2.carbon.bam.webapp.agent.feature</module>
     </modules>
 
     <dependencies>
@@ -57,10 +47,6 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.webapp.mgt.ui</artifactId>
         </dependency>
     </dependencies>
 
