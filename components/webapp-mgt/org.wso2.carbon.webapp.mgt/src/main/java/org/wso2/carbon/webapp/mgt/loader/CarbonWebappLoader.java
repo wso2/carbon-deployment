@@ -61,31 +61,30 @@ public class CarbonWebappLoader extends WebappLoader {
 
     //TODO Refactor
     private String getWebappFilePath() throws IOException {
+
         String webappFilePath = null;
-        if (getContext() instanceof Context) {
 
-            //Value of the following variable depends on various conditions. Sometimes you get just the webapp directory
-            //name. Sometime you get absolute path the webapp directory or war file.
-            Context ctx = getContext();
-            String docBase = ctx.getDocBase();
+        // Value of the following variable depends on various conditions. Sometimes you get just the webapp directory
+        // name. Sometime you get absolute path the webapp directory or war file.
+        Context ctx = getContext();
+        String docBase = ctx.getDocBase();
 
-            Host host = (Host) ctx.getParent();
-            String appBase = host.getAppBase();
-            File canonicalAppBase = new File(appBase);
-            if (canonicalAppBase.isAbsolute()) {
-                canonicalAppBase = canonicalAppBase.getCanonicalFile();
-            } else {
-                canonicalAppBase =
-                        new File(System.getProperty("carbon.home"), appBase)
-                                .getCanonicalFile();
-            }
+        Host host = (Host) ctx.getParent();
+        String appBase = host.getAppBase();
+        File canonicalAppBase = new File(appBase);
+        if (canonicalAppBase.isAbsolute()) {
+            canonicalAppBase = canonicalAppBase.getCanonicalFile();
+        } else {
+            canonicalAppBase =
+                    new File(System.getProperty("carbon.home"), appBase)
+                            .getCanonicalFile();
+        }
 
-            File webappFile = new File(docBase);
-            if (webappFile.isAbsolute()) {
-                webappFilePath = webappFile.getCanonicalPath();
-            } else {
-                webappFilePath = (new File(canonicalAppBase, docBase)).getPath();
-            }
+        File webappFile = new File(docBase);
+        if (webappFile.isAbsolute()) {
+            webappFilePath = webappFile.getCanonicalPath();
+        } else {
+            webappFilePath = (new File(canonicalAppBase, docBase)).getPath();
         }
         return webappFilePath;
     }
