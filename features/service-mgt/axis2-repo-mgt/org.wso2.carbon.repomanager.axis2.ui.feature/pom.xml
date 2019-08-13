@@ -20,14 +20,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>repomanager-axis2-feature</artifactId>
-        <version>4.9.8-SNAPSHOT</version>
+        <version>4.9.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.repomanager.axis2.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <version>4.9.8-SNAPSHOT</version>
+    <version>4.9.8</version>
     <name>WSO2 Carbon - Axis2 Repository Management UI Feature</name>
     <url>http://wso2.org</url>
     <description>
