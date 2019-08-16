@@ -59,7 +59,7 @@
                             <id>org.wso2.carbon.bam.webapp.agent</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core:${carbon.kernel.feature.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon.deployment:org.wso2.carbon.bam.webapp.agent.server.feature:${project.version}</includedFeatureDef>
