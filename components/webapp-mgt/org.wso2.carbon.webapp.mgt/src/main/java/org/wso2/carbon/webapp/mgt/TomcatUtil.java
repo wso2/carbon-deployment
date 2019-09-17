@@ -24,7 +24,6 @@ import org.apache.catalina.util.SessionConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
-import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.servlet.SessionTrackingMode;
@@ -93,17 +92,6 @@ public class TomcatUtil {
             appName = contextName;
         }
         return appName;
-    }
-
-    public static Boolean isVirtualHostRequest(String requestedHostName) {
-        Boolean isVirtualHostRequest = false;
-        HotUpdateService hotUpdate = DataHolder.getHotUpdateService();
-        //checking for whether the request is for virtual host or not, if the server installed with url-mappings only.
-        if(hotUpdate != null && requestedHostName.endsWith(hotUpdate.getSuffixOfHost())) {
-            //in case server url from carbon.xml used as a suffix, then localhost request won't get executed here
-            isVirtualHostRequest = true;
-        }
-        return isVirtualHostRequest;
     }
 
     private static void parseSessionCookiesId(Request request) {

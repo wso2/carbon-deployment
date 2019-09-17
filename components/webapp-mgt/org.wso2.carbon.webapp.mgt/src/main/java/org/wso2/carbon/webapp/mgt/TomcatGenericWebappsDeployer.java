@@ -254,18 +254,6 @@ public class TomcatGenericWebappsDeployer {
             Context context = DataHolder.getCarbonTomcatService()
                                         .addWebApp(WebAppUtils.getHost(webappFile.getAbsolutePath()), contextStr,
                                                    webappFile.getAbsolutePath());
-            //deploying web app for url-mapper
-            if (DataHolder.getHotUpdateService() != null) {
-                List<String> hostNames = DataHolder.getHotUpdateService().getMappigsPerWebapp(contextStr);
-                for (String hostName : hostNames) {
-                    CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
-                    Host host = DataHolder.getHotUpdateService().addHost(hostName);
-                    URLMappingHolder.getInstance().putUrlMappingForApplication(hostName, contextStr);
-                    Context contextForHost =
-                            DataHolder.getCarbonTomcatService().addWebApp(host, "/", webappFile.getAbsolutePath());
-                    log.info("Deployed webapp on host: " + contextForHost);
-                }
-            }
 
             Manager manager = context.getManager();
             if (context.getDistributable() && (DataHolder.getCarbonTomcatService().getTomcat().

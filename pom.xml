@@ -338,38 +338,6 @@
                 <artifactId>org.wso2.carbon.discovery.core</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.url.mapper.stub</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.url.mapper</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.tomcat.ext</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.tomcat</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.tomcat.patch</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.url.mapper.clustermessage</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-                <version>${carbon.commons.version}</version>
-            </dependency>
 
             <!-- Carbon Analytics Commons Dependency-->
             <dependency>
