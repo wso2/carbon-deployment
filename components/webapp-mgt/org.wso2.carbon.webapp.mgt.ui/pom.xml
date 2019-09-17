@@ -53,10 +53,6 @@
             <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
-            <artifactId>org.wso2.carbon.url.mapper.stub</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
         </dependency>

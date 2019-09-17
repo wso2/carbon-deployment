@@ -240,14 +240,6 @@ public class WebApplication {
         //reload the context of WebApplication
 
         try {
-            //reload the context of Host
-            handleHotUpdateToHost("reload");
-        } catch (CarbonException e) {
-            log.error("error while reloading context for the hosts", e);
-        }
-
-
-        try {
             bamEnable = getBamEnableFromWebappMetaData();
         } catch (Exception e) {
             log.error("Unable to get bam enable from web app meta data.", e);
@@ -303,8 +295,7 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while stopping this webapp
      */
     public boolean stop() throws CarbonException {
-        //stop the context of Host
-        handleHotUpdateToHost("stop");
+
         //stop the context of WebApplication
         return stop(this.context);
 
@@ -331,8 +322,7 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while starting this webapp
      */
     public boolean start() throws CarbonException {
-        //start context of the Host
-        handleHotUpdateToHost("start");
+
         //start the context of WebApplication
         return start(this.context);
     }
@@ -357,8 +347,7 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while lazy unloading
      */
     public void lazyUnload() throws CarbonException {
-        //lozyunload the context of Host
-        handleHotUpdateToHost("lazyUnload");
+
         //lazyunload the context of WebApplication
         lazyUnload(this.context);
     }
@@ -433,52 +422,11 @@ public class WebApplication {
     }
 
     /**
-     * Doing the start, stop, reload and lazy unload of webapps inside all hosts
-     * respectively when getting request.
-     *
-     * @param nameOfOperation the operation to be performed in oder to hot update the host
-     * @throws CarbonException if errors occurs when hot update the host
-     */
-    private void handleHotUpdateToHost(String nameOfOperation) throws CarbonException {
-        if (DataHolder.getHotUpdateService() != null) {
-          List<String> mappings = URLMappingHolder.getInstance().
-                   getUrlMappingsPerApplication(this.context.getName());
-            Engine engine = DataHolder.getCarbonTomcatService().getTomcat().getEngine();
-            Context hostContext;
-            Host host;
-            for (String hostName : mappings) {
-                host = (Host) engine.findChild(hostName);
-                if(host != null) {
-                    hostContext = (Context)host.findChild("/");
-                    if(hostContext != null) {
-                        if (nameOfOperation.equalsIgnoreCase("start")) {
-                            start(hostContext);
-                        } else if (nameOfOperation.equalsIgnoreCase("stop")) {
-                            stop(hostContext);
-                        } else if (nameOfOperation.equalsIgnoreCase("reload")) {
-                            reload(hostContext);
-                        } else if (nameOfOperation.equalsIgnoreCase("lazyunload")) {
-                            lazyUnload(hostContext);
-                            DataHolder.getHotUpdateService().removeHost(hostName);
-                        } else if (nameOfOperation.equalsIgnoreCase("delete")) {
-                            DataHolder.getHotUpdateService().deleteHost(hostName);
-                        }
-                    }
-
-                }
-
-            }
-
-        }
-    }
-
-    /**
      * Completely delete & destroy this Web application
      *
      * @throws CarbonException If an error occurs while undeploying this webapp
      */
     public void delete() throws CarbonException {
-        handleHotUpdateToHost("delete");
         undeploy();
         if (webappFile.isFile() && !webappFile.delete()) {
             throw new CarbonException("Webapp file " + webappFile + " deletion failed");

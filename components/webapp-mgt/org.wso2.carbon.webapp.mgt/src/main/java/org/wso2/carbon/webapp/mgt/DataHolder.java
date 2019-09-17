@@ -21,7 +21,6 @@ import org.wso2.carbon.core.deployment.DeploymentSynchronizer;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
-import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -32,7 +31,6 @@ public class DataHolder {
     private static ConfigurationContext serverConfigContext;
     private static RealmService realmService;
     private static CarbonTomcatService carbonTomcatService;
-    private static HotUpdateService hotUpdateService;
     protected static DeploymentSynchronizer deploymentSynchronizerService;
     private static RegistryService registryService;
     private static TenantRegistryLoader tenantRegistryLoader;
@@ -61,14 +59,6 @@ public class DataHolder {
 
     public static CarbonTomcatService getCarbonTomcatService() {
         return DataHolder.carbonTomcatService;
-    }
-
-    public static void setHotUpdateService(HotUpdateService hotUpdateService) {
-        DataHolder.hotUpdateService = hotUpdateService;
-    }
-
-    public static HotUpdateService getHotUpdateService() {
-        return DataHolder.hotUpdateService;
     }
 
     public static void setDeploymentSynchronizerService(
