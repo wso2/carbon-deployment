@@ -21,7 +21,7 @@
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>service-mgt-feature</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>4.9.14</version>
+        <version>4.9.15-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
