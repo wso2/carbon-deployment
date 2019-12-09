@@ -77,7 +77,7 @@
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.operation.mgt</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.feature.version}
+                                <importFeatureDef>org.wso2.carbon.core.server:compatible:${carbon.kernel.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.module.mgt.server:compatible:${project.version}
                                 </importFeatureDef>
