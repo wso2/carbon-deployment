@@ -19,12 +19,12 @@ package org.wso2.carbon.webapp.mgt.sso;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Response;
-import org.opensaml.saml2.core.Subject;
-import org.opensaml.security.SAMLSignatureProfileValidator;
-import org.opensaml.xml.signature.SignatureValidator;
-import org.opensaml.xml.validation.ValidationException;
+import org.opensaml.saml.saml2.core.Assertion;
+import org.opensaml.saml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.Subject;
+import org.opensaml.saml.security.impl.SAMLSignatureProfileValidator;
+import org.opensaml.xmlsec.signature.support.SignatureException;
+import org.opensaml.xmlsec.signature.support.SignatureValidator;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.KeyStoreManager;
@@ -55,9 +55,8 @@ public class SAMLSignatureValidatorImpl implements SAMLSignatureValidator {
                     SAMLSignatureProfileValidator signatureProfileValidator = new SAMLSignatureProfileValidator();
                     signatureProfileValidator.validate(response.getSignature());
 
-                    SignatureValidator validator = getSignatureValidator(assertion);
-                    validator.validate(response.getSignature());
-                } catch (ValidationException e) {
+                    SignatureValidator.validate(response.getSignature(), getCredential(assertion));
+                } catch (SignatureException e) {
                     throw new SSOAgentException("Signature validation failed for SAML2 Response", e);
                 }
             }
@@ -71,16 +70,15 @@ public class SAMLSignatureValidatorImpl implements SAMLSignatureValidator {
                     SAMLSignatureProfileValidator signatureProfileValidator = new SAMLSignatureProfileValidator();
                     signatureProfileValidator.validate(assertion.getSignature());
 
-                    SignatureValidator validator = getSignatureValidator(assertion);
-                    validator.validate(assertion.getSignature());
-                } catch (ValidationException e) {
+                    SignatureValidator.validate(assertion.getSignature(), getCredential(assertion));
+                } catch (SignatureException e) {
                     throw new SSOAgentException("Signature validation failed for SAML2 Assertion");
                 }
             }
         }
     }
 
-    private SignatureValidator getSignatureValidator(Assertion assertion) throws SSOAgentException {
+    private SSOCarbonX509Credential getCredential(Assertion assertion) throws SSOAgentException {
 
         X509Certificate certificate;
 
@@ -106,7 +104,7 @@ public class SAMLSignatureValidatorImpl implements SAMLSignatureValidator {
         } catch (UserStoreException e) {
             throw new SSOAgentException("unable to get tenant ID for domain : "+tenantDomain, e);
         }
-        return new SignatureValidator(new SSOCarbonX509Credential(certificate));
+        return new SSOCarbonX509Credential(certificate);
     }
 
     /**
