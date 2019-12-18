@@ -1293,7 +1293,7 @@
         <carbon.analytics-common.version>5.2.18</carbon.analytics-common.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>5.15.56-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.version>5.15.62</carbon.identity.version>
         <sso.agent.version>5.3.4</sso.agent.version>
         <entitlement.proxy.version>5.3.1</entitlement.proxy.version>
         <carbon.identity.imp.pkg.version>[5.15.0, 6.0.0)</carbon.identity.imp.pkg.version>
@@ -1325,7 +1325,7 @@
         <neethi.osgi.version.range>[2.0.4.wso2v4, 3.1.0)</neethi.osgi.version.range>
 
         <!-- Rampart Version -->
-        <rampart.wso2.version>1.6.1-wso2v42-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1-wso2v42</rampart.wso2.version>
 
         <opensaml.version>3.3.1.wso2v1</opensaml.version>
 
