@@ -26,8 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
-import org.opensaml.saml2.core.StatusCode;
-import org.opensaml.xml.util.Base64;
+import org.opensaml.saml.saml2.core.StatusCode;
+import net.shibboleth.utilities.java.support.codec.Base64Support;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
@@ -253,10 +253,10 @@ public class SAMLSSOValve extends SingleSignOn {
                                 .getProperty(WebappSSOConstants.ENABLE_IDP_SESSION_VALIDATION_BEFORE_LOGOUT, "false"))
                                 && ssoAgentConfig.getSAML2().isPassiveAuthn()) {
 
-                            String saml2ResponseString = new String(Base64.decode(
+                            String saml2ResponseString = new String(Base64Support.decode(
                                     request.getParameter(SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_RESP)),
                                     Charset.forName("UTF-8"));
-                            org.opensaml.saml2.core.Response saml2Response = (org.opensaml.saml2.core.Response) SSOAgentUtils
+                            org.opensaml.saml.saml2.core.Response saml2Response = (org.opensaml.saml.saml2.core.Response) SSOAgentUtils
                                     .unmarshall(saml2ResponseString);
                             String htmlPayload;
                             ssoAgentConfig.getSAML2().setPassiveAuthn(false);
@@ -447,12 +447,12 @@ public class SAMLSSOValve extends SingleSignOn {
         return redirectPath;
     }
 
-    private boolean isNoPassive(org.opensaml.saml2.core.Response response) {
+    private boolean isNoPassive(org.opensaml.saml.saml2.core.Response response) {
 
         return response.getStatus() != null &&
                 response.getStatus().getStatusCode() != null &&
-                response.getStatus().getStatusCode().getValue().equals(StatusCode.RESPONDER_URI) &&
+                response.getStatus().getStatusCode().getValue().equals(StatusCode.RESPONDER) &&
                 response.getStatus().getStatusCode().getStatusCode() != null &&
-                response.getStatus().getStatusCode().getStatusCode().getValue().equals(StatusCode.NO_PASSIVE_URI);
+                response.getStatus().getStatusCode().getStatusCode().getValue().equals(StatusCode.NO_PASSIVE);
     }
 }

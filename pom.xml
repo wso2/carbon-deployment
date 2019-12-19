@@ -1130,6 +1130,14 @@
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
                 <version>${apache.felix.scr.ds.annotations.version}</version>
             </dependency>
+
+            <!--OpenSAML3 dependencies-->
+            <dependency>
+                <groupId>org.wso2.orbit.org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+            <!--End of OpenSAML3 dependencies-->
         </dependencies>
     </dependencyManagement>
 
@@ -1285,10 +1293,10 @@
         <carbon.analytics-common.version>5.2.18</carbon.analytics-common.version>
 
         <!-- Carbon Identity version-->
-        <carbon.identity.version>5.15.17</carbon.identity.version>
-        <sso.agent.version>5.3.3</sso.agent.version>
+        <carbon.identity.version>5.15.62</carbon.identity.version>
+        <sso.agent.version>5.3.4</sso.agent.version>
         <entitlement.proxy.version>5.3.1</entitlement.proxy.version>
-        <carbon.identity.imp.pkg.version>[5.14.0, 6.0.0)</carbon.identity.imp.pkg.version>
+        <carbon.identity.imp.pkg.version>[5.15.0, 6.0.0)</carbon.identity.imp.pkg.version>
 
         <orbit.version.openid4java>0.9.6.wso2v2</orbit.version.openid4java>
 
@@ -1317,7 +1325,9 @@
         <neethi.osgi.version.range>[2.0.4.wso2v4, 3.1.0)</neethi.osgi.version.range>
 
         <!-- Rampart Version -->
-        <rampart.wso2.version>1.6.1-wso2v41</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1-wso2v42</rampart.wso2.version>
+
+        <opensaml.version>3.3.1.wso2v1</opensaml.version>
 
         <libthrift.wso2.version>0.9.2.wso2v1</libthrift.wso2.version>
 
