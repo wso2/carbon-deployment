@@ -23,7 +23,7 @@
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>carbon-deployment</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>4.9.18-SNAPSHOT</version>
+        <version>4.10.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
