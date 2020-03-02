@@ -1280,7 +1280,7 @@
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 
         <!-- Carbon kernel version-->
-        <carbon.kernel.version>4.5.3</carbon.kernel.version>
+        <carbon.kernel.version>4.6.0</carbon.kernel.version>
         <carbon.kernel.feature.version>${carbon.kernel.version}</carbon.kernel.feature.version>
         <carbon.kernel.imp.pkg.version>[4.4.0, 5.0.0)</carbon.kernel.imp.pkg.version>
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
@@ -1304,7 +1304,7 @@
         <carbon.deployment.exp.pkg.version>${project.version}</carbon.deployment.exp.pkg.version>
         <carbon.deployment.imp.pkg.version>[4.9.0, 5.0.0)</carbon.deployment.imp.pkg.version>
 
-        <version.tomcat>9.0.22</version.tomcat>
+        <version.tomcat>9.0.31</version.tomcat>
         <orbit.version.tomcat>${version.tomcat}.wso2v1</orbit.version.tomcat>
 
         <eclipse.osgi.version>3.9.1.v20130814-1242</eclipse.osgi.version>
