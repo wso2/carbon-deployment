@@ -515,6 +515,34 @@ padding:0 10px;
                 <% } %>
 				</div>
             </td>
+            <%
+                String wsdlUrl = service.getWsdlURLs()[0];
+                String swaggerUrl = wsdlUrl.substring(0, wsdlUrl.length() - "wsdl".length());
+            %>
+            <td width="100px">
+                <div style="text-align:center">
+                <% if ("data_service".equals(service.getServiceType())) {%>
+                <nobr>
+                    <a href="<%=swaggerUrl + "swagger.json"%>" class="icon-link"
+                       style="background-image:url(images/swagger.png);" target="_blank">
+                        <fmt:message key="ds.swagger"/>
+                    </a>
+                </nobr>
+                <% } %>
+                </div>
+            </td>
+            <td width="100px">
+                <div style="text-align:center">
+                <% if ("data_service".equals(service.getServiceType())) {%>
+                <nobr>
+                    <a href="<%=swaggerUrl + "swaggertryit"%>" class="icon-link"
+                       style="background-image:url(images/tryit.gif);" target="_blank">
+                        <fmt:message key="try.ds.resources"/>
+                    </a>
+                </nobr>
+                <% } %>
+				</div>
+            </td>
             <% if (loggedIn && hasDownloadableServices) { %>
             <td width="100px">
                 <% if ((service.getServiceType().equalsIgnoreCase("axis2") && !(service.getName().equalsIgnoreCase("xkms"))) ||
