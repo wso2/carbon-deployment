@@ -292,8 +292,6 @@ public class TomcatGenericWebappsDeployer {
                     log.debug(((CarbonTomcatSessionPersistentManager) manager).getName() +
                              " enabled Tomcat HTTP Session Persistent mode using " +
                              ((CarbonTomcatSessionPersistentManager) manager).getStore());
-                } else {
-                    context.setManager(new CarbonTomcatSessionManager(tenantId));
                 }
             }
 
