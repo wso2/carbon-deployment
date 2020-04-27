@@ -86,6 +86,11 @@ public final class WebappsConstants {
     public static final String WEBAPP_RESOURCE_PATH_ROOT = "/repository/webapps/";
     public static final String WEBAPP_STATUS = "Status";
 
+    // Constants related to CXF3 runtime configurations.
+    public static final String CXF3_RUNTIME = "CXF3";
+    public static final String CXF3_CLASS_PATH = "${carbon.home}/lib/runtimes/cxf3/*.jar;${carbon" +
+            ".home}/lib/runtimes/cxf3/";
+
     public static final class WebappState {
         public static final String STARTED = "started";
         public static final String STOPPED = "stopped";

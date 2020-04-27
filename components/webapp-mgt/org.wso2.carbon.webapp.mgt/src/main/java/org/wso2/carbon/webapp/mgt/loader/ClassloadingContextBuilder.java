@@ -235,6 +235,16 @@ public class ClassloadingContextBuilder {
                 classloadingConfig.addExclusiveEnvironment(name, environment);
             }
         }
+
+        // Load the CXF3 runtime if it is not configured as an exclusive environment in the
+        // webapp-classloading-environments.xml file.
+        if (classloadingConfig.getExclusiveEnvironment(WebappsConstants.CXF3_RUNTIME) == null) {
+            String name = WebappsConstants.CXF3_RUNTIME;
+            String classpathStr = WebappsConstants.CXF3_CLASS_PATH;
+            String[] classpath = generateClasspath(classpathStr);
+            CLEnvironment environment = new CLEnvironment(classpath, null);
+            classloadingConfig.addExclusiveEnvironment(name, environment);
+        }
     }
 
     //TODO Validate the schema.. works for the best case. Improve error handling

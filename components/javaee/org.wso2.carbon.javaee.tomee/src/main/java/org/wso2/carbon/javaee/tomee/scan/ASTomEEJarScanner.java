@@ -83,7 +83,7 @@ public class ASTomEEJarScanner extends TomEEJarScanner {
      * Scan a URL for JARs with the optional extensions to look at all files
      * and all directories.
      */
-    private void process(JarScannerCallback callback, URL url)
+    protected void process(JarScannerCallback callback, URL url)
             throws IOException {
 
         if (log.isTraceEnabled()) {
