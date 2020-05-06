@@ -116,6 +116,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.sts</groupId>
+            <artifactId>org.wso2.carbon.identity.sts.common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

@@ -44,7 +44,7 @@ import org.wso2.carbon.module.mgt.internal.DataHolder;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.security.config.SecurityConfigAdmin;
+import org.wso2.carbon.identity.sts.common.config.SecurityConfigAdmin;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
 

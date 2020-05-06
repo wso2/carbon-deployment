@@ -14,7 +14,8 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
@@ -63,6 +64,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.sts</groupId>
+            <artifactId>org.wso2.carbon.identity.sts.common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.core</artifactId>
         </dependency>
@@ -100,7 +105,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.application.deployer</artifactId>
         </dependency>
-    <dependency>
+        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <scope>provided</scope>
@@ -143,7 +148,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-		<version>2.16</version>
+                <version>2.16</version>
                 <inherited>true</inherited>
                 <configuration>
                     <forkMode>pertest</forkMode>
