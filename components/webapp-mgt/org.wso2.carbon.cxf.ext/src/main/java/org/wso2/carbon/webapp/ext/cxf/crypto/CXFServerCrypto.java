@@ -16,10 +16,6 @@
 
 package org.wso2.carbon.webapp.ext.cxf.crypto;
 
-import org.apache.axiom.om.OMAttribute;
-import org.apache.axiom.om.OMElement;
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.security.WSSecurityException;
@@ -33,13 +29,10 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.SecurityConstants;
-import org.wso2.carbon.security.internal.SecurityMgtServiceComponent;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
-import org.wso2.carbon.security.util.XKMSCryptoClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.security.auth.callback.CallbackHandler;
-import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
