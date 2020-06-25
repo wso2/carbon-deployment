@@ -306,7 +306,7 @@
 %>
 
 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
-                  page="index.jsp" pageNumberParameterName="pageNumber"
+                  page="service_groups.jsp" pageNumberParameterName="pageNumber"
                   resourceBundle="org.wso2.carbon.service.mgt.ui.i18n.Resources"
                   prevKey="prev" nextKey="next"
                   parameters="<%=parameters%>"/>
@@ -461,7 +461,7 @@
                           numberOfPages="<%=numberOfPages%>"/>
 <% } %>
 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
-                  page="index.jsp" pageNumberParameterName="pageNumber"
+                  page="service_groups.jsp" pageNumberParameterName="pageNumber"
                   resourceBundle="org.wso2.carbon.service.mgt.ui.i18n.Resources"
                   prevKey="prev" nextKey="next"
                   parameters="<%= parameters%>"/>
