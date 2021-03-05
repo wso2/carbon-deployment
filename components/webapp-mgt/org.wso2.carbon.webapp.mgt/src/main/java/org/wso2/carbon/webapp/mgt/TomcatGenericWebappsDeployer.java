@@ -21,21 +21,16 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.util.JavaUtils;
 import org.apache.catalina.Context;
-import org.apache.catalina.Host;
 import org.apache.catalina.Manager;
 import org.apache.catalina.core.StandardContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataException;
 import org.wso2.carbon.core.persistence.metadata.ArtifactMetadataManager;
 import org.wso2.carbon.core.persistence.metadata.ArtifactType;
 import org.wso2.carbon.core.persistence.metadata.DeploymentArtifactMetadataFactory;
-import org.wso2.carbon.tomcat.api.CarbonTomcatService;
-import org.wso2.carbon.tomcat.ext.utils.URLMappingHolder;
-import org.wso2.carbon.webapp.mgt.session.CarbonTomcatClusterableSessionManager;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.File;
@@ -255,58 +250,8 @@ public class TomcatGenericWebappsDeployer {
                                         .addWebApp(WebAppUtils.getHost(webappFile.getAbsolutePath()), contextStr,
                                                    webappFile.getAbsolutePath());
 
-            Manager manager = context.getManager();
-            if (context.getDistributable() && (DataHolder.getCarbonTomcatService().getTomcat().
-                    getService().getContainer().getCluster()) != null) {
-
-                // Using clusterable manager
-                Manager sessionManager;
-
-                if (manager instanceof CarbonTomcatClusterableSessionManager) {
-                    sessionManager = manager;
-                    ((CarbonTomcatClusterableSessionManager) manager).setOwnerTenantId(tenantId);
-                } else if (manager instanceof org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager) {
-                    //kept for backward compatibility. Remove once the session managers in carbon core are removed.
-                    sessionManager = manager;
-                    ((org.wso2.carbon.core.session.CarbonTomcatClusterableSessionManager) manager).
-                            setOwnerTenantId(tenantId);
-                } else {
-                    sessionManager = new CarbonTomcatClusterableSessionManager(tenantId);
-                    context.setManager(sessionManager);
-                }
-
-                Object alreadyinsertedSMMap = configurationContext.getProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP);
-                if(alreadyinsertedSMMap != null){
-                    ((Map<String, Manager>) alreadyinsertedSMMap).put(context.getName(), sessionManager);
-                }else{
-                    sessionManagerMap.put(context.getName(), sessionManager);
-                    configurationContext.setProperty(CarbonConstants.TOMCAT_SESSION_MANAGER_MAP,
-                            sessionManagerMap);
-                }
-
-            } else {
-                if (manager instanceof CarbonTomcatSessionManager) {
-                    ((CarbonTomcatSessionManager) manager).setOwnerTenantId(tenantId);
-                } else if (manager instanceof CarbonTomcatSessionPersistentManager){
-                    ((CarbonTomcatSessionPersistentManager) manager).setOwnerTenantId(tenantId);
-                    log.debug(((CarbonTomcatSessionPersistentManager) manager).getName() +
-                             " enabled Tomcat HTTP Session Persistent mode using " +
-                             ((CarbonTomcatSessionPersistentManager) manager).getStore());
-                }
-            }
-
             WebApplication webapp = new WebApplication(this, context, webappFile);
             webapp.setServletContextParameters(webContextParams);
-
-            String bamEnable = recievePersistedWebappMetaData(webappFile, WebappsConstants.ENABLE_BAM_STATISTICS);
-            if (bamEnable == null || "".equals(bamEnable)) {
-                bamEnable = context.findParameter(WebappsConstants.ENABLE_BAM_STATISTICS);
-                if (bamEnable == null || "".equals(bamEnable)) {
-                    bamEnable = "false";
-                }
-            }
-            webapp.addParameter(WebappsConstants.ENABLE_BAM_STATISTICS, bamEnable);
-
             webapp.setState("Started");
 
             WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(
