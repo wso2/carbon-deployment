@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.webapp.mgt.loader.CLEnvironment;
 import org.wso2.carbon.webapp.mgt.loader.ClassloadingConfiguration;
 
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,11 +37,13 @@ import java.util.Map;
 public class SharedClassLoaderFactory {
 
     private static final Log log = LogFactory.getLog(SharedClassLoaderFactory.class);
+    private static URLClassLoader sharedClassLoader;
     private static Map<String, URLClassLoader> sharedClassLoaders = new HashMap<>();
 
     public static void init(ClassloadingConfiguration classloadingConfig) {
 
         ClassLoader tomcatBundleClassLoader = Thread.currentThread().getContextClassLoader();
+        sharedClassLoader = new SharedURLClassLoader(new URL[0], tomcatBundleClassLoader);
         classloadingConfig.getExclusiveEnvironments().forEach(
                 ((name, clEnvironment) -> createClassloader(name, clEnvironment, tomcatBundleClassLoader)));
     }
@@ -77,6 +80,11 @@ public class SharedClassLoaderFactory {
         } catch (Exception e) {
             log.error("Error while creating class loader for " + name, e);
         }
+    }
+
+    public static URLClassLoader getSharedClassLoader() {
+
+        return sharedClassLoader;
     }
 
     static URLClassLoader getSharedClassLoaders(String name) {
