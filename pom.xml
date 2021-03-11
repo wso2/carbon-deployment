@@ -1453,9 +1453,9 @@
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 
-        <org.apache.cxf.version>3.2.8</org.apache.cxf.version>
-        <com.fasterxml.jackson.version>2.9.9</com.fasterxml.jackson.version>
-        <com.fasterxml.jackson.databind.version>2.9.9.3</com.fasterxml.jackson.databind.version>
+        <org.apache.cxf.version>3.3.7</org.apache.cxf.version>
+        <com.fasterxml.jackson.version>2.10.5</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.databind.version>2.10.5</com.fasterxml.jackson.databind.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
         <!-- for maven release process -->
