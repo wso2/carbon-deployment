@@ -49,10 +49,11 @@ public class SharedURLClassLoader extends URLClassLoader {
 
     private URLClassLoader getSharedEnvironmentClassLoader(String environment) {
 
-        return SharedClassLoaderFactory.getSharedClassLoaders(environment);
+        return SharedClassLoaderFactory.getEnvironmentClassLoader(environment);
     }
 
 
+    @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 
         synchronized (getClassLoadingLock(name)) {

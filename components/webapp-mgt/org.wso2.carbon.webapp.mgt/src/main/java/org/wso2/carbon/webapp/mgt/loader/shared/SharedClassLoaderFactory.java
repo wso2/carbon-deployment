@@ -38,14 +38,20 @@ public class SharedClassLoaderFactory {
 
     private static final Log log = LogFactory.getLog(SharedClassLoaderFactory.class);
     private static URLClassLoader sharedClassLoader;
-    private static Map<String, URLClassLoader> sharedClassLoaders = new HashMap<>();
+    private static Map<String, URLClassLoader> environmentClassLoaders = new HashMap<>();
 
+    /**
+     * Initialize the shared class loader and environment class loaders for each defined environments
+     * in the first webapp deployment.
+     *
+     * @param classloadingConfig    Class loading configuration.
+     */
     public static void init(ClassloadingConfiguration classloadingConfig) {
 
-        ClassLoader tomcatBundleClassLoader = Thread.currentThread().getContextClassLoader();
-        sharedClassLoader = new SharedURLClassLoader(new URL[0], tomcatBundleClassLoader);
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        sharedClassLoader = new SharedURLClassLoader(new URL[0], contextClassLoader);
         classloadingConfig.getExclusiveEnvironments().forEach(
-                ((name, clEnvironment) -> createClassloader(name, clEnvironment, tomcatBundleClassLoader)));
+                ((name, clEnvironment) -> createClassloader(name, clEnvironment, contextClassLoader)));
     }
 
     private static void createClassloader(String name, CLEnvironment environment, ClassLoader parentClassLoader) {
@@ -58,7 +64,7 @@ public class SharedClassLoaderFactory {
             return;
         }
         for (String repository : environment.getDelegatedPackageArray()) {
-            if (sharedClassLoaders.containsKey(name)) {
+            if (environmentClassLoaders.containsKey(name)) {
                 continue;
             }
             if (repository.endsWith("*.jar")) {
@@ -76,19 +82,31 @@ public class SharedClassLoaderFactory {
 
         try {
             ClassLoader classloader = ClassLoaderFactory.createClassLoader(repositories, parentClassLoader);
-            sharedClassLoaders.put(name, (URLClassLoader) classloader);
+            environmentClassLoaders.put(name, (URLClassLoader) classloader);
         } catch (Exception e) {
             log.error("Error while creating class loader for " + name, e);
         }
     }
 
+    /**
+     * Get the shared class loader for the complete deployment. This shared class loader will loop through the
+     * environment class loaders to load the resource.
+     *
+     * @return  URLClassLoader
+     */
     public static URLClassLoader getSharedClassLoader() {
 
         return sharedClassLoader;
     }
 
-    static URLClassLoader getSharedClassLoaders(String name) {
+    /**
+     * Get the shared class loader loader for a specific environment.
+     *
+     * @param environmentName  Environment Name.
+     * @return      URLClassLoader.
+     */
+    public static URLClassLoader getEnvironmentClassLoader(String environmentName) {
 
-        return sharedClassLoaders.get(name);
+        return environmentClassLoaders.get(environmentName);
     }
 }
