@@ -22,8 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.webapp.mgt.loader.shared.SharedClassLoaderFactory;
-import org.wso2.carbon.webapp.mgt.loader.shared.SharedURLClassLoader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -51,7 +49,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
     private static final String CLASS_FILE_SUFFIX = ".class";
 
     public CarbonWebappClassLoader(ClassLoader parent) {
-        super(SharedClassLoaderFactory.getSharedClassLoader());
+        super(SharedClassLoaderFactory.getInstance().getSharedClassLoader());
         String launchIniPath = Paths.get(CarbonUtils.getCarbonConfigDirPath(), "etc", "launch.ini").toString();
         readSystemPackagesList(launchIniPath);
     }

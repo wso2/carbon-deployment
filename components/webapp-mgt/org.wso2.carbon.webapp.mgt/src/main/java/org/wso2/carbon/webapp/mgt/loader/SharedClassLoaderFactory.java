@@ -16,13 +16,11 @@
  *  under the License.
  */
 
-package org.wso2.carbon.webapp.mgt.loader.shared;
+package org.wso2.carbon.webapp.mgt.loader;
 
 import org.apache.catalina.startup.ClassLoaderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.webapp.mgt.loader.CLEnvironment;
-import org.wso2.carbon.webapp.mgt.loader.ClassloadingConfiguration;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -37,8 +35,23 @@ import java.util.Map;
 public class SharedClassLoaderFactory {
 
     private static final Log log = LogFactory.getLog(SharedClassLoaderFactory.class);
-    private static URLClassLoader sharedClassLoader;
-    private static Map<String, URLClassLoader> environmentClassLoaders = new HashMap<>();
+    private static SharedClassLoaderFactory instance = new SharedClassLoaderFactory();
+    private URLClassLoader sharedClassLoader;
+    private Map<String, URLClassLoader> environmentClassLoaders = new HashMap<>();
+
+    private SharedClassLoaderFactory() {
+
+    }
+
+    /**
+     * Get the instance of the SharedClassLoaderFactory.
+     *
+     * @return  SharedClassLoaderFactory
+     */
+    public static SharedClassLoaderFactory getInstance() {
+
+        return instance;
+    }
 
     /**
      * Initialize the shared class loader and environment class loaders for each defined environments
@@ -46,7 +59,7 @@ public class SharedClassLoaderFactory {
      *
      * @param classloadingConfig    Class loading configuration.
      */
-    public static void init(ClassloadingConfiguration classloadingConfig) {
+    public void init(ClassloadingConfiguration classloadingConfig) {
 
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         sharedClassLoader = new SharedURLClassLoader(new URL[0], contextClassLoader);
@@ -54,7 +67,7 @@ public class SharedClassLoaderFactory {
                 ((name, clEnvironment) -> createClassloader(name, clEnvironment, contextClassLoader)));
     }
 
-    private static void createClassloader(String name, CLEnvironment environment, ClassLoader parentClassLoader) {
+    private void createClassloader(String name, CLEnvironment environment, ClassLoader parentClassLoader) {
 
         if (log.isDebugEnabled()) {
             log.debug("Creating shared class loader for " + name);
@@ -94,7 +107,7 @@ public class SharedClassLoaderFactory {
      *
      * @return  URLClassLoader
      */
-    public static URLClassLoader getSharedClassLoader() {
+    public URLClassLoader getSharedClassLoader() {
 
         return sharedClassLoader;
     }
@@ -105,7 +118,7 @@ public class SharedClassLoaderFactory {
      * @param environmentName  Environment Name.
      * @return      URLClassLoader.
      */
-    public static URLClassLoader getEnvironmentClassLoader(String environmentName) {
+    public URLClassLoader getEnvironmentClassLoader(String environmentName) {
 
         return environmentClassLoaders.get(environmentName);
     }

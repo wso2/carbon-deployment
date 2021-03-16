@@ -88,7 +88,6 @@
                             !org.wso2.carbon.webapp.mgt.internal,
                             org.wso2.carbon.webapp.mgt,
                             org.wso2.carbon.webapp.mgt.loader,
-                            org.wso2.carbon.webapp.mgt.loader.shared,
                             org.wso2.carbon.webapp.mgt.utils,
                             org.wso2.carbon.webapp.mgt.multitenancy,
                             org.wso2.carbon.webapp.mgt.sync,

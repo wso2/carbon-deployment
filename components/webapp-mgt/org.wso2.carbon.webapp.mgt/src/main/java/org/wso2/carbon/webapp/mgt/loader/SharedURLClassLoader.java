@@ -16,11 +16,10 @@
  *  under the License.
  */
 
-package org.wso2.carbon.webapp.mgt.loader.shared;
+package org.wso2.carbon.webapp.mgt.loader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.webapp.mgt.loader.WebappClassloadingContext;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +30,7 @@ import java.util.Enumeration;
  * This classloader will be the parent of the CarbonWebappClassLoader class loader.
  * It will loop through the shared environment class loaders to load the resource.
  */
-public class SharedURLClassLoader extends URLClassLoader {
+class SharedURLClassLoader extends URLClassLoader {
 
     private static final Log log = LogFactory.getLog(SharedURLClassLoader.class);
     private WebappClassloadingContext webappCC;
@@ -49,7 +48,7 @@ public class SharedURLClassLoader extends URLClassLoader {
 
     private URLClassLoader getSharedEnvironmentClassLoader(String environment) {
 
-        return SharedClassLoaderFactory.getEnvironmentClassLoader(environment);
+        return SharedClassLoaderFactory.getInstance().getEnvironmentClassLoader(environment);
     }
 
 
