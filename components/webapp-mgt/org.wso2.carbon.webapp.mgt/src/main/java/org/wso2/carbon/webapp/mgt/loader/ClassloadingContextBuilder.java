@@ -70,7 +70,7 @@ public class ClassloadingContextBuilder {
             throw new FileNotFoundException(clConfigPath);
         }
         loadClassloadingPolicy(classloadingConfig, clConfigFile);
-
+        SharedClassLoaderFactory.getInstance().init(classloadingConfig);
         return classloadingConfig;
     }
 
