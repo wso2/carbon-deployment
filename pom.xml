@@ -912,7 +912,21 @@
                 <artifactId>spring-web</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.olingo</groupId>
+                <artifactId>olingo-odata2-core-incubating</artifactId>
+                <version>${olingo-odata2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.olingo</groupId>
+                <artifactId>olingo-odata2-api-incubating</artifactId>
+                <version>${olingo-odata2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax.validation.api.version}</version>
+            </dependency>
             <!-- JavaEE Tomee feature related dependencies-->
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.openejb</groupId>
@@ -1107,6 +1121,11 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
@@ -1428,6 +1447,8 @@
         <ehcache.core.version>2.5.1</ehcache.core.version>
         <velocity.version>1.7</velocity.version>
         <commons.lang.version>2.6</commons.lang.version>
+        <olingo-odata2.version>1.1.0</olingo-odata2.version>
+        <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
 
         <!-- J2EE Runtime Enviroment -->
         <myfaces.version>2.1.17</myfaces.version>
@@ -1461,7 +1482,7 @@
         <!-- for maven release process -->
         <project.scm.id>my-scm-server</project.scm.id>
 
-    <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
+        <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
         <maven.scr.plugin.version>1.26.0</maven.scr.plugin.version>
         <pax.logging.api.version>1.10.1</pax.logging.api.version>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
