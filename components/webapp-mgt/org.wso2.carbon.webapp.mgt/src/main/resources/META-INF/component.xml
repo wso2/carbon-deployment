@@ -16,14 +16,6 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-    <deployers>
-        <deployer>
-            <directory>artifactMetafiles/webapp</directory>
-            <extension>xml</extension>
-            <class>org.wso2.carbon.webapp.mgt.WebappMetadataDeployer</class>
-        </deployer>
-    </deployers>
-
     <ManagementPermissions>
         <ManagementPermission>
             <DisplayName>Webapps</DisplayName>
