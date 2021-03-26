@@ -1366,7 +1366,7 @@
         <!--<commons-pool.version>1.5.0.wso2v1</commons-pool.version>-->
         <commons-logging.version>1.1.1</commons-logging.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-beanutils.version>1.8.3</commons-beanutils.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-digester.version>2.1</commons-digester.version>
 
         <!-- Equinox dependency versions -->
