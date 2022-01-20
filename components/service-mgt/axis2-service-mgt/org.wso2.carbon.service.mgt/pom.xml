@@ -19,14 +19,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>axis2-service-mgt</artifactId>
-        <version>4.12.8</version>
+        <version>4.12.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.service.mgt</artifactId>
     <packaging>bundle</packaging>
-    <version>4.12.8</version>
+    <version>4.12.9-SNAPSHOT</version>
     <name>WSO2 Carbon - Service Management BE</name>
     <description>org.wso2.carbon.service.mgt provides the service mgt functionalities</description>
     <url>http://wso2.org</url>
