@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>as-runtimes-feature</artifactId>
-        <version>4.12.9-SNAPSHOT</version>
+        <version>4.12.9</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -28,7 +28,7 @@
     <artifactId>org.wso2.carbon.as.runtimes.cxf.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - CXF Runtime Environment</name>
-    <version>4.12.9-SNAPSHOT</version>
+    <version>4.12.9</version>
     <url>http://wso2.org</url>
     <description>This feature contains the CXF Runtime Environment need to run CXF-based webapps</description>
 
