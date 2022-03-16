@@ -88,6 +88,9 @@ public class SharedClassLoaderFactory {
             } else if (repository.endsWith("/*")) {
                 repository = repository.substring(0, repository.length() - 2);
                 repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.DIR));
+            } else if (repository.endsWith("/")) {
+                repository = repository.substring(0, repository.length() - 1);
+                repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.DIR));
             } else {
                 repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.DIR));
             }
