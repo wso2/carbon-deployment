@@ -22,6 +22,7 @@ import org.apache.catalina.startup.ClassLoaderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -76,20 +77,31 @@ public class SharedClassLoaderFactory {
         if (environment == null || environment.getDelegatedPackageArray() == null) {
             return;
         }
-        for (String repository : environment.getDelegatedPackageArray()) {
+        for (String repositoryLocation : environment.getDelegatedPackageArray()) {
             if (environmentClassLoaders.containsKey(name)) {
                 continue;
             }
-            if (repository.endsWith("*.jar")) {
-                repository = repository.substring(0, repository.length() - "*.jar".length());
-                repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.GLOB));
-            } else if (repository.endsWith(".jar")) {
-                repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.URL));
-            } else if (repository.endsWith("/*")) {
-                repository = repository.substring(0, repository.length() - 2);
-                repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.DIR));
+            if (repositoryLocation.endsWith("*.jar")) {
+                repositoryLocation = repositoryLocation.substring(0, repositoryLocation.length() - "*.jar".length());
+                repositories.add(new ClassLoaderFactory.Repository(repositoryLocation,
+                        ClassLoaderFactory.RepositoryType.GLOB));
+            } else if (repositoryLocation.endsWith(".jar")) {
+                repositories.add(new ClassLoaderFactory.Repository(repositoryLocation,
+                        ClassLoaderFactory.RepositoryType.URL));
+            } else if (repositoryLocation.endsWith("/*")) {
+                repositoryLocation = repositoryLocation.substring(0, repositoryLocation.length() - 2);
+                repositoryLocation = normalizeRepositoryLocation(repositoryLocation);
+                repositories.add(new ClassLoaderFactory.Repository(repositoryLocation,
+                        ClassLoaderFactory.RepositoryType.DIR));
+            } else if (repositoryLocation.endsWith("/")) {
+                repositoryLocation = repositoryLocation.substring(0, repositoryLocation.length() - 1);
+                repositoryLocation = normalizeRepositoryLocation(repositoryLocation);
+                repositories.add(new ClassLoaderFactory.Repository(repositoryLocation,
+                        ClassLoaderFactory.RepositoryType.DIR));
             } else {
-                repositories.add(new ClassLoaderFactory.Repository(repository, ClassLoaderFactory.RepositoryType.DIR));
+                repositoryLocation = normalizeRepositoryLocation(repositoryLocation);
+                repositories.add(new ClassLoaderFactory.Repository(repositoryLocation,
+                        ClassLoaderFactory.RepositoryType.DIR));
             }
         }
 
@@ -99,6 +111,19 @@ public class SharedClassLoaderFactory {
         } catch (Exception e) {
             log.error("Error while creating class loader for " + name, e);
         }
+    }
+
+    /**
+     * Remove unnecessary field in the repository location to avoid issues with windows.
+     *
+     * @param repositoryLocation location of the repository.
+     * @return normalized repository location
+     */
+    private String normalizeRepositoryLocation(String repositoryLocation) {
+
+        String strip = "file:" + (File.separatorChar == '/' ? "" : "/");
+        return repositoryLocation.replace(strip, "");
+
     }
 
     /**
