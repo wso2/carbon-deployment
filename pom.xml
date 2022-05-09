@@ -1407,7 +1407,7 @@
         <cxf.bundle.version>2.7.16</cxf.bundle.version>
         <cxf.xjc.version>3.2.1</cxf.xjc.version>
         <spring.version>3.2.18.RELEASE</spring.version>
-        <spring5.version>5.3.18</spring5.version>
+        <spring5.version>5.3.19</spring5.version>
         <carbon.cxf.webapp.ext>1.0.1</carbon.cxf.webapp.ext>
         <aopalliance.version>1.0</aopalliance.version>
         <wss4j.version>1.6.18</wss4j.version>
