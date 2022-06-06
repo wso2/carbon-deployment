@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>bam-service-data-agents</artifactId>
-        <version>4.12.14-SNAPSHOT</version>
+        <version>4.12.14</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
