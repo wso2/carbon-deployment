@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt-stub</artifactId>
-        <version>4.12.16</version>
+        <version>4.12.17-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
