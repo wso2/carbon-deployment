@@ -19,13 +19,13 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>webapp-mgt</artifactId>
-        <version>4.12.16-SNAPSHOT</version>
+        <version>4.12.16</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
-    <version>4.12.16-SNAPSHOT</version>
+    <version>4.12.16</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Webapp Management BE</name>
     <description>Webapp management BE fuctionalities</description>
