@@ -21,14 +21,14 @@
     <parent>
         <groupId>org.wso2.carbon.deployment</groupId>
         <artifactId>axis2-repo-mgt</artifactId>
-        <version>4.12.19-SNAPSHOT</version>
+        <version>4.12.19</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.repomanager.axis2.ui</artifactId>
     <packaging>bundle</packaging>
-    <version>4.12.19-SNAPSHOT</version>
+    <version>4.12.19</version>
     <name>WSO2 Carbon - Axis2 Repository Management UI</name>
     <url>http://wso2.org</url>
 
