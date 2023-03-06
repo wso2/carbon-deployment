@@ -23,7 +23,7 @@ public class LoaderConstants {
     public final static String CL_CONFIG_FILE = "webapp-classloading.xml";
     public final static String APP_CL_CONFIG_FILE = "META-INF/" + CL_CONFIG_FILE;
     public final static String DEFAULT_EXT_DIR = "${carbon.home}/lib/runtimes/ext/";
-
+    public final static String DISABLE_SHARED_ENV_CLASS_LOADER = "disableSharedEnvClassLoader";
 
     public final static String SYSTEM_ENV = "Carbon";
     public final static String TOMCAT_ENV = "Tomcat";

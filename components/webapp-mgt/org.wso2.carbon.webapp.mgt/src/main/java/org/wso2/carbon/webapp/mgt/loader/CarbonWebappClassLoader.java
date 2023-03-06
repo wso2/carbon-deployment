@@ -22,10 +22,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.security.AccessController;
@@ -49,14 +51,26 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
     private static final String CLASS_FILE_SUFFIX = ".class";
 
     public CarbonWebappClassLoader(ClassLoader parent) {
-        super(SharedClassLoaderFactory.getInstance().getSharedClassLoader());
+
+        super(getClassLoader(parent));
         String launchIniPath = Paths.get(CarbonUtils.getCarbonConfigDirPath(), "etc", "launch.ini").toString();
         readSystemPackagesList(launchIniPath);
     }
 
     public void setWebappCC(WebappClassloadingContext classloadingContext) {
         this.webappCC = classloadingContext;
-        ((SharedURLClassLoader)this.parent).setWebappCC(classloadingContext);
+        if (WebAppUtils.isSharedEnvClassLoaderDisabled()) {
+            // Adding provided classpath entries, if any
+            for (String repository : webappCC.getProvidedRepositories()) {
+                try {
+                    addURL(new URL(repository));
+                } catch (MalformedURLException e) {
+                    // do nothing
+                }
+            }
+        } else {
+            ((SharedURLClassLoader) this.parent).setWebappCC(classloadingContext);
+        }
     }
 
     @Override
@@ -155,7 +169,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
 
 
         // 1) Load from the parent if the parent-first is true.
-        if (webappCC.isParentFirst()) {
+        if (webappCC.isParentFirst() && isMatchingDelegatedPackages(name)) {
             clazz = findClassFromParent(name, resolve);
             if (clazz != null) {
                 return clazz;
@@ -171,7 +185,7 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         // 3) TODO load from the shared repositories
 
         // 4) Load from the parent if the parent-first is false.
-        if (!webappCC.isParentFirst()) {
+        if (!webappCC.isParentFirst() && isMatchingDelegatedPackages(name)) {
             clazz = findClassFromParent(name, resolve);
             if (clazz != null) {
                 return clazz;
@@ -307,5 +321,22 @@ public class CarbonWebappClassLoader extends WebappClassLoader {
         return new CompoundEnumeration(tmp);
     }
 
+    private static ClassLoader getClassLoader(ClassLoader parent) {
+
+        if (WebAppUtils.isSharedEnvClassLoaderDisabled()) {
+            return parent;
+        } else {
+            return SharedClassLoaderFactory.getInstance().getSharedClassLoader();
+        }
+    }
+
+    private boolean isMatchingDelegatedPackages(String name) {
+
+        if (webappCC != null && WebAppUtils.isSharedEnvClassLoaderDisabled()) {
+            return webappCC.isDelegatedPackage(name) && !webappCC.isExcludedPackage(name);
+        }
+        // If shared class loader is enabled, this returns true since it is independent of this condition.
+        return true;
+    }
 
 }

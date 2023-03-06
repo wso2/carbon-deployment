@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.webapp.mgt.WebappsConstants;
+import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
 import org.wso2.carbon.webapp.mgt.utils.XMLUtils;
 
 import java.io.File;
@@ -70,7 +71,9 @@ public class ClassloadingContextBuilder {
             throw new FileNotFoundException(clConfigPath);
         }
         loadClassloadingPolicy(classloadingConfig, clConfigFile);
-        SharedClassLoaderFactory.getInstance().init(classloadingConfig);
+        if (!WebAppUtils.isSharedEnvClassLoaderDisabled()) {
+            SharedClassLoaderFactory.getInstance().init(classloadingConfig);
+        }
         return classloadingConfig;
     }
 

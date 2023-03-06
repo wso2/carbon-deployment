@@ -41,6 +41,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.wso2.carbon.webapp.mgt.loader.LoaderConstants.DISABLE_SHARED_ENV_CLASS_LOADER;
+
 public class WebAppUtils {
 
     public static List<String> vhostNames = getVhostNames();
@@ -327,5 +329,15 @@ public class WebAppUtils {
                      ? webappName.substring(0, webappName.indexOf(".war")) : webappName;
         return WebappsConstants.WEBAPP_RESOURCE_PATH_ROOT + webApplication.getHostName() + "/" + webappName
                + webApplication.getVersion();
+    }
+
+    /**
+     * Check whether the shared environment class loader is disabled.
+     *
+     * @return Whether shared environment class loader is disabled.
+     */
+    public static boolean isSharedEnvClassLoaderDisabled() {
+
+        return Boolean.parseBoolean(System.getProperty(DISABLE_SHARED_ENV_CLASS_LOADER));
     }
 }
