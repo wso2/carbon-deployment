@@ -58,14 +58,7 @@ public class WebAppMonitoringPublisherValve extends ValveBase {
 
     public WebAppMonitoringPublisherValve() {
 
-        super(true);
-        try {
-            uaParser = new CachingParser();
-        } catch (IOException e) {
-            // We should continue though we have a loss here.
-            LOG.error("Internal error in the User-Agent header parser. Some of the fields may not be included in the BAM Data Stream", e);
-        }
-
+        uaParser = new CachingParser();
         try {
             publisher = new HttpStatPublisher();
         } catch (BAMPublisherConfigurationException e) {
