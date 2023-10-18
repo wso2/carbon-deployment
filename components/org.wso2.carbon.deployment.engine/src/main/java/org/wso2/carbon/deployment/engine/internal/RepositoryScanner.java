@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.engine.Artifact;
 import org.wso2.carbon.deployment.engine.ArtifactType;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -124,7 +125,11 @@ public class RepositoryScanner {
      * @param type              ArtifactType
      */
     private void findArtifactsToDeploy(File directoryToSearch, ArtifactType type) {
+        DeploymentConfiguration deploymentConfiguration = DataHolder.getInstance().getDeploymentConfiguration();
         File[] files = directoryToSearch.listFiles();
+        if(deploymentConfiguration != null && deploymentConfiguration.getAlphabeticalOrder()) {
+            Arrays.sort(files);
+        }
         if (files != null && files.length > 0) {
             Arrays.asList(files).forEach(
                     file -> {

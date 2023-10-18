@@ -43,6 +43,9 @@ public class DeploymentConfiguration {
     @Element(description = "Deployment notifier config")
     private DeploymentNotifierConfig deploymentNotifier = new DeploymentNotifierConfig();
 
+    @Element(description = "Preserve alphabetical order")
+    private boolean alphabeticalOrder = false;
+
     public DeploymentConfiguration() {
         serverRepositoryLocation = ConfigurationUtils.substituteVariables(serverRepositoryLocation);
         runtimeRepositoryLocation = ConfigurationUtils.substituteVariables(runtimeRepositoryLocation);
@@ -62,6 +65,10 @@ public class DeploymentConfiguration {
 
     public int getUpdateInterval() {
         return updateInterval;
+    }
+
+    public boolean getAlphabeticalOrder() {
+        return alphabeticalOrder;
     }
 
     public DeploymentNotifierConfig getDeploymentNotifier() {
