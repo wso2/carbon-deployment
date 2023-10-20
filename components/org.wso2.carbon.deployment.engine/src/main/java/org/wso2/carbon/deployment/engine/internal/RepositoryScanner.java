@@ -127,7 +127,8 @@ public class RepositoryScanner {
     private void findArtifactsToDeploy(File directoryToSearch, ArtifactType type) {
         DeploymentConfiguration deploymentConfiguration = DataHolder.getInstance().getDeploymentConfiguration();
         File[] files = directoryToSearch.listFiles();
-        if(deploymentConfiguration != null && deploymentConfiguration.getAlphabeticalOrder()) {
+        // Sort the files if the deployment configuration is set to deploy by lexicographical order
+        if (deploymentConfiguration != null && deploymentConfiguration.getDeployByLexicographicalOrder()) {
             Arrays.sort(files);
         }
         if (files != null && files.length > 0) {

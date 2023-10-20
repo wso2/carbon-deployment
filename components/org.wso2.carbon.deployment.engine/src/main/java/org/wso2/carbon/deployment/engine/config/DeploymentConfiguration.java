@@ -43,8 +43,8 @@ public class DeploymentConfiguration {
     @Element(description = "Deployment notifier config")
     private DeploymentNotifierConfig deploymentNotifier = new DeploymentNotifierConfig();
 
-    @Element(description = "Preserve alphabetical order")
-    private boolean alphabeticalOrder = false;
+    @Element(description = "Deploy artifacts by lexicographical order")
+    private boolean deployByLexicographicalOrder = false;
 
     public DeploymentConfiguration() {
         serverRepositoryLocation = ConfigurationUtils.substituteVariables(serverRepositoryLocation);
@@ -67,8 +67,8 @@ public class DeploymentConfiguration {
         return updateInterval;
     }
 
-    public boolean getAlphabeticalOrder() {
-        return alphabeticalOrder;
+    public boolean getDeployByLexicographicalOrder() {
+        return deployByLexicographicalOrder;
     }
 
     public DeploymentNotifierConfig getDeploymentNotifier() {
