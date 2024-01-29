@@ -1421,9 +1421,9 @@
         <jaxb.xjc.version>2.2.6</jaxb.xjc.version>
         <jaxb.impl.version>2.2.6</jaxb.impl.version>
         <javax.ws.rs.version>2.0-m10</javax.ws.rs.version>
-        <httpcore.nio.version>4.2.4</httpcore.nio.version>
-        <httpcore.version>4.2.4</httpcore.version>
-        <httpclient.version>4.3.6</httpclient.version>
+        <httpcore.nio.version>4.4.16</httpcore.nio.version>
+        <httpcore.version>4.4.16</httpcore.version>
+        <httpclient.version>4.5.14</httpclient.version>
         <httpasyncclient.version>4.1.3</httpasyncclient.version>
         <ehcache.core.version>2.5.1</ehcache.core.version>
         <velocity.version>1.7</velocity.version>
@@ -1435,7 +1435,7 @@
         <geronimo-jpa.version>1.1</geronimo-jpa.version>
         <geronimo-jta.version>1.1.1</geronimo-jta.version>
 
-        <ua.parser.version>1.5.4.wso2v3</ua.parser.version>
+        <ua.parser.version>1.6.1.wso2v1</ua.parser.version>
 
         <!--json wso2-->
         <!--<version.json.wso2>2.0.0.wso2v1</version.json.wso2>-->
@@ -1454,7 +1454,7 @@
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 
         <org.apache.cxf.version>3.6.2</org.apache.cxf.version>
-        <com.fasterxml.jackson.version>2.16.0</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.16.1</com.fasterxml.jackson.version>
         <com.fasterxml.jackson.databind.version>2.16.0</com.fasterxml.jackson.databind.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
