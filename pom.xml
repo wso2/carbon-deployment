@@ -378,11 +378,6 @@
                 <version>${inbound.auth.sts.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
-                <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
-                <version>${sso.agent.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.server.feature</artifactId>
                 <version>${carbon.identity.version}</version>
@@ -1299,7 +1294,6 @@
 
         <!-- Carbon Identity version-->
         <carbon.identity.version>5.18.0</carbon.identity.version>
-        <sso.agent.version>5.4.0</sso.agent.version>
         <entitlement.proxy.version>5.3.1</entitlement.proxy.version>
         <carbon.identity.imp.pkg.version>[5.15.0, 6.0.0)</carbon.identity.imp.pkg.version>
         <inbound.auth.sts.version>5.6.0</inbound.auth.sts.version>
