@@ -1060,7 +1060,7 @@ public class WebappAdmin extends AbstractAdmin {
 
             String fileName = uploadData.getFileName();
             String version = uploadData.getVersion();
-            if (version != "" && version != null) {
+            if (version != null && !version.isEmpty()) {
                 if (fileName.contains(".war")) {
                     fileName = fileName.replace(".war", "#" + version + ".war");
                 } else if (fileName.contains(".zip")) {
