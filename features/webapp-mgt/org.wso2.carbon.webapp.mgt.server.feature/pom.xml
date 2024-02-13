@@ -42,10 +42,6 @@
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.webapp.deployer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
-            <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -100,7 +96,6 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt:${project.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon.deployment:org.wso2.carbon.webapp.deployer</bundleDef>
-                                <bundleDef>org.wso2.carbon.identity.agent.sso.java:org.wso2.carbon.identity.sso.agent</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:compatible:${carbon.kernel.feature.version}
