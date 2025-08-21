@@ -1480,7 +1480,7 @@
         <commons.beanutils.orbit.version>1.8.0.wso2v1</commons.beanutils.orbit.version>
         <serp.orbit.version>1.14.1.wso2v1</serp.orbit.version>
 
-        <org.apache.cxf.version>3.5.10</org.apache.cxf.version>
+        <org.apache.cxf.version>3.5.11</org.apache.cxf.version>
         <xercesImpl.version>2.12.2.wso2v1</xercesImpl.version>
         <com.fasterxml.jackson.version>2.17.2</com.fasterxml.jackson.version>
         <com.fasterxml.jackson.databind.version>2.17.2</com.fasterxml.jackson.databind.version>
