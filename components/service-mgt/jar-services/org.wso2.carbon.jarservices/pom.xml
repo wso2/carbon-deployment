@@ -45,7 +45,7 @@
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.jarservices.*,
-                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
                             org.apache.commons.logging.*; version="${import.package.version.commons.logging}",
                             *;resolution:=optional,
                         </Import-Package>
