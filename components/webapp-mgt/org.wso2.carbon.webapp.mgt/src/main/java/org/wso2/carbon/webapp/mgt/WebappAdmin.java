@@ -1067,10 +1067,12 @@ public class WebappAdmin extends AbstractAdmin {
                     fileName = fileName.replace(".zip", "#" + version + ".zip");
                 }
             }
-            if (WebAppUtils.validateWebappFileName(fileName)) {
-                String msg = "Web app file name consists unsupported characters  - " + fileName;
-                log.error(msg);
-                throw new AxisFault(msg);
+            try {
+                log.debug("Validating webapp file: " + fileName);
+                WebAppUtils.validateWebappFile(fileName);
+            } catch (CarbonException e) {
+                log.error(e.getMessage());
+                throw new AxisFault(e.getMessage(), e);
             }
             fileName = fileName.substring(fileName.lastIndexOf(System.getProperty("file.separator")) + 1);
             File destFile = new File(webappsDir, fileName);

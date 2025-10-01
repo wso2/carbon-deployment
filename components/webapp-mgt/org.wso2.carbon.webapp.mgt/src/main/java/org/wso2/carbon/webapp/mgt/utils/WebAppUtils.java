@@ -23,6 +23,7 @@ import org.apache.catalina.Container;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardWrapper;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.tomcat.CarbonTomcatException;
@@ -70,6 +71,63 @@ public class WebAppUtils {
         Matcher matcher = pattern.matcher(filename);
         boolean isMatch = matcher.matches();
         return isMatch;
+    }
+
+    /**
+     * Validates file name and extension.
+     *
+     * @param fileName File name to validate
+     * @param allowedExtensions Array of allowed file extensions (without dot), e.g., {"war", "zip"}
+     * @throws CarbonException if validation fails
+     */
+    private static void validateFile(String fileName, String[] allowedExtensions)
+            throws CarbonException {
+        // 1. Basic null/empty validation
+        if (fileName == null || fileName.trim().isEmpty()) {
+            throw new CarbonException("Invalid file name. File name is not available");
+        }
+
+        // 2. File name character validation
+        if (validateWebappFileName(fileName)) {
+            throw new CarbonException("Web app file name consists unsupported characters  - " + fileName);
+        }
+
+        fileName = fileName.trim();
+
+        // 3. File extension validation
+        if (allowedExtensions != null && allowedExtensions.length > 0) {
+            boolean validExtension = false;
+            String lowerFileName = fileName.toLowerCase();
+
+            for (String extension : allowedExtensions) {
+                if (lowerFileName.endsWith("." + extension.toLowerCase())) {
+                    validExtension = true;
+
+                    int minLength = extension.length() + 1;
+                    if (fileName.length() <= minLength) {
+                        throw new CarbonException(
+                                "Invalid file name: filename cannot be just an extension. File: " + fileName);
+                    }
+                    break;
+                }
+            }
+
+            if (!validExtension) {
+                String allowedExtensionsString = String.join(", ", allowedExtensions);
+                throw new CarbonException(
+                        "Invalid file type. Only " + allowedExtensionsString + " files are allowed. File: " + fileName);
+            }
+        }
+    }
+
+    /**
+     * Convenience method for Webapp file validation.
+     *
+     * @param fileName Webapp file name to validate
+     * @throws CarbonException if validation fails
+     */
+    public static void validateWebappFile(String fileName) throws CarbonException {
+        validateFile(fileName, new String[]{"war", "zip"});
     }
 
     /**
