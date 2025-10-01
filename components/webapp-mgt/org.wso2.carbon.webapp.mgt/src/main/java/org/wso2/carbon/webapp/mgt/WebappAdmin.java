@@ -1068,6 +1068,7 @@ public class WebappAdmin extends AbstractAdmin {
                 }
             }
             try {
+                log.debug("Validating webapp file: " + fileName);
                 WebAppUtils.validateWebappFile(fileName);
             } catch (CarbonException e) {
                 log.error(e.getMessage());

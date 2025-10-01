@@ -711,6 +711,7 @@ public class ModuleAdminService extends AbstractAdmin {
             // deploy module by module.
             for (ModuleUploadData uploadData : moduleUploadData) {
                 fileName = uploadData.getFileName();
+                log.info("Uploading module: " + fileName);
                 validateFileNameAndPath(modulesDir, fileName);
                 writeToRepository(modulesDir.getAbsolutePath(), fileName, uploadData.getDataHandler());    
             }
@@ -978,7 +979,7 @@ public class ModuleAdminService extends AbstractAdmin {
             }
         } catch (Exception e) {
             String msg = "Error validating file name and path: " + fileName;
-            log.error(msg);
+            log.error(msg + ": " + e.getMessage());
             throw new AxisFault(msg, e);
         }
     }
