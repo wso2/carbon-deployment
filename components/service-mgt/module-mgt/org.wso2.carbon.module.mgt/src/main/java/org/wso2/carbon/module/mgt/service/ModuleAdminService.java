@@ -711,6 +711,7 @@ public class ModuleAdminService extends AbstractAdmin {
             // deploy module by module.
             for (ModuleUploadData uploadData : moduleUploadData) {
                 fileName = uploadData.getFileName();
+                validateFileNameAndPath(modulesDir, fileName);
                 writeToRepository(modulesDir.getAbsolutePath(), fileName, uploadData.getDataHandler());    
             }
 
@@ -949,6 +950,37 @@ public class ModuleAdminService extends AbstractAdmin {
         }
 
         return true;
+    }
+
+    /**
+     * Validates the filename and path
+     *
+     * @param parentDir The parent directory where the file will be stored
+     * @param fileName The name of the file to be validated
+     * @throws AxisFault if the filename or path is invalid
+     */
+    private void validateFileNameAndPath(File parentDir, String fileName) throws AxisFault {
+        try {
+            if (fileName == null || fileName.trim().isEmpty()) {
+                throw new AxisFault("File name cannot be null or empty");
+            }
+
+            File targetFile = new File(parentDir, fileName);
+
+            String parentCanonicalPath = parentDir.getCanonicalPath();
+            String targetCanonicalPath = targetFile.getCanonicalPath();
+
+            if (!targetCanonicalPath.startsWith(parentCanonicalPath + File.separator) &&
+                    !targetCanonicalPath.equals(parentCanonicalPath)) {
+                throw new AxisFault("Invalid file path. File must be within the modules directory. " +
+                        "Attempted path: " + targetCanonicalPath +
+                        ", Expected parent: " + parentCanonicalPath);
+            }
+        } catch (Exception e) {
+            String msg = "Error validating file name and path: " + fileName;
+            log.error(msg);
+            throw new AxisFault(msg, e);
+        }
     }
 
     private void writeToRepository(String path, String fileName, DataHandler dataHandler)
