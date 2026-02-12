@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
-        <version>1.2</version>
+        <version>1.4</version>
     </parent>
 
     <modules>
@@ -1219,13 +1219,23 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>5.1.9</version>
                     <extensions>true</extensions>
                     <configuration>
                         <obrRepository>NONE</obrRepository>
                         <!--<instructions>
                           <_include>-osgi.bnd</_include>
                         </instructions>-->
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.14.1</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <source>21</source>
+                        <target>21</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -1348,8 +1358,7 @@
 
         <!-- Axis2 Version -->
         <axis2.wso2.version>1.6.1-wso2v40</axis2.wso2.version>
-        <axis2.osgi.version.range>[1.6.1-wso2v40, 1.7.0)</axis2.osgi.version.range>
-        <imp.pkg.version.axis2>[1.6.1-wso2v40, 1.7.0)</imp.pkg.version.axis2>
+        <axis2.osgi.version.range>[1.6.1, 1.7.0)</axis2.osgi.version.range>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
         <axis2.wso2.version.aar.plugin>1.6.2</axis2.wso2.version.aar.plugin>
         <neethi.osgi.version>2.0.4.wso2v5</neethi.osgi.version>
