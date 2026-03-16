@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
@@ -48,6 +49,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     protected ConfigurationContext configContext;
     protected Map<String, WebApplicationsHolder> webApplicationsHolderMap;
     private String[] defaultWatchedResources;
+    private final Map<String, Long> webappLastWatchedResourceModifiedTimes = new ConcurrentHashMap<String, Long>();
 
     public void init(ConfigurationContext configCtx) {
         this.configContext = configCtx;
@@ -108,6 +110,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                             CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST),
                     listeners);
             super.deploy(deploymentFileData);
+            initializeWatchedResourceModifiedState(deploymentFileData.getFile());
 
         } catch (Exception e) {
             String msg = "Error occurred while deploying webapp : " + deploymentFileData.getFile().getAbsolutePath();
@@ -152,38 +155,61 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                     handleRedeployment(warFile);
                 }
             } else {
-                if (isWatchedResourceChanged(fileName, unpackedFile)) {
-                    // if watchedResources are modified, reload the context
-                    Context context = getWebappContext(unpackedFile);
-                    if (context != null) {
-                        context.reload();
-                        log.info("Reloaded Context with name: " + context.getName());
+                Context context = getWebappContext(unpackedFile);
+                boolean watchedResourceChanged = context != null && isWatchedResourceChanged(fileName, context);
+                if (watchedResourceChanged) {
+                    synchronized (context.getName().intern()) {
+                        if (context.getState().isAvailable()) {
+                            // if watchedResources are modified, reload the context
+                            context.reload();
+                            log.info("Reloaded Context with name: " + context.getName());
+                        }
                     }
                 }
             }
         }
     }
 
-    private boolean isWatchedResourceChanged(String fileName, File file) {
+    private boolean isWatchedResourceChanged(String fileName, Context context) {
+
+        long latestWatchedResourceModifiedTime = getLatestWatchedResourceModifiedTime(fileName, context);
+        String contextName = context.getName();
+        Long knownWatchedResourceModifiedTime = webappLastWatchedResourceModifiedTimes.get(contextName);
+
+        if (knownWatchedResourceModifiedTime == null) {
+            webappLastWatchedResourceModifiedTimes.put(contextName, latestWatchedResourceModifiedTime);
+            return false;
+        }
+
+        if (latestWatchedResourceModifiedTime > knownWatchedResourceModifiedTime) {
+            webappLastWatchedResourceModifiedTimes.put(contextName, latestWatchedResourceModifiedTime);
+            return true;
+        }
+        return false;
+    }
+
+    private long getLatestWatchedResourceModifiedTime(String fileName, Context context) {
+        long latestWatchedResourceModifiedTime = 0;
+
         //check for default watched resources
         for (String watchedResource : defaultWatchedResources) {
             File watchedResourceFile = new File(fileName + File.separator + watchedResource);
-            if (watchedResourceFile.lastModified() > file.lastModified()) {
-                return true;
+            if (watchedResourceFile.exists() &&
+                    watchedResourceFile.lastModified() > latestWatchedResourceModifiedTime) {
+                latestWatchedResourceModifiedTime = watchedResourceFile.lastModified();
             }
         }
+
         //check for explicitly mentioned watched releases
-        Context context = getWebappContext(file);
-        if (context != null) {
-            String[] watchedResources = context.findWatchedResources();
-            for (String watchedResource : watchedResources) {
-                File watchedResourceFile = new File(fileName + File.separator + watchedResource);
-                if (watchedResourceFile.lastModified() >= file.lastModified()) {
-                    return true;
-                }
+        String[] watchedResources = context.findWatchedResources();
+        for (String watchedResource : watchedResources) {
+            File watchedResourceFile = new File(fileName + File.separator + watchedResource);
+            if (watchedResourceFile.exists() &&
+                    watchedResourceFile.lastModified() > latestWatchedResourceModifiedTime) {
+                latestWatchedResourceModifiedTime = watchedResourceFile.lastModified();
             }
         }
-        return false;
+        return latestWatchedResourceModifiedTime;
     }
 
     private Context getWebappContext(File file) {
@@ -269,6 +295,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             throws DeploymentException {
         try {
 
+            clearWatchedResourceModifiedState(webappToUndeploy);
             tomcatWebappDeployer.undeploy(webappToUndeploy);
 
         } catch (CarbonException e) {
@@ -277,6 +304,23 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             throw new DeploymentException(msg, e);
         }
         super.undeploy(fileName);
+    }
+
+    private void clearWatchedResourceModifiedState(File webappFile) {
+        Context context = getWebappContext(webappFile);
+        if (context != null) {
+            webappLastWatchedResourceModifiedTimes.remove(context.getName());
+        }
+    }
+
+    private void initializeWatchedResourceModifiedState(File webappFile) {
+        if (webappFile != null && webappFile.isDirectory()) {
+            Context context = getWebappContext(webappFile);
+            if (context != null) {
+                webappLastWatchedResourceModifiedTimes.put(context.getName(),
+                        getLatestWatchedResourceModifiedTime(webappFile.getAbsolutePath(), context));
+            }
+        }
     }
 
 
