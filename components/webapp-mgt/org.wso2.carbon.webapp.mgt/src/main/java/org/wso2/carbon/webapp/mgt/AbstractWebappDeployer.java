@@ -158,7 +158,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                 Context context = getWebappContext(unpackedFile);
                 boolean watchedResourceChanged = context != null && isWatchedResourceChanged(fileName, context);
                 if (watchedResourceChanged) {
-                    synchronized (context.getName().intern()) {
+                    synchronized (("webapp-reload-lock:" + context.getName()).intern()) {
                         if (context.getState().isAvailable()) {
                             // if watchedResources are modified, reload the context
                             context.reload();
@@ -322,7 +322,6 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             }
         }
     }
-
 
     public boolean isExistingFaultyApp(String filePath) {
         WebApplicationsHolder webApplicationsHolder = WebAppUtils.getWebappHolder(filePath, configContext);
