@@ -68,8 +68,8 @@ public class WebAppUtils {
     }
 
     public static boolean validateWebappFileName(String filename) {
-        Pattern pattern = Pattern.compile(".*[\\]\\[!\"$%&'()*+,/:;<=>?@~{|}^`].*");
-        Matcher matcher = pattern.matcher(filename);
+        Pattern pattern = Pattern.compile("(?s).*([\\n\\r]|[\\]\\[!\"$%&'()*+,/:;<=>?@~{|}^`]).*");
+        Matcher matcher = pattern.matcher(filename.trim());
         boolean isMatch = matcher.matches();
         return isMatch;
     }
