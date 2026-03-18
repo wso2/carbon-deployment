@@ -156,13 +156,17 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                 }
             } else {
                 Context context = getWebappContext(unpackedFile);
-                boolean watchedResourceChanged = context != null && isWatchedResourceChanged(fileName, context);
-                if (watchedResourceChanged) {
+                if (context != null) {
                     synchronized (("webapp-reload-lock:" + context.getName()).intern()) {
                         if (context.getState().isAvailable()) {
-                            // if watchedResources are modified, reload the context
-                            context.reload();
-                            log.info("Reloaded Context with name: " + context.getName());
+                            long latestWatchedResourceModifiedTime =
+                                    getLatestWatchedResourceModifiedTime(fileName, context);
+                            if (isWatchedResourceChanged(context, latestWatchedResourceModifiedTime)) {
+                                // if watchedResources are modified, reload the context
+                                context.reload();
+                                updateWatchedResourceModifiedState(context, latestWatchedResourceModifiedTime);
+                                log.info("Reloaded Context with name: " + context.getName());
+                            }
                         }
                     }
                 }
@@ -170,9 +174,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         }
     }
 
-    private boolean isWatchedResourceChanged(String fileName, Context context) {
-
-        long latestWatchedResourceModifiedTime = getLatestWatchedResourceModifiedTime(fileName, context);
+    private boolean isWatchedResourceChanged(Context context, long latestWatchedResourceModifiedTime) {
         String contextName = context.getName();
         Long knownWatchedResourceModifiedTime = webappLastWatchedResourceModifiedTimes.get(contextName);
 
@@ -181,11 +183,11 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
             return false;
         }
 
-        if (latestWatchedResourceModifiedTime > knownWatchedResourceModifiedTime) {
-            webappLastWatchedResourceModifiedTimes.put(contextName, latestWatchedResourceModifiedTime);
-            return true;
-        }
-        return false;
+        return latestWatchedResourceModifiedTime > knownWatchedResourceModifiedTime;
+    }
+
+    private void updateWatchedResourceModifiedState(Context context, long latestWatchedResourceModifiedTime) {
+        webappLastWatchedResourceModifiedTimes.put(context.getName(), latestWatchedResourceModifiedTime);
     }
 
     private long getLatestWatchedResourceModifiedTime(String fileName, Context context) {
