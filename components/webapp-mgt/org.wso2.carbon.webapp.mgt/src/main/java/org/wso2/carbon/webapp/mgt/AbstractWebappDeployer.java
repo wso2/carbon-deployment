@@ -311,6 +311,9 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     private void clearWatchedResourceModifiedState(File webappFile) {
         Context context = getWebappContext(webappFile);
         if (context != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Clearing watched resource state for webapp: " + context.getName());
+            }
             webappLastWatchedResourceModifiedTimes.remove(context.getName());
         }
     }
