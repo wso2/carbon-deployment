@@ -1491,8 +1491,8 @@
 
         <org.apache.cxf.version>3.5.11</org.apache.cxf.version>
         <xercesImpl.version>2.12.2.wso2v1</xercesImpl.version>
-        <com.fasterxml.jackson.version>2.17.2</com.fasterxml.jackson.version>
-        <com.fasterxml.jackson.databind.version>2.17.2</com.fasterxml.jackson.databind.version>
+        <com.fasterxml.jackson.version>2.21.2</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.databind.version>2.21.2</com.fasterxml.jackson.databind.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
         <!-- for maven release process -->
