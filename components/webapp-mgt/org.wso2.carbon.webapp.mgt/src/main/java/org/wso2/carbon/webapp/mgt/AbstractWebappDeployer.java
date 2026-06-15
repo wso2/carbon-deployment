@@ -198,7 +198,8 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                                         handleRedeployment(unpackedFile);
                                         log.info("Redeployed context: " + contextName + " (recovered)");
                                     } catch (Exception recoveryError) {
-                                        log.error("Redeploy retry failed for context: " + contextName);
+                                        log.error("Redeploy retry failed for context: " + contextName,
+                                                recoveryError);
                                     }
                                 }
                                 // If redeploy failed to reseed the baseline, restore the previous baseline so the
