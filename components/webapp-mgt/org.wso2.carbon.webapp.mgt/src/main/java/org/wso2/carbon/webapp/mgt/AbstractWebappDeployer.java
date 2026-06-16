@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.webapp.mgt.utils.WebAppUtils;
@@ -42,6 +43,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractWebappDeployer extends AbstractDeployer {
 
     private static final Log log = LogFactory.getLog(AbstractWebappDeployer.class);
+
+    // carbon.xml property controlling watched-resource reload; defaults to true when absent (preserves
+    // legacy behavior). Unrelated to JSP hot deployment, which Jasper handles independently.
+    private static final String WATCHED_RESOURCE_RELOAD_ENABLED_CONFIG =
+            "WebappManagement.WatchedResourceReloadEnabled";
+
     protected String webappsDir;
     protected String extension;
     protected TomcatGenericWebappsDeployer tomcatWebappDeployer;
@@ -49,6 +56,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
     protected ConfigurationContext configContext;
     protected Map<String, WebApplicationsHolder> webApplicationsHolderMap;
     private String[] defaultWatchedResources;
+    private boolean watchedResourceReloadEnabled;
     private final Map<String, Long> webappLastWatchedResourceModifiedTimes = new ConcurrentHashMap<String, Long>();
 
     public void init(ConfigurationContext configCtx) {
@@ -84,6 +92,17 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         defaultWatchedResources = new String[]{"WEB-INF" + File.separator + "web.xml",
                 "WEB-INF" + File.separator + "lib",
                 "WEB-INF" + File.separator + "classes"};
+
+        // Enabled by default (absent property -> true) to preserve legacy behavior; set false to stop
+        // the reload that is the spurious trigger on NFS-shared multi-node deployments.
+        String watchedResourceReloadConfig =
+                ServerConfiguration.getInstance().getFirstProperty(WATCHED_RESOURCE_RELOAD_ENABLED_CONFIG);
+        watchedResourceReloadEnabled =
+                (watchedResourceReloadConfig == null) || Boolean.parseBoolean(watchedResourceReloadConfig);
+        if (log.isDebugEnabled()) {
+            log.debug("Watched-resource reload for webapps under '" + webappsDir + "' is "
+                    + (watchedResourceReloadEnabled ? "enabled" : "disabled") + ".");
+        }
     }
 
     protected abstract TomcatGenericWebappsDeployer createTomcatGenericWebappDeployer(
@@ -154,7 +173,7 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                     handleUndeployment(fileName, unpackedFile);
                     handleRedeployment(warFile);
                 }
-            } else {
+            } else if (watchedResourceReloadEnabled) {
                 Context context = getWebappContext(unpackedFile);
                 if (context != null) {
                     synchronized (("webapp-reload-lock:" + context.getName()).intern()) {
@@ -162,10 +181,36 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
                             long latestWatchedResourceModifiedTime =
                                     getLatestWatchedResourceModifiedTime(fileName, context);
                             if (isWatchedResourceChanged(context, latestWatchedResourceModifiedTime)) {
-                                // if watchedResources are modified, reload the context
-                                context.reload();
-                                updateWatchedResourceModifiedState(context, latestWatchedResourceModifiedTime);
-                                log.info("Reloaded Context with name: " + context.getName());
+                                // Watched-resource changes require full undeploy+redeploy (not reload)
+                                // so Jasper's TldCache is rebuilt and JSPs recompile correctly. Redeploy
+                                // also reseeds the watched-resource baseline.
+                                String contextName = context.getName();
+                                Long previousWatchedResourceModifiedTime =
+                                        webappLastWatchedResourceModifiedTimes.get(contextName);
+                                handleUndeployment(fileName, unpackedFile);
+                                try {
+                                    handleRedeployment(unpackedFile);
+                                    log.info("Redeployed context: " + contextName);
+                                } catch (Exception redeploymentError) {
+                                    log.error("Redeploy failed for context: " + contextName + ", retrying.",
+                                            redeploymentError);
+                                    try {
+                                        handleRedeployment(unpackedFile);
+                                        log.info("Redeployed context: " + contextName + " (recovered)");
+                                    } catch (Exception recoveryError) {
+                                        log.error("Redeploy retry failed for context: " + contextName,
+                                                recoveryError);
+                                    }
+                                }
+                                // If redeploy failed to reseed the baseline, restore the previous baseline so the
+                                // next change still triggers redeployment. Do not advance the baseline to the
+                                // failing timestamp.
+                                if (previousWatchedResourceModifiedTime != null &&
+                                        webappLastWatchedResourceModifiedTimes.get(contextName) == null) {
+                                    webappLastWatchedResourceModifiedTimes.put(contextName,
+                                            previousWatchedResourceModifiedTime);
+                                    log.warn("Restored watched-resource baseline for context: " + contextName);
+                                }
                             }
                         }
                     }
@@ -184,10 +229,6 @@ public abstract class AbstractWebappDeployer extends AbstractDeployer {
         }
 
         return latestWatchedResourceModifiedTime > knownWatchedResourceModifiedTime;
-    }
-
-    private void updateWatchedResourceModifiedState(Context context, long latestWatchedResourceModifiedTime) {
-        webappLastWatchedResourceModifiedTimes.put(context.getName(), latestWatchedResourceModifiedTime);
     }
 
     private long getLatestWatchedResourceModifiedTime(String fileName, Context context) {
